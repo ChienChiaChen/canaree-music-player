@@ -17,6 +17,7 @@ import dev.olog.msc.dagger.scope.PerService
 import dev.olog.msc.music.service.MusicService
 import dev.olog.msc.presentation.base.music.service.MusicServiceConnectionState
 import dev.olog.msc.presentation.widget.image.view.player.toPlayerImage
+import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable

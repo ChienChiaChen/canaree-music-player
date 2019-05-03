@@ -19,7 +19,7 @@ import dev.olog.msc.domain.interactor.playing.queue.InsertHistorySongUseCase
 import dev.olog.msc.music.service.interfaces.PlayerLifecycle
 import dev.olog.msc.music.service.model.MediaEntity
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.k.extension.unsubscribe
+import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.Maybe
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

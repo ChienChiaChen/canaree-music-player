@@ -7,7 +7,7 @@ import dev.olog.msc.core.gateway.*
 import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.utils.k.extension.mapToList
+import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Observable
 import javax.inject.Inject
 

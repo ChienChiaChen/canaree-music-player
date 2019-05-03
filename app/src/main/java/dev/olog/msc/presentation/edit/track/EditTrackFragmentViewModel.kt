@@ -7,7 +7,7 @@ import com.crashlytics.android.Crashlytics
 import dev.olog.msc.NetworkUtils
 import dev.olog.msc.app.app
 import dev.olog.msc.utils.img.ImagesFolderUtils
-import dev.olog.msc.utils.k.extension.unsubscribe
+import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import org.jaudiotagger.tag.TagOptionSingleton
 import javax.inject.Inject

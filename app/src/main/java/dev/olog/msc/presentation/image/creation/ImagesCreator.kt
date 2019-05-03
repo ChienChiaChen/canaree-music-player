@@ -10,7 +10,7 @@ import dev.olog.msc.domain.interactor.all.newrequest.GetAllFoldersNewRequestUseC
 import dev.olog.msc.domain.interactor.all.newrequest.GetAllGenresNewRequestUseCase
 import dev.olog.msc.domain.interactor.all.newrequest.GetAllPlaylistsNewRequestUseCase
 import dev.olog.msc.isLowMemoryDevice
-import dev.olog.msc.utils.k.extension.asFlowable
+import dev.olog.msc.shared.extensions.asFlowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Flowables
 import io.reactivex.rxkotlin.addTo

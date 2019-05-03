@@ -20,8 +20,8 @@ import dev.olog.msc.presentation.library.tab.TabFragmentHeaders
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.shared.extensions.*
 import dev.olog.msc.utils.TextUtils
-import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import java.util.concurrent.TimeUnit

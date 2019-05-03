@@ -15,10 +15,10 @@ import dev.olog.msc.domain.interactor.playing.queue.UpdatePlayingQueueUseCase
 import dev.olog.msc.music.service.model.MediaEntity
 import dev.olog.msc.music.service.model.PositionInQueue
 import dev.olog.msc.music.service.model.toMediaEntity
-import dev.olog.msc.utils.assertMainThread
-import dev.olog.msc.utils.k.extension.clamp
-import dev.olog.msc.utils.k.extension.swap
-import dev.olog.msc.utils.k.extension.unsubscribe
+import dev.olog.msc.shared.utils.assertMainThread
+import dev.olog.msc.shared.utils.clamp
+import dev.olog.msc.shared.extensions.swap
+import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

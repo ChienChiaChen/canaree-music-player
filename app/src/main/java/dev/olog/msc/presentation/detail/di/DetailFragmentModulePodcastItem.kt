@@ -16,7 +16,7 @@ import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.TextUtils
-import dev.olog.msc.utils.k.extension.asFlowable
+import dev.olog.msc.shared.extensions.asFlowable
 import io.reactivex.Flowable
 
 @Module

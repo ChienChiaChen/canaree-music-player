@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package dev.olog.msc.utils.k.extension
+package dev.olog.msc.shared.extensions
 
 import java.util.*
 
@@ -47,4 +47,14 @@ fun <T> MutableList<T>.doIf(predicate: Boolean, action: MutableList<T>.() -> Any
         this.action()
     }
     return this
+}
+
+fun <T> MutableList<T>.removeFirst(predicate: (T) -> Boolean): Boolean {
+    for (t in this) {
+        if (predicate(t)) {
+            this.remove(t)
+            return true
+        }
+    }
+    return false
 }

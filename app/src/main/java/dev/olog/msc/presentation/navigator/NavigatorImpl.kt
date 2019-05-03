@@ -45,7 +45,7 @@ import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.collapse
 import dev.olog.msc.utils.k.extension.fragmentTransaction
 import dev.olog.msc.utils.k.extension.hideFragmentsIfExists
-import dev.olog.msc.utils.k.extension.unsubscribe
+import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 

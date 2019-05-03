@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import dev.olog.msc.R
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.base.adapter.drag.TouchHelperAdapterCallback
-import dev.olog.msc.presentation.utils.lazyFast
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.subscribe

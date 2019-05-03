@@ -13,7 +13,7 @@ import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.utils.img.ImagesFolderUtils
-import dev.olog.msc.utils.k.extension.debounceFirst
+import dev.olog.msc.shared.extensions.debounceFirst
 import dev.olog.msc.utils.safeCompare
 import io.reactivex.Completable
 import io.reactivex.Observable

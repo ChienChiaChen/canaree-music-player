@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dev.olog.msc.dagger.qualifier.ApplicationContext
 import dev.olog.msc.dagger.qualifier.ProcessLifecycle
-import dev.olog.msc.utils.isNougat_MR1
+import dev.olog.msc.shared.utils.isNougat_MR1
 import javax.inject.Singleton
 
 @Module

@@ -9,7 +9,7 @@ import dev.olog.msc.domain.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
 import dev.olog.msc.domain.interactor.item.GetSongUseCase
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.k.extension.mapToList
+import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Completable
 import javax.inject.Inject
 

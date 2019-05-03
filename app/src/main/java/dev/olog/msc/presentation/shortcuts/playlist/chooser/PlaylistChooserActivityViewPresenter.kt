@@ -6,7 +6,7 @@ import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.domain.interactor.all.GetAllPlaylistsUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.k.extension.mapToList
+import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Observable
 import javax.inject.Inject
 

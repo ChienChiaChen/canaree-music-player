@@ -9,7 +9,7 @@ import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.asLiveData
-import dev.olog.msc.utils.k.extension.debounceFirst
+import dev.olog.msc.shared.extensions.debounceFirst
 import io.reactivex.rxkotlin.Observables
 import javax.inject.Inject
 

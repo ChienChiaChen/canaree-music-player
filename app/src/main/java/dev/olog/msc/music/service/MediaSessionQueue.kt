@@ -18,7 +18,7 @@ import dev.olog.msc.presentation.app.widget.WidgetClasses
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.getAppWidgetsIdsFor
-import dev.olog.msc.utils.k.extension.unsubscribe
+import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject

@@ -14,7 +14,7 @@ import dev.olog.msc.domain.interactor.all.sibling.*
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.utils.k.extension.mapToList
+import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Observable
 
 @Module

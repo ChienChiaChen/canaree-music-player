@@ -8,8 +8,8 @@ import dev.olog.msc.domain.interactor.all.GetAllGenresUseCase
 import dev.olog.msc.domain.interactor.all.GetAllPlaylistsUseCase
 import dev.olog.msc.domain.interactor.all.GetAllPodcastUseCase
 import dev.olog.msc.domain.interactor.all.GetAllSongsUseCase
-import dev.olog.msc.utils.k.extension.asFlowable
-import dev.olog.msc.utils.k.extension.unsubscribe
+import dev.olog.msc.shared.extensions.asFlowable
+import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Flowables
 import javax.inject.Inject

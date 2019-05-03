@@ -23,11 +23,13 @@ import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.tutorial.TutorialTapTarget
-import dev.olog.msc.presentation.utils.lazyFast
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.presentation.widget.SwipeableView
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.isMarshmallow
+import dev.olog.msc.shared.extensions.mapToList
+import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.shared.utils.isMarshmallow
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Completable
 import io.reactivex.Observable

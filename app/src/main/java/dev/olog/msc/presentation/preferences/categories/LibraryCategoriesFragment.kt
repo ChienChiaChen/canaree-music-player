@@ -11,7 +11,7 @@ import dev.olog.msc.R
 import dev.olog.msc.presentation.base.BaseDialogFragment
 import dev.olog.msc.presentation.base.adapter.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.theme.ThemedDialog
-import dev.olog.msc.presentation.utils.lazyFast
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.ctx
 import dev.olog.msc.utils.k.extension.withArguments

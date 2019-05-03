@@ -15,8 +15,9 @@ import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.library.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.utils.ImeUtils
-import dev.olog.msc.presentation.utils.lazyFast
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
+import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_search.*

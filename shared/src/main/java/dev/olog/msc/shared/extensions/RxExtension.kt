@@ -1,8 +1,6 @@
-package dev.olog.msc.utils.k.extension
+package dev.olog.msc.shared.extensions
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams
-import dev.olog.msc.FlowableFirstThenDebounce
+import dev.olog.msc.shared.rx.operators.FlowableFirstThenDebounce
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -23,16 +21,7 @@ fun <T> Observable<T>.asFlowable(backpressureStrategy: BackpressureStrategy = Ba
     return this.toFlowable(backpressureStrategy)
 }
 
-fun <T> Flowable<T>.asLiveData() : LiveData<T> {
-    return LiveDataReactiveStreams.fromPublisher(this)
-}
 
-fun <T> Observable<T>.asLiveData(backpressureStrategy: BackpressureStrategy = BackpressureStrategy.LATEST)
-        : LiveData<T> {
-
-    return LiveDataReactiveStreams.fromPublisher(this.toFlowable(backpressureStrategy))
-
-}
 
 fun <T, R> Flowable<List<T>>.mapToList(mapper: (T) -> R): Flowable<List<R>> {
     return this.map { it.map { mapper(it) } }

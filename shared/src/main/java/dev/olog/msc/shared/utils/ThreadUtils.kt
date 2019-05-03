@@ -1,8 +1,8 @@
-package dev.olog.msc.utils
+package dev.olog.msc.shared.utils
 
 import android.os.Handler
 import android.os.Looper
-import dev.olog.msc.BuildConfig
+import dev.olog.msc.shared.BuildConfig
 
 private val handler = Handler(Looper.getMainLooper())
 fun isMainThread() = Looper.myLooper() == Looper.getMainLooper()

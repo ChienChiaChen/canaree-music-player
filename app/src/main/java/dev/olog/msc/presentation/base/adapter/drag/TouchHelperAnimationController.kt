@@ -7,7 +7,7 @@ import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import dev.olog.msc.R
-import dev.olog.msc.presentation.utils.lazyFast
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.utils.k.extension.setVisible
 import dev.olog.msc.utils.k.extension.toggleVisibility
 import kotlin.math.hypot

@@ -6,7 +6,7 @@ import androidx.room.Query
 import dev.olog.msc.data.entity.PlaylistMostPlayedEntity
 import dev.olog.msc.data.entity.SongMostTimesPlayedEntity
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.utils.k.extension.mapToList
+import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Flowable
 import io.reactivex.Observable
 

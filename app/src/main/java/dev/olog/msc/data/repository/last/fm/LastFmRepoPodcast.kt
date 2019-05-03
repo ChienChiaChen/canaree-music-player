@@ -14,7 +14,7 @@ import dev.olog.msc.core.entity.LastFmPodcast
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.utils.TextUtils
-import dev.olog.msc.utils.assertBackgroundThread
+import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

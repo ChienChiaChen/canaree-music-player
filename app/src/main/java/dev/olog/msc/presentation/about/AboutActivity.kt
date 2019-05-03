@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.R
 import dev.olog.msc.presentation.base.BaseActivity
 import dev.olog.msc.presentation.navigator.NavigatorAbout
-import dev.olog.msc.presentation.utils.lazyFast
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.utils.k.extension.subscribe
 import kotlinx.android.synthetic.main.activity_about.*

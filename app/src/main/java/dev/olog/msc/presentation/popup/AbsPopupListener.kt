@@ -12,7 +12,7 @@ import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.domain.interactor.all.GetPlaylistsBlockingUseCase
 import dev.olog.msc.domain.interactor.dialog.AddToPlaylistUseCase
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.utils.lazyFast
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.asHtml
 import dev.olog.msc.utils.k.extension.toast
@@ -25,8 +25,10 @@ abstract class AbsPopupListener(
 
 ) : PopupMenu.OnMenuItemClickListener {
 
-    val playlists by lazyFast { getPlaylistBlockingUseCase.execute(if (podcastPlaylist) PlaylistType.PODCAST
-                                                                    else PlaylistType.TRACK) }
+    val playlists by lazyFast {
+        getPlaylistBlockingUseCase.execute(if (podcastPlaylist) PlaylistType.PODCAST
+        else PlaylistType.TRACK)
+    }
 
     @SuppressLint("RxLeakedSubscription")
     protected fun onPlaylistSubItemClick(context: Context, itemId: Int, mediaId: MediaId, listSize: Int, title: String){

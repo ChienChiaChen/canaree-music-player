@@ -19,8 +19,8 @@ import dev.olog.msc.music.service.voice.VoiceSearch
 import dev.olog.msc.music.service.voice.VoiceSearchParams
 import dev.olog.msc.utils.ComparatorUtils
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.k.extension.clamp
-import dev.olog.msc.utils.k.extension.swap
+import dev.olog.msc.shared.utils.clamp
+import dev.olog.msc.shared.extensions.swap
 import dev.olog.msc.utils.safeCompare
 import io.reactivex.Single
 import io.reactivex.functions.Function

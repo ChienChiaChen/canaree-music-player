@@ -17,10 +17,11 @@ import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.detail.scroll.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.theme.AppTheme
-import dev.olog.msc.presentation.utils.lazyFast
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.presentation.widget.image.view.ShapeImageView
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.shared.extensions.deepCopy
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
@@ -50,7 +51,7 @@ class DetailFragment : BaseFragment() {
     private val recycledViewPool by lazyFast { RecyclerView.RecycledViewPool() }
 
     private val mediaId by lazyFast {
-        val mediaId = arguments!!.getString(DetailFragment.ARGUMENTS_MEDIA_ID)!!
+        val mediaId = arguments!!.getString(ARGUMENTS_MEDIA_ID)!!
         MediaId.fromString(mediaId)
     }
 
@@ -59,10 +60,12 @@ class DetailFragment : BaseFragment() {
     private val relatedArtistAdapter by lazyFast { DetailRelatedArtistsAdapter(lifecycle, navigator) }
     private val albumsAdapter by lazyFast { DetailAlbumsAdapter(lifecycle, navigator) }
 
-    private val adapter by lazyFast { DetailFragmentAdapter(
-            lifecycle, mediaId, recentlyAddedAdapter, mostPlayedAdapter, relatedArtistAdapter,
-            albumsAdapter, navigator, act as MediaProvider, viewModel, recycledViewPool
-    ) }
+    private val adapter by lazyFast {
+        DetailFragmentAdapter(
+                lifecycle, mediaId, recentlyAddedAdapter, mostPlayedAdapter, relatedArtistAdapter,
+                albumsAdapter, navigator, act as MediaProvider, viewModel, recycledViewPool
+        )
+    }
 
     internal var hasLightStatusBarColor by Delegates.observable(false) { _, _, new ->
         adjustStatusBarColor(new)

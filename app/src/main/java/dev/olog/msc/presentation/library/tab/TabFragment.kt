@@ -13,7 +13,7 @@ import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.parentViewModelProvider
-import dev.olog.msc.presentation.utils.lazyFast
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.presentation.widget.fast.scroller.WaveSideBarView
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.TextUtils
@@ -40,20 +40,22 @@ class TabFragment : BaseFragment() {
 
     private val lastAlbumsAdapter by lazyFast { TabHorizontalAdapters.getLastPlayedAlbums(this) }
     private val lastArtistsAdapter by lazyFast { TabHorizontalAdapters.getLastPlayedArtists(this) }
-    private val newAlbumsAdapter by lazyFast { TabHorizontalAdapters.getNewAlbums(this)  }
+    private val newAlbumsAdapter by lazyFast { TabHorizontalAdapters.getNewAlbums(this) }
     private val newArtistsAdapter by lazyFast { TabHorizontalAdapters.getNewArtists(this) }
 
     private val viewModel by lazyFast { parentViewModelProvider<TabFragmentViewModel>(viewModelFactory) }
 
     internal val category by lazyFast {
-        val ordinalCategory = arguments!!.getInt(TabFragment.ARGUMENTS_SOURCE)
+        val ordinalCategory = arguments!!.getInt(ARGUMENTS_SOURCE)
         MediaIdCategory.values()[ordinalCategory]
     }
 
-    private val adapter by lazyFast { TabFragmentAdapter(
-            lifecycle, navigator, act as MediaProvider, lastArtistsAdapter,lastAlbumsAdapter,
-            newAlbumsAdapter, newArtistsAdapter, viewModel
-    ) }
+    private val adapter by lazyFast {
+        TabFragmentAdapter(
+                lifecycle, navigator, act as MediaProvider, lastArtistsAdapter, lastAlbumsAdapter,
+                newAlbumsAdapter, newArtistsAdapter, viewModel
+        )
+    }
 
     private fun handleEmptyStateVisibility(isEmpty: Boolean){
         emptyStateText.toggleVisibility(isEmpty, true)

@@ -1,4 +1,4 @@
-package dev.olog.msc.utils
+package dev.olog.msc.shared.utils
 
 import android.os.Build
 

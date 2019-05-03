@@ -1,7 +1,12 @@
-package dev.olog.msc.utils.k.extension
+package dev.olog.msc.shared.extensions
 
 import android.util.LongSparseArray
-import androidx.core.util.forEach
+
+inline fun <T> LongSparseArray<T>.forEach(action: (key: Long, value: T) -> Unit) {
+    for (index in 0 until size()) {
+        action(keyAt(index), valueAt(index))
+    }
+}
 
 fun <T> LongSparseArray<T>.toList(): List<T>{
     val list = mutableListOf<T>()

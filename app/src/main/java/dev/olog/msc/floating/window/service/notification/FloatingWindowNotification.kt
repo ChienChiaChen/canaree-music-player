@@ -13,9 +13,9 @@ import dev.olog.msc.R
 import dev.olog.msc.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.floating.window.service.FloatingWindowService
-import dev.olog.msc.utils.isOreo
+import dev.olog.msc.shared.utils.isOreo
 import dev.olog.msc.utils.k.extension.asServicePendingIntent
-import dev.olog.msc.utils.k.extension.unsubscribe
+import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 

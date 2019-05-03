@@ -14,7 +14,7 @@ import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.PodcastPlaylistGateway
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.k.extension.mapToList
+import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single

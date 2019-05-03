@@ -27,7 +27,7 @@ import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.getString
 import dev.olog.msc.utils.img.ImagesFolderUtils
-import dev.olog.msc.utils.k.extension.debounceFirst
+import dev.olog.msc.shared.extensions.debounceFirst
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable

@@ -1,4 +1,4 @@
-package dev.olog.msc;
+package dev.olog.msc.shared.rx.operators;
 
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;

@@ -6,7 +6,7 @@ import dev.olog.msc.domain.interactor.all.*
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.track.*
-import dev.olog.msc.utils.k.extension.mapToList
+import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Single
 import javax.inject.Inject
 

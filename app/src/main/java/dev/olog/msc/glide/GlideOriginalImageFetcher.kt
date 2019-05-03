@@ -7,7 +7,7 @@ import com.bumptech.glide.load.data.DataFetcher
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.k.extension.unsubscribe
+import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
