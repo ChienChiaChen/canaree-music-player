@@ -1,8 +1,8 @@
 package dev.olog.msc.domain.interactor.all
 
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.domain.executors.ComputationScheduler
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.interactor.base.GetGroupUseCase
 import javax.inject.Inject
 

@@ -1,10 +1,10 @@
 package dev.olog.msc.domain.interactor.all.sorted
 
-import dev.olog.msc.domain.entity.Artist
-import dev.olog.msc.domain.entity.SortArranging
-import dev.olog.msc.domain.entity.SortType
+import dev.olog.msc.core.entity.track.Artist
+import dev.olog.msc.core.entity.sort.SortArranging
+import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.domain.executors.IoScheduler
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.interactor.all.GetAllArtistsUseCase
 import dev.olog.msc.domain.interactor.base.ObservableUseCase
 import dev.olog.msc.utils.safeCompare

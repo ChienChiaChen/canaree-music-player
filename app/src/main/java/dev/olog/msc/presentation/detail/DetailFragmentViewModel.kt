@@ -2,14 +2,14 @@ package dev.olog.msc.presentation.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import dev.olog.msc.domain.entity.SortArranging
-import dev.olog.msc.domain.entity.SortType
+import dev.olog.msc.core.entity.sort.SortArranging
+import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.domain.interactor.GetDetailTabsVisibilityUseCase
 import dev.olog.msc.domain.interactor.all.sorted.util.*
 import dev.olog.msc.presentation.detail.sort.DetailSort
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.utils.MediaId
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.asLiveData
 import dev.olog.msc.utils.k.extension.debounceFirst
 import io.reactivex.Completable

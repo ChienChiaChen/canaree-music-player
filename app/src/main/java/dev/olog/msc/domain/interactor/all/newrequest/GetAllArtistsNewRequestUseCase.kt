@@ -1,8 +1,8 @@
 package dev.olog.msc.domain.interactor.all.newrequest
 
-import dev.olog.msc.domain.entity.Artist
+import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.domain.executors.ComputationScheduler
-import dev.olog.msc.domain.gateway.ArtistGateway
+import dev.olog.msc.core.gateway.ArtistGateway
 import dev.olog.msc.domain.interactor.base.ObservableUseCase
 import io.reactivex.Observable
 import javax.inject.Inject

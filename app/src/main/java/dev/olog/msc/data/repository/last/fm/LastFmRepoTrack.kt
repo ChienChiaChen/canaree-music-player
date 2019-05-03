@@ -9,9 +9,9 @@ import dev.olog.msc.data.entity.LastFmTrackEntity
 import dev.olog.msc.data.mapper.LastFmNulls
 import dev.olog.msc.data.mapper.toDomain
 import dev.olog.msc.data.mapper.toModel
-import dev.olog.msc.domain.entity.LastFmTrack
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.entity.LastFmTrack
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.assertBackgroundThread
 import io.reactivex.Single

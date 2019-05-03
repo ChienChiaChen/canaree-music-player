@@ -6,7 +6,7 @@ import android.net.Uri
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.util.SparseArray
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.utils.getInt
 import dev.olog.msc.utils.getStringOrNull
 import java.io.File

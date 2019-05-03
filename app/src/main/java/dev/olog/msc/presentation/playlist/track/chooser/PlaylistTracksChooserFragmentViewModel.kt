@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import dev.olog.msc.domain.entity.PlaylistType
+import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.domain.interactor.all.GetAllPodcastUseCase
 import dev.olog.msc.domain.interactor.all.GetAllSongsUseCase
 import dev.olog.msc.domain.interactor.playlist.InsertCustomTrackListRequest
@@ -16,7 +16,7 @@ import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.playlist.track.chooser.model.PlaylistTrack
 import dev.olog.msc.presentation.playlist.track.chooser.model.toDisplayableItem
 import dev.olog.msc.presentation.playlist.track.chooser.model.toPlaylistTrack
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.asLiveData
 import dev.olog.msc.utils.k.extension.mapToList
 import dev.olog.msc.utils.k.extension.toList

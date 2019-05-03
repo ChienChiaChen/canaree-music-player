@@ -19,7 +19,7 @@ import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.R
 import dev.olog.msc.app.GlideApp
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.domain.gateway.prefs.TutorialPreferenceGateway
+import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.isLowMemoryDevice
 import dev.olog.msc.presentation.preferences.blacklist.BlacklistFragment
 import dev.olog.msc.presentation.preferences.categories.LibraryCategoriesFragment
@@ -27,7 +27,7 @@ import dev.olog.msc.presentation.preferences.last.fm.credentials.LastFmCredentia
 import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.theme.ThemedDialog
 import dev.olog.msc.presentation.utils.ColorPalette
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.img.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Completable

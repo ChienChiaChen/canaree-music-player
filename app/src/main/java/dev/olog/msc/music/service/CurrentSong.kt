@@ -5,11 +5,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.dagger.scope.PerService
-import dev.olog.msc.domain.entity.FavoriteEnum
-import dev.olog.msc.domain.entity.FavoriteStateEntity
-import dev.olog.msc.domain.entity.FavoriteType
-import dev.olog.msc.domain.entity.LastMetadata
-import dev.olog.msc.domain.gateway.prefs.MusicPreferencesGateway
+import dev.olog.msc.core.entity.favorite.FavoriteEnum
+import dev.olog.msc.core.entity.favorite.FavoriteStateEntity
+import dev.olog.msc.core.entity.favorite.FavoriteType
+import dev.olog.msc.core.entity.LastMetadata
+import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.domain.interactor.all.last.played.InsertLastPlayedAlbumUseCase
 import dev.olog.msc.domain.interactor.all.last.played.InsertLastPlayedArtistUseCase
 import dev.olog.msc.domain.interactor.all.most.played.InsertMostPlayedUseCase
@@ -18,7 +18,7 @@ import dev.olog.msc.domain.interactor.favorite.UpdateFavoriteStateUseCase
 import dev.olog.msc.domain.interactor.playing.queue.InsertHistorySongUseCase
 import dev.olog.msc.music.service.interfaces.PlayerLifecycle
 import dev.olog.msc.music.service.model.MediaEntity
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.unsubscribe
 import io.reactivex.Maybe
 import io.reactivex.disposables.CompositeDisposable

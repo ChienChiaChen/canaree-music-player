@@ -7,13 +7,13 @@ import android.content.Intent
 import android.widget.PopupMenu
 import dev.olog.msc.FileProvider
 import dev.olog.msc.R
-import dev.olog.msc.domain.entity.PlaylistType
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.domain.interactor.all.GetPlaylistsBlockingUseCase
 import dev.olog.msc.domain.interactor.dialog.AddToPlaylistUseCase
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.utils.lazyFast
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.asHtml
 import dev.olog.msc.utils.k.extension.toast
 import io.reactivex.android.schedulers.AndroidSchedulers

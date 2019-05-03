@@ -1,13 +1,12 @@
 package dev.olog.msc.data.repository
 
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.entity.PlayingQueueSong
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.PlayingQueueGateway
+import dev.olog.msc.core.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.data.db.AppDatabase
-import dev.olog.msc.domain.entity.PlayingQueueSong
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.gateway.PlayingQueueGateway
-import dev.olog.msc.domain.gateway.PodcastGateway
-import dev.olog.msc.domain.gateway.SongGateway
-import dev.olog.msc.domain.interactor.playing.queue.UpdatePlayingQueueUseCaseRequest
-import dev.olog.msc.utils.MediaId
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -41,7 +40,7 @@ class PlayingQueueRepository @Inject constructor(
         )
     }
 
-    override fun update(list: List<UpdatePlayingQueueUseCaseRequest>): Completable {
+    override fun update(list: List<Triple<MediaId, Long, Int>>): Completable {
         return playingQueueDao.insert(list)
     }
 

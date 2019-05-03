@@ -1,9 +1,9 @@
 package dev.olog.msc.domain.interactor.search.delete
 
 import dev.olog.msc.domain.executors.IoScheduler
-import dev.olog.msc.domain.gateway.RecentSearchesGateway
+import dev.olog.msc.core.gateway.RecentSearchesGateway
 import dev.olog.msc.domain.interactor.base.CompletableUseCaseWithParam
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import io.reactivex.Completable
 import javax.inject.Inject
 

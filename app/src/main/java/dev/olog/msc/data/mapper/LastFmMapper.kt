@@ -5,8 +5,8 @@ import dev.olog.msc.api.last.fm.album.search.AlbumSearch
 import dev.olog.msc.api.last.fm.artist.info.ArtistInfo
 import dev.olog.msc.api.last.fm.track.info.TrackInfo
 import dev.olog.msc.api.last.fm.track.search.TrackSearch
+import dev.olog.msc.core.entity.*
 import dev.olog.msc.data.entity.*
-import dev.olog.msc.domain.entity.*
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,10 +1,10 @@
 package dev.olog.msc.domain.interactor.all.sibling
 
-import dev.olog.msc.domain.entity.Folder
+import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.domain.executors.IoScheduler
-import dev.olog.msc.domain.gateway.FolderGateway
+import dev.olog.msc.core.gateway.FolderGateway
 import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import io.reactivex.Observable
 import javax.inject.Inject
 

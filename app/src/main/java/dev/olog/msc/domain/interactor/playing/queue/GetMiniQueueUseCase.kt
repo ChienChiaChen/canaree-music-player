@@ -1,8 +1,8 @@
 package dev.olog.msc.domain.interactor.playing.queue
 
-import dev.olog.msc.domain.entity.PlayingQueueSong
+import dev.olog.msc.core.entity.PlayingQueueSong
 import dev.olog.msc.domain.executors.IoScheduler
-import dev.olog.msc.domain.gateway.PlayingQueueGateway
+import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.domain.interactor.base.SingleUseCase
 import io.reactivex.Single
 import javax.inject.Inject

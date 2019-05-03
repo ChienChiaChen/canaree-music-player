@@ -7,10 +7,10 @@ import dagger.multibindings.IntoMap
 import dev.olog.msc.R
 import dev.olog.msc.app.app
 import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.PodcastAlbum
-import dev.olog.msc.domain.entity.PodcastArtist
-import dev.olog.msc.domain.entity.PodcastPlaylist
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.podcast.PodcastAlbum
+import dev.olog.msc.core.entity.podcast.PodcastArtist
+import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.domain.interactor.all.*
 import dev.olog.msc.domain.interactor.all.last.played.GetLastPlayedPodcastAlbumsUseCase
 import dev.olog.msc.domain.interactor.all.last.played.GetLastPlayedPodcastArtistsUseCase
@@ -18,8 +18,8 @@ import dev.olog.msc.domain.interactor.all.recently.added.GetRecentlyAddedPodcast
 import dev.olog.msc.domain.interactor.all.recently.added.GetRecentlyAddedPodcastsArtistsUseCase
 import dev.olog.msc.presentation.library.tab.TabFragmentHeaders
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.utils.MediaId
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable

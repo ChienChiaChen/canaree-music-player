@@ -3,7 +3,7 @@ package dev.olog.msc.data.db
 import androidx.room.*
 import dev.olog.msc.data.entity.FavoriteEntity
 import dev.olog.msc.data.entity.FavoritePodcastEntity
-import dev.olog.msc.domain.entity.FavoriteType
+import dev.olog.msc.core.entity.favorite.FavoriteType
 import io.reactivex.Completable
 import io.reactivex.Flowable
 

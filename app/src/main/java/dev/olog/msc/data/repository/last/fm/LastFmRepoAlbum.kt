@@ -8,9 +8,9 @@ import dev.olog.msc.data.entity.LastFmAlbumEntity
 import dev.olog.msc.data.mapper.LastFmNulls
 import dev.olog.msc.data.mapper.toDomain
 import dev.olog.msc.data.mapper.toModel
-import dev.olog.msc.domain.entity.Album
-import dev.olog.msc.domain.entity.LastFmAlbum
-import dev.olog.msc.domain.gateway.AlbumGateway
+import dev.olog.msc.core.entity.track.Album
+import dev.olog.msc.core.entity.LastFmAlbum
+import dev.olog.msc.core.gateway.AlbumGateway
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

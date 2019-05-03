@@ -3,10 +3,10 @@ package dev.olog.msc.music.service
 import android.net.Uri
 import android.os.Bundle
 import dev.olog.msc.constants.MusicConstants
-import dev.olog.msc.domain.entity.SortArranging
-import dev.olog.msc.domain.entity.SortType
-import dev.olog.msc.domain.gateway.GenreGateway
-import dev.olog.msc.domain.gateway.prefs.MusicPreferencesGateway
+import dev.olog.msc.core.entity.sort.SortArranging
+import dev.olog.msc.core.entity.sort.SortType
+import dev.olog.msc.core.gateway.GenreGateway
+import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.domain.interactor.PodcastPositionUseCase
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
 import dev.olog.msc.domain.interactor.all.most.played.GetMostPlayedSongsUseCase
@@ -18,7 +18,7 @@ import dev.olog.msc.music.service.model.*
 import dev.olog.msc.music.service.voice.VoiceSearch
 import dev.olog.msc.music.service.voice.VoiceSearchParams
 import dev.olog.msc.utils.ComparatorUtils
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.clamp
 import dev.olog.msc.utils.k.extension.swap
 import dev.olog.msc.utils.safeCompare
@@ -188,7 +188,7 @@ class QueueManager @Inject constructor(
     }
 
     override fun handlePlayFromUri(uri: Uri): Single<PlayerMediaEntity> {
-        return getSongByFileUseCase.execute(uri)
+        return getSongByFileUseCase.execute(uri.toString())
                 .delay(500, TimeUnit.MILLISECONDS)
                 .map { it.toMediaEntity(0, MediaId.songId(it.id)) }
                 .map { listOf(it) }

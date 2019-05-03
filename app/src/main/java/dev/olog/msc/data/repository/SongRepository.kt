@@ -19,10 +19,10 @@ import dev.olog.msc.data.mapper.toFakeSong
 import dev.olog.msc.data.mapper.toSong
 import dev.olog.msc.data.mapper.toUneditedSong
 import dev.olog.msc.data.repository.util.CommonQuery
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.gateway.SongGateway
-import dev.olog.msc.domain.gateway.UsedImageGateway
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.gateway.UsedImageGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.getString
@@ -110,11 +110,13 @@ class SongRepository @Inject constructor(
     private fun mockDataIfNeeded(original: List<Song>): List<Song> {
         if (AppConstants.useFakeData && original.isEmpty()){
             return (0 until 50)
-                    .map { Song(it.toLong(), it.toLong(), it.toLong(),
-                            "An awesome title", "An awesome artist",
-                            "An awesome album artist", "An awesome album",
-                            "", (it * 1000000).toLong(), System.currentTimeMillis(),
-                            "storage/emulated/folder", "folder", -1, -1) }
+                    .map {
+                        Song(it.toLong(), it.toLong(), it.toLong(),
+                                "An awesome title", "An awesome artist",
+                                "An awesome album artist", "An awesome album",
+                                "", (it * 1000000).toLong(), System.currentTimeMillis(),
+                                "storage/emulated/folder", "folder", -1, -1)
+                    }
         }
         return original
     }
@@ -154,8 +156,8 @@ class SongRepository @Inject constructor(
     }
 
     @SuppressLint("Recycle")
-    override fun getByUri(uri: Uri): Single<Song> {
-        return Single.fromCallable { getByUriInternal(uri) }
+    override fun getByUri(uri: String): Single<Song> {
+        return Single.fromCallable { getByUriInternal(Uri.parse(uri)) }
                 .map { it.toLong() }
                 .flatMap { getByParam(it).firstOrError() }
     }

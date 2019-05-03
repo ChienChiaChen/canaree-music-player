@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.dialog.clear.playlist
 
 import dev.olog.msc.domain.interactor.dialog.ClearPlaylistUseCase
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import io.reactivex.Completable
 import javax.inject.Inject
 

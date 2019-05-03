@@ -1,10 +1,10 @@
 package dev.olog.msc.music.service.voice
 
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.gateway.GenreGateway
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.GenreGateway
 import dev.olog.msc.music.service.model.MediaEntity
 import dev.olog.msc.music.service.model.toMediaEntity
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import io.reactivex.Observable
 import io.reactivex.Single
 

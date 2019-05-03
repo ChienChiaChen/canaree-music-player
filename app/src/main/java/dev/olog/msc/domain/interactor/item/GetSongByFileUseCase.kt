@@ -1,9 +1,8 @@
 package dev.olog.msc.domain.interactor.item
 
-import android.net.Uri
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.executors.IoScheduler
-import dev.olog.msc.domain.gateway.SongGateway
 import dev.olog.msc.domain.interactor.base.SingleUseCaseWithParam
 import io.reactivex.Single
 import javax.inject.Inject
@@ -12,10 +11,10 @@ class GetSongByFileUseCase @Inject internal constructor(
         schedulers: IoScheduler,
         private val gateway: SongGateway
 
-) : SingleUseCaseWithParam<Song, Uri>(schedulers) {
+) : SingleUseCaseWithParam<Song, String>(schedulers) {
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(uri: Uri): Single<Song> {
+    override fun buildUseCaseObservable(uri: String): Single<Song> {
         return gateway.getByUri(uri)
     }
 }

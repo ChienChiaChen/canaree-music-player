@@ -4,10 +4,10 @@ import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.UsedAlbumImageEntity
 import dev.olog.msc.data.entity.UsedArtistImageEntity
 import dev.olog.msc.data.entity.UsedTrackImageEntity
-import dev.olog.msc.domain.entity.UsedAlbumImage
-import dev.olog.msc.domain.entity.UsedArtistImage
-import dev.olog.msc.domain.entity.UsedTrackImage
-import dev.olog.msc.domain.gateway.UsedImageGateway
+import dev.olog.msc.core.entity.UsedAlbumImage
+import dev.olog.msc.core.entity.UsedArtistImage
+import dev.olog.msc.core.entity.UsedTrackImage
+import dev.olog.msc.core.gateway.UsedImageGateway
 import javax.inject.Inject
 
 class UsedImageRepository @Inject constructor(

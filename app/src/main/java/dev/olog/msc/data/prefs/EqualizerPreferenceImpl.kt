@@ -2,7 +2,7 @@ package dev.olog.msc.data.prefs
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import dev.olog.msc.domain.gateway.prefs.EqualizerPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
 import io.reactivex.Completable
 import javax.inject.Inject
 

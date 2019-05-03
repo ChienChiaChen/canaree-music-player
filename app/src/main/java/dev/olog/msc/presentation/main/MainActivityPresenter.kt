@@ -1,6 +1,6 @@
 package dev.olog.msc.presentation.main
 
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.interactor.IsRepositoryEmptyUseCase
 import javax.inject.Inject
 

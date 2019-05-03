@@ -1,6 +1,6 @@
 package dev.olog.msc.domain.interactor.prefs
 
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import javax.inject.Inject
 
 class SleepTimerUseCase @Inject constructor(private val gateway: AppPreferencesGateway){

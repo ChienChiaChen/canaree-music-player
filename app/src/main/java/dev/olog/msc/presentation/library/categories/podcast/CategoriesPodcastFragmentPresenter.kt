@@ -1,6 +1,6 @@
 package dev.olog.msc.presentation.library.categories.podcast
 
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.utils.k.extension.clamp
 import javax.inject.Inject
 

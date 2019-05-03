@@ -5,11 +5,11 @@ import dev.olog.msc.dagger.qualifier.ApplicationContext
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.FolderMostPlayedEntity
 import dev.olog.msc.data.mapper.toFolder
-import dev.olog.msc.domain.entity.Folder
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.gateway.FolderGateway
-import dev.olog.msc.domain.gateway.SongGateway
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.entity.track.Folder
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.FolderGateway
+import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.safeCompare
 import io.reactivex.Completable
 import io.reactivex.CompletableSource

@@ -2,8 +2,8 @@ package dev.olog.msc.data.repository
 
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.db.RecentSearchesDao
-import dev.olog.msc.domain.entity.SearchResult
-import dev.olog.msc.domain.gateway.*
+import dev.olog.msc.core.entity.SearchResult
+import dev.olog.msc.core.gateway.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject

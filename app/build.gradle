@@ -96,6 +96,11 @@ android {
 dependencies {
     implementation files('libs/jaudiotagger-android-2.2.3.jar')
 
+    implementation project(':core')
+    implementation project(':shared')
+    implementation project(':traceur')
+    implementation project(':taptargetview')
+
     // data binding
     kapt "androidx.databinding:databinding-compiler:$gradle_plugin"
 
@@ -149,11 +154,11 @@ dependencies {
 
     // other
     implementation "com.sothree.slidinguppanel:library:$rootProject.sliding_panel"
-//    implementation 'com.google.android.exoplayer:exoplayer-core:2.9.0'
-    implementation project(':exoplayer-library-core')
-    implementation project(':exoplayer-extension-flac')
-    implementation project(':exoplayer-extension-opus')
-    implementation project(':exoplayer-extension-ffmpeg')
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.9.6'
+//    implementation project(':exoplayer-library-core')
+//    implementation project(':exoplayer-extension-flac')
+//    implementation project(':exoplayer-extension-opus')
+//    implementation project(':exoplayer-extension-ffmpeg')
     implementation "com.airbnb.android:lottie:$rootProject.lottie"
 
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"

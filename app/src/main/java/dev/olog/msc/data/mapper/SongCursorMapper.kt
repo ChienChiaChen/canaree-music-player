@@ -4,7 +4,7 @@ import android.database.Cursor
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import androidx.core.database.getStringOrNull
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.utils.getInt
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.getString

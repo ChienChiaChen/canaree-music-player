@@ -7,7 +7,7 @@ import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.pro.IBilling
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.asLiveData
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.withLatestFrom

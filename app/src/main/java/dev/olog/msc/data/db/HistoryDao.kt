@@ -6,8 +6,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import dev.olog.msc.data.entity.HistoryEntity
 import dev.olog.msc.data.entity.PodcastHistoryEntity
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.track.Song
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable

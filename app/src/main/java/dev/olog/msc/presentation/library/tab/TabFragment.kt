@@ -6,8 +6,8 @@ import androidx.annotation.CallSuper
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.R
-import dev.olog.msc.domain.entity.PlaylistType
-import dev.olog.msc.domain.entity.SortType
+import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.model.DisplayableItem
@@ -15,7 +15,7 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.parentViewModelProvider
 import dev.olog.msc.presentation.utils.lazyFast
 import dev.olog.msc.presentation.widget.fast.scroller.WaveSideBarView
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_tab.*

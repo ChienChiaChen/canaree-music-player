@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.library.folder.tree
 
 import dev.olog.msc.presentation.base.BaseModel
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import java.io.File
 
 data class DisplayableFile(

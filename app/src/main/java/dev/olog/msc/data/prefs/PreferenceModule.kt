@@ -9,10 +9,10 @@ import dagger.Module
 import dagger.Provides
 import dev.olog.msc.dagger.qualifier.ApplicationContext
 import dev.olog.msc.data.prefs.app.AppPreferencesImpl
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.domain.gateway.prefs.EqualizerPreferencesGateway
-import dev.olog.msc.domain.gateway.prefs.MusicPreferencesGateway
-import dev.olog.msc.domain.gateway.prefs.TutorialPreferenceGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import javax.inject.Singleton
 
 @Module(includes = [PreferenceModule.Bindings::class])

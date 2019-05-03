@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.dialog.remove.duplicates
 
 import dev.olog.msc.domain.interactor.dialog.RemoveDuplicatesUseCase
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import io.reactivex.Completable
 import javax.inject.Inject
 

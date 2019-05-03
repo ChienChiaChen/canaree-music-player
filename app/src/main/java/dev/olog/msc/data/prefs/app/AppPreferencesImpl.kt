@@ -7,11 +7,11 @@ import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.R
 import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.domain.entity.LibraryCategoryBehavior
-import dev.olog.msc.domain.entity.UserCredentials
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.domain.gateway.prefs.Sorting
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.entity.LibraryCategoryBehavior
+import dev.olog.msc.core.entity.UserCredentials
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.Sorting
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.safeGetCanonicalPath
 import io.reactivex.Completable
 import io.reactivex.Observable

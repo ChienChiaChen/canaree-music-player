@@ -1,12 +1,12 @@
 package dev.olog.msc.presentation.edit.artist
 
-import dev.olog.msc.domain.entity.Artist
-import dev.olog.msc.domain.entity.PodcastArtist
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.track.Artist
+import dev.olog.msc.core.entity.podcast.PodcastArtist
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
 import dev.olog.msc.domain.interactor.item.GetArtistUseCase
 import dev.olog.msc.domain.interactor.item.GetPodcastArtistUseCase
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import io.reactivex.Single
 import javax.inject.Inject
 

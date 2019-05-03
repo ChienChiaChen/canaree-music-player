@@ -9,14 +9,14 @@ import android.widget.PopupMenu
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
 import dev.olog.msc.app.app
-import dev.olog.msc.domain.entity.LibrarySortType
-import dev.olog.msc.domain.entity.SortArranging
-import dev.olog.msc.domain.entity.SortType
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.entity.sort.LibrarySortType
+import dev.olog.msc.core.entity.sort.SortArranging
+import dev.olog.msc.core.entity.sort.SortType
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
-import dev.olog.msc.utils.MediaId
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import javax.inject.Inject
 
 

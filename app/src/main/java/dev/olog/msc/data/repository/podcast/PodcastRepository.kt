@@ -15,9 +15,9 @@ import dev.olog.msc.data.mapper.toFakePodcast
 import dev.olog.msc.data.mapper.toPodcast
 import dev.olog.msc.data.mapper.toUneditedPodcast
 import dev.olog.msc.data.repository.util.CommonQuery
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.gateway.PodcastGateway
-import dev.olog.msc.domain.gateway.UsedImageGateway
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.img.ImagesFolderUtils
@@ -85,11 +85,13 @@ class PodcastRepository @Inject constructor(
     private fun mockDataIfNeeded(original: List<Podcast>): List<Podcast> {
         if (AppConstants.useFakeData && original.isEmpty()){
             return (0 until 50)
-                    .map { Podcast(it.toLong(), it.toLong(), it.toLong(),
-                            "An awesome title", "An awesome artist",
-                            "An awesome album artist", "An awesome album",
-                            "", (it * 1000000).toLong(), System.currentTimeMillis(),
-                            "storage/emulated/folder", "folder", -1, -1) }
+                    .map {
+                        Podcast(it.toLong(), it.toLong(), it.toLong(),
+                                "An awesome title", "An awesome artist",
+                                "An awesome album artist", "An awesome album",
+                                "", (it * 1000000).toLong(), System.currentTimeMillis(),
+                                "storage/emulated/folder", "folder", -1, -1)
+                    }
         }
         return original
     }

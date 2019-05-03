@@ -2,10 +2,14 @@ package dev.olog.msc.data.repository
 
 import android.annotation.SuppressLint
 import dev.olog.msc.data.db.AppDatabase
-import dev.olog.msc.domain.entity.*
-import dev.olog.msc.domain.gateway.FavoriteGateway
-import dev.olog.msc.domain.gateway.PodcastGateway
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.entity.favorite.FavoriteEnum
+import dev.olog.msc.core.entity.favorite.FavoriteStateEntity
+import dev.olog.msc.core.entity.favorite.FavoriteType
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.FavoriteGateway
+import dev.olog.msc.core.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.utils.safeCompare
 import io.reactivex.Completable
 import io.reactivex.Observable

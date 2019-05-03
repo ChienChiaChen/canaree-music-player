@@ -4,14 +4,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.entity.PlayingQueueSong
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.data.entity.MiniQueueEntity
 import dev.olog.msc.data.entity.PlayingQueueEntity
-import dev.olog.msc.domain.entity.PlayingQueueSong
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.interactor.playing.queue.UpdatePlayingQueueUseCaseRequest
-import dev.olog.msc.utils.MediaId
-import dev.olog.msc.utils.MediaIdCategory
 import io.reactivex.*
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.schedulers.Schedulers
@@ -115,7 +114,7 @@ abstract class PlayingQueueDao {
                 } }
     }
 
-    fun insert(list: List<UpdatePlayingQueueUseCaseRequest>) : Completable {
+    fun insert(list: List<Triple<MediaId, Long, Int>>) : Completable {
 
         return Single.fromCallable { deleteAllImpl() }
                 .map { list.map {

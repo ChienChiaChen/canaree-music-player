@@ -9,9 +9,9 @@ import dev.olog.msc.data.entity.LastFmArtistEntity
 import dev.olog.msc.data.mapper.LastFmNulls
 import dev.olog.msc.data.mapper.toDomain
 import dev.olog.msc.data.mapper.toModel
-import dev.olog.msc.domain.entity.Artist
-import dev.olog.msc.domain.entity.LastFmArtist
-import dev.olog.msc.domain.gateway.ArtistGateway
+import dev.olog.msc.core.entity.track.Artist
+import dev.olog.msc.core.entity.LastFmArtist
+import dev.olog.msc.core.gateway.ArtistGateway
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

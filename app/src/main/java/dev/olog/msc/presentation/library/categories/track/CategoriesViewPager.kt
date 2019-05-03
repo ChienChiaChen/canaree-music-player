@@ -6,10 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import dev.olog.msc.R
-import dev.olog.msc.domain.entity.LibraryCategoryBehavior
+import dev.olog.msc.asString
+import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.presentation.library.folder.tree.FolderTreeFragment
 import dev.olog.msc.presentation.library.tab.TabFragment
-import dev.olog.msc.utils.MediaIdCategory
 
 class CategoriesViewPager(
         private val context: Context,

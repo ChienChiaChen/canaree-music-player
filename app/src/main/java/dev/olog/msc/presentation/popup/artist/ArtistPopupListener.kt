@@ -4,15 +4,15 @@ import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
 import dev.olog.msc.app.shortcuts.AppShortcuts
-import dev.olog.msc.domain.entity.Artist
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.track.Artist
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.domain.interactor.all.GetPlaylistsBlockingUseCase
 import dev.olog.msc.domain.interactor.dialog.AddToPlaylistUseCase
 import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import javax.inject.Inject
 
 class ArtistPopupListener @Inject constructor(

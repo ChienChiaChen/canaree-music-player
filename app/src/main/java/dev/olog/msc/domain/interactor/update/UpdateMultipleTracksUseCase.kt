@@ -1,10 +1,10 @@
 package dev.olog.msc.domain.interactor.update
 
 import dev.olog.msc.app.IoSchedulers
-import dev.olog.msc.domain.gateway.UsedImageGateway
+import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
 import dev.olog.msc.domain.interactor.base.CompletableUseCaseWithParam
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import io.reactivex.Completable
 import io.reactivex.Observable
 import org.jaudiotagger.tag.FieldKey

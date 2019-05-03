@@ -5,17 +5,16 @@ import androidx.annotation.CheckResult
 import androidx.annotation.MainThread
 import com.crashlytics.android.Crashlytics
 import dev.olog.msc.constants.PlaylistConstants.MINI_QUEUE_SIZE
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.gateway.prefs.MusicPreferencesGateway
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
 import dev.olog.msc.domain.interactor.item.GetSongUseCase
 import dev.olog.msc.domain.interactor.playing.queue.UpdatePlayingQueueUseCase
-import dev.olog.msc.domain.interactor.playing.queue.UpdatePlayingQueueUseCaseRequest
 import dev.olog.msc.music.service.model.MediaEntity
 import dev.olog.msc.music.service.model.PositionInQueue
 import dev.olog.msc.music.service.model.toMediaEntity
-import dev.olog.msc.utils.MediaId
 import dev.olog.msc.utils.assertMainThread
 import dev.olog.msc.utils.k.extension.clamp
 import dev.olog.msc.utils.k.extension.swap
@@ -63,7 +62,7 @@ class QueueImpl @Inject constructor(
                 .flattenAsObservable { it }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .map { UpdatePlayingQueueUseCaseRequest(it.mediaId, it.id, it.idInPlaylist) }
+                .map { Triple(it.mediaId, it.id, it.idInPlaylist) }
                 .toList()
                 .flatMapCompletable { updatePlayingQueueUseCase.execute(it) }
                 .subscribe({}, Throwable::printStackTrace)

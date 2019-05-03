@@ -1,9 +1,9 @@
 package dev.olog.msc.domain.interactor.all.last.played
 
-import dev.olog.msc.domain.entity.Artist
+import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.domain.executors.ComputationScheduler
-import dev.olog.msc.domain.gateway.ArtistGateway
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.ArtistGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.interactor.base.ObservableUseCase
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables

@@ -2,8 +2,8 @@ package dev.olog.msc.data.repository.lyrics
 
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.OfflineLyricsEntity
-import dev.olog.msc.domain.entity.OfflineLyrics
-import dev.olog.msc.domain.gateway.OfflineLyricsGateway
+import dev.olog.msc.core.entity.OfflineLyrics
+import dev.olog.msc.core.gateway.OfflineLyricsGateway
 import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject

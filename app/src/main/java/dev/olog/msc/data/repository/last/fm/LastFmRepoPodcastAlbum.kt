@@ -9,9 +9,9 @@ import dev.olog.msc.data.mapper.LastFmNulls
 import dev.olog.msc.data.mapper.toDomain
 import dev.olog.msc.data.mapper.toModel
 import dev.olog.msc.data.mapper.toPodcastDomain
-import dev.olog.msc.domain.entity.LastFmPodcastAlbum
-import dev.olog.msc.domain.entity.PodcastAlbum
-import dev.olog.msc.domain.gateway.PodcastAlbumGateway
+import dev.olog.msc.core.entity.LastFmPodcastAlbum
+import dev.olog.msc.core.entity.podcast.PodcastAlbum
+import dev.olog.msc.core.gateway.PodcastAlbumGateway
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

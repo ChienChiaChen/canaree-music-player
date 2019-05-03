@@ -1,0 +1,14 @@
+apply plugin: 'kotlin'
+
+dependencies {
+    // kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    // rx
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rx_java"
+
+    implementation "com.github.dmstocking:support-optional:$rootProject.optional_lib"
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"

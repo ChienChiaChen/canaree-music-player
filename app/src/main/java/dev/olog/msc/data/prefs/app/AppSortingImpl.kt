@@ -3,10 +3,10 @@ package dev.olog.msc.data.prefs.app
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import dev.olog.msc.domain.entity.LibrarySortType
-import dev.olog.msc.domain.entity.SortArranging
-import dev.olog.msc.domain.entity.SortType
-import dev.olog.msc.domain.gateway.prefs.Sorting
+import dev.olog.msc.core.entity.sort.LibrarySortType
+import dev.olog.msc.core.entity.sort.SortArranging
+import dev.olog.msc.core.entity.sort.SortType
+import dev.olog.msc.core.gateway.prefs.Sorting
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables

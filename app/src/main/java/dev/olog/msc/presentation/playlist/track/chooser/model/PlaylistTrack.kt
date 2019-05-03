@@ -1,10 +1,10 @@
 package dev.olog.msc.presentation.playlist.track.chooser.model
 
 import dev.olog.msc.R
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import java.io.File
 
 data class PlaylistTrack (

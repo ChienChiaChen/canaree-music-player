@@ -3,7 +3,7 @@ package dev.olog.msc.presentation.image.creation
 import android.content.Context
 import android.provider.MediaStore
 import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.domain.interactor.all.newrequest.GetAllSongsNewRequestUseCase
 import dev.olog.msc.presentation.image.creation.impl.MergedImagesCreator
 import dev.olog.msc.utils.assertBackgroundThread

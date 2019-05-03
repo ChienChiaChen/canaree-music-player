@@ -1,10 +1,10 @@
 package dev.olog.msc.domain.interactor.item
 
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.domain.executors.IoScheduler
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import io.reactivex.Observable
 import javax.inject.Inject
 

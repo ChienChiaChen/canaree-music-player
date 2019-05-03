@@ -11,7 +11,7 @@ import de.umass.lastfm.scrobble.ScrobbleData
 import dev.olog.msc.api.last.fm.LAST_FM_API_KEY
 import dev.olog.msc.api.last.fm.LAST_FM_API_SECRET
 import dev.olog.msc.dagger.qualifier.ServiceLifecycle
-import dev.olog.msc.domain.entity.UserCredentials
+import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.domain.interactor.last.fm.scrobble.ObserveLastFmUserCredentials
 import dev.olog.msc.music.service.interfaces.PlayerLifecycle
 import dev.olog.msc.music.service.model.MediaEntity

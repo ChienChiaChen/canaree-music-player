@@ -10,9 +10,9 @@ import dev.olog.msc.data.mapper.LastFmNulls
 import dev.olog.msc.data.mapper.toDomain
 import dev.olog.msc.data.mapper.toDomainPodcast
 import dev.olog.msc.data.mapper.toModel
-import dev.olog.msc.domain.entity.LastFmPodcast
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.gateway.PodcastGateway
+import dev.olog.msc.core.entity.LastFmPodcast
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.assertBackgroundThread
 import io.reactivex.Single

@@ -5,7 +5,7 @@ import android.os.Bundle
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.presentation.base.BaseModel
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 
 data class DisplayableItem (
         override val type: Int,

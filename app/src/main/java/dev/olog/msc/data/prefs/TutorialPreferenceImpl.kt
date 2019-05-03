@@ -3,7 +3,7 @@ package dev.olog.msc.data.prefs
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import dev.olog.msc.domain.gateway.prefs.TutorialPreferenceGateway
+import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

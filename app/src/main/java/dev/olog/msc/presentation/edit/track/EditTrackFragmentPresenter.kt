@@ -2,15 +2,15 @@ package dev.olog.msc.presentation.edit.track
 
 import com.github.dmstocking.optional.java.util.Optional
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.domain.entity.LastFmTrack
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.gateway.UsedImageGateway
+import dev.olog.msc.core.entity.LastFmTrack
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
 import dev.olog.msc.domain.interactor.item.GetUneditedSongUseCase
 import dev.olog.msc.domain.interactor.last.fm.GetLastFmTrackUseCase
 import dev.olog.msc.domain.interactor.last.fm.LastFmTrackRequest
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.get
 import io.reactivex.Single
 import org.jaudiotagger.audio.AudioFileIO

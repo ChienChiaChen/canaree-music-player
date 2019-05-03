@@ -1,8 +1,8 @@
 package dev.olog.msc.data.repository.last.fm
 
 import com.github.dmstocking.optional.java.util.Optional
-import dev.olog.msc.domain.entity.*
-import dev.olog.msc.domain.gateway.LastFmGateway
+import dev.olog.msc.core.entity.*
+import dev.olog.msc.core.gateway.LastFmGateway
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.schedulers.Schedulers

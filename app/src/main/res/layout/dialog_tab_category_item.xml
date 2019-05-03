@@ -3,12 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="item"
-            type="dev.olog.msc.domain.entity.LibraryCategoryBehavior"/>
-    </data>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -25,10 +19,8 @@
                 android:layout_height="match_parent"
                 tools:text="Songs"
                 android:textColor="?android:attr/textColorPrimary"
-                android:text="@{item.asString(context)}"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:checked="@{item.visible}"
                 android:textSize="16dp"
                 android:clickable="false"
                 android:focusable="false"/>

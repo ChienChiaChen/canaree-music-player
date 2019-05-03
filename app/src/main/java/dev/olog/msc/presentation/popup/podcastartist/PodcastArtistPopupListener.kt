@@ -4,16 +4,16 @@ import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
 import dev.olog.msc.app.shortcuts.AppShortcuts
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.PodcastArtist
-import dev.olog.msc.domain.entity.toSong
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.podcast.PodcastArtist
+import dev.olog.msc.core.entity.podcast.toSong
 import dev.olog.msc.domain.interactor.all.GetPlaylistsBlockingUseCase
 import dev.olog.msc.domain.interactor.dialog.AddToPlaylistUseCase
 import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import javax.inject.Inject
 
 class PodcastArtistPopupListener @Inject constructor(

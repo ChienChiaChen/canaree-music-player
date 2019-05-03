@@ -5,8 +5,8 @@ import android.database.Cursor
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import dev.olog.msc.data.entity.PlaylistSongEntity
-import dev.olog.msc.domain.entity.Genre
-import dev.olog.msc.domain.entity.Playlist
+import dev.olog.msc.core.entity.track.Genre
+import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.getLongOrNull
 import dev.olog.msc.utils.getStringOrNull

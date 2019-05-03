@@ -1,12 +1,12 @@
 package dev.olog.msc.domain.interactor.all
 
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.entity.toSong
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.entity.podcast.toSong
 import dev.olog.msc.domain.executors.ComputationScheduler
-import dev.olog.msc.domain.gateway.*
+import dev.olog.msc.core.gateway.*
 import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
-import dev.olog.msc.utils.MediaId
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.mapToList
 import io.reactivex.Observable
 import javax.inject.Inject
