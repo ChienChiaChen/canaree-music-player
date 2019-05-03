@@ -15,9 +15,7 @@ import dev.olog.msc.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.interactor.all.GetAllFoldersUseCase
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.shared.extensions.mapToList
-import dev.olog.msc.shared.extensions.startWith
-import dev.olog.msc.shared.extensions.startWithIfNotEmpty
+import dev.olog.msc.shared.extensions.*
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.k.extension.*
 import dev.olog.msc.utils.safeCompare

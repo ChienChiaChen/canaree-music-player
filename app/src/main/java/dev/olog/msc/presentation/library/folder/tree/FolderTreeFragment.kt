@@ -12,6 +12,7 @@ import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.presentation.widget.BreadCrumbLayout
+import dev.olog.msc.shared.extensions.safeGetCanonicalFile
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_folder_tree.*
 import kotlinx.android.synthetic.main.fragment_folder_tree.view.*

@@ -12,7 +12,7 @@ import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.Sorting
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.utils.k.extension.safeGetCanonicalPath
+import dev.olog.msc.shared.extensions.safeGetCanonicalPath
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

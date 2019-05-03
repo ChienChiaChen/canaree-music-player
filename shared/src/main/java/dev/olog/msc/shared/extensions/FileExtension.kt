@@ -1,4 +1,4 @@
-package dev.olog.msc.utils.k.extension
+package dev.olog.msc.shared.extensions
 
 import android.os.Environment
 import android.webkit.MimeTypeMap
