@@ -1,4 +1,4 @@
-package dev.olog.msc.floatingwindow;
+package dev.olog.msc.floatingwindowservice;
 
 import org.junit.Test;
 

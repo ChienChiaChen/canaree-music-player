@@ -100,11 +100,12 @@ dependencies {
     implementation project(':shared')
     implementation project(':traceur')
     implementation project(':taptargetview')
-    implementation project(':musicservice')
+    implementation project(':service-music')
     implementation project(':imageprovider')
-    implementation project(':apilastfm')
+    implementation project(':api-lastfm')
     implementation project(':data')
     implementation project(':pro')
+    implementation project(':service-floating_window')
 
     // data binding
     kapt "androidx.databinding:databinding-compiler:$gradle_plugin"

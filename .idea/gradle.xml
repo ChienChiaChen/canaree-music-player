@@ -8,14 +8,14 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/apilastfm" />
+            <option value="$PROJECT_DIR$/api-lastfm" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/data" />
-            <option value="$PROJECT_DIR$/floatingwindow" />
             <option value="$PROJECT_DIR$/imageprovider" />
-            <option value="$PROJECT_DIR$/musicservice" />
             <option value="$PROJECT_DIR$/pro" />
+            <option value="$PROJECT_DIR$/service-floating_window" />
+            <option value="$PROJECT_DIR$/service-music" />
             <option value="$PROJECT_DIR$/shared" />
             <option value="$PROJECT_DIR$/taptargetview" />
             <option value="$PROJECT_DIR$/traceur" />
