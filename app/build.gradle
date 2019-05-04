@@ -104,6 +104,7 @@ dependencies {
     implementation project(':imageprovider')
     implementation project(':apilastfm')
     implementation project(':data')
+    implementation project(':pro')
 
     // data binding
     kapt "androidx.databinding:databinding-compiler:$gradle_plugin"
@@ -132,8 +133,7 @@ dependencies {
     implementation "androidx.palette:palette:$rootProject.androidX"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraint_layout"
 
-    // billing
-    implementation "com.android.billingclient:billing:$rootProject.billing"
+
 
     // dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
