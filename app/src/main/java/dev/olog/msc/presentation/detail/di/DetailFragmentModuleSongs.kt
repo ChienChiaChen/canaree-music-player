@@ -7,13 +7,14 @@ import dagger.Provides
 import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
 import dev.olog.msc.R
-import dev.olog.msc.constants.PlaylistConstants
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.PlaylistGateway
+import dev.olog.msc.core.gateway.PodcastPlaylistGateway
 import dev.olog.msc.core.interactor.added.GetRecentlyAddedUseCase
 import dev.olog.msc.core.interactor.played.GetMostPlayedSongsUseCase
 import dev.olog.msc.domain.interactor.GetTotalSongDurationUseCase
@@ -142,7 +143,7 @@ private fun Song.toDetailDisplayableItem(parentId: MediaId, sortType: SortType):
         parentId.isAlbum || parentId.isPodcastAlbum -> R.layout.item_detail_song_with_track
         (parentId.isPlaylist || parentId.isPodcastPlaylist) && sortType == SortType.CUSTOM -> {
             val playlistId = parentId.categoryValue.toLong()
-            if (PlaylistConstants.isAutoPlaylist(playlistId) || PlaylistConstants.isPodcastAutoPlaylist(playlistId)) {
+            if (PlaylistGateway.isAutoPlaylist(playlistId) || PodcastPlaylistGateway.isPodcastAutoPlaylist(playlistId)) {
                 R.layout.item_detail_song
             } else R.layout.item_detail_song_with_drag_handle
         }

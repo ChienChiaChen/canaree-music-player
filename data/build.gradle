@@ -28,13 +28,16 @@ android {
 dependencies {
     implementation project(':core')
     implementation project(':imageprovider')
+    implementation project(':shared')
+
+    implementation "androidx.core:core-ktx:1.0.1"
 
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     // db
-    implementation "com.squareup.sqlbrite3:sqlbrite:$rootProject.sql_brite"
-    implementation "androidx.room:room-runtime:$rootProject.room"
+    api "com.squareup.sqlbrite3:sqlbrite:$rootProject.sql_brite"
+    api "androidx.room:room-runtime:$rootProject.room"
     kapt "androidx.room:room-compiler:$rootProject.room"
     implementation "androidx.room:room-rxjava2:$rootProject.room"
 
@@ -45,7 +48,7 @@ dependencies {
     // rx
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.rx_java"
     implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rx_kotlin"
-    implementation "com.f2prateek.rx.preferences2:rx-preferences:$rootProject.rx_preferences"
+    api "com.f2prateek.rx.preferences2:rx-preferences:$rootProject.rx_preferences"
     debugImplementation "nl.littlerobots.rxlint:rxlint:$rootProject.rx_lint"
 
     testImplementation 'junit:junit:4.12'

@@ -3,11 +3,11 @@ package dev.olog.msc.app
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
-import dev.olog.msc.api.last.fm.LastFmModule
+import dev.olog.msc.apilastfm.LastFmModule
 import dev.olog.msc.app.shortcuts.AppShortcutsModule
-import dev.olog.msc.data.RepositoryHelperModule
-import dev.olog.msc.data.RepositoryModule
-import dev.olog.msc.data.prefs.PreferenceModule
+import dev.olog.msc.data.di.PreferenceModule
+import dev.olog.msc.data.di.RepositoryHelperModule
+import dev.olog.msc.data.di.RepositoryModule
 import dev.olog.msc.floating.window.service.di.FloatingWindowServiceInjector
 import dev.olog.msc.musicservice.di.MusicServiceInjector
 import dev.olog.msc.presentation.ViewModelModule

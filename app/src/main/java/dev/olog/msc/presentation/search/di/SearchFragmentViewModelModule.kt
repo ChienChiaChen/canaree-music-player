@@ -21,9 +21,9 @@ import dev.olog.msc.domain.interactor.search.GetAllRecentSearchesUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.search.SearchFragmentHeaders
 import dev.olog.msc.presentation.search.SearchFragmentType
+import dev.olog.msc.shared.RecentSearchesTypes
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.mapToList
-import dev.olog.msc.utils.RecentSearchesTypes
 import dev.olog.msc.utils.k.extension.asLiveData
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

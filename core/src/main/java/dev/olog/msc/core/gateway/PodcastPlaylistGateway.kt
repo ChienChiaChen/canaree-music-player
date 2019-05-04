@@ -10,6 +10,19 @@ interface PodcastPlaylistGateway :
         ChildsHasPodcasts<Long>,
         HasMostPlayed {
 
+    companion object {
+
+        const val PODCAST_LAST_ADDED_ID: Long = -6000
+        const val PODCAST_FAVORITE_LIST_ID: Long = -60012
+        const val PODCAST_HISTORY_LIST_ID: Long = -60018
+
+        private val podcastAutoPlaylists = listOf(
+                PODCAST_LAST_ADDED_ID, PODCAST_FAVORITE_LIST_ID, PODCAST_HISTORY_LIST_ID
+        )
+
+        fun isPodcastAutoPlaylist(id: Long) = podcastAutoPlaylists.contains(id)
+    }
+
     fun getAllAutoPlaylists() : Observable<List<PodcastPlaylist>>
 
     fun createPlaylist(playlistName: String): Single<Long>

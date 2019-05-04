@@ -15,8 +15,8 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.interactor.all.GetAllFoldersUseCase
+import dev.olog.msc.data.utils.getLong
 import dev.olog.msc.shared.extensions.*
-import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.k.extension.asLiveData
 import dev.olog.msc.utils.k.extension.logStackStace
 import io.reactivex.Observable

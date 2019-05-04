@@ -1,12 +1,12 @@
 package dev.olog.msc.presentation.detail
 
-import dev.olog.msc.constants.PlaylistConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.domain.interactor.playlist.MoveItemInPlaylistUseCase
 import dev.olog.msc.domain.interactor.playlist.RemoveFromPlaylistUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
 import io.reactivex.Completable
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ class DetailFragmentPresenter @Inject constructor(
         mediaId.assertPlaylist()
         val playlistId = mediaId.resolveId
         val playlistType = if (item.mediaId.isPodcast) PlaylistType.PODCAST else PlaylistType.TRACK
-        if (playlistId == PlaylistConstants.FAVORITE_LIST_ID){
+        if (playlistId == PlaylistGateway.FAVORITE_LIST_ID){
             // favorites use songId instead of idInPlaylist
             return removeFromPlaylistUseCase.execute(RemoveFromPlaylistUseCase.Input(
                     playlistId, item.mediaId.leaf!!, playlistType

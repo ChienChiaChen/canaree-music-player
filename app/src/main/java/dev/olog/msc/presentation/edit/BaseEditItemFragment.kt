@@ -11,14 +11,14 @@ import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.core.net.toUri
 import com.bumptech.glide.Priority
-import dev.olog.msc.Permissions
 import dev.olog.msc.R
 import dev.olog.msc.app.glide.GlideApp
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.presentation.base.BaseBottomSheetFragment
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.theme.ThemedDialog
+import dev.olog.msc.shared.Permissions
 import dev.olog.msc.utils.img.CoverUtils
-import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.act
 import dev.olog.msc.utils.k.extension.ctx
 

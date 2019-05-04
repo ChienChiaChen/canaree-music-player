@@ -10,12 +10,14 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import dagger.Module
 import dagger.Provides
 import dev.olog.msc.LastFmEncrypter
+import dev.olog.msc.PrefsKeysImpl
 import dev.olog.msc.app.glide.GlideImageProvider
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.IEncrypter
 import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
+import dev.olog.msc.data.PrefsKeys
 import dev.olog.msc.imageprovider.IImageProvider
 import dev.olog.msc.presentation.app.widget.defaul.WidgetColored
 import dev.olog.msc.presentation.app.widget.queue.WidgetColoredWithQueue
@@ -88,6 +90,11 @@ class AppModule(private val app: App) {
 
     @Provides
     fun provideImageProvider(impl: GlideImageProvider): IImageProvider {
+        return impl
+    }
+
+    @Provides
+    fun providePrefsKeys(impl: PrefsKeysImpl): PrefsKeys {
         return impl
     }
 

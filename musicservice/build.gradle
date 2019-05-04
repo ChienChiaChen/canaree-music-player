@@ -52,13 +52,13 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rx_kotlin"
     debugImplementation "nl.littlerobots.rxlint:rxlint:$rootProject.rx_lint"
 
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.9.6'
+    api 'com.google.android.exoplayer:exoplayer-core:2.9.6'
 //    implementation project(':exoplayer-library-core')
 //    implementation project(':exoplayer-extension-flac')
 //    implementation project(':exoplayer-extension-opus')
 //    implementation project(':exoplayer-extension-ffmpeg')
 
-    implementation "de.u-mass:lastfm-java:$rootProject.last_fm_binding"
+    api "de.u-mass:lastfm-java:$rootProject.last_fm_binding"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
