@@ -20,6 +20,7 @@ import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.tutorial.TutorialTapTarget
 import dev.olog.msc.presentation.widget.animateBackgroundColor
 import dev.olog.msc.presentation.widget.animateTextColor
+import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable

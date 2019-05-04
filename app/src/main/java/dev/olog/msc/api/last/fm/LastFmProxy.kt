@@ -7,7 +7,7 @@ import dev.olog.msc.api.last.fm.artist.info.ArtistInfo
 import dev.olog.msc.api.last.fm.artist.search.ArtistSearch
 import dev.olog.msc.api.last.fm.track.info.TrackInfo
 import dev.olog.msc.api.last.fm.track.search.TrackSearch
-import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.shared.TrackUtils
 import io.reactivex.Single
 import java.net.URLEncoder
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class LastFmProxy @Inject constructor(
      * A not unknown artist is required
      */
     override fun getTrackInfo(track: String, artist: String, autocorrect: Long): Single<TrackInfo> {
-        if (artist == AppConstants.UNKNOWN){
+        if (artist == TrackUtils.UNKNOWN){
             return Single.error(IllegalArgumentException("artist can not be unknown"))
         }
 
@@ -36,7 +36,7 @@ class LastFmProxy @Inject constructor(
 
     override fun searchTrack(track: String, artist: String, limit: Long): Single<TrackSearch> {
         val normalizedTrack = UTF8NormalizedEntity(track)
-        val normalizedArtist = UTF8NormalizedEntity(if (artist == AppConstants.UNKNOWN) "" else artist)
+        val normalizedArtist = UTF8NormalizedEntity(if (artist == TrackUtils.UNKNOWN) "" else artist)
         return impl.searchTrack(
                 normalizedTrack.value,
                 normalizedArtist.value
@@ -60,7 +60,7 @@ class LastFmProxy @Inject constructor(
      * A not unknown artist is required
      */
     override fun getAlbumInfo(album: String, artist: String, autocorrect: Long, language: String): Single<AlbumInfo> {
-        if (artist == AppConstants.UNKNOWN){
+        if (artist == TrackUtils.UNKNOWN){
             return Single.error(IllegalArgumentException("artist can not be unknown"))
         }
 

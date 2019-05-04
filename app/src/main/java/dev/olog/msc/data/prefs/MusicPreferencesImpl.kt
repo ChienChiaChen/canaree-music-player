@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import io.reactivex.Completable

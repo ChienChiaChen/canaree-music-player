@@ -2,7 +2,6 @@ package dev.olog.msc.app
 
 import android.app.AlarmManager
 import android.app.Application
-import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.res.Resources
 import android.net.ConnectivityManager
@@ -10,13 +9,20 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import dagger.Module
 import dagger.Provides
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.dagger.qualifier.ProcessLifecycle
-import dev.olog.msc.presentation.app.widget.WidgetClasses
+import dev.olog.msc.LastFmEncrypter
+import dev.olog.msc.app.glide.GlideImageProvider
+import dev.olog.msc.core.Classes
+import dev.olog.msc.core.IEncrypter
+import dev.olog.msc.core.WidgetClasses
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
+import dev.olog.msc.imageprovider.IImageProvider
 import dev.olog.msc.presentation.app.widget.defaul.WidgetColored
 import dev.olog.msc.presentation.app.widget.queue.WidgetColoredWithQueue
+import dev.olog.msc.presentation.main.MainActivity
 import java.text.Collator
 import java.util.*
+import javax.inject.Singleton
 
 @Module
 class AppModule(private val app: App) {
@@ -40,7 +46,7 @@ class AppModule(private val app: App) {
     @Provides
     internal fun provideWidgetsClasses() : WidgetClasses {
         return object : WidgetClasses {
-            override fun get(): List<Class<out AppWidgetProvider>> {
+            override fun get(): List<Class<*>> {
                 return listOf(
                         WidgetColored::class.java,
                         WidgetColoredWithQueue::class.java
@@ -65,6 +71,24 @@ class AppModule(private val app: App) {
         instance.strength = Collator.SECONDARY
 //        instance.decomposition = Collator.CANONICAL_DECOMPOSITION
         return instance
+    }
+
+    @Provides
+    @Singleton
+    fun provideEncryoter(impl: LastFmEncrypter): IEncrypter{
+        return impl
+    }
+
+    @Provides
+    fun provideClasses(): Classes {
+        return object : Classes {
+            override fun mainClass(): Class<*> = MainActivity::class.java
+        }
+    }
+
+    @Provides
+    fun provideImageProvider(impl: GlideImageProvider): IImageProvider {
+        return impl
     }
 
 }

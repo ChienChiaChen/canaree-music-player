@@ -6,22 +6,23 @@ import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.R
 import dev.olog.msc.app.app
-import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.dagger.qualifier.MediaIdCategoryKey
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
-import dev.olog.msc.domain.interactor.all.*
-import dev.olog.msc.domain.interactor.all.last.played.GetLastPlayedPodcastAlbumsUseCase
-import dev.olog.msc.domain.interactor.all.last.played.GetLastPlayedPodcastArtistsUseCase
-import dev.olog.msc.domain.interactor.all.recently.added.GetRecentlyAddedPodcastsAlbumsUseCase
-import dev.olog.msc.domain.interactor.all.recently.added.GetRecentlyAddedPodcastsArtistsUseCase
+import dev.olog.msc.core.interactor.added.GetRecentlyAddedPodcastsAlbumsUseCase
+import dev.olog.msc.core.interactor.added.GetRecentlyAddedPodcastsArtistsUseCase
+import dev.olog.msc.core.interactor.all.*
+import dev.olog.msc.core.interactor.played.GetLastPlayedPodcastAlbumsUseCase
+import dev.olog.msc.core.interactor.played.GetLastPlayedPodcastArtistsUseCase
 import dev.olog.msc.presentation.library.tab.TabFragmentHeaders
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.*
-import dev.olog.msc.utils.TextUtils
+import dev.olog.msc.shared.utils.TextUtils
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import java.util.concurrent.TimeUnit
@@ -200,7 +201,7 @@ private fun PodcastPlaylist.toAutoPlaylist(): DisplayableItem {
 }
 
 private fun Podcast.toTabDisplayableItem(): DisplayableItem {
-    val artist = DisplayableItem.adjustArtist(this.artist)
+    val artist = TrackUtils.adjustArtist(this.artist)
 
     val duration = app.getString(R.string.tab_podcast_duration, TimeUnit.MILLISECONDS.toMinutes(this.duration))
 
@@ -235,7 +236,7 @@ private fun PodcastAlbum.toTabDisplayableItem(): DisplayableItem{
             R.layout.item_tab_album,
             MediaId.podcastAlbumId(id),
             title,
-            DisplayableItem.adjustArtist(artist),
+            TrackUtils.adjustArtist(artist),
             image
     )
 }

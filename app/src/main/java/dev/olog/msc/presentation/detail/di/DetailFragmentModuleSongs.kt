@@ -8,24 +8,25 @@ import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
 import dev.olog.msc.R
 import dev.olog.msc.constants.PlaylistConstants
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.track.Artist
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.podcast.PodcastArtist
-import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.entity.sort.SortType
+import dev.olog.msc.core.entity.track.Artist
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.interactor.added.GetRecentlyAddedUseCase
+import dev.olog.msc.core.interactor.played.GetMostPlayedSongsUseCase
 import dev.olog.msc.domain.interactor.GetTotalSongDurationUseCase
-import dev.olog.msc.domain.interactor.all.most.played.GetMostPlayedSongsUseCase
-import dev.olog.msc.domain.interactor.all.recently.added.GetRecentlyAddedUseCase
 import dev.olog.msc.domain.interactor.all.related.artists.GetPodcastRelatedArtistsUseCase
 import dev.olog.msc.domain.interactor.all.related.artists.GetRelatedArtistsUseCase
 import dev.olog.msc.domain.interactor.all.sorted.GetSortedSongListByParamUseCase
 import dev.olog.msc.domain.interactor.all.sorted.util.GetSortOrderUseCase
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.TextUtils
-import dev.olog.msc.utils.TimeUtils
+import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.mapToList
+import dev.olog.msc.shared.utils.TextUtils
+import dev.olog.msc.utils.TimeUtils
 import io.reactivex.Observable
 
 @Module
@@ -150,8 +151,8 @@ private fun Song.toDetailDisplayableItem(parentId: MediaId, sortType: SortType):
     }
 
     val subtitle = when {
-        parentId.isArtist || parentId.isPodcastArtist -> DisplayableItem.adjustAlbum(this.album)
-        else -> DisplayableItem.adjustArtist(this.artist)
+        parentId.isArtist || parentId.isPodcastArtist -> TrackUtils.adjustAlbum(this.album)
+        else -> TrackUtils.adjustArtist(this.artist)
     }
 
     val track = when {
@@ -176,7 +177,7 @@ private fun Song.toMostPlayedDetailDisplayableItem(parentId: MediaId): Displayab
             R.layout.item_detail_song_most_played,
             MediaId.playableItem(parentId, id),
             this.title,
-            DisplayableItem.adjustArtist(this.artist),
+            TrackUtils.adjustArtist(this.artist),
             this.image,
             true
     )
@@ -187,7 +188,7 @@ private fun Song.toRecentDetailDisplayableItem(parentId: MediaId): DisplayableIt
             R.layout.item_detail_song_recent,
             MediaId.playableItem(parentId, id),
             this.title,
-            DisplayableItem.adjustArtist(this.artist),
+            TrackUtils.adjustArtist(this.artist),
             this.image,
             true
     )

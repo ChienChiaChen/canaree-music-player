@@ -4,7 +4,7 @@ import android.content.Context
 import dev.olog.msc.R
 import dev.olog.msc.presentation.base.adapter.AbsAdapter
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.utils.k.extension.configuration
+import dev.olog.msc.shared.extensions.configuration
 
 class ArtistSpanSizeLookup(
         context: Context,

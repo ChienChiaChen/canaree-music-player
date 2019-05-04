@@ -5,7 +5,7 @@ import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.utils.k.extension.configuration
+import dev.olog.msc.shared.extensions.configuration
 import kotlinx.android.synthetic.main.activity_debug_configuration.*
 
 class DebugConfigurationActivity: AppCompatActivity() {

@@ -5,11 +5,11 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.dagger.ViewModelKey
-import dev.olog.msc.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.presentation.edit.track.EditTrackFragment
 import dev.olog.msc.presentation.edit.track.EditTrackFragmentViewModel
-import dev.olog.msc.core.MediaId
 
 @Module(includes = [EditTrackFragmentModule.Binding::class])
 class EditTrackFragmentModule(

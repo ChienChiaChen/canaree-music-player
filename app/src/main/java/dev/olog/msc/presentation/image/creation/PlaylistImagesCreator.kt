@@ -2,9 +2,9 @@ package dev.olog.msc.presentation.image.creation
 
 import android.content.Context
 import android.provider.MediaStore
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.data.repository.util.CommonQuery
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.track.Playlist
+import dev.olog.msc.data.repository.util.CommonQuery
 import dev.olog.msc.presentation.image.creation.impl.MergedImagesCreator
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.utils.img.ImagesFolderUtils

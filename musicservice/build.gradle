@@ -28,9 +28,12 @@ android {
 dependencies {
     implementation project(':core')
     implementation project(':shared')
+    implementation project(':imageprovider')
 
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    implementation "androidx.media:media:1.0.1"
 
     // google architecture components
     implementation "androidx.lifecycle:lifecycle-runtime:$rootProject.lifecycle"
@@ -38,9 +41,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycle"
     implementation "androidx.lifecycle:lifecycle-reactivestreams:$rootProject.lifecycle"
 
-    // dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
+    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
     // rx
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.rx_java"
@@ -53,6 +57,8 @@ dependencies {
 //    implementation project(':exoplayer-extension-flac')
 //    implementation project(':exoplayer-extension-opus')
 //    implementation project(':exoplayer-extension-ffmpeg')
+
+    implementation "de.u-mass:lastfm-java:$rootProject.last_fm_binding"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'

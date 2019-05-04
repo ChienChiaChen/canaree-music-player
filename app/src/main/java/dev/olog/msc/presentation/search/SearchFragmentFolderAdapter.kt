@@ -3,8 +3,8 @@ package dev.olog.msc.presentation.search
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import dev.olog.msc.BR
-import dev.olog.msc.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.dagger.scope.PerFragment
+import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
+import dev.olog.msc.core.dagger.scope.PerFragment
 import dev.olog.msc.presentation.base.adapter.AbsAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.model.DisplayableItem

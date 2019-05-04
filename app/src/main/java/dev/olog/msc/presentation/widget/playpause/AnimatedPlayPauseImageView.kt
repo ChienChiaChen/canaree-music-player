@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import androidx.annotation.Keep
 import androidx.appcompat.widget.AppCompatImageButton
 import dev.olog.msc.presentation.theme.AppTheme
-import dev.olog.msc.utils.k.extension.isPortrait
+import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.utils.k.extension.textColorTertiary
 
 @Keep

@@ -1,9 +1,9 @@
 package dev.olog.msc.domain.interactor.all.newrequest
 
 import dev.olog.msc.core.entity.track.Album
-import dev.olog.msc.domain.executors.ComputationScheduler
+import dev.olog.msc.core.executors.ComputationScheduler
 import dev.olog.msc.core.gateway.AlbumGateway
-import dev.olog.msc.domain.interactor.base.ObservableUseCase
+import dev.olog.msc.core.interactor.base.ObservableUseCase
 import io.reactivex.Observable
 import javax.inject.Inject
 

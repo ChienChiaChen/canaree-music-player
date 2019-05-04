@@ -8,8 +8,8 @@ import android.view.View
 import android.widget.EditText
 import dev.olog.msc.R
 import dev.olog.msc.core.entity.UserCredentials
-import dev.olog.msc.domain.interactor.last.fm.scrobble.GetLastFmUserCredentials
-import dev.olog.msc.domain.interactor.last.fm.scrobble.UpdateLastFmUserCredentials
+import dev.olog.msc.core.interactor.scrobble.GetLastFmUserCredentials
+import dev.olog.msc.core.interactor.scrobble.UpdateLastFmUserCredentials
 import dev.olog.msc.presentation.base.BaseDialogFragment
 import dev.olog.msc.presentation.theme.ThemedDialog
 import dev.olog.msc.utils.k.extension.ctx

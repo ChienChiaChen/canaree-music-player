@@ -12,15 +12,16 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import dev.olog.msc.R;
-import dev.olog.msc.utils.TextUtils;
+import dev.olog.msc.shared.utils.TextUtils;
 import dev.olog.msc.utils.k.extension.ViewExtensionKt;
 
 public class WaveSideBarView extends View {

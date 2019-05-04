@@ -9,7 +9,7 @@ import androidx.annotation.LayoutRes
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.support.DaggerFragment
 import dev.olog.msc.analytics.AppAnalytics
-import dev.olog.msc.utils.k.extension.isPortrait
+import dev.olog.msc.shared.extensions.isPortrait
 
 abstract class BaseFragment : DaggerFragment(), LoggableFragment {
 

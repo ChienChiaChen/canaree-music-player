@@ -3,11 +3,11 @@ package dev.olog.msc.app
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import dev.olog.msc.dagger.qualifier.ProcessLifecycle
-import dev.olog.msc.domain.interactor.all.GetAllGenresUseCase
-import dev.olog.msc.domain.interactor.all.GetAllPlaylistsUseCase
-import dev.olog.msc.domain.interactor.all.GetAllPodcastUseCase
-import dev.olog.msc.domain.interactor.all.GetAllSongsUseCase
+import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
+import dev.olog.msc.core.interactor.all.GetAllGenresUseCase
+import dev.olog.msc.core.interactor.all.GetAllPlaylistsUseCase
+import dev.olog.msc.core.interactor.all.GetAllPodcastUseCase
+import dev.olog.msc.core.interactor.all.GetAllSongsUseCase
 import dev.olog.msc.shared.extensions.asFlowable
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable

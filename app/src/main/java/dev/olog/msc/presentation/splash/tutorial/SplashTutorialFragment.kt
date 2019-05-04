@@ -13,12 +13,12 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import dev.olog.msc.R
-import dev.olog.msc.app.GlideApp
+import dev.olog.msc.app.glide.GlideApp
 import dev.olog.msc.presentation.widget.StoppingViewPager
 import dev.olog.msc.presentation.widget.SwipeableView
+import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.utils.img.CoverUtils
 import dev.olog.msc.utils.k.extension.ctx
-import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 
 class SplashTutorialFragment : Fragment(), SwipeableView.SwipeListener {

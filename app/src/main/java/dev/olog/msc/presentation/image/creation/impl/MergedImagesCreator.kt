@@ -2,12 +2,12 @@ package dev.olog.msc.presentation.image.creation.impl
 
 import android.content.Context
 import android.graphics.Bitmap
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.utils.img.ImagesFolderUtils
 import dev.olog.msc.utils.img.extractImageName
-import dev.olog.msc.utils.k.extension.getBitmapAsync
+import dev.olog.msc.utils.k.extension.getBitmap
 import java.io.File
 import java.io.FileOutputStream
 
@@ -36,8 +36,8 @@ object MergedImagesCreator {
 
     private fun getBitmap(context: Context, albumId: Long): Bitmap {
         val originalImage = ImagesFolderUtils.forAlbum(albumId)
-        val model = DisplayableItem(0, MediaId.albumId(albumId), "", image = originalImage)
-        return context.getBitmapAsync(model, 500, withError = false)
+        val model = ImageModel(MediaId.albumId(albumId), originalImage)
+        return context.getBitmap(model, 500, withError = false)
     }
 
     @Throws(OutOfMemoryError::class)

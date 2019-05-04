@@ -2,10 +2,10 @@ package dev.olog.msc.presentation.popup.podcast
 
 import android.view.View
 import dev.olog.msc.R
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
+import dev.olog.msc.shared.TrackUtils
 
 class PodcastPopup(
         view: View,
@@ -21,10 +21,10 @@ class PodcastPopup(
 
         setOnMenuItemClickListener(listener)
 
-        if (podcast.artist == AppConstants.UNKNOWN){
+        if (podcast.artist == TrackUtils.UNKNOWN){
             menu.removeItem(R.id.viewArtist)
         }
-        if (podcast.album == AppConstants.UNKNOWN){
+        if (podcast.album == TrackUtils.UNKNOWN){
             menu.removeItem(R.id.viewAlbum)
         }
     }

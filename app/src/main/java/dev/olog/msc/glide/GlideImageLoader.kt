@@ -9,12 +9,12 @@ import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.imageprovider.ImageModel
 import java.io.File
 import java.io.InputStream
 import java.security.MessageDigest
@@ -26,11 +26,11 @@ class GlideImageLoader(
         private val songGateway: SongGateway,
         private val podcastGateway: PodcastGateway
 
-) : ModelLoader<DisplayableItem, InputStream> {
+) : ModelLoader<ImageModel, InputStream> {
 
-    override fun handles(model: DisplayableItem): Boolean = true
+    override fun handles(model: ImageModel): Boolean = true
 
-    override fun buildLoadData(model: DisplayableItem, width: Int, height: Int, options: Options): ModelLoader.LoadData<InputStream>? {
+    override fun buildLoadData(model: ImageModel, width: Int, height: Int, options: Options): ModelLoader.LoadData<InputStream>? {
         val mediaId = model.mediaId
 
         if (isAsset(model)){
@@ -46,9 +46,9 @@ class GlideImageLoader(
                 notAnImage(model) -> {
                     // song/album has not a default image, download
                     if (mediaId.isLeaf){
-                        ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideSongFetcher(context, model, lastFmGateway))
+                        ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideSongFetcher(context, model.mediaId, lastFmGateway))
                     } else {
-                        ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideAlbumFetcher(context, model, lastFmGateway))
+                        ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideAlbumFetcher(context, model.mediaId, lastFmGateway))
                     }
                 }
                 AppConstants.IGNORE_MEDIA_STORE_COVERS -> {
@@ -65,18 +65,18 @@ class GlideImageLoader(
 
         if (mediaId.isArtist || mediaId.isPodcastArtist){
             // download artist image
-            return ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideArtistFetcher(context, model, lastFmGateway))
+            return ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideArtistFetcher(context, model.mediaId, lastFmGateway))
         }
 
         // use merged image
         return uriLoader.buildLoadData(Uri.fromFile(File(model.image)), width, height, options)
     }
 
-    private fun isAsset(model: DisplayableItem): Boolean {
+    private fun isAsset(model: ImageModel): Boolean {
         return URLUtil.isAssetUrl(model.image)
     }
 
-    private fun notAnImage(model: DisplayableItem): Boolean {
+    private fun notAnImage(model: ImageModel): Boolean {
         return model.image.isBlank() || URLUtil.isNetworkUrl(model.image)
     }
 
@@ -86,9 +86,9 @@ class GlideImageLoader(
             private val songGateway: SongGateway,
             private val podcastGateway: PodcastGateway
 
-    ) : ModelLoaderFactory<DisplayableItem, InputStream> {
+    ) : ModelLoaderFactory<ImageModel, InputStream> {
 
-        override fun build(multiFactory: MultiModelLoaderFactory): ModelLoader<DisplayableItem, InputStream> {
+        override fun build(multiFactory: MultiModelLoaderFactory): ModelLoader<ImageModel, InputStream> {
             val uriLoader = multiFactory.build(Uri::class.java, InputStream::class.java)
             return GlideImageLoader(context, lastFmGateway, uriLoader, songGateway, podcastGateway)
         }

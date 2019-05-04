@@ -1,13 +1,13 @@
 package dev.olog.msc.domain.interactor.all.sorted
 
-import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.domain.interactor.all.GetAllSongsUseCase
-import dev.olog.msc.domain.interactor.base.ObservableUseCase
-import dev.olog.msc.utils.safeCompare
+import dev.olog.msc.core.interactor.all.GetAllSongsUseCase
+import dev.olog.msc.core.interactor.base.ObservableUseCase
+import dev.olog.msc.shared.extensions.safeCompare
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import java.text.Collator

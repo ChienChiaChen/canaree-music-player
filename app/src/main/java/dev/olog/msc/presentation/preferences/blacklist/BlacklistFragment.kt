@@ -9,10 +9,10 @@ import android.view.View
 import dev.olog.msc.R
 import dev.olog.msc.presentation.base.BaseDialogFragment
 import dev.olog.msc.presentation.theme.ThemedDialog
+import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.utils.k.extension.asLiveData
 import dev.olog.msc.utils.k.extension.ctx
 import dev.olog.msc.utils.k.extension.subscribe
-import dev.olog.msc.utils.k.extension.toast
 import javax.inject.Inject
 
 class BlacklistFragment : BaseDialogFragment() {

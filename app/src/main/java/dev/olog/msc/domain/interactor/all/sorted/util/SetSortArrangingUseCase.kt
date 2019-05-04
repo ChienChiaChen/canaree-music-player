@@ -1,8 +1,8 @@
 package dev.olog.msc.domain.interactor.all.sorted.util
 
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.domain.interactor.base.CompletableUseCase
+import dev.olog.msc.core.interactor.base.CompletableUseCase
 import io.reactivex.Completable
 import javax.inject.Inject
 

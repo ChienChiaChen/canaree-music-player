@@ -3,17 +3,17 @@ package dev.olog.msc.data.repository.last.fm
 import com.github.dmstocking.optional.java.util.Optional
 import dev.olog.msc.api.last.fm.LastFmService
 import dev.olog.msc.api.last.fm.annotation.Proxy
-import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.entity.LastFmPodcast
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmPodcastEntity
 import dev.olog.msc.data.mapper.LastFmNulls
 import dev.olog.msc.data.mapper.toDomain
 import dev.olog.msc.data.mapper.toDomainPodcast
 import dev.olog.msc.data.mapper.toModel
-import dev.olog.msc.core.entity.LastFmPodcast
-import dev.olog.msc.core.entity.podcast.Podcast
-import dev.olog.msc.core.gateway.PodcastGateway
-import dev.olog.msc.utils.TextUtils
+import dev.olog.msc.shared.TrackUtils
+import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -61,7 +61,7 @@ class LastFmRepoPodcast @Inject constructor(
         val trackId = podcast.id
 
         val trackTitle = TextUtils.addSpacesToDash(podcast.title)
-        val trackArtist = if (podcast.artist == AppConstants.UNKNOWN) "" else podcast.artist
+        val trackArtist = if (podcast.artist == TrackUtils.UNKNOWN) "" else podcast.artist
 
         return lastFmService.getTrackInfo(trackTitle, trackArtist)
                 .map { it.toDomainPodcast(trackId) }

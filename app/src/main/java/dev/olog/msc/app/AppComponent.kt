@@ -9,7 +9,7 @@ import dev.olog.msc.data.RepositoryHelperModule
 import dev.olog.msc.data.RepositoryModule
 import dev.olog.msc.data.prefs.PreferenceModule
 import dev.olog.msc.floating.window.service.di.FloatingWindowServiceInjector
-import dev.olog.msc.music.service.di.MusicServiceInjector
+import dev.olog.msc.musicservice.di.MusicServiceInjector
 import dev.olog.msc.presentation.ViewModelModule
 import dev.olog.msc.presentation.about.di.AboutActivityInjector
 import dev.olog.msc.presentation.app.widget.WidgetBindingModule

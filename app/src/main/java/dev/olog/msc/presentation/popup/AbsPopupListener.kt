@@ -5,17 +5,17 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.widget.PopupMenu
-import dev.olog.msc.FileProvider
 import dev.olog.msc.R
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.domain.interactor.all.GetPlaylistsBlockingUseCase
 import dev.olog.msc.domain.interactor.dialog.AddToPlaylistUseCase
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.shared.FileProvider
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.core.MediaId
+import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.utils.k.extension.asHtml
-import dev.olog.msc.utils.k.extension.toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 abstract class AbsPopupListener(
@@ -58,7 +58,7 @@ abstract class AbsPopupListener(
     protected fun share(activity: Activity, song: Song){
         val intent = Intent()
         intent.action = Intent.ACTION_SEND
-        intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForSong(activity, song))
+        intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForPath(activity, song.path))
         intent.type = "audio/*"
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         try {

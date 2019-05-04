@@ -11,11 +11,10 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
-import dev.olog.msc.constants.MusicConstants
-import dev.olog.msc.music.service.MusicService
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.BaseActivity
 import dev.olog.msc.presentation.detail.sort.DetailSort
-import dev.olog.msc.core.MediaId
+import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -45,7 +44,7 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
         super.onCreate(savedInstanceState)
 
         mediaBrowser = MediaBrowserCompat(this,
-                ComponentName(this, MusicService::class.java),
+                ComponentName(this, dev.olog.msc.musicservice.MusicService::class.java),
                 MusicServiceConnection(this), null)
 
         callback = MediaServiceCallback(this)

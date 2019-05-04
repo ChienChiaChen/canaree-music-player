@@ -2,7 +2,7 @@ package dev.olog.msc.presentation.main.di
 
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
-import dev.olog.msc.dagger.scope.PerActivity
+import dev.olog.msc.core.dagger.scope.PerActivity
 import dev.olog.msc.presentation.detail.di.DetailFragmentInjector
 import dev.olog.msc.presentation.dialog.add.favorite.di.AddFavoriteDialogInjector
 import dev.olog.msc.presentation.dialog.clear.playlist.di.ClearPlaylistDialogInjector

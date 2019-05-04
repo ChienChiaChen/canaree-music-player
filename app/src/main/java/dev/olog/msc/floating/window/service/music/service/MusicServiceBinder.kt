@@ -11,12 +11,14 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.dagger.qualifier.ServiceLifecycle
-import dev.olog.msc.dagger.scope.PerService
-import dev.olog.msc.music.service.MusicService
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
+import dev.olog.msc.core.dagger.scope.PerService
+import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.presentation.base.music.service.MusicServiceConnectionState
 import dev.olog.msc.presentation.widget.image.view.player.toPlayerImage
+import dev.olog.msc.shared.extensions.isPaused
+import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable
@@ -32,7 +34,7 @@ class MusicServiceBinder @Inject constructor(
 
 ) : DefaultLifecycleObserver {
 
-    private val mediaBrowser = MediaBrowserCompat(context, ComponentName(context, MusicService::class.java),
+    private val mediaBrowser = MediaBrowserCompat(context, ComponentName(context, dev.olog.msc.musicservice.MusicService::class.java),
             FloatingMusicConnection(this), null)
     private val connectionDisposable: Disposable
     private val publisher = BehaviorSubject.createDefault(MusicServiceConnectionState.NONE)

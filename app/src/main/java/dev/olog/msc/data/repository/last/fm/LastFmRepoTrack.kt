@@ -3,16 +3,16 @@ package dev.olog.msc.data.repository.last.fm
 import com.github.dmstocking.optional.java.util.Optional
 import dev.olog.msc.api.last.fm.LastFmService
 import dev.olog.msc.api.last.fm.annotation.Proxy
-import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.entity.LastFmTrack
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmTrackEntity
 import dev.olog.msc.data.mapper.LastFmNulls
 import dev.olog.msc.data.mapper.toDomain
 import dev.olog.msc.data.mapper.toModel
-import dev.olog.msc.core.entity.LastFmTrack
-import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.utils.TextUtils
+import dev.olog.msc.shared.TrackUtils
+import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -61,7 +61,7 @@ class LastFmRepoTrack @Inject constructor(
         val trackId = track.id
 
         val trackTitle = TextUtils.addSpacesToDash(track.title)
-        val trackArtist = if (track.artist == AppConstants.UNKNOWN) "" else track.artist
+        val trackArtist = if (track.artist == TrackUtils.UNKNOWN) "" else track.artist
 
         return lastFmService.getTrackInfo(trackTitle, trackArtist)
                 .map { it.toDomain(trackId) }

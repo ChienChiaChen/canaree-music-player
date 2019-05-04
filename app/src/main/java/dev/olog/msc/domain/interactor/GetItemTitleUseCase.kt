@@ -1,10 +1,10 @@
 package dev.olog.msc.domain.interactor
 
-import dev.olog.msc.domain.executors.IoScheduler
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
-import dev.olog.msc.domain.interactor.item.*
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.executors.IoScheduler
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
+import dev.olog.msc.core.interactor.item.*
 import io.reactivex.Observable
 import javax.inject.Inject
 

@@ -1,10 +1,10 @@
 package dev.olog.msc.domain.interactor.all.sibling
 
-import dev.olog.msc.core.entity.podcast.PodcastAlbum
-import dev.olog.msc.domain.executors.IoScheduler
-import dev.olog.msc.core.gateway.PodcastAlbumGateway
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.entity.podcast.PodcastAlbum
+import dev.olog.msc.core.executors.IoScheduler
+import dev.olog.msc.core.gateway.PodcastAlbumGateway
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import io.reactivex.Observable
 import javax.inject.Inject
 

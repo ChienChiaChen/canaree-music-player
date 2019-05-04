@@ -1,16 +1,16 @@
 package dev.olog.msc.presentation.edit.track
 
 import com.github.dmstocking.optional.java.util.Optional
-import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.UsedImageGateway
-import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
-import dev.olog.msc.domain.interactor.item.GetUneditedSongUseCase
+import dev.olog.msc.core.interactor.item.GetPodcastUseCase
+import dev.olog.msc.core.interactor.item.GetUneditedSongUseCase
 import dev.olog.msc.domain.interactor.last.fm.GetLastFmTrackUseCase
 import dev.olog.msc.domain.interactor.last.fm.LastFmTrackRequest
-import dev.olog.msc.core.MediaId
+import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.utils.k.extension.get
 import io.reactivex.Single
 import org.jaudiotagger.audio.AudioFileIO
@@ -40,8 +40,8 @@ class EditTrackFragmentPresenter @Inject constructor(
         return getSongUseCase.execute(mediaId)
                 .firstOrError()
                 .map { it.copy(
-                        artist = if (it.artist == AppConstants.UNKNOWN) "" else it.artist,
-                        album = if (it.album == AppConstants.UNKNOWN) "" else it.album
+                        artist = if (it.artist == TrackUtils.UNKNOWN) "" else it.artist,
+                        album = if (it.album == TrackUtils.UNKNOWN) "" else it.album
                 ) }
                 .map { it.toDisplayableSong() }
                 .doOnSuccess {
@@ -56,8 +56,8 @@ class EditTrackFragmentPresenter @Inject constructor(
         return getPodcastUseCase.execute(mediaId)
                 .firstOrError()
                 .map { it.copy(
-                        artist = if (it.artist == AppConstants.UNKNOWN) "" else it.artist,
-                        album = if (it.album == AppConstants.UNKNOWN) "" else it.album
+                        artist = if (it.artist == TrackUtils.UNKNOWN) "" else it.artist,
+                        album = if (it.album == TrackUtils.UNKNOWN) "" else it.album
                 ) }
                 .map { it.toDisplayableSong() }
                 .doOnSuccess {

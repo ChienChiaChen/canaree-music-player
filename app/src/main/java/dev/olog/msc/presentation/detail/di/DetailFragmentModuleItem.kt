@@ -5,14 +5,15 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
-import dev.olog.msc.domain.interactor.item.*
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.dagger.qualifier.MediaIdCategoryKey
 import dev.olog.msc.core.entity.track.*
-import dev.olog.msc.utils.TextUtils
+import dev.olog.msc.core.interactor.item.*
+import dev.olog.msc.presentation.model.DisplayableItem
+import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.asFlowable
+import dev.olog.msc.shared.utils.TextUtils
 import io.reactivex.Flowable
 
 @Module
@@ -117,7 +118,7 @@ private fun Album.toHeaderItem(): List<DisplayableItem> {
             R.layout.item_detail_item_image,
             MediaId.albumId(this.id),
             title,
-            DisplayableItem.adjustArtist(this.artist),
+            TrackUtils.adjustArtist(this.artist),
             image = image
     ))
 }

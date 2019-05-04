@@ -16,9 +16,10 @@ import dev.olog.msc.Permissions
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.constants.FloatingWindowsConstants
-import dev.olog.msc.constants.MusicConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.floating.window.service.FloatingWindowHelper
-import dev.olog.msc.music.service.MusicService
+import dev.olog.msc.musicservice.MusicService
+import dev.olog.msc.musicservice.PendingIntents
 import dev.olog.msc.presentation.DrawsOnTop
 import dev.olog.msc.presentation.base.HasBilling
 import dev.olog.msc.presentation.base.HasSlidingPanel
@@ -32,7 +33,8 @@ import dev.olog.msc.presentation.preferences.PreferencesActivity
 import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.utils.animation.HasSafeTransition
 import dev.olog.msc.pro.IBilling
-import dev.olog.msc.core.MediaId
+import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.utils.clamp
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -181,7 +183,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
                 bottomNavigation.selectedItemId = R.id.navigation_search
                 navigator.toSearchFragment()
             }
-            AppConstants.ACTION_CONTENT_VIEW -> slidingPanel.expand()
+            PendingIntents.ACTION_CONTENT_VIEW -> slidingPanel.expand()
             MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH -> {
                 val serviceIntent = Intent(this, MusicService::class.java)
                 serviceIntent.action = MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH

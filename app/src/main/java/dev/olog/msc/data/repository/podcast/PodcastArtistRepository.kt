@@ -4,17 +4,18 @@ import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.data.db.AppDatabase
-import dev.olog.msc.data.mapper.toArtist
-import dev.olog.msc.data.mapper.toFakeArtist
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.gateway.PodcastArtistGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.UsedImageGateway
+import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.data.mapper.toArtist
+import dev.olog.msc.data.mapper.toFakeArtist
 import dev.olog.msc.onlyWithStoragePermission
+import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.debounceFirst
-import dev.olog.msc.utils.safeCompare
+import dev.olog.msc.shared.extensions.safeCompare
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -60,7 +61,7 @@ class PodcastArtistRepository @Inject constructor(
 
     private fun mapToArtists(songList: List<Podcast>): List<PodcastArtist> {
         return songList.asSequence()
-                .filter { it.artist != AppConstants.UNKNOWN }
+                .filter { it.artist != TrackUtils.UNKNOWN }
                 .distinctBy { it.artistId }
                 .map { song ->
                     val albums = countAlbums(song.artistId, songList)
@@ -81,7 +82,7 @@ class PodcastArtistRepository @Inject constructor(
     private fun countAlbums(artistId: Long, songList: List<Podcast>): Int {
         return songList.asSequence()
                 .distinctBy { it.albumId }
-                .filter { it.album != AppConstants.UNKNOWN }
+                .filter { it.album != TrackUtils.UNKNOWN }
                 .count { it.artistId == artistId }
     }
 

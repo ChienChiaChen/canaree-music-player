@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.utils.k.extension.dipf
+import dev.olog.msc.shared.extensions.dipf
 
 private const val DEFAULT_RADIUS = 5
 

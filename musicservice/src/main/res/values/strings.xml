@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">MusicService</string>
+    <string name="app_name" translatable="false">MusicService</string>
+
+    <string name="music_channel_id_notification">Media playback</string>
+    <string name="music_channel_id_notification_description">Media playback controls</string>
+
+    <string name="music_error_empty_queue">Could not find music</string>
+
+    <string name="music_player_error">Player error</string>
 </resources>

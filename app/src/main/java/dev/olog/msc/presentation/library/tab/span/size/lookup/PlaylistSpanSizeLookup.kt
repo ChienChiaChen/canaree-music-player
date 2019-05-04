@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.library.tab.span.size.lookup
 
 import android.content.Context
-import dev.olog.msc.utils.k.extension.configuration
+import dev.olog.msc.shared.extensions.configuration
 
 
 class PlaylistSpanSizeLookup(

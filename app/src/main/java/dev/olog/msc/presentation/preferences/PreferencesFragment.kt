@@ -17,8 +17,9 @@ import com.afollestad.materialdialogs.color.colorChooser
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.R
-import dev.olog.msc.app.GlideApp
+import dev.olog.msc.app.glide.GlideApp
 import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.isLowMemoryDevice
 import dev.olog.msc.presentation.preferences.blacklist.BlacklistFragment
@@ -27,7 +28,7 @@ import dev.olog.msc.presentation.preferences.last.fm.credentials.LastFmCredentia
 import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.theme.ThemedDialog
 import dev.olog.msc.presentation.utils.ColorPalette
-import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.utils.img.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Completable
@@ -192,7 +193,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
                 requestMainActivityToRecreate()
                 GlideApp.get(ctx.applicationContext).clearMemory()
             }
-            getString(R.string.prefs_lockscreen_artwork_key) -> AppConstants.updateLockscreenArtworkEnabled(ctx)
+//            getString(R.string.prefs_lockscreen_artwork_key) -> AppConstants.updateLockscreenArtworkEnabled(ctx)
             getString(R.string.prefs_notch_support_key),
             getString(R.string.prefs_folder_tree_view_key),
             getString(R.string.prefs_blacklist_key),

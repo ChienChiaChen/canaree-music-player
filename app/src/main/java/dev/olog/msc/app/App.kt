@@ -11,17 +11,17 @@ import dagger.android.support.DaggerApplication
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.Permissions
 import dev.olog.msc.R
-import dev.olog.msc.app.shortcuts.AppShortcuts
 import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.domain.interactor.prefs.SleepTimerUseCase
+import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.presentation.image.creation.ImagesCreator
 import dev.olog.msc.presentation.theme.AppTheme
+import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.traceur.Traceur
 import dev.olog.msc.updatePermissionValve
-import dev.olog.msc.utils.PendingIntents
 import io.alterac.blurkit.BlurKit
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -79,13 +79,17 @@ class App : BaseApp() {
 
     private fun initializeConstants() {
         AppConstants.initialize(this)
+        TrackUtils.initialize(
+                getString(R.string.common_unknown_artist),
+                getString(R.string.common_unknown_album)
+        )
         AppTheme.initialize(this)
         PreferenceManager.setDefaultValues(this, R.xml.prefs, false)
     }
 
     private fun resetSleepTimer() {
         sleepTimerUseCase.reset()
-        alarmManager.cancel(PendingIntents.stopMusicServiceIntent(this))
+        alarmManager.cancel(dev.olog.msc.musicservice.PendingIntents.stopMusicServiceIntent(this))
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

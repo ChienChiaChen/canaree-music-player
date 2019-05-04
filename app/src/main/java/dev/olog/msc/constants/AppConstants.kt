@@ -12,7 +12,6 @@ object AppConstants {
     }
 
     private const val TAG = "AppConstants"
-    const val ACTION_CONTENT_VIEW = "$TAG.action.content.view"
 
     var useFakeData = false
     var IGNORE_MEDIA_STORE_COVERS = false
@@ -27,21 +26,14 @@ object AppConstants {
 
     var QUICK_ACTION = QuickActionView.Type.NONE
     var IMAGE_SHAPE = ImageShape.ROUND
-    var SHOW_LOCKSCREEN_IMAGE = false
 
     const val PROGRESS_BAR_INTERVAL = 250
 
-    const val UNKNOWN = "<unknown>"
-    lateinit var UNKNOWN_ALBUM: String
-    lateinit var UNKNOWN_ARTIST: String
+
 
     fun initialize(context: Context){
-        UNKNOWN_ALBUM = context.getString(R.string.common_unknown_album)
-        UNKNOWN_ARTIST = context.getString(R.string.common_unknown_artist)
-
         updateQuickAction(context)
         updateIconShape(context)
-        updateLockscreenArtworkEnabled(context)
         updateIgnoreMediaStoreCovers(context)
     }
 
@@ -53,17 +45,8 @@ object AppConstants {
         IMAGE_SHAPE = getIconShape(context)
     }
 
-    fun updateLockscreenArtworkEnabled(context: Context) {
-        SHOW_LOCKSCREEN_IMAGE = getLockscreenArtworkEnabled(context)
-    }
-
     fun updateIgnoreMediaStoreCovers(context: Context) {
         IGNORE_MEDIA_STORE_COVERS = getIgnoreMediaStoreCovers(context)
-    }
-
-    private fun getLockscreenArtworkEnabled(context: Context): Boolean {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
-        return preferences.getBoolean(context.getString(R.string.prefs_lockscreen_artwork_key), false)
     }
 
     private fun getQuickAction(context: Context): QuickActionView.Type {

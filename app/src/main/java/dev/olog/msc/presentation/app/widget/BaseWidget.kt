@@ -9,15 +9,16 @@ import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import dev.olog.msc.R
-import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.constants.MusicConstants
+import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
-import dev.olog.msc.music.service.MusicService
+import dev.olog.msc.musicservice.MusicService
+import dev.olog.msc.musicservice.PendingIntents
 import dev.olog.msc.presentation.main.MainActivity
 import dev.olog.msc.presentation.utils.images.ImageProcessorResult
-import dev.olog.msc.utils.k.extension.asServicePendingIntent
-import dev.olog.msc.utils.k.extension.getAppWidgetsIdsFor
+import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.extensions.asServicePendingIntent
+import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
 import javax.inject.Inject
 
 abstract class BaseWidget : AbsWidgetApp() {
@@ -106,7 +107,7 @@ abstract class BaseWidget : AbsWidgetApp() {
 
     private fun buildContentIntent(context: Context): PendingIntent {
         val intent = Intent(context, MainActivity::class.java)
-        intent.action = AppConstants.ACTION_CONTENT_VIEW
+        intent.action = PendingIntents.ACTION_CONTENT_VIEW
         return PendingIntent.getActivity(context, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }

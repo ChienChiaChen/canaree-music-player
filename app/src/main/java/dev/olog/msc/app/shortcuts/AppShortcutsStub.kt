@@ -2,7 +2,7 @@ package dev.olog.msc.app.shortcuts
 
 import android.content.Context
 import androidx.lifecycle.Lifecycle
-import dev.olog.msc.dagger.qualifier.ProcessLifecycle
+import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 
 class AppShortcutsStub(
         context: Context,

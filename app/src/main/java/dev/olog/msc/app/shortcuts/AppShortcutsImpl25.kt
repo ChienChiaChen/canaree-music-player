@@ -11,11 +11,11 @@ import androidx.core.content.getSystemService
 import androidx.lifecycle.Lifecycle
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.constants.MusicConstants
-import dev.olog.msc.dagger.qualifier.ProcessLifecycle
+import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.presentation.main.MainActivity
 import dev.olog.msc.presentation.shortcuts.ShortcutsActivity
 import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivity
+import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.utils.isNougat_MR1
 
 @RequiresApi(Build.VERSION_CODES.N_MR1)

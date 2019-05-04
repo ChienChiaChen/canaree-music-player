@@ -1,10 +1,10 @@
 package dev.olog.msc.domain.interactor.dialog
 
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.gateway.PodcastPlaylistGateway
-import dev.olog.msc.domain.interactor.base.CompletableUseCaseWithParam
-import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import io.reactivex.Completable
 import javax.inject.Inject
 

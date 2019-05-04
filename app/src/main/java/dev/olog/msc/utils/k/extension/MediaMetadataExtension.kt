@@ -1,10 +1,10 @@
 package dev.olog.msc.utils.k.extension
 
 import android.support.v4.media.MediaMetadataCompat
-import dev.olog.msc.constants.MusicConstants
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.TextUtils
+import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.TrackUtils
+import dev.olog.msc.shared.utils.TextUtils
 
 fun MediaMetadataCompat.getTitle(): CharSequence {
     return getText(MediaMetadataCompat.METADATA_KEY_TITLE)
@@ -12,12 +12,12 @@ fun MediaMetadataCompat.getTitle(): CharSequence {
 
 fun MediaMetadataCompat.getArtist(): CharSequence {
     val artist = getText(MediaMetadataCompat.METADATA_KEY_ARTIST)
-    return DisplayableItem.adjustArtist(artist.toString())
+    return TrackUtils.adjustArtist(artist.toString())
 }
 
 fun MediaMetadataCompat.getAlbum(): CharSequence {
     val album = getText(MediaMetadataCompat.METADATA_KEY_ALBUM)
-    return DisplayableItem.adjustAlbum(album.toString())
+    return TrackUtils.adjustAlbum(album.toString())
 }
 
 fun MediaMetadataCompat.getDuration(): Long {

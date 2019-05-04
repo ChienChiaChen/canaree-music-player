@@ -7,23 +7,24 @@ import androidx.lifecycle.Transformations
 import dagger.Module
 import dagger.Provides
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.dagger.scope.PerFragment
-import dev.olog.msc.core.entity.*
-import dev.olog.msc.domain.interactor.all.*
-import dev.olog.msc.domain.interactor.search.GetAllRecentSearchesUseCase
-import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.presentation.search.SearchFragmentHeaders
-import dev.olog.msc.presentation.search.SearchFragmentType
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.scope.PerFragment
+import dev.olog.msc.core.entity.SearchResult
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.core.entity.track.*
+import dev.olog.msc.core.interactor.all.*
+import dev.olog.msc.domain.interactor.search.GetAllRecentSearchesUseCase
+import dev.olog.msc.presentation.model.DisplayableItem
+import dev.olog.msc.presentation.search.SearchFragmentHeaders
+import dev.olog.msc.presentation.search.SearchFragmentType
+import dev.olog.msc.shared.TrackUtils
+import dev.olog.msc.shared.extensions.mapToList
 import dev.olog.msc.utils.RecentSearchesTypes
 import dev.olog.msc.utils.k.extension.asLiveData
-import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
@@ -252,7 +253,7 @@ private fun Song.toSearchDisplayableItem(): DisplayableItem{
             R.layout.item_search_song,
             MediaId.songId(this.id),
             title,
-            DisplayableItem.adjustArtist(artist),
+            TrackUtils.adjustArtist(artist),
             image,
             true
     )
@@ -263,7 +264,7 @@ private fun Podcast.toSearchDisplayableItem(): DisplayableItem{
             R.layout.item_search_song,
             MediaId.podcastId(this.id),
             title,
-            DisplayableItem.adjustArtist(artist),
+            TrackUtils.adjustArtist(artist),
             image,
             true
     )
@@ -274,7 +275,7 @@ private fun Album.toSearchDisplayableItem(): DisplayableItem {
             R.layout.item_search_album,
             MediaId.albumId(id),
             title,
-            DisplayableItem.adjustArtist(artist),
+            TrackUtils.adjustArtist(artist),
             image
     )
 }
@@ -284,7 +285,7 @@ private fun PodcastAlbum.toSearchDisplayableItem(): DisplayableItem {
             R.layout.item_search_album,
             MediaId.podcastAlbumId(id),
             title,
-            DisplayableItem.adjustArtist(artist),
+            TrackUtils.adjustArtist(artist),
             image
     )
 }

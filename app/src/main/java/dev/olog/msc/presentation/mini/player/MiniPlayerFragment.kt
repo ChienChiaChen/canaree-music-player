@@ -10,8 +10,10 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.R
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.base.music.service.MediaProvider
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.theme.AppTheme
+import dev.olog.msc.shared.TrackUtils
+import dev.olog.msc.shared.extensions.isPaused
+import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable
@@ -42,7 +44,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
         }
         val (modelTitle, modelSubtitle) = presenter.getMetadata()
         view.title.text = modelTitle
-        view.artist.text = DisplayableItem.adjustArtist(modelSubtitle)
+        view.artist.text = TrackUtils.adjustArtist(modelSubtitle)
 
         val media = activity as MediaProvider
 

@@ -1,6 +1,7 @@
 package dev.olog.msc.core.gateway.prefs
 
-import dev.olog.msc.core.entity.*
+import dev.olog.msc.core.entity.LibraryCategoryBehavior
+import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
@@ -61,6 +62,8 @@ interface AppPreferencesGateway : Sorting {
 
     fun canShowPodcastCategory(): Boolean
     fun isAdaptiveColorEnabled(): Boolean
+
+    fun observeLockscreenArtworkEnabled(): Observable<Boolean>
 
 }
 

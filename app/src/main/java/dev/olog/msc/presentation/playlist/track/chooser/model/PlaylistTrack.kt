@@ -1,10 +1,11 @@
 package dev.olog.msc.presentation.playlist.track.chooser.model
 
 import dev.olog.msc.R
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
+import dev.olog.msc.shared.TrackUtils
 import java.io.File
 
 data class PlaylistTrack (
@@ -34,7 +35,7 @@ internal fun PlaylistTrack.toDisplayableItem(): DisplayableItem {
             R.layout.item_choose_track,
             if (this.isPodcast) MediaId.podcastId(this.id) else MediaId.songId(this.id),
             this.title,
-            DisplayableItem.adjustArtist(this.artist),
+            TrackUtils.adjustArtist(this.artist),
             this.image,
             true
     )

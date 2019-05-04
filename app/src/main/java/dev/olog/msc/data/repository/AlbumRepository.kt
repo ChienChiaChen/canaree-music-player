@@ -4,17 +4,18 @@ import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.data.db.AppDatabase
-import dev.olog.msc.data.mapper.toAlbum
 import dev.olog.msc.core.entity.track.Album
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.AlbumGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.gateway.UsedImageGateway
+import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.data.mapper.toAlbum
 import dev.olog.msc.onlyWithStoragePermission
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.debounceFirst
-import dev.olog.msc.utils.safeCompare
+import dev.olog.msc.shared.extensions.safeCompare
+import dev.olog.msc.utils.img.ImagesFolderUtils
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -44,7 +45,7 @@ class AlbumRepository @Inject constructor(
                 .switchMap { songGateway.getAll() }
                 .map { songList ->
                     songList.asSequence()
-                            .filter { it.album != AppConstants.UNKNOWN }
+                            .filter { it.album != TrackUtils.UNKNOWN }
                             .distinctBy { it.albumId }
                             .map { song ->
                                 song.toAlbum(songList.count { it.albumId == song.albumId })

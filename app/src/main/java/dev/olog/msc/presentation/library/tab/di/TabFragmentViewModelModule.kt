@@ -5,25 +5,26 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
-import dev.olog.msc.domain.interactor.all.GetAllAutoPlaylistUseCase
-import dev.olog.msc.domain.interactor.all.GetAllFoldersUseCase
-import dev.olog.msc.domain.interactor.all.GetAllGenresUseCase
-import dev.olog.msc.domain.interactor.all.GetAllPlaylistsUseCase
-import dev.olog.msc.domain.interactor.all.last.played.GetLastPlayedAlbumsUseCase
-import dev.olog.msc.domain.interactor.all.last.played.GetLastPlayedArtistsUseCase
-import dev.olog.msc.domain.interactor.all.recently.added.GetRecentlyAddedAlbumsUseCase
-import dev.olog.msc.domain.interactor.all.recently.added.GetRecentlyAddedArtistsUseCase
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.dagger.qualifier.MediaIdCategoryKey
+import dev.olog.msc.core.entity.track.*
+import dev.olog.msc.core.interactor.added.GetRecentlyAddedAlbumsUseCase
+import dev.olog.msc.core.interactor.added.GetRecentlyAddedArtistsUseCase
+import dev.olog.msc.core.interactor.all.GetAllAutoPlaylistUseCase
+import dev.olog.msc.core.interactor.all.GetAllFoldersUseCase
+import dev.olog.msc.core.interactor.all.GetAllGenresUseCase
+import dev.olog.msc.core.interactor.all.GetAllPlaylistsUseCase
+import dev.olog.msc.core.interactor.played.GetLastPlayedAlbumsUseCase
+import dev.olog.msc.core.interactor.played.GetLastPlayedArtistsUseCase
 import dev.olog.msc.domain.interactor.all.sorted.GetAllAlbumsSortedUseCase
 import dev.olog.msc.domain.interactor.all.sorted.GetAllArtistsSortedUseCase
 import dev.olog.msc.domain.interactor.all.sorted.GetAllSongsSortedUseCase
 import dev.olog.msc.presentation.library.tab.TabFragmentHeaders
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.entity.track.*
+import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.*
-import dev.olog.msc.utils.TextUtils
+import dev.olog.msc.shared.utils.TextUtils
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 
@@ -236,8 +237,8 @@ private fun Playlist.toTabDisplayableItem(resources: Resources): DisplayableItem
 }
 
 private fun Song.toTabDisplayableItem(): DisplayableItem {
-    val artist = DisplayableItem.adjustArtist(this.artist)
-    val album = DisplayableItem.adjustAlbum(this.album)
+    val artist = TrackUtils.adjustArtist(this.artist)
+    val album = TrackUtils.adjustAlbum(this.album)
 
     return DisplayableItem(
             R.layout.item_tab_song,
@@ -256,7 +257,7 @@ private fun Album.toTabDisplayableItem(): DisplayableItem{
             R.layout.item_tab_album,
             MediaId.albumId(id),
             title,
-            DisplayableItem.adjustArtist(artist),
+            TrackUtils.adjustArtist(artist),
             image
     )
 }
@@ -291,7 +292,7 @@ private fun Album.toTabLastPlayedDisplayableItem(): DisplayableItem {
             R.layout.item_tab_album_last_played,
             MediaId.albumId(id),
             title,
-            DisplayableItem.adjustArtist(artist),
+            TrackUtils.adjustArtist(artist),
             image
     )
 }

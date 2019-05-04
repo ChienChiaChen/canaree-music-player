@@ -5,10 +5,10 @@ import android.util.AttributeSet
 import android.view.View
 import dev.olog.msc.R
 import dev.olog.msc.presentation.theme.AppTheme
-import dev.olog.msc.utils.k.extension.dimen
-import dev.olog.msc.utils.k.extension.dip
+import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.extensions.dip
+import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.utils.k.extension.hasNotch
-import dev.olog.msc.utils.k.extension.isPortrait
 
 /**
  * Custom status bar to handle device notch

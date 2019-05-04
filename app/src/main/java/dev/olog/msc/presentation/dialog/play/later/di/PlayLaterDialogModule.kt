@@ -3,9 +3,9 @@ package dev.olog.msc.presentation.dialog.play.later.di
 import androidx.lifecycle.Lifecycle
 import dagger.Module
 import dagger.Provides
-import dev.olog.msc.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.presentation.dialog.play.later.PlayLaterDialog
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
+import dev.olog.msc.presentation.dialog.play.later.PlayLaterDialog
 
 @Module
 class PlayLaterDialogModule(

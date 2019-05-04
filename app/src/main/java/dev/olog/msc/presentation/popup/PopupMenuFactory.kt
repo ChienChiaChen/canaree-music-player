@@ -2,7 +2,9 @@ package dev.olog.msc.presentation.popup
 
 import android.view.View
 import android.widget.PopupMenu
-import dev.olog.msc.domain.interactor.item.*
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.interactor.item.*
 import dev.olog.msc.presentation.popup.album.AlbumPopup
 import dev.olog.msc.presentation.popup.artist.ArtistPopup
 import dev.olog.msc.presentation.popup.folder.FolderPopup
@@ -13,8 +15,6 @@ import dev.olog.msc.presentation.popup.podcastalbum.PodcastAlbumPopup
 import dev.olog.msc.presentation.popup.podcastartist.PodcastArtistPopup
 import dev.olog.msc.presentation.popup.podcastplaylist.PodcastPlaylistPopup
 import dev.olog.msc.presentation.popup.song.SongPopup
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject

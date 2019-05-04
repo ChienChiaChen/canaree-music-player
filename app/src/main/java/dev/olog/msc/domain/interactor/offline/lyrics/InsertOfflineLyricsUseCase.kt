@@ -1,12 +1,12 @@
 package dev.olog.msc.domain.interactor.offline.lyrics
 
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.OfflineLyrics
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.OfflineLyricsGateway
-import dev.olog.msc.domain.interactor.base.CompletableUseCaseWithParam
-import dev.olog.msc.domain.interactor.item.GetSongUseCase
-import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
+import dev.olog.msc.core.interactor.item.GetSongUseCase
 import io.reactivex.Completable
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.FieldKey

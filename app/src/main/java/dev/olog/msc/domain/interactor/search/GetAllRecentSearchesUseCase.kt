@@ -1,9 +1,9 @@
 package dev.olog.msc.domain.interactor.search
 
 import dev.olog.msc.core.entity.SearchResult
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.RecentSearchesGateway
-import dev.olog.msc.domain.interactor.base.ObservableUseCase
+import dev.olog.msc.core.interactor.base.ObservableUseCase
 import io.reactivex.Observable
 import javax.inject.Inject
 

@@ -7,7 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.presentation.base.HasSlidingPanel
-import dev.olog.msc.utils.k.extension.dip
+import dev.olog.msc.shared.extensions.dip
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 

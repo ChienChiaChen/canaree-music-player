@@ -6,10 +6,10 @@ import android.content.Context
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import dev.olog.msc.constants.PlaylistConstants
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.favorite.FavoriteType
 import dev.olog.msc.core.gateway.FavoriteGateway
+import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.utils.getLong
 import io.reactivex.Completable
 import io.reactivex.Single

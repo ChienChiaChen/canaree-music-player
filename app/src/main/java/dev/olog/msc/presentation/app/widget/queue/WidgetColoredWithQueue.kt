@@ -7,11 +7,11 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.RemoteViews
 import dev.olog.msc.R
-import dev.olog.msc.constants.MusicConstants
-import dev.olog.msc.music.service.MusicService
+import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.presentation.app.widget.WidgetSize
 import dev.olog.msc.presentation.app.widget.defaul.WidgetColored
-import dev.olog.msc.utils.k.extension.asServicePendingIntent
+import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.extensions.asServicePendingIntent
 
 class WidgetColoredWithQueue : WidgetColored(){
 

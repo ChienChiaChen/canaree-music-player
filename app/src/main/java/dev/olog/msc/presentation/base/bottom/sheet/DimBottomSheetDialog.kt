@@ -9,8 +9,8 @@ import dev.olog.msc.R
 import dev.olog.msc.analytics.AppAnalytics
 import dev.olog.msc.presentation.base.LoggableFragment
 import dev.olog.msc.presentation.theme.AppTheme
-import dev.olog.msc.utils.k.extension.dip
-import dev.olog.msc.utils.k.extension.isLandscape
+import dev.olog.msc.shared.extensions.dip
+import dev.olog.msc.shared.extensions.isLandscape
 
 class DimBottomSheetDialog(context: Context, theme: Int)
     : BottomSheetDialog(context, theme), LoggableFragment {

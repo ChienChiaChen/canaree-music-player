@@ -3,7 +3,7 @@ package dev.olog.msc.presentation.detail.scroll.listener
 import android.view.View
 import dev.olog.msc.R
 import dev.olog.msc.presentation.detail.DetailFragment
-import dev.olog.msc.utils.k.extension.dimen
+import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.utils.k.extension.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 

@@ -1,14 +1,14 @@
 package dev.olog.msc.presentation.dialog.create.playlist
 
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.item.GetPodcastUseCase
+import dev.olog.msc.core.interactor.item.GetSongUseCase
+import dev.olog.msc.core.interactor.queue.GetPlayingQueueUseCase
 import dev.olog.msc.domain.interactor.all.GetPlaylistsBlockingUseCase
-import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
-import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
-import dev.olog.msc.domain.interactor.item.GetSongUseCase
-import dev.olog.msc.domain.interactor.playing.queue.GetPlayingQueueUseCase
 import dev.olog.msc.domain.interactor.playlist.InsertCustomTrackListRequest
 import dev.olog.msc.domain.interactor.playlist.InsertCustomTrackListToPlaylist
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Completable
 import javax.inject.Inject

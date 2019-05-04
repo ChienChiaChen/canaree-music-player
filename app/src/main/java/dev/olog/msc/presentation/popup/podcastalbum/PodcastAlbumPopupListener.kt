@@ -3,7 +3,8 @@ package dev.olog.msc.presentation.popup.podcastalbum
 import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
-import dev.olog.msc.app.shortcuts.AppShortcuts
+import dev.olog.msc.core.AppShortcuts
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.toSong
@@ -13,7 +14,6 @@ import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
-import dev.olog.msc.core.MediaId
 import javax.inject.Inject
 
 class PodcastAlbumPopupListener @Inject constructor(

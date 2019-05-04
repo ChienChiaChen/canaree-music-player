@@ -7,12 +7,12 @@ import dev.olog.msc.api.last.fm.artist.info.ArtistInfo
 import dev.olog.msc.api.last.fm.artist.search.ArtistSearch
 import dev.olog.msc.api.last.fm.track.info.TrackInfo
 import dev.olog.msc.api.last.fm.track.search.TrackSearch
+import dev.olog.msc.core.gateway.LastFmGateway.Companion.LAST_FM_API_KEY
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-const val LAST_FM_API_KEY = "56553f687cba2aa671c99caff536def1"
-const val LAST_FM_API_SECRET = "b81ab835211b283398a16343ab0e6b66"
+
 private const val MIN_SEARCH_PAGES = 1L
 private const val MAX_SEARCH_PAGES = 5L
 private const val DEFAULT_SEARCH_PAGES = MAX_SEARCH_PAGES

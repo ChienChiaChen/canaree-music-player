@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import dev.olog.msc.constants.MusicConstants
-import dev.olog.msc.music.service.MusicService
+import dev.olog.msc.musicservice.MusicService
+import dev.olog.msc.shared.MusicConstants
 
 class ShortcutsActivity : AppCompatActivity(){
 

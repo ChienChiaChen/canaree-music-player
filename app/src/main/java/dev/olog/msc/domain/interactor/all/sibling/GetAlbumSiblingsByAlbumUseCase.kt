@@ -1,11 +1,11 @@
 package dev.olog.msc.domain.interactor.all.sibling
 
-import dev.olog.msc.core.entity.track.Album
-import dev.olog.msc.domain.executors.IoScheduler
-import dev.olog.msc.core.gateway.AlbumGateway
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
-import dev.olog.msc.domain.interactor.item.GetAlbumUseCase
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.entity.track.Album
+import dev.olog.msc.core.executors.IoScheduler
+import dev.olog.msc.core.gateway.AlbumGateway
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
+import dev.olog.msc.core.interactor.item.GetAlbumUseCase
 import io.reactivex.Observable
 import javax.inject.Inject
 

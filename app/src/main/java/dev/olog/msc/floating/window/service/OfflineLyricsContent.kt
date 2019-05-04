@@ -13,8 +13,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.bumptech.glide.Priority
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dev.olog.msc.R
-import dev.olog.msc.app.GlideApp
+import dev.olog.msc.app.glide.GlideApp
 import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.floating.window.service.api.Content
 import dev.olog.msc.floating.window.service.music.service.MusicServiceBinder
 import dev.olog.msc.floating.window.service.music.service.MusicServiceMetadata
@@ -25,11 +26,10 @@ import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.widget.animateBackgroundColor
 import dev.olog.msc.presentation.widget.animateTextColor
 import dev.olog.msc.presentation.widget.image.view.BlurImageView
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.img.CoverUtils
-import dev.olog.msc.utils.k.extension.isPlaying
-import dev.olog.msc.utils.k.extension.toggleVisibility
+import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.utils.img.CoverUtils
+import dev.olog.msc.utils.k.extension.toggleVisibility
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

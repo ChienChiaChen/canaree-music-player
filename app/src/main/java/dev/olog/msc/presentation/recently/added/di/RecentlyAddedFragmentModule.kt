@@ -6,11 +6,11 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.dagger.ViewModelKey
-import dev.olog.msc.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.presentation.recently.added.RecentlyAddedFragment
 import dev.olog.msc.presentation.recently.added.RecentlyAddedFragmentViewModel
-import dev.olog.msc.core.MediaId
 
 @Module(includes = [RecentlyAddedFragmentModule.Binding::class])
 class RecentlyAddedFragmentModule(

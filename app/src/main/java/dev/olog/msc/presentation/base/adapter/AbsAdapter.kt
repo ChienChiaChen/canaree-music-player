@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import dev.olog.msc.R
 import dev.olog.msc.presentation.base.BaseModel
 import dev.olog.msc.presentation.base.adapter.drag.TouchableAdapter
-import dev.olog.msc.utils.k.extension.logStackStace
-import dev.olog.msc.utils.k.extension.toast
+import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.utils.k.extension.logStackStace
 import io.reactivex.disposables.Disposable
 
 abstract class AbsAdapter<Model : BaseModel>(

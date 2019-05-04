@@ -1,14 +1,14 @@
 package dev.olog.msc.domain.interactor.dialog
 
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Playlist
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.gateway.PodcastPlaylistGateway
-import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
-import dev.olog.msc.domain.interactor.base.CompletableUseCaseWithParam
-import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
-import dev.olog.msc.domain.interactor.item.GetSongUseCase
-import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
+import dev.olog.msc.core.interactor.item.GetPodcastUseCase
+import dev.olog.msc.core.interactor.item.GetSongUseCase
 import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Completable
 import javax.inject.Inject

@@ -10,12 +10,12 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.ServiceLifecycle
+import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.floating.window.service.FloatingWindowService
-import dev.olog.msc.shared.utils.isOreo
-import dev.olog.msc.utils.k.extension.asServicePendingIntent
+import dev.olog.msc.shared.extensions.asServicePendingIntent
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.shared.utils.isOreo
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 

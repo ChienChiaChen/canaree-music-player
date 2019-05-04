@@ -1,13 +1,13 @@
 package dev.olog.msc.domain.interactor.all.related.artists
 
-import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.core.entity.track.Artist
-import dev.olog.msc.domain.executors.ComputationScheduler
-import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
-import dev.olog.msc.domain.interactor.item.GetArtistUseCase
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.safeCompare
+import dev.olog.msc.core.entity.track.Artist
+import dev.olog.msc.core.executors.ComputationScheduler
+import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
+import dev.olog.msc.core.interactor.item.GetArtistUseCase
+import dev.olog.msc.shared.TrackUtils
+import dev.olog.msc.shared.extensions.safeCompare
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toFlowable
 import java.text.Collator
@@ -26,7 +26,7 @@ class GetRelatedArtistsUseCase @Inject constructor(
         if (mediaId.isFolder || mediaId.isPlaylist || mediaId.isGenre){
             return getSongListByParamUseCase.execute(mediaId)
                     .switchMapSingle { songList -> songList.toFlowable()
-                            .filter { it.artist != AppConstants.UNKNOWN }
+                            .filter { it.artist != TrackUtils.UNKNOWN }
                             .distinct { it.artistId }
                             .map { MediaId.artistId(it.artistId) }
                             .flatMapSingle { getArtistUseCase.execute(it).firstOrError().subscribeOn(executors.worker) }

@@ -6,12 +6,12 @@ import android.os.Environment
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.Sorting
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.shared.extensions.safeGetCanonicalPath
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -467,5 +467,10 @@ class AppPreferencesImpl @Inject constructor(
 
     override fun isAdaptiveColorEnabled(): Boolean {
         return preferences.getBoolean(context.getString(R.string.prefs_adaptive_colors_key), false)
+    }
+
+    override fun observeLockscreenArtworkEnabled(): Observable<Boolean> {
+        return rxPreferences.getBoolean(context.getString(R.string.prefs_lockscreen_artwork_key), false)
+                .asObservable()
     }
 }

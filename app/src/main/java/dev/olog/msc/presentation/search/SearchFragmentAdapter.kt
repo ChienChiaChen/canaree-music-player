@@ -2,10 +2,9 @@ package dev.olog.msc.presentation.search
 
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.BR
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.FragmentLifecycle
+import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.presentation.base.adapter.AbsAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.base.music.service.MediaProvider

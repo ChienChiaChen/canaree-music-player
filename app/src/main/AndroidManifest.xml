@@ -113,7 +113,7 @@
 
         <!--music service-->
         <service
-            android:name=".music.service.MusicService"
+            android:name=".musicservice.MusicService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />

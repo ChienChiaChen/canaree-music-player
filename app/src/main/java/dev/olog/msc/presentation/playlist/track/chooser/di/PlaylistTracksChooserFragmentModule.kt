@@ -5,9 +5,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
-import dev.olog.msc.dagger.ViewModelKey
-import dev.olog.msc.dagger.qualifier.FragmentLifecycle
+import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.dagger.ViewModelKey
 import dev.olog.msc.presentation.playlist.track.chooser.PlaylistTracksChooserFragment
 import dev.olog.msc.presentation.playlist.track.chooser.PlaylistTracksChooserFragmentViewModel
 

@@ -1,9 +1,9 @@
 package dev.olog.msc.domain.interactor
 
-import dev.olog.msc.domain.executors.ComputationScheduler
-import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
-import dev.olog.msc.domain.interactor.base.SingleUseCaseWithParam
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.executors.ComputationScheduler
+import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.base.SingleUseCaseWithParam
 import io.reactivex.Single
 import javax.inject.Inject
 

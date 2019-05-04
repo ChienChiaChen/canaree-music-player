@@ -2,11 +2,11 @@ package dev.olog.msc.presentation.popup.podcastartist
 
 import android.view.View
 import dev.olog.msc.R
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
+import dev.olog.msc.shared.TrackUtils
 
 class PodcastArtistPopup (
         view: View,
@@ -30,7 +30,7 @@ class PodcastArtistPopup (
         if (song != null){
             menu.removeItem(R.id.viewArtist)
 
-            if (song.album == AppConstants.UNKNOWN){
+            if (song.album == TrackUtils.UNKNOWN){
                 menu.removeItem(R.id.viewAlbum)
             }
         }

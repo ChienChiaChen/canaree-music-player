@@ -5,8 +5,8 @@ import android.os.Environment
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import androidx.core.database.getStringOrNull
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.utils.getInt
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.getString
@@ -86,7 +86,7 @@ private fun adjustAlbum(album: String?): String {
         return ""
     }
     if (album == Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS).name){
-        return AppConstants.UNKNOWN
+        return TrackUtils.UNKNOWN
     } else {
         return album
     }

@@ -1,8 +1,8 @@
 package dev.olog.msc.domain.interactor
 
-import dev.olog.msc.domain.executors.ComputationScheduler
-import dev.olog.msc.domain.interactor.base.ObservableUseCase
-import dev.olog.msc.domain.interactor.playing.queue.ObservePlayingQueueUseCase
+import dev.olog.msc.core.executors.ComputationScheduler
+import dev.olog.msc.core.interactor.base.ObservableUseCase
+import dev.olog.msc.core.interactor.queue.ObservePlayingQueueUseCase
 import dev.olog.msc.shared.extensions.debounceFirst
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit

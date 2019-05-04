@@ -4,7 +4,7 @@ import com.github.dmstocking.optional.java.util.Optional
 import dev.olog.msc.app.IoSchedulers
 import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.core.gateway.LastFmGateway
-import dev.olog.msc.domain.interactor.base.SingleUseCaseWithParam
+import dev.olog.msc.core.interactor.base.SingleUseCaseWithParam
 import io.reactivex.Single
 import javax.inject.Inject
 

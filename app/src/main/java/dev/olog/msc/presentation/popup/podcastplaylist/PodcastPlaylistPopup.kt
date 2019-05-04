@@ -2,12 +2,12 @@ package dev.olog.msc.presentation.popup.podcastplaylist
 
 import android.view.View
 import dev.olog.msc.R
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.constants.PlaylistConstants
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
+import dev.olog.msc.shared.TrackUtils
 
 class PodcastPlaylistPopup(
         view: View,
@@ -47,10 +47,10 @@ class PodcastPlaylistPopup(
                 menu.removeItem(R.id.clear)
             }
         } else {
-            if (song.artist == AppConstants.UNKNOWN){
+            if (song.artist == TrackUtils.UNKNOWN){
                 menu.removeItem(R.id.viewArtist)
             }
-            if (song.album == AppConstants.UNKNOWN){
+            if (song.album == TrackUtils.UNKNOWN){
                 menu.removeItem(R.id.viewAlbum)
             }
             if (playlist.id == PlaylistConstants.FAVORITE_LIST_ID){

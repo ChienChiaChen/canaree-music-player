@@ -1,9 +1,9 @@
 package dev.olog.msc.presentation.equalizer
 
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
-import dev.olog.msc.music.service.equalizer.IBassBoost
-import dev.olog.msc.music.service.equalizer.IEqualizer
-import dev.olog.msc.music.service.equalizer.IVirtualizer
+import dev.olog.msc.musicservice.equalizer.IBassBoost
+import dev.olog.msc.musicservice.equalizer.IEqualizer
+import dev.olog.msc.musicservice.equalizer.IVirtualizer
 import io.reactivex.Observable
 import javax.inject.Inject
 

@@ -8,7 +8,7 @@ import dev.olog.msc.BuildConfig
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
-import dev.olog.msc.utils.k.extension.toast
+import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable

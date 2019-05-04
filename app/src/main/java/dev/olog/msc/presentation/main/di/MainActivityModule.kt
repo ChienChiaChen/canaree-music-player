@@ -10,10 +10,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import dev.olog.msc.core.dagger.qualifier.ActivityContext
+import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
+import dev.olog.msc.core.dagger.scope.PerActivity
 import dev.olog.msc.dagger.ViewModelKey
-import dev.olog.msc.dagger.qualifier.ActivityContext
-import dev.olog.msc.dagger.qualifier.ActivityLifecycle
-import dev.olog.msc.dagger.scope.PerActivity
 import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.edit.EditItemViewModel
 import dev.olog.msc.presentation.main.MainActivity

@@ -10,13 +10,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.dagger.qualifier.ProcessLifecycle
-import dev.olog.msc.presentation.main.MainActivity
-import dev.olog.msc.presentation.model.DisplayableItem
+import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.k.extension.getBitmapAsync
-import dev.olog.msc.utils.k.extension.toast
+import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
+import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.presentation.main.MainActivity
+import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.utils.k.extension.getBitmap
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -44,8 +45,8 @@ abstract class BaseAppShortcuts(
                 intent.action = AppConstants.SHORTCUT_DETAIL
                 intent.putExtra(AppConstants.SHORTCUT_DETAIL_MEDIA_ID, mediaId.toString())
 
-                val model = DisplayableItem(0, mediaId, "", image = image)
-                val bitmap = context.getBitmapAsync(model, 128, { circleCrop() })
+                val model = ImageModel(mediaId, image)
+                val bitmap = context.getBitmap(model, 128, { circleCrop() })
                 val shortcut = ShortcutInfoCompat.Builder(context, title)
                         .setShortLabel(title)
                         .setIcon(IconCompat.createWithBitmap(bitmap))
