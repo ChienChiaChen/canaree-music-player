@@ -7,7 +7,7 @@ import dev.olog.msc.core.entity.track.Genre
 import dev.olog.msc.data.repository.util.CommonQuery
 import dev.olog.msc.presentation.image.creation.impl.MergedImagesCreator
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import io.reactivex.Flowable
 import javax.inject.Inject
 

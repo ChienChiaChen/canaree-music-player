@@ -5,8 +5,8 @@ import android.graphics.Bitmap
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import dev.olog.msc.utils.img.ImagesFolderUtils
-import dev.olog.msc.utils.img.extractImageName
+import dev.olog.msc.imageprovider.ImagesFolderUtils
+import dev.olog.msc.imageprovider.extractImageName
 import dev.olog.msc.utils.k.extension.getBitmap
 import java.io.File
 import java.io.FileOutputStream
@@ -35,7 +35,7 @@ object MergedImagesCreator {
     }
 
     private fun getBitmap(context: Context, albumId: Long): Bitmap {
-        val originalImage = ImagesFolderUtils.forAlbum(albumId)
+        val originalImage = ImagesFolderUtils.forAlbum(context, albumId)
         val model = ImageModel(MediaId.albumId(albumId), originalImage)
         return context.getBitmap(model, 500, withError = false)
     }

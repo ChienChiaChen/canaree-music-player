@@ -3,8 +3,9 @@ package dev.olog.msc.presentation.edit.album
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dev.olog.msc.app.app
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import org.jaudiotagger.tag.TagOptionSingleton
@@ -44,7 +45,7 @@ class EditAlbumFragmentViewModel @Inject constructor(
 
     fun getNewImage(): String? {
         val albumId = getAlbum().id
-        val original = ImagesFolderUtils.forAlbum(albumId)
+        val original = ImagesFolderUtils.forAlbum(app, albumId)
         val current = displayedAlbum.value!!.image
         if (original == current){
             return null

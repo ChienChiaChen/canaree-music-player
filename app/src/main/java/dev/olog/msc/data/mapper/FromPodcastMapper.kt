@@ -27,14 +27,3 @@ fun Podcast.toArtist(songCount: Int, albumsCount: Int) : PodcastArtist {
             ""
     )
 }
-
-fun Podcast.toFakeArtist(songCount: Int, albumsCount: Int) : PodcastArtist {
-    return PodcastArtist(
-            this.artistId,
-            this.artist,
-            this.albumArtist,
-            songCount,
-            albumsCount,
-            getFakeImage(this.artistId)
-    )
-}

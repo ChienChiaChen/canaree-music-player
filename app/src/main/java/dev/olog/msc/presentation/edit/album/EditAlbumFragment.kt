@@ -17,7 +17,7 @@ import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_edit_album.*
 import kotlinx.android.synthetic.main.fragment_edit_album.view.*
@@ -107,7 +107,7 @@ class EditAlbumFragment : BaseEditItemFragment() {
 
     override fun restoreImage() {
         val albumId = viewModel.getAlbum().id
-        val uri = ImagesFolderUtils.forAlbum(albumId)
+        val uri = ImagesFolderUtils.forAlbum(requireContext(), albumId)
         viewModel.updateImage(uri)
     }
 

@@ -7,21 +7,19 @@ import android.provider.MediaStore
 import androidx.core.util.getOrDefault
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.PodcastPositionEntity
-import dev.olog.msc.data.mapper.toFakePodcast
 import dev.olog.msc.data.mapper.toPodcast
 import dev.olog.msc.data.mapper.toUneditedPodcast
 import dev.olog.msc.data.repository.util.CommonQuery
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.shared.extensions.debounceFirst
 import dev.olog.msc.utils.getLong
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -69,31 +67,12 @@ class PodcastRepository @Inject constructor(
                 .debounceFirst()
                 .lift(SqlBrite.Query.mapToList { mapToPodcast(it) })
                 .map { adjustImages(it) }
-                .map { mockDataIfNeeded(it) }
                 .doOnError { it.printStackTrace() }
                 .onErrorReturn { listOf() }
     }
 
     private fun mapToPodcast(cursor: Cursor): Podcast {
-        return if (AppConstants.useFakeData){
-            cursor.toFakePodcast()
-        } else {
-            cursor.toPodcast()
-        }
-    }
-
-    private fun mockDataIfNeeded(original: List<Podcast>): List<Podcast> {
-        if (AppConstants.useFakeData && original.isEmpty()){
-            return (0 until 50)
-                    .map {
-                        Podcast(it.toLong(), it.toLong(), it.toLong(),
-                                "An awesome title", "An awesome artist",
-                                "An awesome album artist", "An awesome album",
-                                "", (it * 1000000).toLong(), System.currentTimeMillis(),
-                                "storage/emulated/folder", "folder", -1, -1)
-                    }
-        }
-        return original
+        return cursor.toPodcast()
     }
 
     private fun adjustImages(original: List<Podcast>): List<Podcast> {
@@ -130,7 +109,7 @@ class PodcastRepository @Inject constructor(
                     val albumId = it.getLong(MediaStore.Audio.AudioColumns.ALBUM_ID)
                     val trackImage = usedImageGateway.getForTrack(id)
                     val albumImage = usedImageGateway.getForAlbum(albumId)
-                    val image = trackImage ?: albumImage ?: ImagesFolderUtils.forAlbum(albumId)
+                    val image = trackImage ?: albumImage ?: ImagesFolderUtils.forAlbum(context, albumId)
                     it.toUneditedPodcast(image)
                 }).distinctUntilChanged()
     }

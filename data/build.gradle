@@ -27,6 +27,7 @@ android {
 
 dependencies {
     implementation project(':core')
+    implementation project(':imageprovider')
 
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

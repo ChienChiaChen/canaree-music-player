@@ -1,13 +1,11 @@
 package dev.olog.msc.data.mapper
 
 import android.content.Context
-import android.net.Uri
 import dev.olog.msc.core.entity.track.Album
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.utils.img.ImagesFolderUtils
-import dev.olog.msc.shared.utils.clamp
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 
 fun Song.toFolder(context: Context, songCount: Int) : Folder {
     val folderImage = ImagesFolderUtils.forFolder(context, this.folderPath)
@@ -42,20 +40,4 @@ fun Song.toArtist(songCount: Int, albumsCount: Int) : Artist {
             albumsCount,
             ""
     )
-}
-
-fun Song.toFakeArtist(songCount: Int, albumsCount: Int) : Artist {
-    return Artist(
-            this.artistId,
-            this.artist,
-            this.albumArtist,
-            songCount,
-            albumsCount,
-            getFakeImage(this.artistId)
-    )
-}
-
-internal fun getFakeImage(artistId: Long): String {
-    val safe = clamp(artistId.rem(6), 0L, 6L)
-    return Uri.parse("file:///android_asset/people/$safe.jpg").toString()
 }

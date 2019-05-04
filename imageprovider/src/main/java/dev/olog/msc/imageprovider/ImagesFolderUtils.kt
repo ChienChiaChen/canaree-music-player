@@ -1,13 +1,8 @@
-package dev.olog.msc.utils.img
+package dev.olog.msc.imageprovider
 
 import android.content.ContentUris
 import android.content.Context
-import android.net.Uri
 import android.provider.MediaStore
-import dev.olog.msc.app.app
-import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.utils.getStringOrNull
-import dev.olog.msc.shared.utils.clamp
 import java.io.File
 
 object ImagesFolderUtils {
@@ -15,12 +10,8 @@ object ImagesFolderUtils {
     const val FOLDER = "folder"
     const val PLAYLIST = "playlist"
     const val GENRE = "genre"
-    private const val DEBUG = "_debug"
 
     fun getFolderName(folderName: String): String {
-        if (AppConstants.useFakeData){
-            return "$folderName$DEBUG"
-        }
         return folderName
     }
 
@@ -30,34 +21,24 @@ object ImagesFolderUtils {
 
     fun forFolder(context: Context, folderPath: String): String{
         val normalizedPath = folderPath.replace(File.separator, "")
-        if (AppConstants.useFakeData){
-            return getImageImpl(context, "$FOLDER$DEBUG", normalizedPath)
-        }
         return getImageImpl(context, FOLDER, normalizedPath)
     }
 
     fun forPlaylist(context: Context, playlistId: Long): String{
-        if (AppConstants.useFakeData){
-            return getImageImpl(context, "$PLAYLIST$DEBUG", playlistId.toString())
-        }
         return getImageImpl(context, PLAYLIST, playlistId.toString())
     }
 
-    fun getAssetImage(albumId: Long, songId: Long): String{
-        return getFakeImage(albumId, songId)
-    }
-
-    fun forAlbum(albumId: Long): String {
+    fun forAlbum(context: Context, albumId: Long): String {
 
         val uri = ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId)
-        val cursor = app.contentResolver.query(uri, arrayOf(MediaStore.Audio.Albums.ALBUM_ART), null,
+        val cursor = context.contentResolver.query(uri, arrayOf(MediaStore.Audio.Albums.ALBUM_ART), null,
                 null, null)
 
         var result : String? = null
 
         cursor?.use {
             if (it.moveToFirst()){
-                result = it.getStringOrNull(MediaStore.Audio.Albums.ALBUM_ART)
+                result = it.getString(it.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART))
             }
         }
 
@@ -67,16 +48,8 @@ object ImagesFolderUtils {
 
         return result!!
     }
-    private fun getFakeImage(albumId: Long, songId: Long): String {
-        val size = 10L
-        val safe = clamp((albumId + songId).rem(size), 0, size - 1)
-        return Uri.parse("file:///android_asset/images/$safe.jpg").toString()
-    }
 
     fun forGenre(context: Context, genreId: Long): String {
-        if (AppConstants.useFakeData){
-            return getImageImpl(context, "$GENRE$DEBUG", genreId.toString())
-        }
         return getImageImpl(context, GENRE, genreId.toString())
     }
 

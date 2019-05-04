@@ -3,7 +3,6 @@ package dev.olog.msc.data.repository.podcast
 import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.gateway.PodcastArtistGateway
@@ -11,7 +10,6 @@ import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.mapper.toArtist
-import dev.olog.msc.data.mapper.toFakeArtist
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.debounceFirst
@@ -72,11 +70,7 @@ class PodcastArtistRepository @Inject constructor(
     }
 
     private fun mapSongToArtist(song: Podcast, songCount: Int, albumCount: Int): PodcastArtist {
-        return if (AppConstants.useFakeData){
-            song.toFakeArtist(songCount, albumCount)
-        } else {
-            song.toArtist(songCount, albumCount)
-        }
+        return song.toArtist(songCount, albumCount)
     }
 
     private fun countAlbums(artistId: Long, songList: List<Podcast>): Int {

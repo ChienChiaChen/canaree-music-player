@@ -1,8 +1,10 @@
 package dev.olog.msc.data.repository.podcast
 
+import android.content.Context
 import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.gateway.PodcastAlbumGateway
@@ -14,7 +16,7 @@ import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.debounceFirst
 import dev.olog.msc.shared.extensions.safeCompare
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -24,6 +26,7 @@ import javax.inject.Inject
 private val MEDIA_STORE_URI = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
 
 class PodcastAlbumRepository @Inject constructor(
+        @ApplicationContext private val context: Context,
         appDatabase: AppDatabase,
         private val rxContentResolver: BriteContentResolver,
         private val podcastGateway: PodcastGateway,
@@ -60,7 +63,7 @@ class PodcastAlbumRepository @Inject constructor(
         }
 
         return list.map { album ->
-            val image = allForAlbum.firstOrNull { it.id == album.id }?.image ?: ImagesFolderUtils.forAlbum(album.id)
+            val image = allForAlbum.firstOrNull { it.id == album.id }?.image ?: ImagesFolderUtils.forAlbum(context, album.id)
             album.copy(image = image)
         }
     }

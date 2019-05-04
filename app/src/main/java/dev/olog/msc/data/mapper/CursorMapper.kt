@@ -10,7 +10,7 @@ import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.getLongOrNull
 import dev.olog.msc.utils.getStringOrNull
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 
 fun Cursor.toGenre(context: Context, genreSize: Int) : Genre {
     val id = this.getLongOrNull(BaseColumns._ID) ?: -1
@@ -36,7 +36,7 @@ fun Cursor.toPlaylist(context: Context, playlistSize: Int) : Playlist {
 }
 
 fun Cursor.extractId() : Long {
-    return this.getLong(android.provider.BaseColumns._ID)
+    return this.getLong(BaseColumns._ID)
 }
 
 fun Cursor.toPlaylistSong() : PlaylistSongEntity {

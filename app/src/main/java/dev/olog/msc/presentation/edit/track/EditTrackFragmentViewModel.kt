@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.crashlytics.android.Crashlytics
 import dev.olog.msc.NetworkUtils
 import dev.olog.msc.app.app
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import org.jaudiotagger.tag.TagOptionSingleton
@@ -43,7 +43,7 @@ class EditTrackFragmentViewModel @Inject constructor(
     fun getNewImage(): String? {
         try {
             val albumId = getSong().albumId
-            val original = ImagesFolderUtils.forAlbum(albumId)
+            val original = ImagesFolderUtils.forAlbum(app, albumId)
             val current = displayedSong.value!!.image
             if (original == current){
                 return null

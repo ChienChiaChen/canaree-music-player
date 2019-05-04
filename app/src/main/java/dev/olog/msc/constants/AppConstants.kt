@@ -13,9 +13,7 @@ object AppConstants {
 
     private const val TAG = "AppConstants"
 
-    var useFakeData = false
     var IGNORE_MEDIA_STORE_COVERS = false
-
 
     const val SHORTCUT_SEARCH = "$TAG.shortcut.search"
     const val SHORTCUT_DETAIL = "$TAG.shortcut.detail"
@@ -28,8 +26,6 @@ object AppConstants {
     var IMAGE_SHAPE = ImageShape.ROUND
 
     const val PROGRESS_BAR_INTERVAL = 250
-
-
 
     fun initialize(context: Context){
         updateQuickAction(context)

@@ -7,7 +7,7 @@ import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.domain.interactor.all.newrequest.GetAllSongsNewRequestUseCase
 import dev.olog.msc.presentation.image.creation.impl.MergedImagesCreator
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import io.reactivex.Flowable
 import java.io.File
 import javax.inject.Inject

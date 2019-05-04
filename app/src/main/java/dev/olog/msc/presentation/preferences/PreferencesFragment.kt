@@ -29,7 +29,7 @@ import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.theme.ThemedDialog
 import dev.olog.msc.presentation.utils.ColorPalette
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers

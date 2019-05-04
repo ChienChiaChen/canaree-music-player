@@ -19,7 +19,7 @@ import dev.olog.msc.presentation.special.thanks.SpecialThanksModel
 import dev.olog.msc.presentation.utils.images.RippleTarget
 import dev.olog.msc.presentation.widget.QuickActionView
 import dev.olog.msc.utils.img.CoverUtils
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 
 object BindingsAdapter {
 

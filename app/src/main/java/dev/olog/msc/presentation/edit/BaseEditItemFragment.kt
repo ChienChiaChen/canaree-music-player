@@ -18,7 +18,7 @@ import dev.olog.msc.presentation.base.BaseBottomSheetFragment
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.theme.ThemedDialog
 import dev.olog.msc.utils.img.CoverUtils
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.act
 import dev.olog.msc.utils.k.extension.ctx
 
