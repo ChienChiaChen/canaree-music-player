@@ -25,8 +25,28 @@ android {
 }
 
 dependencies {
+    implementation project(':core')
+    implementation project(':shared')
+
+    // kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    implementation "androidx.appcompat:appcompat:1.0.2"
+
+    // google architecture components
+    implementation "androidx.lifecycle:lifecycle-runtime:$rootProject.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycle"
+
     // billing
     api "com.android.billingclient:billing:$rootProject.billing"
+
+    // rx
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rx_java"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rx_kotlin"
+
+    // dagger
+    implementation "com.google.dagger:dagger:$rootProject.dagger"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'

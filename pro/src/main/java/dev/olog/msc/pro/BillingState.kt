@@ -4,3 +4,4 @@ class BillingState(
         val isTrial: Boolean,
         val isBought: Boolean
 )
+

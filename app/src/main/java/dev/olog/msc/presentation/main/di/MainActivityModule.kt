@@ -19,10 +19,9 @@ import dev.olog.msc.presentation.edit.EditItemViewModel
 import dev.olog.msc.presentation.main.MainActivity
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.navigator.NavigatorImpl
-import dev.olog.msc.pro.BillingImpl
-import dev.olog.msc.pro.IBilling
+import dev.olog.msc.pro.ProModule
 
-@Module(includes = [MainActivityModule.Binding::class])
+@Module(includes = [MainActivityModule.Binding::class, ProModule::class])
 class MainActivityModule(
         private val activity: MainActivity
 ) {
@@ -64,10 +63,6 @@ class MainActivityModule(
         @Binds
         @PerActivity
         fun provideNavigator(navigatorImpl: NavigatorImpl): Navigator
-
-        @Binds
-        @PerActivity
-        fun provideBilling(impl: BillingImpl): IBilling
 
     }
 
