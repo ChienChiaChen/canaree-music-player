@@ -1,34 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-
-android {
-    compileSdkVersion 28
-
-
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-}
+apply from: '../base_module.gradle'
 
 dependencies {
     implementation project(':core')
@@ -37,36 +8,26 @@ dependencies {
     implementation project(':image-provider')
     implementation project(':offline-lyrics')
 
-    // kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation librariesCore.lifecycleRuntime
+    implementation librariesCore.lifecycleExtensions
+    implementation librariesCore.lifecycleJava8
 
-    // google architecture components
-    implementation "androidx.lifecycle:lifecycle-runtime:$rootProject.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycle"
+    implementation librariesAndroidX.appcompat
+    implementation librariesAndroidX.media
+    implementation librariesAndroidX.recycler
+    implementation librariesAndroidX.cardview
+    implementation librariesAndroidX.material
+    implementation librariesUi.constraintLayout
 
-    implementation "androidx.appcompat:appcompat:1.0.2"
-    implementation "androidx.media:media:1.0.1"
-    implementation "androidx.recyclerview:recyclerview:$rootProject.androidX"
-    implementation "androidx.cardview:cardview:$rootProject.androidX"
-    implementation "com.google.android.material:material:$rootProject.androidX"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraint_layout"
+    implementation librariesCore.daggerAndroid
+    kapt librariesCore.daggerAndroidProcessor
 
-    // dagger
-    implementation "com.google.dagger:dagger:$rootProject.dagger"
-    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
-    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+    implementation librariesCore.rxAndroid
 
-    // rx
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rx_java"
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rx_android"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rx_kotlin"
-    debugImplementation "nl.littlerobots.rxlint:rxlint:$rootProject.rx_lint"
-
-    implementation "com.github.bumptech.glide:glide:$rootProject.glide"
-    kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
-    kapt 'com.android.support:support-annotations:28.0.0'
+    implementation librariesUi.glide
+    kapt librariesUi.glideProcessor
+    // mandatory for glide compatibility
+    kapt librariesUi.androidSupportAnnotation
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'

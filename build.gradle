@@ -44,11 +44,6 @@ task clean(type: Delete) {
 }
 
 ext {
-    // Sdk and tools
-    minSdkVersion = 21
-    targetSdkVersion = 28
-    compileSdkVersion = 28
-    buildToolsVersion = '28.0.3'
 
     /*  version code
         999 - for old compatibility
@@ -58,45 +53,162 @@ ext {
     versionCode = 999_28_2_1_01
     versionName = '2.1.1'
 
-    // App dependencies
-    androidX = '1.0.0'
-    firebase = '16.0.8'
-    firebase_in_app_mess = '17.0.3'
-    lifecycle = '2.0.0'
-    room = '2.0.0'
-    constraint_layout = '1.1.3'
-    glide = '4.9.0'
-    sliding_panel = '3.4.0'
-//    lottie = '2.8.0'
-    lottie = '3.0.0'
-    sql_brite = '3.2.0'
-    billing = '1.2.2'
-    retrofit = '2.5.0'
-    fuzzywuzzy = '1.2.0'
-    gson = '2.8.5'
-    ok_http = '3.14.0'
-    optional_lib = '1.2'
-    last_fm_binding = '0.1.2'
-    aes_crypto = '1.1.0'
+    // Sdk and tools
+    minSdkVersion = 21
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+    buildToolsVersion = '28.0.3'
 
-    // reactive
+//    libs
+    dagger = '2.22.1'
     rx_java = '2.2.8'
     rx_android = '2.1.1'
     rx_binding = '2.2.0'
-
     rx_preferences = '2.0.0'
     rx_kotlin = '2.3.0'
     rx_lint = '1.7.0'
-
-    custom_tabs = '2.0.0'
+    lifecycle = '2.0.0'
+    sliding_panel = '3.4.0'
+    lottie = '3.0.0'
+    glide = '4.9.0'
     material_dialogs = '2.8.1'
-
-    // dependency injection
-    dagger = '2.22.1'
-
-    // debug
+    blurkit = '1.0.0'
+    fuzzywuzzy = '1.2.0'
+    aes_crypto = '1.1.0'
+    android_support = '28.0.0'
+    constraint_layout = '1.1.3'
     leak_canary = '1.6.3'
-    crashlytics = '2.9.9'
+    stetho = '1.5.1'
+    custom_tabs = '2.0.0'
+    gson = '2.8.5'
+    optional = '1.2'
+    retrofit = '2.5.0'
+    ok_http = '3.14.0'
+    sql_brite = '3.2.0'
+    billing = '1.2.2'
+    last_fm_binding = '0.1.2'
+    exoplayer = '2.9.6'
+
+    android_x_core = '1.0.1'
+    android_x_legacy = '1.0.0'
+    android_x_appcompat = '1.0.2'
+    android_x_media = '1.0.1'
+    android_x_media_router = '1.0.0'
+    android_x_recycler = '1.0.0'
+    android_x_cardview = '1.0.0'
+    android_x_browser = '1.0.0'
+    android_x_material = '1.0.0'
+    android_x_preference = '1.0.0'
+    android_x_palette = '1.0.0'
+    android_x_annotations = '1.0.2'
+    room = '2.0.0'
+
+    firebase = '16.0.8'
+    firebase_crashlytics = '2.9.9'
+    firebase_messaging = '16.1.1'
+
+    librariesCore = [
+            kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
+//            dagger
+            dagger                : "com.google.dagger:dagger:$dagger",
+            daggerProcessor       : "com.google.dagger:dagger-compiler:$dagger",
+            daggerAndroid         : "com.google.dagger:dagger-android:$dagger",
+            daggerAndroidProcessor: "com.google.dagger:dagger-android-processor:$dagger",
+            daggerAndroidSupport  : "com.google.dagger:dagger-android-support:$dagger",
+//            rx
+            rxJava                : "io.reactivex.rxjava2:rxjava:$rx_java",
+            rxKotlin              : "io.reactivex.rxjava2:rxkotlin:$rx_kotlin",
+            rxLint                : "nl.littlerobots.rxlint:rxlint:$rx_lint",
+            rxBindings            : "com.jakewharton.rxbinding2:rxbinding:$rx_binding",
+            rxAndroid             : "io.reactivex.rxjava2:rxandroid:$rx_android",
+//            lifecycle
+            lifecycleRuntime      : "androidx.lifecycle:lifecycle-runtime:$lifecycle",
+            lifecycleExtensions   : "androidx.lifecycle:lifecycle-extensions:$lifecycle",
+            lifecycleJava8        : "androidx.lifecycle:lifecycle-common-java8:$lifecycle",
+            lifecycleRx           : "androidx.lifecycle:lifecycle-reactivestreams:$lifecycle",
+    ]
+
+    librariesMusic = [
+            remoteExoPlayer: "com.google.android.exoplayer:exoplayer-core:$exoplayer",
+            exoPlayer      : ':exoplayer-library-core',
+            exoPlayerFlac  : ':exoplayer-extension-flac',
+            exoPlayerOpus  : ':exoplayer-extension-opus',
+            exoPlayerFfmpeg: ':exoplayer-extension-ffmpeg',
+
+    ]
+
+    librariesFirebase = [
+            core       : "com.google.firebase:firebase-core:$firebase",
+            crashlytics: "com.crashlytics.sdk.android:crashlytics:$firebase_crashlytics",
+            messaging  : "com.google.firebase:firebase-invites:$firebase_messaging"
+    ]
+
+    librariesNetwork = [
+            retrofit           : "com.squareup.retrofit2:retrofit:$retrofit",
+            retrofitRx         : "com.squareup.retrofit2:adapter-rxjava2:$retrofit",
+            retrofitGson       : "com.squareup.retrofit2:converter-gson:$retrofit",
+            retrofitInterceptor: "com.squareup.okhttp3:logging-interceptor:$ok_http",
+            okHttp             : "com.squareup.okhttp3:okhttp:$ok_http"
+    ]
+
+    librariesPersistency = [
+            rxPrefs      : "com.f2prateek.rx.preferences2:rx-preferences:$rx_preferences",
+            room         : "androidx.room:room-runtime:$room",
+            roomProcessor: "androidx.room:room-compiler:$room",
+            roomRx       : "androidx.room:room-rxjava2:$room",
+            sqlBrite     : "com.squareup.sqlbrite3:sqlbrite:$sql_brite"
+    ]
+
+    librariesAndroidX = [
+            core       : "androidx.core:core:$android_x_core",
+            coreKtx    : "androidx.core:core-ktx:$android_x_core",
+            legacyV4   : "androidx.legacy:legacy-support-v4:$android_x_legacy",
+            appcompat  : "androidx.appcompat:appcompat:$android_x_appcompat",
+            media      : "androidx.media:media:$android_x_media",
+            mediaRouter: "androidx.mediarouter:mediarouter:$android_x_media_router",
+            recycler   : "androidx.recyclerview:recyclerview:$android_x_recycler",
+            cardview   : "androidx.cardview:cardview:$android_x_cardview",
+            browser    : "androidx.cardview:cardview:$android_x_browser",
+            material   : "com.google.android.material:material:$android_x_material",
+            preference : "androidx.legacy:legacy-preference-v14:$android_x_preference",
+            palette    : "androidx.palette:palette:$android_x_palette",
+            annotations: "androidx.annotation:annotation:$android_x_annotations"
+    ]
+
+    librariesUi = [
+            dataBinding             : "androidx.databinding:databinding-compiler:$gradle_plugin",
+
+            androidSupportAnnotation: "com.android.support:support-annotations:$android_support",
+
+            slidingPanel            : "com.sothree.slidinguppanel:library:$sliding_panel",
+            lottie                  : "com.airbnb.android:lottie:$lottie",
+            blurkit                 : "io.alterac.blurkit:blurkit:$blurkit",
+
+            glide                   : "com.github.bumptech.glide:glide:$glide",
+            glideProcessor          : "com.github.bumptech.glide:compiler:$glide",
+
+            materialDialogsCore     : "com.afollestad.material-dialogs:core:$material_dialogs",
+            materialDialogsColor    : "com.afollestad.material-dialogs:color:$material_dialogs",
+
+            constraintLayout        : "androidx.constraintlayout:constraintlayout:$constraint_layout",
+    ]
+
+    librariesUtils = [
+            fuzzywuzzy: "me.xdrop:fuzzywuzzy:$fuzzywuzzy",
+            aesCrypto : "com.github.tozny:java-aes-crypto:$aes_crypto",
+            customTabs: "saschpe.android:customtabs:$custom_tabs",
+            gson      : "com.google.code.gson:gson:$gson",
+            optional  : "com.github.dmstocking:support-optional:$optional",
+            billing   : "com.android.billingclient:billing:$billing",
+            lastFm    : "de.u-mass:lastfm-java:$last_fm_binding",
+    ]
+
+    librariesDebug = [
+            leakCanary       : "com.squareup.leakcanary:leakcanary-android:$leak_canary",
+            leakCanarySupport: "com.squareup.leakcanary:leakcanary-support-fragment:$leak_canary",
+            leakCanaryStub   : "com.squareup.leakcanary:leakcanary-android-no-op:$leak_canary",
+            stetho           : "com.facebook.stetho:stetho:$stetho"
+    ]
 
     // test
     junit = '4.12'

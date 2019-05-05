@@ -1,17 +1,11 @@
 apply plugin: 'kotlin'
 
 dependencies {
-    // kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
-    // rx
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rx_java"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rx_kotlin"
-
-    // dagger
-    implementation "com.google.dagger:dagger:$rootProject.dagger"
-
-    implementation "com.github.dmstocking:support-optional:$rootProject.optional_lib"
+    implementation librariesCore.kotlin
+    implementation librariesCore.rxJava
+    implementation librariesCore.rxKotlin
+    implementation librariesCore.dagger
+    implementation librariesUtils.optional
 }
 
 sourceCompatibility = "8"

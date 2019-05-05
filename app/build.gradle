@@ -72,7 +72,6 @@ android {
     }
 
 
-
     lintOptions {
         checkReleaseBuilds false
         disable 'MissingTranslation'
@@ -109,82 +108,81 @@ dependencies {
     implementation project(':shared-ui-components')
     implementation project(':offline-lyrics')
 
+    implementation project(':presentation-navigator')
+
     // data binding
-    kapt "androidx.databinding:databinding-compiler:$gradle_plugin"
+    kapt librariesUi.dataBinding
 
     // kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation librariesCore.kotlin
 
     // google architecture components
-    implementation "androidx.lifecycle:lifecycle-runtime:$rootProject.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-reactivestreams:$rootProject.lifecycle"
+    implementation librariesCore.lifecycleRuntime
+    implementation librariesCore.lifecycleExtensions
+    implementation librariesCore.lifecycleJava8
+    implementation librariesCore.lifecycleRx
 
     // support
-    implementation "androidx.core:core:1.0.1"
-    implementation "androidx.core:core-ktx:1.0.1"
-    implementation "androidx.legacy:legacy-support-v4:$rootProject.androidX"
-    implementation "androidx.appcompat:appcompat:1.0.2"
-    implementation "androidx.media:media:1.0.1"
-    implementation "androidx.mediarouter:mediarouter:$rootProject.androidX"
-    implementation "androidx.recyclerview:recyclerview:$rootProject.androidX"
-    implementation "androidx.cardview:cardview:$rootProject.androidX"
-    implementation "androidx.browser:browser:$rootProject.androidX"
-    implementation "com.google.android.material:material:$rootProject.androidX"
-    implementation "androidx.legacy:legacy-preference-v14:$rootProject.androidX"
-    implementation "androidx.palette:palette:$rootProject.androidX"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraint_layout"
-
-
+    implementation librariesAndroidX.core
+    implementation librariesAndroidX.coreKtx
+    implementation librariesAndroidX.legacyV4
+    implementation librariesAndroidX.appcompat
+    implementation librariesAndroidX.media
+    implementation librariesAndroidX.mediaRouter
+    implementation librariesAndroidX.recycler
+    implementation librariesAndroidX.cardview
+    implementation librariesAndroidX.browser
+    implementation librariesAndroidX.material
+    implementation librariesAndroidX.preference
+    implementation librariesAndroidX.palette
+    implementation librariesUi.constraintLayout
 
     // dagger
-    implementation "com.google.dagger:dagger:$rootProject.dagger"
-    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
-    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+    implementation librariesCore.dagger
+    kapt librariesCore.daggerProcessor
+    implementation librariesCore.daggerAndroid
+    implementation librariesCore.daggerAndroidSupport
+    kapt librariesCore.daggerAndroidProcessor
 
     // rx
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rx_java"
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rx_android"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rx_kotlin"
-    implementation "com.jakewharton.rxbinding2:rxbinding:$rootProject.rx_binding"
-    debugImplementation "nl.littlerobots.rxlint:rxlint:$rootProject.rx_lint"
+    implementation librariesCore.rxJava
+    implementation librariesCore.rxAndroid
+    implementation librariesCore.rxKotlin
+    implementation librariesCore.rxBindings
+    debugImplementation librariesCore.rxLint
 
-    // other
-    implementation "com.sothree.slidinguppanel:library:$rootProject.sliding_panel"
-    implementation "com.airbnb.android:lottie:$rootProject.lottie"
+    implementation librariesUi.slidingPanel
+    implementation librariesUi.lottie
 
-    implementation "com.github.bumptech.glide:glide:$rootProject.glide"
-    kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
-    kapt 'com.android.support:support-annotations:28.0.0'
+    implementation librariesUi.glide
+    kapt librariesUi.glideProcessor
+    // mandatory for glide compatibility
+    kapt librariesUi.androidSupportAnnotation
 
-    implementation "me.xdrop:fuzzywuzzy:$rootProject.fuzzywuzzy"
-    implementation "com.github.tozny:java-aes-crypto:$rootProject.aes_crypto"
-    implementation "saschpe.android:customtabs:$rootProject.custom_tabs"
-    implementation "com.afollestad.material-dialogs:core:$rootProject.material_dialogs"
-    implementation "com.afollestad.material-dialogs:color:$rootProject.material_dialogs"
-    implementation 'io.alterac.blurkit:blurkit:1.0.0'
+    implementation librariesUtils.fuzzywuzzy
+    implementation librariesUtils.aesCrypto
+    implementation librariesUtils.customTabs
+    implementation librariesUi.materialDialogsCore
+    implementation librariesUi.materialDialogsColor
+    implementation librariesUi.blurkit
 
     // debug
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leak_canary"
-    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$rootProject.leak_canary"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leak_canary"
-
-//    debugImplementation 'com.facebook.stetho:stetho:1.5.0'
+    debugImplementation librariesDebug.leakCanary
+    debugImplementation librariesDebug.leakCanarySupport
+    releaseImplementation librariesDebug.leakCanaryStub
+//    debugImplementation librariesDebug.stetho
 
     // firebase
-    implementation "com.google.firebase:firebase-core:$rootProject.firebase"
-    implementation("com.crashlytics.sdk.android:crashlytics:$rootProject.crashlytics") {
+    implementation librariesFirebase.core
+    implementation(librariesFirebase.crashlytics) {
         transitive = true
     }
-    implementation 'com.google.firebase:firebase-invites:16.1.1'
+    implementation librariesFirebase.messaging
 
     testImplementation "junit:junit:$rootProject.junit"
     testImplementation "org.mockito:mockito-core:$rootProject.mockito"
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
 
 // leave at bottom
