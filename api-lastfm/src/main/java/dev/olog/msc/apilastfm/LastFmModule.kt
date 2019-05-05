@@ -78,7 +78,7 @@ class LastFmModule {
 
     @Provides
     @Singleton
-    fun provideLastFmRepository(repository: LastFmRepository): LastFmGateway {
+    internal fun provideLastFmRepository(repository: LastFmRepository): LastFmGateway {
         return repository
     }
 

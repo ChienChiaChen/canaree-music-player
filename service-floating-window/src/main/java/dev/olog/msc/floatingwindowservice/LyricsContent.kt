@@ -19,7 +19,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import java.util.concurrent.TimeUnit
 
-class LyricsContent (
+internal class LyricsContent (
         lifecycle: Lifecycle,
         context: Context,
         private val musicServiceBinder: MusicServiceBinder

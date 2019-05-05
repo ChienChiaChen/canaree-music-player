@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 private val MEDIA_STORE_URI = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
 
-class PodcastAlbumRepository @Inject constructor(
+internal class PodcastAlbumRepository @Inject constructor(
         @ApplicationContext private val context: Context,
         appDatabase: AppDatabase,
         private val rxContentResolver: BriteContentResolver,

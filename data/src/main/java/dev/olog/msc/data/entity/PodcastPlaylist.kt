@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "podcast_playlist")
-data class PodcastPlaylistEntity(
+internal data class PodcastPlaylistEntity(
         @PrimaryKey(autoGenerate = true) val id: Long = 0,
         val name: String,
         val size: Int
@@ -21,7 +21,7 @@ data class PodcastPlaylistEntity(
             childColumns = ["playlistId"],
             onDelete = ForeignKey.CASCADE)
         ])
-data class PodcastPlaylistTrackEntity(
+internal data class PodcastPlaylistTrackEntity(
         @PrimaryKey(autoGenerate = true) val id: Long = 0,
         val idInPlaylist: Long,
         val podcastId: Long,

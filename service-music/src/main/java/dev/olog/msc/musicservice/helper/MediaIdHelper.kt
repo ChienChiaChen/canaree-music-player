@@ -6,7 +6,7 @@ import android.support.v4.media.MediaDescriptionCompat
 import androidx.annotation.StringRes
 import dev.olog.msc.core.MediaIdCategory
 
-object MediaIdHelper {
+internal object MediaIdHelper {
 
     const val MEDIA_ID_ROOT = "__ROOT__"
 

@@ -1,8 +1,8 @@
 package dev.olog.msc.musicservice.volume
 
-interface IPlayerVolume {
+internal interface IPlayerVolume {
 
-    var listener: IPlayerVolume.Listener?
+    var listener: Listener?
 
     fun getVolume(): Float
     fun normal(): Float

@@ -14,7 +14,7 @@ import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.musicservice.model.MediaEntity
 import javax.inject.Inject
 
-class DefaultSourceFactory @Inject constructor(
+internal class DefaultSourceFactory @Inject constructor(
         @ApplicationContext context: Context
 
 ): SourceFactory<MediaEntity> {

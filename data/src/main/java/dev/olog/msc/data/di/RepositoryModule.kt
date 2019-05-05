@@ -16,62 +16,62 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun provideFolderRepository(repository: FolderRepository): FolderGateway
+    internal abstract fun provideFolderRepository(repository: FolderRepository): FolderGateway
 
     @Binds
     @Singleton
-    abstract fun providePlaylistRepository(repository: PlaylistRepository): PlaylistGateway
+    internal abstract fun providePlaylistRepository(repository: PlaylistRepository): PlaylistGateway
 
     @Binds
     @Singleton
-    abstract fun provideSongRepository(repository: SongRepository): SongGateway
+    internal abstract fun provideSongRepository(repository: SongRepository): SongGateway
 
     @Binds
     @Singleton
-    abstract fun provideAlbumRepository(repository: AlbumRepository): AlbumGateway
+    internal abstract fun provideAlbumRepository(repository: AlbumRepository): AlbumGateway
 
     @Binds
     @Singleton
-    abstract fun provideArtistRepository(repository: ArtistRepository): ArtistGateway
+    internal abstract fun provideArtistRepository(repository: ArtistRepository): ArtistGateway
 
     @Binds
     @Singleton
-    abstract fun provideGenreRepository(repository: GenreRepository): GenreGateway
+    internal abstract fun provideGenreRepository(repository: GenreRepository): GenreGateway
 
     @Binds
     @Singleton
-    abstract fun providePodcastRepository(repository: PodcastRepository): PodcastGateway
+    internal abstract fun providePodcastRepository(repository: PodcastRepository): PodcastGateway
 
     @Binds
     @Singleton
-    abstract fun providePodcastPlaylistRepository(repository: PlaylistPodcastRepository): PodcastPlaylistGateway
+    internal abstract fun providePodcastPlaylistRepository(repository: PlaylistPodcastRepository): PodcastPlaylistGateway
 
     @Binds
     @Singleton
-    abstract fun providePodcastAlbumsRepository(repository: PodcastAlbumRepository): PodcastAlbumGateway
+    internal abstract fun providePodcastAlbumsRepository(repository: PodcastAlbumRepository): PodcastAlbumGateway
 
     @Binds
     @Singleton
-    abstract fun providePodcastArtistsRepository(repository: PodcastArtistRepository): PodcastArtistGateway
+    internal abstract fun providePodcastArtistsRepository(repository: PodcastArtistRepository): PodcastArtistGateway
 
     @Binds
     @Singleton
-    abstract fun providePlayingQueueRepository(repository: PlayingQueueRepository): PlayingQueueGateway
+    internal abstract fun providePlayingQueueRepository(repository: PlayingQueueRepository): PlayingQueueGateway
 
     @Binds
     @Singleton
-    abstract fun provideFavoriteRepository(repository: FavoriteRepository): FavoriteGateway
+    internal abstract fun provideFavoriteRepository(repository: FavoriteRepository): FavoriteGateway
 
     @Binds
     @Singleton
-    abstract fun provideRecentSearchesRepository(repository: RecentSearchesRepository): RecentSearchesGateway
+    internal abstract fun provideRecentSearchesRepository(repository: RecentSearchesRepository): RecentSearchesGateway
 
     @Binds
     @Singleton
-    abstract fun provideLyricsRepository(repository: OfflineLyricsRepository): OfflineLyricsGateway
+    internal abstract fun provideLyricsRepository(repository: OfflineLyricsRepository): OfflineLyricsGateway
 
     @Binds
     @Singleton
-    abstract fun provideUsedImageRepository(repository: UsedImageRepository): UsedImageGateway
+    internal abstract fun provideUsedImageRepository(repository: UsedImageRepository): UsedImageGateway
 
 }

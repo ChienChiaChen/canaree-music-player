@@ -24,7 +24,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.logging.Level
 import javax.inject.Inject
 
-class LastFmScrobbling @Inject constructor(
+internal class LastFmScrobbling @Inject constructor(
         @ServiceLifecycle lifecycle: Lifecycle,
         observeLastFmUserCredentials: ObserveLastFmUserCredentials,
         playerLifecycle: PlayerLifecycle

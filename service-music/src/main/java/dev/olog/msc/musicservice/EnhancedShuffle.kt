@@ -7,7 +7,7 @@ import dev.olog.msc.shared.extensions.removeFirst
 import javax.inject.Inject
 
 @PerService
-class EnhancedShuffle @Inject constructor(
+internal class EnhancedShuffle @Inject constructor(
         playerLifecycle: PlayerLifecycle
 
 )  {

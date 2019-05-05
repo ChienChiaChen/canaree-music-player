@@ -5,7 +5,7 @@ import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
 import dev.olog.msc.musicservice.equalizer.IBassBoost
 import javax.inject.Inject
 
-class BassBoostImpl @Inject constructor(
+internal class BassBoostImpl @Inject constructor(
         private val equalizerPrefsUseCase: EqualizerPreferencesGateway
 
 ) : IBassBoost {

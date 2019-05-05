@@ -7,7 +7,7 @@ import dev.olog.msc.musicservice.model.PlayerMediaEntity
 import dev.olog.msc.musicservice.model.PositionInQueue
 import io.reactivex.Single
 
-interface Queue {
+internal interface Queue {
 
     fun isReady() : Boolean
 

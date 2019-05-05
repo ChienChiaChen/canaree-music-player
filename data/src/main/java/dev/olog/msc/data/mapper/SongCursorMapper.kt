@@ -11,7 +11,7 @@ import dev.olog.msc.data.utils.getStringOrNull
 import java.io.File
 
 
-fun Cursor.toSong(): Song {
+internal fun Cursor.toSong(): Song {
     val id = getLong(BaseColumns._ID)
     val artistId = getLong(MediaStore.Audio.AudioColumns.ARTIST_ID)
     val albumId = getLong(MediaStore.Audio.AudioColumns.ALBUM_ID)
@@ -46,7 +46,7 @@ fun Cursor.toSong(): Song {
             folder.capitalize(), disc, track)
 }
 
-fun Cursor.toUneditedSong(image: String): Song {
+internal fun Cursor.toUneditedSong(image: String): Song {
     val id = getLong(BaseColumns._ID)
     val artistId = getLong(MediaStore.Audio.AudioColumns.ARTIST_ID)
     val albumId = getLong(MediaStore.Audio.AudioColumns.ALBUM_ID)

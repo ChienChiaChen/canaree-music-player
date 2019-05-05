@@ -5,7 +5,7 @@ import dev.olog.msc.core.entity.PlayingQueueSong
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 
-data class MediaEntity(
+internal data class MediaEntity(
         val id: Long,
         val idInPlaylist: Int,
         val mediaId: MediaId,
@@ -25,7 +25,7 @@ data class MediaEntity(
         val isPodcast: Boolean
 )
 
-fun Song.toMediaEntity(progressive: Int, mediaId: MediaId) : MediaEntity {
+internal fun Song.toMediaEntity(progressive: Int, mediaId: MediaId) : MediaEntity {
     return MediaEntity(
             this.id,
             progressive,
@@ -47,7 +47,7 @@ fun Song.toMediaEntity(progressive: Int, mediaId: MediaId) : MediaEntity {
     )
 }
 
-fun Podcast.toMediaEntity(progressive: Int, mediaId: MediaId) : MediaEntity {
+internal fun Podcast.toMediaEntity(progressive: Int, mediaId: MediaId) : MediaEntity {
     return MediaEntity(
             this.id,
             progressive,
@@ -69,7 +69,7 @@ fun Podcast.toMediaEntity(progressive: Int, mediaId: MediaId) : MediaEntity {
     )
 }
 
-fun PlayingQueueSong.toMediaEntity() : MediaEntity {
+internal fun PlayingQueueSong.toMediaEntity() : MediaEntity {
     return MediaEntity(
             this.id,
             this.idInPlaylist,
@@ -91,6 +91,6 @@ fun PlayingQueueSong.toMediaEntity() : MediaEntity {
     )
 }
 
-fun MediaEntity.toPlayerMediaEntity(positionInQueue: PositionInQueue, bookmark: Long) : PlayerMediaEntity {
+internal fun MediaEntity.toPlayerMediaEntity(positionInQueue: PositionInQueue, bookmark: Long) : PlayerMediaEntity {
     return PlayerMediaEntity(this, positionInQueue, bookmark)
 }

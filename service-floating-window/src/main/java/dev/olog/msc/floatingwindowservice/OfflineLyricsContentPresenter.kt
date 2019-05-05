@@ -6,7 +6,7 @@ import dev.olog.msc.offlinelyrics.domain.InsertOfflineLyricsUseCase
 import dev.olog.msc.offlinelyrics.domain.ObserveOfflineLyricsUseCase
 import javax.inject.Inject
 
-class OfflineLyricsContentPresenter @Inject constructor(
+internal class OfflineLyricsContentPresenter @Inject constructor(
         appPreferencesUseCase: AppPreferencesGateway,
         observeUseCase: ObserveOfflineLyricsUseCase,
         insertUseCase: InsertOfflineLyricsUseCase

@@ -21,7 +21,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.toFlowable
 import javax.inject.Inject
 
-class PlaylistPodcastRepository @Inject constructor(
+internal class PlaylistPodcastRepository @Inject constructor(
         resources: Resources,
         appDatabase: AppDatabase,
         private val podcastGateway: PodcastGateway,

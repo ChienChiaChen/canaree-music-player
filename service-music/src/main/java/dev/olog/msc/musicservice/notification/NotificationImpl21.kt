@@ -18,16 +18,16 @@ import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.IImageProvider
 import dev.olog.msc.imageprovider.ImageModel
-import dev.olog.msc.musicservice.PendingIntents
 import dev.olog.msc.musicservice.R
 import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.asActivityPendingIntent
 import dev.olog.msc.shared.extensions.asServicePendingIntent
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import javax.inject.Inject
 
-open class NotificationImpl21 @Inject constructor(
+internal open class NotificationImpl21 @Inject constructor(
         protected val service: Service,
         private val token: MediaSessionCompat.Token,
         protected val notificationManager: Lazy<NotificationManager>,

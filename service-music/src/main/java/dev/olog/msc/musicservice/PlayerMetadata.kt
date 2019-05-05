@@ -26,7 +26,7 @@ import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 @PerService
-class PlayerMetadata @Inject constructor(
+internal class PlayerMetadata @Inject constructor(
         @ServiceLifecycle lifecycle: Lifecycle,
         @ApplicationContext private val context: Context,
         private val mediaSession: MediaSessionCompat,

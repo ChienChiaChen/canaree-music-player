@@ -10,8 +10,8 @@ import javax.inject.Inject
 
 class FloatingWindowService : BaseFloatingService() {
 
-    @Inject lateinit var hoverMenu: CustomHoverMenu
-    @Inject lateinit var notification : FloatingWindowNotification
+    @Inject internal lateinit var hoverMenu: CustomHoverMenu
+    @Inject internal lateinit var notification : FloatingWindowNotification
 
     companion object {
         const val TAG = "FloatingWindowService"

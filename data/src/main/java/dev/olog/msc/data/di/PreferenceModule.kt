@@ -24,18 +24,18 @@ class PreferenceModule{
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+    internal fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
     }
 
     @Provides
     @Singleton
-    fun provideRxPreferences(preferences: SharedPreferences): RxSharedPreferences {
+    internal fun provideRxPreferences(preferences: SharedPreferences): RxSharedPreferences {
         return RxSharedPreferences.create(preferences)
     }
 
     @Module
-    interface Bindings {
+    internal interface Bindings {
 
         @Binds
         @Singleton

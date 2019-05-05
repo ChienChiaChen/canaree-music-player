@@ -8,7 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class OfflineLyricsRepository @Inject constructor(
+internal class OfflineLyricsRepository @Inject constructor(
         appDatabase: AppDatabase
 
 ) : OfflineLyricsGateway {

@@ -8,7 +8,7 @@ import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import javax.inject.Inject
 
 @PerService
-class ShuffleMode @Inject constructor(
+internal class ShuffleMode @Inject constructor(
         private val mediaSession: MediaSessionCompat,
         private val musicPreferencesUseCase: MusicPreferencesGateway
 ) {

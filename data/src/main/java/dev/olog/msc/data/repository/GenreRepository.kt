@@ -38,7 +38,7 @@ private val SONG_SELECTION = null
 private val SONG_SELECTION_ARGS: Array<String>? = null
 private const val SONG_SORT_ORDER = "lower(${MediaStore.Audio.Genres.Members.TITLE})"
 
-class GenreRepository @Inject constructor(
+internal class GenreRepository @Inject constructor(
         @ApplicationContext private val context: Context,
         private val rxContentResolver: BriteContentResolver,
         private val songGateway: SongGateway,

@@ -8,7 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 
 @Dao
-abstract class FavoriteDao {
+internal abstract class FavoriteDao {
 
     @Query("SELECT songId FROM favorite_songs")
     internal abstract fun getAllImpl(): Flowable<List<Long>>
@@ -17,10 +17,10 @@ abstract class FavoriteDao {
     internal abstract fun getAllPodcastsImpl(): Flowable<List<Long>>
 
     @Query("DELETE FROM favorite_songs")
-    abstract fun deleteAll()
+    internal abstract fun deleteAll()
 
     @Query("DELETE FROM favorite_podcast_songs")
-    abstract fun deleteAllPodcasts()
+    internal abstract fun deleteAllPodcasts()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     internal abstract fun insertOneImpl(item: FavoriteEntity)
@@ -40,7 +40,7 @@ abstract class FavoriteDao {
     @Delete
     internal abstract fun deleteGroupPodcastImpl(item: List<FavoritePodcastEntity>)
 
-    fun addToFavoriteSingle(type: FavoriteType, id: Long): Completable {
+    internal fun addToFavoriteSingle(type: FavoriteType, id: Long): Completable {
         return Completable.fromCallable {
             if (type == FavoriteType.TRACK) {
                 insertOneImpl(FavoriteEntity(id))
@@ -50,7 +50,7 @@ abstract class FavoriteDao {
         }
     }
 
-    fun addToFavorite(type: FavoriteType, songIds: List<Long>): Completable {
+    internal fun addToFavorite(type: FavoriteType, songIds: List<Long>): Completable {
         return Completable.fromCallable {
             if (type == FavoriteType.TRACK) {
                 insertGroupImpl(songIds.map { FavoriteEntity(it) })
@@ -60,7 +60,7 @@ abstract class FavoriteDao {
         }
     }
 
-    open fun removeFromFavorite(type: FavoriteType, songId: List<Long>): Completable {
+    internal open fun removeFromFavorite(type: FavoriteType, songId: List<Long>): Completable {
         return Completable.fromCallable {
             if (type == FavoriteType.TRACK){
                 deleteGroupImpl(songId.map { FavoriteEntity(it) })
@@ -71,9 +71,9 @@ abstract class FavoriteDao {
     }
 
     @Query("SELECT songId FROM favorite_songs WHERE songId = :songId")
-    abstract fun isFavorite(songId: Long): FavoriteEntity?
+    internal abstract fun isFavorite(songId: Long): FavoriteEntity?
 
     @Query("SELECT podcastId FROM favorite_podcast_songs WHERE podcastId = :podcastId")
-    abstract fun isFavoritePodcast(podcastId: Long): FavoritePodcastEntity?
+    internal abstract fun isFavoritePodcast(podcastId: Long): FavoritePodcastEntity?
 
 }

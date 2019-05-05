@@ -20,7 +20,7 @@ import dev.olog.msc.shared.utils.clamp
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class PlayerImpl @Inject constructor(
+internal class PlayerImpl @Inject constructor(
         @ServiceLifecycle lifecycle: Lifecycle,
         private val playerState: PlayerState,
         private val noisy: Lazy<Noisy>,

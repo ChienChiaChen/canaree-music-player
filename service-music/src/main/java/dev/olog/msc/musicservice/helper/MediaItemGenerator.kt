@@ -11,7 +11,7 @@ import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Single
 import javax.inject.Inject
 
-class MediaItemGenerator @Inject constructor(
+internal class MediaItemGenerator @Inject constructor(
         private val getAllFoldersUseCase: GetAllFoldersUseCase,
         private val getAllPlaylistsUseCase: GetAllPlaylistsUseCase,
         private val getAllSongsUseCase: GetAllSongsUseCase,

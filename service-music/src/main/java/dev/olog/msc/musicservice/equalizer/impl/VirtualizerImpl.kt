@@ -5,7 +5,7 @@ import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
 import dev.olog.msc.musicservice.equalizer.IVirtualizer
 import javax.inject.Inject
 
-class VirtualizerImpl @Inject constructor(
+internal class VirtualizerImpl @Inject constructor(
         private val equalizerPrefsUseCase: EqualizerPreferencesGateway
 
 ) : IVirtualizer {

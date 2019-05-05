@@ -19,7 +19,7 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class LastFmRepoPodcast @Inject constructor(
+internal class LastFmRepoPodcast @Inject constructor(
         appDatabase: AppDatabase,
         @Proxy private val lastFmService: LastFmService,
         private val gateway: PodcastGateway

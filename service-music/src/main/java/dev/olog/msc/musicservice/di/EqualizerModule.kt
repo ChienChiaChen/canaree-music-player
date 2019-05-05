@@ -1,4 +1,4 @@
-package dev.olog.msc.app
+package dev.olog.msc.musicservice.di
 
 import dagger.Binds
 import dagger.Module
@@ -15,14 +15,14 @@ abstract class EqualizerModule {
 
     @Binds
     @Singleton
-    abstract fun provideEqualizer(equalizerImpl: EqualizerImpl): IEqualizer
+    internal abstract fun provideEqualizer(equalizerImpl: EqualizerImpl): IEqualizer
 
     @Binds
     @Singleton
-    abstract fun provideBassBoost(bassBoostImpl: BassBoostImpl): IBassBoost
+    internal abstract fun provideBassBoost(bassBoostImpl: BassBoostImpl): IBassBoost
 
     @Binds
     @Singleton
-    abstract fun provideVirtualizer(virtualizerIml: VirtualizerImpl): IVirtualizer
+    internal abstract fun provideVirtualizer(virtualizerIml: VirtualizerImpl): IVirtualizer
 
 }

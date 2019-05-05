@@ -17,14 +17,14 @@ class FloatingWindowServiceModule(
 
     @Provides
     @ServiceLifecycle
-    fun provideLifecycle(): Lifecycle = service.lifecycle
+    internal fun provideLifecycle(): Lifecycle = service.lifecycle
 
     @Provides
     @ServiceContext
-    fun provideContext(): Context = service
+    internal fun provideContext(): Context = service
 
     @Provides
-    fun provideService() : Service = service
+    internal fun provideService() : Service = service
 
     @Provides
     internal fun provideNotificationManager(): NotificationManager {

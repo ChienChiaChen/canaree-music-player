@@ -8,7 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class TutorialPreferenceImpl @Inject constructor(
+internal class TutorialPreferenceImpl @Inject constructor(
         private val preferences: SharedPreferences,
         private val rxPreferences: RxSharedPreferences
 

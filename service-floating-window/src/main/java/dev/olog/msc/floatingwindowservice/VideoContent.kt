@@ -3,7 +3,7 @@ package dev.olog.msc.floatingwindowservice
 import android.content.Context
 import androidx.lifecycle.Lifecycle
 
-class VideoContent(
+internal class VideoContent(
         lifecycle: Lifecycle,
         context: Context
 

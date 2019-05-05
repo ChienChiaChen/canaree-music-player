@@ -11,7 +11,7 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 
 @Dao
-abstract class GenreMostPlayedDao {
+internal abstract class GenreMostPlayedDao {
 
     @Query("""
         SELECT songId, count(*) as timesPlayed
@@ -22,12 +22,12 @@ abstract class GenreMostPlayedDao {
         ORDER BY timesPlayed DESC
         LIMIT 10
     """)
-    abstract fun query(genreId: Long): Flowable<List<SongMostTimesPlayedEntity>>
+    internal abstract fun query(genreId: Long): Flowable<List<SongMostTimesPlayedEntity>>
 
     @Insert
-    abstract fun insertOne(item: GenreMostPlayedEntity)
+    internal abstract fun insertOne(item: GenreMostPlayedEntity)
 
-    fun getAll(genreId: Long, songList: Observable<List<Song>>): Observable<List<Song>> {
+    internal fun getAll(genreId: Long, songList: Observable<List<Song>>): Observable<List<Song>> {
         return this.query(genreId)
                 .toObservable()
                 .switchMap { mostPlayedSongs -> songList.map { songList ->

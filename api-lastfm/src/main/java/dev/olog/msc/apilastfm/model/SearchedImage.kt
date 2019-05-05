@@ -1,6 +1,6 @@
 package dev.olog.msc.apilastfm.model
 
-data class SearchedImage(
+internal data class SearchedImage(
         val id: Long,
         val image: String
 )

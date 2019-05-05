@@ -8,14 +8,14 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 
 @Dao
-abstract class LastPlayedPodcastArtistDao {
+internal abstract class LastPlayedPodcastArtistDao {
 
     @Query("""
         SELECT * FROM last_played_podcast_artists
         ORDER BY dateAdded DESC
         LIMIT 20
     """)
-    abstract fun getAll(): Flowable<List<LastPlayedPodcastArtistEntity>>
+    internal abstract fun getAll(): Flowable<List<LastPlayedPodcastArtistEntity>>
 
     @Insert
     internal abstract fun insertImpl(entity: LastPlayedPodcastArtistEntity)
@@ -26,7 +26,7 @@ abstract class LastPlayedPodcastArtistDao {
     """)
     internal abstract fun deleteImpl(artistId: Long)
 
-    fun insertOne(id: Long) : Completable {
+    internal fun insertOne(id: Long) : Completable {
         return Completable.fromCallable{ deleteImpl(id) }
                 .andThen { insertImpl(LastPlayedPodcastArtistEntity(id)) }
     }

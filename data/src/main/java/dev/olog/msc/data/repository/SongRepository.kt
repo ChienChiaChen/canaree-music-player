@@ -56,7 +56,7 @@ private const val SELECTION = "$DURATION > 20000 AND ${MediaStore.Audio.Media.IS
 
 private const val SORT_ORDER = "lower(${MediaStore.Audio.Media.TITLE})"
 
-class SongRepository @Inject constructor(
+internal class SongRepository @Inject constructor(
         @ApplicationContext private val context: Context,
         private  val rxContentResolver: BriteContentResolver,
         private  val appPrefsUseCase: AppPreferencesGateway,

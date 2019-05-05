@@ -3,7 +3,7 @@ package dev.olog.msc.floatingwindowservice.music.service
 import android.support.v4.media.MediaBrowserCompat
 import dev.olog.msc.shared.MusicServiceConnectionState
 
-class FloatingMusicConnection(
+internal class FloatingMusicConnection(
         private val binder: MusicServiceBinder
 
 ) : MediaBrowserCompat.ConnectionCallback() {

@@ -11,7 +11,7 @@ import dev.olog.msc.data.utils.getInt
 import dev.olog.msc.data.utils.getStringOrNull
 import java.io.File
 
-object CommonQuery {
+internal object CommonQuery {
 
     fun getSize(contentResolver: ContentResolver, uri: Uri): Int {
         try {
@@ -28,23 +28,6 @@ object CommonQuery {
         } catch (ex: IllegalArgumentException) {
             return 0
         }
-    }
-
-    fun extractAlbumIdsFromSongs(contentResolver: ContentResolver, uri: Uri): List<Long> {
-        val result = mutableListOf<Long>()
-
-        val projection = arrayOf(MediaStore.Audio.Playlists.Members.ALBUM_ID)
-
-        val cursor = contentResolver.query(uri, projection, null,
-                null, null)
-
-        cursor?.use {
-            while (cursor.moveToNext()) {
-                result.add(it.getLong(0))
-            }
-        }
-
-        return result
     }
 
     fun getAllSongsIdNotBlackListd(

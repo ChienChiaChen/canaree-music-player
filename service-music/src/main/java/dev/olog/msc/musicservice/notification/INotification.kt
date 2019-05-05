@@ -2,7 +2,7 @@ package dev.olog.msc.musicservice.notification
 
 import android.app.Notification
 
-interface INotification {
+internal interface INotification {
 
     companion object {
         const val NOTIFICATION_ID : Int = 0x6d7363

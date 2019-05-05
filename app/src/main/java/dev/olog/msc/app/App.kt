@@ -16,7 +16,9 @@ import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.interactor.SleepTimerUseCase
+import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.presentation.image.creation.ImagesCreator
+import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.updatePermissionValve
@@ -89,7 +91,7 @@ class App : BaseApp() {
 
     private fun resetSleepTimer() {
         sleepTimerUseCase.reset()
-        alarmManager.cancel(dev.olog.msc.musicservice.PendingIntents.stopMusicServiceIntent(this))
+        alarmManager.cancel(PendingIntents.stopMusicServiceIntent(this, MusicService::class.java))
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

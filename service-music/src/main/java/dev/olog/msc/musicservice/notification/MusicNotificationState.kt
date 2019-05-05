@@ -4,7 +4,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import dev.olog.msc.musicservice.model.MediaEntity
 import java.util.concurrent.TimeUnit
 
-data class MusicNotificationState (
+internal data class MusicNotificationState (
         var id: Long = -1,
         var title: String = "",
         var artist: String = "",
@@ -26,7 +26,7 @@ data class MusicNotificationState (
                 duration != -1L
     }
 
-    fun updateMetadata(metadata: MediaEntity): Boolean {
+    internal fun updateMetadata(metadata: MediaEntity): Boolean {
         this.id = metadata.id
         this.title = metadata.title
         this.artist = metadata.artist
@@ -36,18 +36,18 @@ data class MusicNotificationState (
         return isValidState()
     }
 
-    fun updateState(state: PlaybackStateCompat): Boolean {
+    internal fun updateState(state: PlaybackStateCompat): Boolean {
         this.isPlaying = state.state == PlaybackStateCompat.STATE_PLAYING
         this.bookmark = state.position
         return isValidState()
     }
 
-    fun updateFavorite(isFavorite: Boolean): Boolean {
+    internal fun updateFavorite(isFavorite: Boolean): Boolean {
         this.isFavorite = isFavorite
         return isValidState()
     }
 
-    fun isDifferentMetadata(metadata: MediaEntity): Boolean {
+    internal fun isDifferentMetadata(metadata: MediaEntity): Boolean {
         return this.id != metadata.id ||
                 this.title != metadata.title ||
                 this.artist != metadata.artist ||
@@ -55,14 +55,14 @@ data class MusicNotificationState (
                 this.image != metadata.image
     }
 
-    fun isDifferentState(state: PlaybackStateCompat): Boolean{
+    internal fun isDifferentState(state: PlaybackStateCompat): Boolean{
         val isPlaying = state.state == PlaybackStateCompat.STATE_PLAYING
         val bookmark = TimeUnit.MILLISECONDS.toSeconds(state.position)
         return this.isPlaying != isPlaying ||
                 TimeUnit.MILLISECONDS.toSeconds(this.bookmark) != bookmark
     }
 
-    fun isDifferentFavorite(isFavorite: Boolean): Boolean {
+    internal fun isDifferentFavorite(isFavorite: Boolean): Boolean {
         return this.isFavorite != isFavorite
     }
 

@@ -12,7 +12,7 @@ import io.reactivex.Single
 import java.net.URLEncoder
 import javax.inject.Inject
 
-class LastFmProxy @Inject constructor(
+internal class LastFmProxy @Inject constructor(
         @Impl private val impl: LastFmService
 
 ): LastFmService {

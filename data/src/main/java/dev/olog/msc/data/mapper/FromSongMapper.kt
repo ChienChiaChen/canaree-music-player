@@ -7,7 +7,7 @@ import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 
-fun Song.toFolder(context: Context, songCount: Int) : Folder {
+internal fun Song.toFolder(context: Context, songCount: Int) : Folder {
     val folderImage = ImagesFolderUtils.forFolder(context, this.folderPath)
 
     return Folder(
@@ -18,7 +18,7 @@ fun Song.toFolder(context: Context, songCount: Int) : Folder {
     )
 }
 
-fun Song.toAlbum(songCount: Int) : Album {
+internal fun Song.toAlbum(songCount: Int) : Album {
     return Album(
             this.albumId,
             this.artistId,
@@ -31,7 +31,7 @@ fun Song.toAlbum(songCount: Int) : Album {
     )
 }
 
-fun Song.toArtist(songCount: Int, albumsCount: Int) : Artist {
+internal fun Song.toArtist(songCount: Int, albumsCount: Int) : Artist {
     return Artist(
             this.artistId,
             this.artist,

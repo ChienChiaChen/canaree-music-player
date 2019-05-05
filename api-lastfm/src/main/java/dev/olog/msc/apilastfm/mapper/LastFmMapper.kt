@@ -18,7 +18,7 @@ private fun millisToFormattedDate(value: Long): String {
 
 }
 
-fun LastFmTrackEntity.toDomain(): LastFmTrack {
+internal fun LastFmTrackEntity.toDomain(): LastFmTrack {
     return LastFmTrack(
             this.id,
             this.title,
@@ -28,7 +28,7 @@ fun LastFmTrackEntity.toDomain(): LastFmTrack {
     )
 }
 
-fun LastFmPodcastEntity.toDomain(): LastFmPodcast {
+internal fun LastFmPodcastEntity.toDomain(): LastFmPodcast {
     return LastFmPodcast(
             this.id,
             this.title,
@@ -38,7 +38,7 @@ fun LastFmPodcastEntity.toDomain(): LastFmPodcast {
     )
 }
 
-fun LastFmAlbumEntity.toDomain(): LastFmAlbum {
+internal fun LastFmAlbumEntity.toDomain(): LastFmAlbum {
     return LastFmAlbum(
             this.id,
             this.title,
@@ -47,7 +47,7 @@ fun LastFmAlbumEntity.toDomain(): LastFmAlbum {
     )
 }
 
-fun LastFmPodcastAlbumEntity.toDomain(): LastFmPodcastAlbum {
+internal fun LastFmPodcastAlbumEntity.toDomain(): LastFmPodcastAlbum {
     return LastFmPodcastAlbum(
             this.id,
             this.title,
@@ -56,7 +56,7 @@ fun LastFmPodcastAlbumEntity.toDomain(): LastFmPodcastAlbum {
     )
 }
 
-fun LastFmTrack.toModel(): LastFmTrackEntity {
+internal fun LastFmTrack.toModel(): LastFmTrackEntity {
     return LastFmTrackEntity(
             this.id,
             this.title,
@@ -67,7 +67,7 @@ fun LastFmTrack.toModel(): LastFmTrackEntity {
     )
 }
 
-fun LastFmPodcast.toModel(): LastFmPodcastEntity {
+internal fun LastFmPodcast.toModel(): LastFmPodcastEntity {
     return LastFmPodcastEntity(
             this.id,
             this.title,
@@ -79,7 +79,7 @@ fun LastFmPodcast.toModel(): LastFmPodcastEntity {
 }
 
 
-fun LastFmAlbum.toModel(): LastFmAlbumEntity {
+internal fun LastFmAlbum.toModel(): LastFmAlbumEntity {
     return LastFmAlbumEntity(
             this.id,
             this.title,
@@ -89,7 +89,7 @@ fun LastFmAlbum.toModel(): LastFmAlbumEntity {
     )
 }
 
-fun LastFmPodcastAlbum.toModel(): LastFmPodcastAlbumEntity {
+internal fun LastFmPodcastAlbum.toModel(): LastFmPodcastAlbumEntity {
     return LastFmPodcastAlbumEntity(
             this.id,
             this.title,
@@ -102,23 +102,23 @@ fun LastFmPodcastAlbum.toModel(): LastFmPodcastAlbumEntity {
 
 
 
-fun LastFmArtistEntity.toDomain(): LastFmArtist {
+internal fun LastFmArtistEntity.toDomain(): LastFmArtist {
     return LastFmArtist(
             this.id,
             this.image
     )
 }
 
-fun LastFmPodcastArtistEntity.toDomain(): LastFmPodcastArtist {
+internal fun LastFmPodcastArtistEntity.toDomain(): LastFmPodcastArtist {
     return LastFmPodcastArtist(
             this.id,
             this.image
     )
 }
 
-object LastFmNulls {
+internal object LastFmNulls {
 
-    fun createNullTrack(trackId: Long): LastFmTrackEntity {
+    internal fun createNullTrack(trackId: Long): LastFmTrackEntity {
         return LastFmTrackEntity(
                 trackId,
                 "",
@@ -129,7 +129,7 @@ object LastFmNulls {
         )
     }
 
-    fun createNullArtist(artistId: Long): LastFmArtistEntity {
+    internal fun createNullArtist(artistId: Long): LastFmArtistEntity {
         return LastFmArtistEntity(
                 artistId,
                 "",
@@ -137,7 +137,7 @@ object LastFmNulls {
         )
     }
 
-    fun createNullAlbum(albumId: Long): LastFmAlbumEntity {
+    internal fun createNullAlbum(albumId: Long): LastFmAlbumEntity {
         return LastFmAlbumEntity(
                 albumId,
                 "",
@@ -147,7 +147,7 @@ object LastFmNulls {
         )
     }
 
-    fun createNullPodcast(trackId: Long): LastFmPodcastEntity {
+    internal fun createNullPodcast(trackId: Long): LastFmPodcastEntity {
         return LastFmPodcastEntity(
                 trackId,
                 "",
@@ -158,7 +158,7 @@ object LastFmNulls {
         )
     }
 
-    fun createNullPodcastArtist(artistId: Long): LastFmPodcastArtistEntity {
+    internal fun createNullPodcastArtist(artistId: Long): LastFmPodcastArtistEntity {
         return LastFmPodcastArtistEntity(
                 artistId,
                 "",
@@ -166,7 +166,7 @@ object LastFmNulls {
         )
     }
 
-    fun createNullPodcastAlbum(albumId: Long): LastFmPodcastAlbumEntity {
+    internal fun createNullPodcastAlbum(albumId: Long): LastFmPodcastAlbumEntity {
         return LastFmPodcastAlbumEntity(
                 albumId,
                 "",
@@ -179,7 +179,7 @@ object LastFmNulls {
 }
 
 
-fun ArtistInfo.toDomain(id: Long): LastFmArtist {
+internal fun ArtistInfo.toDomain(id: Long): LastFmArtist {
     val artist = this.artist
     return LastFmArtist(
             id,
@@ -188,7 +188,7 @@ fun ArtistInfo.toDomain(id: Long): LastFmArtist {
 }
 
 
-fun ArtistInfo.toPodcastDomain(id: Long): LastFmPodcastArtist {
+internal fun ArtistInfo.toPodcastDomain(id: Long): LastFmPodcastArtist {
     val artist = this.artist
     return LastFmPodcastArtist(
             id,
@@ -196,7 +196,7 @@ fun ArtistInfo.toPodcastDomain(id: Long): LastFmPodcastArtist {
     )
 }
 
-fun ArtistInfo.toModel(id: Long): LastFmArtistEntity {
+internal fun ArtistInfo.toModel(id: Long): LastFmArtistEntity {
     val artist = this.artist
     return LastFmArtistEntity(
             id,
@@ -205,7 +205,7 @@ fun ArtistInfo.toModel(id: Long): LastFmArtistEntity {
     )
 }
 
-fun ArtistInfo.toPodcastModel(id: Long): LastFmPodcastArtistEntity {
+internal fun ArtistInfo.toPodcastModel(id: Long): LastFmPodcastArtistEntity {
     val artist = this.artist
     return LastFmPodcastArtistEntity(
             id,
@@ -214,7 +214,7 @@ fun ArtistInfo.toPodcastModel(id: Long): LastFmPodcastArtistEntity {
     )
 }
 
-fun AlbumSearch.toPodcastDomain(id: Long, originalArtist: String): LastFmPodcastAlbum {
+internal fun AlbumSearch.toPodcastDomain(id: Long, originalArtist: String): LastFmPodcastAlbum {
     val results = this.results.albummatches.album
     val bestArtist = FuzzySearch.extractOne(originalArtist, results.map { it.artist }).string
     val best = results.first { it.artist == bestArtist }
@@ -227,7 +227,7 @@ fun AlbumSearch.toPodcastDomain(id: Long, originalArtist: String): LastFmPodcast
     )
 }
 
-fun AlbumSearch.toDomain(id: Long, originalArtist: String): LastFmAlbum {
+internal fun AlbumSearch.toDomain(id: Long, originalArtist: String): LastFmAlbum {
     val results = this.results.albummatches.album
     val bestArtist = FuzzySearch.extractOne(originalArtist, results.map { it.artist }).string
     val best = results.first { it.artist == bestArtist }
@@ -240,7 +240,7 @@ fun AlbumSearch.toDomain(id: Long, originalArtist: String): LastFmAlbum {
     )
 }
 
-fun TrackSearch.toDomain(id: Long): LastFmTrack {
+internal fun TrackSearch.toDomain(id: Long): LastFmTrack {
     val track = this.results.trackmatches.track[0]
 
     return LastFmTrack(
@@ -252,7 +252,7 @@ fun TrackSearch.toDomain(id: Long): LastFmTrack {
     )
 }
 
-fun TrackSearch.toDomainPodcast(id: Long): LastFmPodcast {
+internal fun TrackSearch.toDomainPodcast(id: Long): LastFmPodcast {
     val track = this.results.trackmatches.track[0]
 
     return LastFmPodcast(
@@ -264,7 +264,7 @@ fun TrackSearch.toDomainPodcast(id: Long): LastFmPodcast {
     )
 }
 
-fun AlbumInfo.toDomain(id: Long): LastFmAlbum {
+internal fun AlbumInfo.toDomain(id: Long): LastFmAlbum {
     val album = this.album
     return LastFmAlbum(
             id,
@@ -274,7 +274,7 @@ fun AlbumInfo.toDomain(id: Long): LastFmAlbum {
     )
 }
 
-fun AlbumInfo.toPodcastDomain(id: Long): LastFmPodcastAlbum {
+internal fun AlbumInfo.toPodcastDomain(id: Long): LastFmPodcastAlbum {
     val album = this.album
     return LastFmPodcastAlbum(
             id,
@@ -284,7 +284,7 @@ fun AlbumInfo.toPodcastDomain(id: Long): LastFmPodcastAlbum {
     )
 }
 
-fun TrackInfo.toDomain(id: Long): LastFmTrack {
+internal fun TrackInfo.toDomain(id: Long): LastFmTrack {
     val track = this.track
     val title = track.name
     val artist = track.artist.name
@@ -300,7 +300,7 @@ fun TrackInfo.toDomain(id: Long): LastFmTrack {
     )
 }
 
-fun TrackInfo.toDomainPodcast(id: Long): LastFmPodcast {
+internal fun TrackInfo.toDomainPodcast(id: Long): LastFmPodcast {
     val track = this.track
     val title = track.name
     val artist = track.artist.name

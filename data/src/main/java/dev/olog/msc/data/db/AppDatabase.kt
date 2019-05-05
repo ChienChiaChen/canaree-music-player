@@ -53,32 +53,32 @@ import dev.olog.msc.data.entity.*
 ), version = 15, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun playingQueueDao(): PlayingQueueDao
+    internal abstract fun playingQueueDao(): PlayingQueueDao
 
-    abstract fun folderMostPlayedDao(): FolderMostPlayedDao
+    internal abstract fun folderMostPlayedDao(): FolderMostPlayedDao
 
-    abstract fun playlistMostPlayedDao(): PlaylistMostPlayedDao
+    internal abstract fun playlistMostPlayedDao(): PlaylistMostPlayedDao
 
-    abstract fun genreMostPlayedDao(): GenreMostPlayedDao
+    internal abstract fun genreMostPlayedDao(): GenreMostPlayedDao
 
-    abstract fun favoriteDao(): FavoriteDao
+    internal abstract fun favoriteDao(): FavoriteDao
 
-    abstract fun recentSearchesDao(): RecentSearchesDao
+    internal abstract fun recentSearchesDao(): RecentSearchesDao
 
-    abstract fun historyDao(): HistoryDao
+    internal abstract fun historyDao(): HistoryDao
 
-    abstract fun lastPlayedAlbumDao() : LastPlayedAlbumDao
-    abstract fun lastPlayedArtistDao() : LastPlayedArtistDao
-    abstract fun lastPlayedPodcastArtistDao() : LastPlayedPodcastArtistDao
-    abstract fun lastPlayedPodcastAlbumDao() : LastPlayedPodcastAlbumDao
+    internal abstract fun lastPlayedAlbumDao() : LastPlayedAlbumDao
+    internal abstract fun lastPlayedArtistDao() : LastPlayedArtistDao
+    internal abstract fun lastPlayedPodcastArtistDao() : LastPlayedPodcastArtistDao
+    internal abstract fun lastPlayedPodcastAlbumDao() : LastPlayedPodcastAlbumDao
 
     abstract fun lastFmDao() : LastFmDao
 
-    abstract fun offlineLyricsDao(): OfflineLyricsDao
+    internal abstract fun offlineLyricsDao(): OfflineLyricsDao
 
-    abstract fun usedImageDao(): UsedImageDao
+    internal abstract fun usedImageDao(): UsedImageDao
 
-    abstract fun podcastPlaylistDao(): PodcastPlaylistDao
+    internal abstract fun podcastPlaylistDao(): PodcastPlaylistDao
 
-    abstract fun podcastPositionDao(): PodcastPositionDao
+    internal abstract fun podcastPositionDao(): PodcastPositionDao
 }

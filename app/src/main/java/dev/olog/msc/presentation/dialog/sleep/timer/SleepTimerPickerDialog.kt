@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import dev.olog.msc.R
 import dev.olog.msc.core.interactor.SleepTimerUseCase
+import dev.olog.msc.musicservice.MusicService
+import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.utils.TimeUtils
 import dev.olog.msc.utils.k.extension.act
@@ -137,7 +139,7 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(), ScrollHmsPickerDialog.Hm
     }
 
     private fun resetAlarmManager(){
-        val intent = dev.olog.msc.musicservice.PendingIntents.stopMusicServiceIntent(context!!)
+        val intent = PendingIntents.stopMusicServiceIntent(context!!, MusicService::class.java)
         alarmManager.cancel(intent)
     }
 
@@ -147,7 +149,7 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(), ScrollHmsPickerDialog.Hm
                 TimeUnit.MINUTES.toMillis(minutes.toLong()) +
                 TimeUnit.SECONDS.toMillis(seconds.toLong())
 
-        val intent = dev.olog.msc.musicservice.PendingIntents.stopMusicServiceIntent(context!!)
+        val intent = PendingIntents.stopMusicServiceIntent(context!!, MusicService::class.java)
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, nextSleep, intent)
     }
 

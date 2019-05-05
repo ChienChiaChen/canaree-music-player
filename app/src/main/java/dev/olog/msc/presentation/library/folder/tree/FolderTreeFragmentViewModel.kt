@@ -15,7 +15,6 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.interactor.all.GetAllFoldersUseCase
-import dev.olog.msc.data.utils.getLong
 import dev.olog.msc.shared.extensions.*
 import dev.olog.msc.utils.k.extension.asLiveData
 import dev.olog.msc.utils.k.extension.logStackStace
@@ -151,6 +150,7 @@ class FolderTreeFragmentViewModel @Inject constructor(
     @SuppressLint("Recycle")
     fun createMediaId(item: DisplayableFile): MediaId? {
         try {
+            // TODO move out the query from presentation module
             val file = item.asFile()
             val path = file.path
             val folderMediaId = MediaId.folderId(path.substring(0, path.lastIndexOf(File.separator)))
@@ -161,7 +161,7 @@ class FolderTreeFragmentViewModel @Inject constructor(
                     arrayOf(file.path), null)?.let { cursor ->
 
                 cursor.moveToFirst()
-                val trackId = cursor.getLong(BaseColumns._ID)
+                val trackId = cursor.getLong(cursor.getColumnIndex(BaseColumns._ID))
                 cursor.close()
                 return MediaId.playableItem(folderMediaId, trackId)
             }

@@ -30,7 +30,7 @@ import javax.inject.Inject
 private const val MINUTES_TO_DESTROY = 30L
 
 @PerService
-class MusicNotificationManager @Inject constructor(
+internal class MusicNotificationManager @Inject constructor(
         private val service: Service,
         @ServiceLifecycle lifecycle: Lifecycle,
         private val audioManager: Lazy<AudioManager>,

@@ -29,7 +29,7 @@ import kotlin.properties.Delegates
 
 private const val SKIP_TO_PREVIOUS_THRESHOLD = 10 * 1000 // 10 sec
 
-class QueueImpl @Inject constructor(
+internal class QueueImpl @Inject constructor(
         private val updatePlayingQueueUseCase: UpdatePlayingQueueUseCase,
         private val repeatMode: RepeatMode,
         private val musicPreferencesUseCase: MusicPreferencesGateway,

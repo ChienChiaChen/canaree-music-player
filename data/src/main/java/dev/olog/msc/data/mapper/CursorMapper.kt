@@ -12,7 +12,7 @@ import dev.olog.msc.data.utils.getLongOrNull
 import dev.olog.msc.data.utils.getStringOrNull
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 
-fun Cursor.toGenre(context: Context, genreSize: Int) : Genre {
+internal fun Cursor.toGenre(context: Context, genreSize: Int) : Genre {
     val id = this.getLongOrNull(BaseColumns._ID) ?: -1
     val name = this.getStringOrNull(MediaStore.Audio.GenresColumns.NAME)?.capitalize() ?: ""
     return Genre(
@@ -23,7 +23,7 @@ fun Cursor.toGenre(context: Context, genreSize: Int) : Genre {
     )
 }
 
-fun Cursor.toPlaylist(context: Context, playlistSize: Int) : Playlist {
+internal fun Cursor.toPlaylist(context: Context, playlistSize: Int) : Playlist {
     val id = this.getLongOrNull(BaseColumns._ID) ?: -1
     val name = this.getStringOrNull(MediaStore.Audio.PlaylistsColumns.NAME)?.capitalize() ?: ""
 
@@ -35,11 +35,11 @@ fun Cursor.toPlaylist(context: Context, playlistSize: Int) : Playlist {
     )
 }
 
-fun Cursor.extractId() : Long {
+internal fun Cursor.extractId() : Long {
     return this.getLong(BaseColumns._ID)
 }
 
-fun Cursor.toPlaylistSong() : PlaylistSongEntity {
+internal fun Cursor.toPlaylistSong() : PlaylistSongEntity {
     return PlaylistSongEntity(
             this.getLong(MediaStore.Audio.Playlists.Members._ID),
             this.getLong(MediaStore.Audio.Playlists.Members.AUDIO_ID)

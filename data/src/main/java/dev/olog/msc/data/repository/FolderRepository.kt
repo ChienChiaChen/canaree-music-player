@@ -17,7 +17,7 @@ import io.reactivex.Observable
 import java.text.Collator
 import javax.inject.Inject
 
-class FolderRepository @Inject constructor(
+internal class FolderRepository @Inject constructor(
         @ApplicationContext private val context: Context,
         private val songGateway: SongGateway,
         appDatabase: AppDatabase,

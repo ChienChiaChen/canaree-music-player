@@ -46,7 +46,7 @@ private val SONG_SELECTION = null
 private val SONG_SELECTION_ARGS: Array<String>? = null
 private const val SONG_SORT_ORDER = MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER
 
-class PlaylistRepository @Inject constructor(
+internal class PlaylistRepository @Inject constructor(
         @ApplicationContext private val context: Context,
         private val rxContentResolver: BriteContentResolver,
         private val songGateway: SongGateway,

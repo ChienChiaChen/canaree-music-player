@@ -6,7 +6,7 @@ import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
 import io.reactivex.Completable
 import javax.inject.Inject
 
-class EqualizerPreferenceImpl @Inject constructor(
+internal class EqualizerPreferenceImpl @Inject constructor(
         private val preferences: SharedPreferences
 
 ): EqualizerPreferencesGateway {

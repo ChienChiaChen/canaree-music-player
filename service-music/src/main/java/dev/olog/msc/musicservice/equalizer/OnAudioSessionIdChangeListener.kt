@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @PerService
-class OnAudioSessionIdChangeListener @Inject constructor(
+internal class OnAudioSessionIdChangeListener @Inject constructor(
         @ServiceLifecycle lifecycle: Lifecycle,
         private val equalizer: IEqualizer,
         private val virtualizer: IVirtualizer,

@@ -13,7 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.floatingwindowservice.api.Content
 import kotlin.properties.Delegates
 
-abstract class WebViewContent(
+internal abstract class WebViewContent(
         lifecycle: Lifecycle,
         context: Context,
         @LayoutRes layoutRes: Int

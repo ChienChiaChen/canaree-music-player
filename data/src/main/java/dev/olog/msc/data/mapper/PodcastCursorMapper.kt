@@ -11,7 +11,7 @@ import dev.olog.msc.data.utils.getString
 import dev.olog.msc.data.utils.getStringOrNull
 import dev.olog.msc.shared.TrackUtils
 
-fun Cursor.toPodcast(): Podcast {
+internal fun Cursor.toPodcast(): Podcast {
     val id = getLong(BaseColumns._ID)
     val artistId = getLong(MediaStore.Audio.AudioColumns.ARTIST_ID)
     val albumId = getLong(MediaStore.Audio.AudioColumns.ALBUM_ID)
@@ -46,7 +46,7 @@ fun Cursor.toPodcast(): Podcast {
             folder.capitalize(), disc, track)
 }
 
-fun Cursor.toUneditedPodcast(image: String): Podcast {
+internal fun Cursor.toUneditedPodcast(image: String): Podcast {
     val id = getLong(BaseColumns._ID)
     val artistId = getLong(MediaStore.Audio.AudioColumns.ARTIST_ID)
     val albumId = getLong(MediaStore.Audio.AudioColumns.ALBUM_ID)

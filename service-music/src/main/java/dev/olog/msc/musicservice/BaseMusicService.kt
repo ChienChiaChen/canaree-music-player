@@ -13,6 +13,7 @@ import dagger.android.AndroidInjection
 import dev.olog.msc.musicservice.interfaces.Player
 import dev.olog.msc.musicservice.interfaces.ServiceLifecycleController
 import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.PendingIntents
 import javax.inject.Inject
 
 abstract class BaseMusicService : MediaBrowserServiceCompat(),
@@ -26,7 +27,7 @@ abstract class BaseMusicService : MediaBrowserServiceCompat(),
     @Suppress("LeakingThis")
     private val dispatcher = ServiceLifecycleDispatcher(this)
 
-    @Inject lateinit var player: Player
+    @Inject internal lateinit var player: Player
 
     private var serviceStarted = false
 

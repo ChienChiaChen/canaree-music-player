@@ -19,7 +19,7 @@ import io.reactivex.subjects.BehaviorSubject
 import java.text.Collator
 import javax.inject.Inject
 
-class FavoriteRepository @Inject constructor(
+internal class FavoriteRepository @Inject constructor(
     appDatabase: AppDatabase,
     private val songGateway: SongGateway,
     private val podcastGateway: PodcastGateway,

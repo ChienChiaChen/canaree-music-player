@@ -1,6 +1,6 @@
 package dev.olog.msc.musicservice.volume
 
-interface IVolume {
+internal interface IVolume {
 
     val normal: Float
     val duck: Float

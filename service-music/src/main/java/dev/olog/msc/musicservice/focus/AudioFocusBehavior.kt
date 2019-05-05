@@ -17,7 +17,7 @@ private enum class FocusState {
 
 }
 
-class AudioFocusBehavior @Inject constructor(
+internal class AudioFocusBehavior @Inject constructor(
         private val player: Lazy<Player>,
         private val volume: IPlayerVolume,
         private val audioManager: Lazy<AudioManager>
@@ -28,9 +28,9 @@ class AudioFocusBehavior @Inject constructor(
     private val focusRequest by lazy { buildFocusRequest() }
     private var currentFocus = FocusState.NONE
 
-    private val focusLock = java.lang.Object()
+    private val focusLock = Object()
 
-    fun requestFocus(): Boolean{
+    internal fun requestFocus(): Boolean{
         val focus = if (isOreo()){
             requestFocusForOreo()
         } else {
@@ -45,7 +45,7 @@ class AudioFocusBehavior @Inject constructor(
         return focus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
     }
 
-    fun abandonFocus(){
+    internal fun abandonFocus(){
         currentFocus = FocusState.NONE
         if (isOreo()){
             audioManager.get().abandonAudioFocusRequest(focusRequest)

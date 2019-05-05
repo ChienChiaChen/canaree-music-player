@@ -14,7 +14,7 @@ import dev.olog.msc.musicservice.R
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class NotificationImpl26 @Inject constructor(
+internal class NotificationImpl26 @Inject constructor(
         service: Service,
         token: MediaSessionCompat.Token,
         notificationManager: Lazy<NotificationManager>,

@@ -8,7 +8,7 @@ import io.reactivex.rxkotlin.Singles
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class LastFmRepository @Inject constructor(
+internal class LastFmRepository @Inject constructor(
         private val lastFmRepoTrack: LastFmRepoTrack,
         private val lastFmRepoArtist: LastFmRepoArtist,
         private val lastFmRepoAlbum: LastFmRepoAlbum,

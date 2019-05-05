@@ -17,11 +17,11 @@ class RepositoryHelperModule {
 
     @Provides
     @Singleton
-    fun provideSqlBrite(): SqlBrite = SqlBrite.Builder().build()
+    internal fun provideSqlBrite(): SqlBrite = SqlBrite.Builder().build()
 
     @Provides
     @Singleton
-    fun provideBriteContentResolver(@ApplicationContext context: Context,
+    internal fun provideBriteContentResolver(@ApplicationContext context: Context,
                                     sqlBrite: SqlBrite) : BriteContentResolver {
 
         val contentProvider = sqlBrite.wrapContentProvider(context.contentResolver, Schedulers.io())
@@ -31,7 +31,7 @@ class RepositoryHelperModule {
 
     @Provides
     @Singleton
-    fun provideRoomDatabase(@ApplicationContext context: Context): AppDatabase {
+    internal fun provideRoomDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, "db")
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration() // 1 to 2

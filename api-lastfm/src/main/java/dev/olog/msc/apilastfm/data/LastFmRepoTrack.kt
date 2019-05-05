@@ -18,7 +18,7 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class LastFmRepoTrack @Inject constructor(
+internal class LastFmRepoTrack @Inject constructor(
         appDatabase: AppDatabase,
         @Proxy private val lastFmService: LastFmService,
         private val songGateway: SongGateway

@@ -27,7 +27,7 @@ import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
 @PerService
-class MusicServiceBinder @Inject constructor(
+internal class MusicServiceBinder @Inject constructor(
         @ApplicationContext private val context: Context,
         @ServiceLifecycle lifecycle: Lifecycle,
         classes: Classes

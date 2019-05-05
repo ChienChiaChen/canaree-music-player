@@ -8,15 +8,15 @@ import dev.olog.msc.musicservice.model.toMediaEntity
 import io.reactivex.Observable
 import io.reactivex.Single
 
-object VoiceSearch {
+internal object VoiceSearch {
 
-    fun noFilter(flowable: Observable<List<Song>>): Single<List<MediaEntity>> {
+    internal fun noFilter(flowable: Observable<List<Song>>): Single<List<MediaEntity>> {
         val mediaId = MediaId.songId(-1)
         return flowable.firstOrError()
                 .map { it.mapIndexed { index, song -> song.toMediaEntity(index, mediaId) } }
     }
 
-    fun filterByAlbum(flowable: Observable<List<Song>>, album: String): Single<List<MediaEntity>> {
+    internal fun filterByAlbum(flowable: Observable<List<Song>>, album: String): Single<List<MediaEntity>> {
         val mediaId = MediaId.songId(-1)
         return flowable.firstOrError()
                 .map {
@@ -27,7 +27,7 @@ object VoiceSearch {
                 }
     }
 
-    fun filterByArtist(flowable: Observable<List<Song>>, artist: String): Single<List<MediaEntity>> {
+    internal fun filterByArtist(flowable: Observable<List<Song>>, artist: String): Single<List<MediaEntity>> {
         val mediaId = MediaId.songId(-1)
         return flowable.firstOrError()
                 .map {
@@ -38,7 +38,7 @@ object VoiceSearch {
                 }
     }
 
-    fun filterByTitle(flowable: Observable<List<Song>>, title: String): Single<List<MediaEntity>> {
+    internal fun filterByTitle(flowable: Observable<List<Song>>, title: String): Single<List<MediaEntity>> {
         val mediaId = MediaId.songId(-1)
         return flowable.firstOrError()
                 .map {
@@ -49,7 +49,7 @@ object VoiceSearch {
                 }
     }
 
-    fun search(flowable: Observable<List<Song>>, param: String): Single<List<MediaEntity>> {
+    internal fun search(flowable: Observable<List<Song>>, param: String): Single<List<MediaEntity>> {
         val mediaId = MediaId.songId(-1)
         return flowable.firstOrError().map {
             it.filter { it.title.toLowerCase() == param ||
@@ -59,7 +59,7 @@ object VoiceSearch {
         }
     }
 
-    fun filterByGenre(genreGateway: GenreGateway, genre: String): Single<List<MediaEntity>> {
+    internal fun filterByGenre(genreGateway: GenreGateway, genre: String): Single<List<MediaEntity>> {
 
         return genreGateway.getAll().map { it.first { it.name.equals(genre, true) } }
                 .firstOrError()

@@ -18,7 +18,7 @@ import java.net.URLEncoder
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-class CustomHoverMenu @Inject constructor(
+internal class CustomHoverMenu @Inject constructor(
         @ServiceContext private val context: Context,
         @ServiceLifecycle lifecycle: Lifecycle,
         musicServiceBinder: MusicServiceBinder,

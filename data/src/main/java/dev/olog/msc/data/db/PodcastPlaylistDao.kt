@@ -8,7 +8,7 @@ import dev.olog.msc.data.entity.PodcastPlaylistTrackEntity
 import io.reactivex.Flowable
 
 @Dao
-abstract class PodcastPlaylistDao {
+internal abstract class PodcastPlaylistDao {
 
     @Query("""
         SELECT playlist.*, count(*) as size
@@ -16,7 +16,7 @@ abstract class PodcastPlaylistDao {
             ON playlist.id = tracks.playlistId
         GROUP BY playlistId
     """)
-    abstract fun getAllPlaylists(): Flowable<List<PodcastPlaylistEntity>>
+    internal abstract fun getAllPlaylists(): Flowable<List<PodcastPlaylistEntity>>
 
     @Query("""
         SELECT playlist.*, count(*) as size
@@ -24,7 +24,7 @@ abstract class PodcastPlaylistDao {
             ON playlist.id = tracks.playlistId
         GROUP BY playlistId
     """)
-    abstract fun getAllPlaylistsBlocking(): List<PodcastPlaylistEntity>
+    internal abstract fun getAllPlaylistsBlocking(): List<PodcastPlaylistEntity>
 
     @Query("""
         SELECT playlist.*, count(*) as size
@@ -33,7 +33,7 @@ abstract class PodcastPlaylistDao {
         where playlist.id = :id
         GROUP BY playlistId
     """)
-    abstract fun getPlaylist(id: Long): Flowable<PodcastPlaylistEntity>
+    internal abstract fun getPlaylist(id: Long): Flowable<PodcastPlaylistEntity>
 
     @Query("""
         SELECT tracks.*
@@ -41,7 +41,7 @@ abstract class PodcastPlaylistDao {
             ON playlist.id = tracks.playlistId
         WHERE playlistId = :playlistId
     """)
-    abstract fun getPlaylistTracks(playlistId: Long): Flowable<List<PodcastPlaylistTrackEntity>>
+    internal abstract fun getPlaylistTracks(playlistId: Long): Flowable<List<PodcastPlaylistTrackEntity>>
 
     @Query("""
         SELECT max(idInPlaylist)
@@ -49,32 +49,32 @@ abstract class PodcastPlaylistDao {
             ON playlist.id = tracks.playlistId
         WHERE playlistId = :playlistId
     """)
-    abstract fun getPlaylistMaxId(playlistId: Long): Int
+    internal abstract fun getPlaylistMaxId(playlistId: Long): Int
 
     @Insert
-    abstract fun createPlaylist(playlist: PodcastPlaylistEntity): Long
+    internal abstract fun createPlaylist(playlist: PodcastPlaylistEntity): Long
 
     @Query("""
         UPDATE podcast_playlist SET name = :name WHERE id = :id
     """)
-    abstract fun renamePlaylist(id: Long, name: String)
+    internal abstract fun renamePlaylist(id: Long, name: String)
 
     @Query("""DELETE FROM podcast_playlist WHERE id = :id""")
-    abstract fun deletePlaylist(id: Long)
+    internal abstract fun deletePlaylist(id: Long)
 
     @Insert
-    abstract fun insertTracks(tracks: List<PodcastPlaylistTrackEntity>)
+    internal abstract fun insertTracks(tracks: List<PodcastPlaylistTrackEntity>)
 
     @Query("""
         DELETE FROM podcast_playlist_tracks
         WHERE playlistId = :playlistId AND id = :idInPlaylist
     """)
-    abstract fun deleteTrack(playlistId: Long, idInPlaylist: Long)
+    internal abstract fun deleteTrack(playlistId: Long, idInPlaylist: Long)
 
     @Query("""
         DELETE FROM podcast_playlist_tracks WHERE playlistId = :id
     """)
-    abstract fun clearPlaylist(id: Long)
+    internal abstract fun clearPlaylist(id: Long)
 
     @Query("""
         DELETE FROM podcast_playlist_tracks
@@ -86,6 +86,6 @@ abstract class PodcastPlaylistDao {
             HAVING items > 1
         )
     """)
-    abstract fun removeDuplicated(id: Long)
+    internal abstract fun removeDuplicated(id: Long)
 
 }

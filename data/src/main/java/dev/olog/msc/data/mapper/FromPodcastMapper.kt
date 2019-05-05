@@ -4,7 +4,7 @@ import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 
-fun Podcast.toAlbum(songCount: Int) : PodcastAlbum {
+internal fun Podcast.toAlbum(songCount: Int) : PodcastAlbum {
     return PodcastAlbum(
             this.albumId,
             this.artistId,
@@ -17,7 +17,7 @@ fun Podcast.toAlbum(songCount: Int) : PodcastAlbum {
     )
 }
 
-fun Podcast.toArtist(songCount: Int, albumsCount: Int) : PodcastArtist {
+internal fun Podcast.toArtist(songCount: Int, albumsCount: Int) : PodcastArtist {
     return PodcastArtist(
             this.artistId,
             this.artist,

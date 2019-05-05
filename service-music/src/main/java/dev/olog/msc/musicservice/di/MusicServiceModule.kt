@@ -87,23 +87,23 @@ class MusicServiceModule(
     }
 
     @Module
-    abstract class Binds {
+    internal abstract class Binds {
 
         @dagger.Binds
         @PerService
-        abstract fun provideQueue(queue: QueueManager): Queue
+        internal abstract fun provideQueue(queue: QueueManager): Queue
 
         @dagger.Binds
         @PerService
-        abstract fun providePlayer(player: PlayerImpl): Player
+        internal abstract fun providePlayer(player: PlayerImpl): Player
 
         @dagger.Binds
         @PerService
-        abstract fun providePlayerLifecycle(player: Player): PlayerLifecycle
+        internal abstract fun providePlayerLifecycle(player: Player): PlayerLifecycle
 
         @dagger.Binds
         @PerService
-        abstract fun providePlayerVolume(volume: PlayerVolume): IPlayerVolume
+        internal abstract fun providePlayerVolume(volume: PlayerVolume): IPlayerVolume
 
     }
 

@@ -29,7 +29,7 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @PerService
-class CurrentSong @Inject constructor(
+internal class CurrentSong @Inject constructor(
         @ServiceLifecycle lifecycle: Lifecycle,
         insertMostPlayedUseCase: InsertMostPlayedUseCase,
         insertHistorySongUseCase: InsertHistorySongUseCase,

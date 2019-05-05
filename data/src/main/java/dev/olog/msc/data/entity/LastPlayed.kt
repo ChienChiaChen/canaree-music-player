@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName ="last_played_artists",
         indices = [(Index("id"))]
 )
-data class LastPlayedArtistEntity(
+internal data class LastPlayedArtistEntity(
         @PrimaryKey var id: Long,
         var dateAdded: Long = System.currentTimeMillis()
 )
@@ -15,7 +15,7 @@ data class LastPlayedArtistEntity(
 @Entity(tableName = "last_played_albums",
         indices = [(Index("id"))]
 )
-data class LastPlayedAlbumEntity(
+internal data class LastPlayedAlbumEntity(
         @PrimaryKey var id: Long,
         var dateAdded: Long = System.currentTimeMillis()
 )
@@ -23,7 +23,7 @@ data class LastPlayedAlbumEntity(
 @Entity(tableName = "last_played_podcast_albums",
         indices = [(Index("id"))]
 )
-data class LastPlayedPodcastAlbumEntity(
+internal data class LastPlayedPodcastAlbumEntity(
         @PrimaryKey var id: Long,
         var dateAdded: Long = System.currentTimeMillis()
 )
@@ -31,7 +31,7 @@ data class LastPlayedPodcastAlbumEntity(
 @Entity(tableName = "last_played_podcast_artists",
         indices = [(Index("id"))]
 )
-data class LastPlayedPodcastArtistEntity(
+internal data class LastPlayedPodcastArtistEntity(
         @PrimaryKey var id: Long,
         var dateAdded: Long = System.currentTimeMillis()
 )

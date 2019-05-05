@@ -1,6 +1,6 @@
 package dev.olog.msc.musicservice.player
 
-//class SimplePlayer @Inject constructor(
+//internal class SimplePlayer @Inject constructor(
 //        @ApplicationContext context: Context,
 //        @ServiceLifecycle lifecycle: Lifecycle,
 //        sourceFactory: DefaultSourceFactory,

@@ -2,12 +2,12 @@ package dev.olog.msc.presentation.image.creation
 
 import android.content.Context
 import android.provider.MediaStore
+import dev.olog.msc.TempQuery
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.track.Playlist
-import dev.olog.msc.data.repository.util.CommonQuery
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.presentation.image.creation.impl.MergedImagesCreator
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import dev.olog.msc.imageprovider.ImagesFolderUtils
 import io.reactivex.Flowable
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class PlaylistImagesCreator @Inject constructor(
                 .runOn(imagesThreadPool.scheduler)
                 .map {
                     val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", it.id)
-                    Pair(it, CommonQuery.extractAlbumIdsFromSongs(ctx.contentResolver, uri))
+                    Pair(it, TempQuery.extractAlbumIdsFromSongs(ctx.contentResolver, uri))
                 }
                 .map { (playlist, albumsId) -> try {
                     makeImage(playlist, albumsId)

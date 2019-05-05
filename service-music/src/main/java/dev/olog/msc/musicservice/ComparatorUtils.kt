@@ -2,7 +2,7 @@ package dev.olog.msc.musicservice
 
 import dev.olog.msc.musicservice.model.MediaEntity
 
-object ComparatorUtils {
+internal object ComparatorUtils {
     fun getMediaEntityAscendingTrackNumberComparator(): Comparator<MediaEntity> {
         return Comparator { o1: MediaEntity, o2: MediaEntity ->
             val tmp = o1.discNumber - o2.discNumber

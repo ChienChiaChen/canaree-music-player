@@ -2,7 +2,7 @@ package dev.olog.msc.floatingwindowservice.music.service
 
 import dev.olog.msc.imageprovider.ImageModel
 
-data class MusicServiceMetadata(
+internal data class MusicServiceMetadata(
         val id: Long,
         val title: String,
         val artist: String,

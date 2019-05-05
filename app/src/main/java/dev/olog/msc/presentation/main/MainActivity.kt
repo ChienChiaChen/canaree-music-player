@@ -18,7 +18,6 @@ import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.constants.FloatingWindowsConstants
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.musicservice.MusicService
-import dev.olog.msc.musicservice.PendingIntents
 import dev.olog.msc.presentation.DrawsOnTop
 import dev.olog.msc.presentation.base.HasBilling
 import dev.olog.msc.presentation.base.HasSlidingPanel
@@ -32,6 +31,7 @@ import dev.olog.msc.presentation.preferences.PreferencesActivity
 import dev.olog.msc.presentation.utils.animation.HasSafeTransition
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.utils.clamp

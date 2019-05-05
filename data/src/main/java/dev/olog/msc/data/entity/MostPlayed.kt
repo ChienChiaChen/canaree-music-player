@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "most_played_folder",
         indices = [(Index("id"))]
 )
-data class FolderMostPlayedEntity(
+internal data class FolderMostPlayedEntity(
         @PrimaryKey(autoGenerate = true) val id: Long,
         val songId: Long,
         val folderPath: String
@@ -16,7 +16,7 @@ data class FolderMostPlayedEntity(
 @Entity(tableName = "most_played_playlist",
         indices = [(Index("id"))]
 )
-data class PlaylistMostPlayedEntity(
+internal data class PlaylistMostPlayedEntity(
         @PrimaryKey(autoGenerate = true) val id: Long,
         val songId: Long,
         val playlistId: Long
@@ -25,7 +25,7 @@ data class PlaylistMostPlayedEntity(
 @Entity(tableName = "most_played_genre",
         indices = [(Index("id"))]
 )
-data class GenreMostPlayedEntity(
+internal data class GenreMostPlayedEntity(
         @PrimaryKey(autoGenerate = true) val id: Long,
         val songId: Long,
         val genreId: Long

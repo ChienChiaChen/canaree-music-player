@@ -31,14 +31,14 @@ import io.reactivex.rxkotlin.addTo
 import javax.inject.Inject
 
 @PerService
-class MediaSessionCallback @Inject constructor(
+internal class MediaSessionCallback @Inject constructor(
         @ApplicationContext private val context: Context,
         @ServiceLifecycle lifecycle: Lifecycle,
         private val queue: Queue,
         private val player: Player,
-        private val repeatMode: dev.olog.msc.musicservice.RepeatMode,
-        private val shuffleMode: dev.olog.msc.musicservice.ShuffleMode,
-        private val mediaButton: dev.olog.msc.musicservice.MediaButton,
+        private val repeatMode: RepeatMode,
+        private val shuffleMode: ShuffleMode,
+        private val mediaButton: MediaButton,
         private val playerState: PlayerState,
         private val toggleFavoriteUseCase: ToggleFavoriteUseCase
 

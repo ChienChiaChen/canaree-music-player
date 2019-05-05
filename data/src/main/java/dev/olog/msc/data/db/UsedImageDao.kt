@@ -9,7 +9,7 @@ import dev.olog.msc.data.entity.UsedArtistImageEntity
 import dev.olog.msc.data.entity.UsedTrackImageEntity
 
 @Dao
-abstract class UsedImageDao {
+internal abstract class UsedImageDao {
 
     // get all
 

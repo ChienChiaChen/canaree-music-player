@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 private const val CHANNEL_ID = "0xfff"
 
-class FloatingWindowNotification @Inject constructor(
+internal class FloatingWindowNotification @Inject constructor(
         private val service: Service,
         @ServiceLifecycle lifecycle: Lifecycle,
         private val notificationManager: NotificationManager,
@@ -47,7 +47,7 @@ class FloatingWindowNotification @Inject constructor(
         disposable.unsubscribe()
     }
 
-    fun startObserving() {
+    internal fun startObserving() {
         disposable = musicPreferencesUseCase.observeLastMetadata()
                 .filter { it.isNotEmpty() }
                 .subscribe({
@@ -57,7 +57,7 @@ class FloatingWindowNotification @Inject constructor(
                 }, Throwable::printStackTrace)
     }
 
-    fun buildNotification(): Notification {
+    internal fun buildNotification(): Notification {
         if (isOreo()){
             createChannel()
         }

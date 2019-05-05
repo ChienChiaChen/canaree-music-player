@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "song_history",
         indices = [(Index("id"))]
 )
-data class HistoryEntity(
+internal data class HistoryEntity(
         @PrimaryKey(autoGenerate = true) val id: Int = 0,
         val songId: Long,
         var dateAdded : Long = System.currentTimeMillis()

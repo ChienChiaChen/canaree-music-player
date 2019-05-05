@@ -1,4 +1,4 @@
-package dev.olog.msc.musicservice
+package dev.olog.msc.shared
 
 import android.app.PendingIntent
 import android.content.Context
@@ -10,8 +10,8 @@ object PendingIntents {
     private const val TAG = "PendingIntents"
     const val ACTION_STOP_SLEEP_END = "$TAG.action.stop_sleep_timer"
 
-    fun stopMusicServiceIntent(context: Context): PendingIntent {
-        val intent = Intent(context, dev.olog.msc.musicservice.MusicService::class.java)
+    fun stopMusicServiceIntent(context: Context, musicService: Class<*>): PendingIntent {
+        val intent = Intent(context, musicService)
         intent.action = ACTION_STOP_SLEEP_END
         return intent.asServicePendingIntent(context, PendingIntent.FLAG_CANCEL_CURRENT)
     }

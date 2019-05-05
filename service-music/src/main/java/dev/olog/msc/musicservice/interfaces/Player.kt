@@ -2,7 +2,7 @@ package dev.olog.msc.musicservice.interfaces
 
 import dev.olog.msc.musicservice.model.PlayerMediaEntity
 
-interface Player : PlayerLifecycle {
+internal interface Player : PlayerLifecycle {
 
     fun isPlaying(): Boolean
     fun getBookmark(): Long
@@ -26,7 +26,7 @@ interface Player : PlayerLifecycle {
     fun setVolume(volume: Float)
 }
 
-enum class SkipType {
+internal enum class SkipType {
     NONE,
     SKIP_PREVIOUS,
     SKIP_NEXT,

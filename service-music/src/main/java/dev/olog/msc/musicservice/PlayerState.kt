@@ -17,7 +17,7 @@ import dev.olog.msc.shared.extensions.isPlaying
 import javax.inject.Inject
 
 @PerService
-class PlayerState @Inject constructor(
+internal class PlayerState @Inject constructor(
         @ApplicationContext private val context: Context,
         private val mediaSession: MediaSessionCompat,
         private val musicPreferencesUseCase: MusicPreferencesGateway,

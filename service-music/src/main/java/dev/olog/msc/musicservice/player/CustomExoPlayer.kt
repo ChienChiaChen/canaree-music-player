@@ -1,6 +1,6 @@
 package dev.olog.msc.musicservice.player
 
-interface CustomExoPlayer<T> {
+internal interface CustomExoPlayer<T> {
 
     fun prepare(mediaEntity: T, bookmark: Long)
 

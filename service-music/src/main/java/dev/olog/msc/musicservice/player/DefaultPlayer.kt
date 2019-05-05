@@ -20,7 +20,7 @@ import dev.olog.msc.shared.BuildConfig
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.utils.clamp
 
-abstract class DefaultPlayer<T>(
+internal abstract class DefaultPlayer<T>(
         private val context: Context,
         lifecycle: Lifecycle,
         private val mediaSourceFactory: SourceFactory<T>,

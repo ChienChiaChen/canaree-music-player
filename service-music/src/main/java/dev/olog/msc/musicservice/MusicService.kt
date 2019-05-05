@@ -22,6 +22,7 @@ import dev.olog.msc.musicservice.helper.WearHelper
 import dev.olog.msc.musicservice.notification.MusicNotificationManager
 import dev.olog.msc.shared.FileProvider
 import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.extensions.asServicePendingIntent
 import dev.olog.msc.shared.extensions.toast
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -35,17 +36,17 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService() {
         const val TAG = "MusicService"
     }
 
-    @Inject lateinit var mediaSession: MediaSessionCompat
-    @Inject lateinit var callback: MediaSessionCallback
+    @Inject internal lateinit var mediaSession: MediaSessionCompat
+    @Inject internal lateinit var callback: MediaSessionCallback
 
-    @Inject lateinit var currentSong : CurrentSong
-    @Inject lateinit var playerMetadata: PlayerMetadata
-    @Inject lateinit var notification: MusicNotificationManager
-    @Inject lateinit var sleepTimerUseCase: SleepTimerUseCase
-    @Inject lateinit var mediaItemGenerator: Lazy<MediaItemGenerator>
-    @Inject lateinit var alarmManager: AlarmManager
-    @Inject lateinit var lastFmScrobbling: LastFmScrobbling
-    @Inject lateinit var classes: Classes
+    @Inject internal lateinit var currentSong : CurrentSong
+    @Inject internal lateinit var playerMetadata: PlayerMetadata
+    @Inject internal lateinit var notification: MusicNotificationManager
+    @Inject internal lateinit var sleepTimerUseCase: SleepTimerUseCase
+    @Inject internal lateinit var mediaItemGenerator: Lazy<MediaItemGenerator>
+    @Inject internal lateinit var alarmManager: AlarmManager
+    @Inject internal lateinit var lastFmScrobbling: LastFmScrobbling
+    @Inject internal lateinit var classes: Classes
 
     private val subsriptions = CompositeDisposable()
 
@@ -140,7 +141,7 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService() {
 
     private fun resetSleepTimer(){
         sleepTimerUseCase.reset()
-        alarmManager.cancel(PendingIntents.stopMusicServiceIntent(this))
+        alarmManager.cancel(PendingIntents.stopMusicServiceIntent(this, this::class.java))
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {

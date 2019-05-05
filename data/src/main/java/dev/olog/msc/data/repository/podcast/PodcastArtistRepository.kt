@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 private val MEDIA_STORE_URI = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
 
-class PodcastArtistRepository @Inject constructor(
+internal class PodcastArtistRepository @Inject constructor(
         appDatabase: AppDatabase,
         private val rxContentResolver: BriteContentResolver,
         private val podcastGateway: PodcastGateway,

@@ -5,7 +5,7 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 
-class FloatingMusicCallback(
+internal class FloatingMusicCallback(
         private val binder: MusicServiceBinder
 
 ) : MediaControllerCompat.Callback() {

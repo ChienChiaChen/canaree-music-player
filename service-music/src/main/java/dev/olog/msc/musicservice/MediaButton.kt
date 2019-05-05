@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 
 @PerService
-class MediaButton @Inject internal constructor(
+internal class MediaButton @Inject internal constructor(
         @ServiceLifecycle lifecycle: Lifecycle,
         private val audioManager: Lazy<AudioManager>
 

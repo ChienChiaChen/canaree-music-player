@@ -7,13 +7,13 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "favorite_songs",
         indices = [(Index("songId"))]
 )
-data class FavoriteEntity(
+internal data class FavoriteEntity(
         @PrimaryKey var songId: Long
 )
 
 @Entity(tableName = "favorite_podcast_songs",
         indices = [(Index("podcastId"))]
 )
-data class FavoritePodcastEntity(
+internal data class FavoritePodcastEntity(
         @PrimaryKey var podcastId: Long
 )

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "recent_searches",
         indices = [(Index("pk"))]
 )
-data class RecentSearchesEntity(
+internal data class RecentSearchesEntity(
         @PrimaryKey(autoGenerate = true)
         val pk: Int = 0,
         val dataType: Int,

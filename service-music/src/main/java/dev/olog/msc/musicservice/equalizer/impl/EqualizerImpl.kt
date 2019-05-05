@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
-class EqualizerImpl @Inject constructor(
+internal class EqualizerImpl @Inject constructor(
         private val equalizerPrefsUseCase: EqualizerPreferencesGateway
 
 ) : IEqualizer {

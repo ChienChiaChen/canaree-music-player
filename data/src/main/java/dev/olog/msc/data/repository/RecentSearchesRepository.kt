@@ -8,7 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class RecentSearchesRepository @Inject constructor(
+internal class RecentSearchesRepository @Inject constructor(
         appDatabase: AppDatabase,
         private val songGateway: SongGateway,
         private val albumGateway: AlbumGateway,

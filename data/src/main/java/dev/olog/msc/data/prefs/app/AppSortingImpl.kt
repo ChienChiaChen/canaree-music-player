@@ -11,7 +11,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 
-class AppSortingImpl (
+internal class AppSortingImpl (
         private val preferences: SharedPreferences,
         private val rxPreferences: RxSharedPreferences
 

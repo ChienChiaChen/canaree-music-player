@@ -28,20 +28,20 @@ import android.text.TextUtils
  * @param query the query parameter from a voice search
  * @param extras the extras parameter from a voice search
  */
-class VoiceSearchParams(
+internal class VoiceSearchParams(
         val query: String, extras: Bundle?
 
 ) {
-    var isAny: Boolean = false
-    var isUnstructured: Boolean = false
-    var isGenreFocus: Boolean = false
-    var isArtistFocus: Boolean = false
-    var isAlbumFocus: Boolean = false
-    var isSongFocus: Boolean = false
-    var genre = "null"
-    var artist = "null"
-    var album = "null"
-    var song = "null"
+    internal var isAny: Boolean = false
+    internal var isUnstructured: Boolean = false
+    internal var isGenreFocus: Boolean = false
+    internal var isArtistFocus: Boolean = false
+    internal var isAlbumFocus: Boolean = false
+    internal var isSongFocus: Boolean = false
+    internal var genre = "null"
+    internal var artist = "null"
+    internal var album = "null"
+    internal var song = "null"
 
     init {
 
