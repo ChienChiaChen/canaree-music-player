@@ -17,13 +17,15 @@ import dev.olog.msc.presentation.base.adapter.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.detail.scroll.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.presentation.widget.image.view.ShapeImageView
 import dev.olog.msc.shared.extensions.deepCopy
 import dev.olog.msc.shared.extensions.isLandscape
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.sharedui.AppTheme
+import dev.olog.msc.sharedui.extensions.setVisible
+import dev.olog.msc.sharedui.extensions.toggleVisibility
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*

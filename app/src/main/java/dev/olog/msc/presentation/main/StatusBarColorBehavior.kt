@@ -5,9 +5,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.presentation.detail.DetailFragment
-import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.utils.isMarshmallow
+import dev.olog.msc.sharedui.AppTheme
 import dev.olog.msc.utils.k.extension.removeLightStatusBar
 import dev.olog.msc.utils.k.extension.setLightStatusBar
 import kotlinx.android.synthetic.main.activity_main.*

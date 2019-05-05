@@ -2,17 +2,17 @@ package dev.olog.msc.presentation.library.categories.track
 
 import android.os.Bundle
 import android.view.View
+import dev.olog.msc.FloatingWindowHelper
 import dev.olog.msc.R
 import dev.olog.msc.catchNothing
-import dev.olog.msc.floating.window.service.FloatingWindowHelper
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tutorial.TutorialTapTarget
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.utils.k.extension.act
-import dev.olog.msc.utils.k.extension.toggleVisibility
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.sharedui.extensions.toggleVisibility
+import dev.olog.msc.utils.k.extension.act
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers

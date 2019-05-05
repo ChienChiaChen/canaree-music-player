@@ -7,8 +7,8 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import dev.olog.msc.R
-import dev.olog.msc.presentation.widget.image.view.ForegroundImageView
 import dev.olog.msc.shared.utils.clamp
+import dev.olog.msc.sharedui.imageview.ForegroundImageView
 import kotlin.math.abs
 
 private const val DEFAULT_PARALLAX = .7f

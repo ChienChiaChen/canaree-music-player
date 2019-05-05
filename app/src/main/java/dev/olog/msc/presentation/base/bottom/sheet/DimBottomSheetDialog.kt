@@ -6,9 +6,9 @@ import android.widget.FrameLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dev.olog.msc.R
-import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.isLandscape
+import dev.olog.msc.sharedui.AppTheme
 
 class DimBottomSheetDialog(context: Context, theme: Int)
     : BottomSheetDialog(context, theme) {

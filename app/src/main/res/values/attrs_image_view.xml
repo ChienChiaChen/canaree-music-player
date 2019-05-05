@@ -5,10 +5,6 @@
         <attr name="avd" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="ForegroundImageView">
-        <attr name="android:foreground" />
-    </declare-styleable>
-
     <declare-styleable name="ParallaxView">
         <attr name="parallax" format="float"/>
     </declare-styleable>

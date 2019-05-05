@@ -17,10 +17,10 @@ import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.presentation.image.creation.ImagesCreator
-import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.updatePermissionValve
+import dev.olog.msc.sharedui.AppTheme
 import dev.olog.msc.traceur.Traceur
 import io.alterac.blurkit.BlurKit
 import io.reactivex.android.plugins.RxAndroidPlugins

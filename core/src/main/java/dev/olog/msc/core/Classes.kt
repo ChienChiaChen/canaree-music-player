@@ -1,5 +1,7 @@
 package dev.olog.msc.core
 
 interface Classes {
-    fun mainClass(): Class<*>
+    fun mainActivity(): Class<*>
+    fun musicService(): Class<*>
+    fun floatingWindowService(): Class<*>
 }

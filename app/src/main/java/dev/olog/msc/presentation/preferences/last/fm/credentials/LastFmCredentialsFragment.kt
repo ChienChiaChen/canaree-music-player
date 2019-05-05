@@ -11,7 +11,7 @@ import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.interactor.scrobble.GetLastFmUserCredentials
 import dev.olog.msc.core.interactor.scrobble.UpdateLastFmUserCredentials
 import dev.olog.msc.presentation.base.BaseDialogFragment
-import dev.olog.msc.presentation.theme.ThemedDialog
+import dev.olog.msc.sharedui.ThemedDialog
 import dev.olog.msc.utils.k.extension.ctx
 import javax.inject.Inject
 

@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.View
-import dev.olog.msc.utils.k.extension.windowBackground
+import dev.olog.msc.sharedui.extensions.windowBackground
 
 class SideBarFade @JvmOverloads constructor(
         context: Context,

@@ -15,10 +15,10 @@ import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.musicservice.PendingIntents
 import dev.olog.msc.presentation.main.MainActivity
-import dev.olog.msc.presentation.utils.images.ImageProcessorResult
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.extensions.asServicePendingIntent
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
+import dev.olog.msc.sharedui.image.processor.ImageProcessorResult
 import javax.inject.Inject
 
 abstract class BaseWidget : AbsWidgetApp() {

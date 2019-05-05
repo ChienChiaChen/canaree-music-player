@@ -7,10 +7,10 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.bumptech.glide.request.transition.Transition
 import dev.olog.msc.R
-import dev.olog.msc.presentation.widget.image.view.ForegroundImageView
 import dev.olog.msc.presentation.widget.parallax.ParallaxImageView
+import dev.olog.msc.sharedui.extensions.getBitmap
+import dev.olog.msc.sharedui.imageview.ForegroundImageView
 import dev.olog.msc.utils.RippleUtils
-import dev.olog.msc.utils.k.extension.getBitmap
 import java.lang.ref.WeakReference
 
 class RippleTarget(

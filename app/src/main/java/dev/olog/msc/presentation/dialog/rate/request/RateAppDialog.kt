@@ -9,9 +9,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.R
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
-import dev.olog.msc.presentation.theme.ThemedDialog
 import dev.olog.msc.presentation.utils.openPlayStore
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.sharedui.ThemedDialog
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

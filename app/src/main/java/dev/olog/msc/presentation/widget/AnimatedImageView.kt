@@ -8,10 +8,10 @@ import androidx.annotation.Keep
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import dev.olog.msc.R
-import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.shared.extensions.isPortrait
-import dev.olog.msc.utils.k.extension.getAnimatedVectorDrawable
-import dev.olog.msc.utils.k.extension.textColorTertiary
+import dev.olog.msc.sharedui.AppTheme
+import dev.olog.msc.sharedui.extensions.getAnimatedVectorDrawable
+import dev.olog.msc.sharedui.extensions.textColorTertiary
 
 @Keep
 class AnimatedImageView @JvmOverloads constructor(

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="offline_lyrics_ok">OK</string>
+    <string name="offline_lyrics_cancel">Cancelar</string>
+    <string name="offline_lyrics_back">Atrás</string>
+</resources>

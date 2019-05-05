@@ -13,12 +13,12 @@ import androidx.core.net.toUri
 import com.bumptech.glide.Priority
 import dev.olog.msc.R
 import dev.olog.msc.app.glide.GlideApp
+import dev.olog.msc.imageprovider.CoverUtils
+import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.presentation.base.BaseBottomSheetFragment
-import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.presentation.theme.ThemedDialog
 import dev.olog.msc.shared.Permissions
-import dev.olog.msc.utils.img.CoverUtils
+import dev.olog.msc.sharedui.ThemedDialog
 import dev.olog.msc.utils.k.extension.act
 import dev.olog.msc.utils.k.extension.ctx
 
@@ -39,7 +39,7 @@ abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
         hideLoader()
     }
 
-    protected fun setImage(model: DisplayableItem){
+    protected fun setImage(model: ImageModel){
         val image = view!!.findViewById<ImageView>(R.id.cover)
 
         GlideApp.with(ctx).clear(image)

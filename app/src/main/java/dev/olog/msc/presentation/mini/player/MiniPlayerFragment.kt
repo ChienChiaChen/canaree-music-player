@@ -10,11 +10,13 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.R
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.base.music.service.MediaProvider
-import dev.olog.msc.presentation.theme.AppTheme
+import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.sharedui.AppTheme
+import dev.olog.msc.sharedui.extensions.toggleVisibility
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,7 +32,6 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
 
     companion object {
         private const val TAG = "MiniPlayerFragment"
-        private const val PROGRESS_BAR_INTERVAL = 250L
         private const val BUNDLE_IS_VISIBLE = "$TAG.BUNDLE_IS_VISIBLE"
     }
 

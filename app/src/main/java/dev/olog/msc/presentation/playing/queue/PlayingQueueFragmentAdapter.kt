@@ -10,7 +10,12 @@ import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
-import dev.olog.msc.utils.k.extension.*
+import dev.olog.msc.sharedui.extensions.textColorPrimary
+import dev.olog.msc.sharedui.extensions.textColorSecondary
+import dev.olog.msc.utils.k.extension.elevateSongOnTouch
+import dev.olog.msc.utils.k.extension.setOnClickListener
+import dev.olog.msc.utils.k.extension.setOnLongClickListener
+import dev.olog.msc.utils.k.extension.setOnMoveListener
 import kotlinx.android.synthetic.main.item_playing_queue.view.*
 import javax.inject.Inject
 

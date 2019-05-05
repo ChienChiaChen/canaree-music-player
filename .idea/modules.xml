@@ -7,12 +7,14 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/canaree-music-player.iml" filepath="$PROJECT_DIR$/.idea/canaree-music-player.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/data/data.iml" filepath="$PROJECT_DIR$/data/data.iml" />
-      <module fileurl="file://$PROJECT_DIR$/imageprovider/imageprovider.iml" filepath="$PROJECT_DIR$/imageprovider/imageprovider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/image-provider/image-provider.iml" filepath="$PROJECT_DIR$/image-provider/image-provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/offline-lyrics/offline-lyrics.iml" filepath="$PROJECT_DIR$/offline-lyrics/offline-lyrics.iml" />
       <module fileurl="file://$PROJECT_DIR$/pro/pro.iml" filepath="$PROJECT_DIR$/pro/pro.iml" />
-      <module fileurl="file://$PROJECT_DIR$/service-floating_window/service-floating_window.iml" filepath="$PROJECT_DIR$/service-floating_window/service-floating_window.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-floating-window/service-floating-window.iml" filepath="$PROJECT_DIR$/service-floating-window/service-floating-window.iml" />
       <module fileurl="file://$PROJECT_DIR$/service-music/service-music.iml" filepath="$PROJECT_DIR$/service-music/service-music.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared/shared.iml" filepath="$PROJECT_DIR$/shared/shared.iml" />
-      <module fileurl="file://$PROJECT_DIR$/taptargetview/taptargetview.iml" filepath="$PROJECT_DIR$/taptargetview/taptargetview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shared-ui-components/shared-ui-components.iml" filepath="$PROJECT_DIR$/shared-ui-components/shared-ui-components.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tap-target-view/tap-target-view.iml" filepath="$PROJECT_DIR$/tap-target-view/tap-target-view.iml" />
       <module fileurl="file://$PROJECT_DIR$/traceur/traceur.iml" filepath="$PROJECT_DIR$/traceur/traceur.iml" />
     </modules>
   </component>

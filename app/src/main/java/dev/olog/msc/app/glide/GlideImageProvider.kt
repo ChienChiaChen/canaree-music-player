@@ -8,11 +8,11 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
+import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.IImageProvider
 import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.imageprovider.ImageUtils
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import dev.olog.msc.utils.img.CoverUtils
-import dev.olog.msc.utils.img.ImageUtils
 import javax.inject.Inject
 
 class GlideImageProvider @Inject constructor() : IImageProvider {

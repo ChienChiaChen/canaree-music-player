@@ -210,6 +210,6 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService() {
 
     private fun buildSessionActivityPendingIntent(): PendingIntent {
         return PendingIntent.getActivity(this, 0,
-                Intent(this, classes.mainClass()::class.java), PendingIntent.FLAG_CANCEL_CURRENT)
+                Intent(this, classes.mainActivity()::class.java), PendingIntent.FLAG_CANCEL_CURRENT)
     }
 }

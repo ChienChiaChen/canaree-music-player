@@ -12,12 +12,14 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/data" />
-            <option value="$PROJECT_DIR$/imageprovider" />
+            <option value="$PROJECT_DIR$/image-provider" />
+            <option value="$PROJECT_DIR$/offline-lyrics" />
             <option value="$PROJECT_DIR$/pro" />
-            <option value="$PROJECT_DIR$/service-floating_window" />
+            <option value="$PROJECT_DIR$/service-floating-window" />
             <option value="$PROJECT_DIR$/service-music" />
             <option value="$PROJECT_DIR$/shared" />
-            <option value="$PROJECT_DIR$/taptargetview" />
+            <option value="$PROJECT_DIR$/shared-ui-components" />
+            <option value="$PROJECT_DIR$/tap-target-view" />
             <option value="$PROJECT_DIR$/traceur" />
           </set>
         </option>

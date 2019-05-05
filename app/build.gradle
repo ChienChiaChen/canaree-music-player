@@ -99,13 +99,15 @@ dependencies {
     implementation project(':core')
     implementation project(':shared')
     implementation project(':traceur')
-    implementation project(':taptargetview')
+    implementation project(':tap-target-view')
     implementation project(':service-music')
-    implementation project(':imageprovider')
+    implementation project(':image-provider')
     implementation project(':api-lastfm')
     implementation project(':data')
     implementation project(':pro')
-    implementation project(':service-floating_window')
+    implementation project(':service-floating-window')
+    implementation project(':shared-ui-components')
+    implementation project(':offline-lyrics')
 
     // data binding
     kapt "androidx.databinding:databinding-compiler:$gradle_plugin"

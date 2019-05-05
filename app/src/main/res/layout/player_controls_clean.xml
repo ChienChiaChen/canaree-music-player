@@ -42,7 +42,7 @@
         app:layout_goneMarginStart="16dp"
         tools:tint="?attr/cleanButtonColor" />
 
-    <dev.olog.msc.presentation.widget.playpause.AnimatedPlayPauseImageView
+    <dev.olog.msc.sharedui.playpause.AnimatedPlayPauseImageView
         android:id="@+id/playPause"
         android:layout_width="64dp"
         android:layout_height="64dp"

@@ -10,6 +10,7 @@ import androidx.core.graphics.drawable.toBitmap
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.shared.extensions.dipf
+import dev.olog.msc.sharedui.imageview.ForegroundImageView
 
 private const val DEFAULT_RADIUS = 5
 

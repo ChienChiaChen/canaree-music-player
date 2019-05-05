@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import dev.olog.msc.presentation.theme.ThemedDialog
 import dev.olog.msc.shared.extensions.toast
+import dev.olog.msc.sharedui.ThemedDialog
 import dev.olog.msc.utils.k.extension.act
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers

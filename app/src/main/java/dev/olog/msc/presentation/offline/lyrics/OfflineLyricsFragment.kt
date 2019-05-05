@@ -9,19 +9,20 @@ import android.widget.SeekBar
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import dev.olog.msc.R
-import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.offline.lyrics.EditLyricsDialog
-import dev.olog.msc.offline.lyrics.NoScrollTouchListener
-import dev.olog.msc.offline.lyrics.OfflineLyricsSyncAdjustementDialog
+import dev.olog.msc.offlinelyrics.EditLyricsDialog
+import dev.olog.msc.offlinelyrics.NoScrollTouchListener
+import dev.olog.msc.offlinelyrics.OfflineLyricsSyncAdjustementDialog
 import dev.olog.msc.presentation.DrawsOnTop
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.base.music.service.MediaProvider
-import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.tutorial.TutorialTapTarget
-import dev.olog.msc.presentation.widget.animateBackgroundColor
-import dev.olog.msc.presentation.widget.animateTextColor
+import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.sharedui.AppTheme
+import dev.olog.msc.sharedui.extensions.animateBackgroundColor
+import dev.olog.msc.sharedui.extensions.animateTextColor
+import dev.olog.msc.sharedui.extensions.toggleVisibility
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -177,8 +178,8 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
     }
 
     private fun resumeSeekBar(speed: Float){
-        updateDisposable = Observable.interval(AppConstants.PROGRESS_BAR_INTERVAL.toLong(), TimeUnit.MILLISECONDS)
-                .subscribe({ seekBar.incrementProgressBy((AppConstants.PROGRESS_BAR_INTERVAL * speed).toInt()) }, Throwable::printStackTrace)
+        updateDisposable = Observable.interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS)
+                .subscribe({ seekBar.incrementProgressBy((PROGRESS_BAR_INTERVAL * speed).toInt()) }, Throwable::printStackTrace)
     }
 
     private val seekBarListener = object : SeekBar.OnSeekBarChangeListener {

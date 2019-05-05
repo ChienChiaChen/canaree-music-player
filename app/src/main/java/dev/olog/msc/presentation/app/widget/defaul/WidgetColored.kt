@@ -9,8 +9,8 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.presentation.app.widget.BaseWidget
 import dev.olog.msc.presentation.app.widget.WidgetMetadata
-import dev.olog.msc.presentation.utils.images.ImageProcessor
 import dev.olog.msc.shared.TrackUtils
+import dev.olog.msc.sharedui.image.processor.ImageProcessor
 import dev.olog.msc.utils.k.extension.getBitmapAsync
 
 private const val IMAGE_SIZE = 300

@@ -11,15 +11,15 @@ import com.bumptech.glide.request.target.Target
 import dev.olog.msc.app.glide.GlideApp
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.glide.AudioFileCover
+import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.presentation.library.folder.tree.DisplayableFile
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
 import dev.olog.msc.presentation.special.thanks.SpecialThanksModel
 import dev.olog.msc.presentation.utils.images.RippleTarget
 import dev.olog.msc.presentation.widget.QuickActionView
-import dev.olog.msc.utils.img.CoverUtils
-import dev.olog.msc.imageprovider.ImagesFolderUtils
 
 object BindingsAdapter {
 

@@ -38,4 +38,6 @@ object MusicConstants {
     const val PATH = "$TAG.PATH"
     const val IS_PODCAST = "$TAG.extra.is_podcast"
 
+    const val PROGRESS_BAR_INTERVAL = 250L
+
 }

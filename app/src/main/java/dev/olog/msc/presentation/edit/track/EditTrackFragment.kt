@@ -9,15 +9,15 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.presentation.edit.BaseEditItemFragment
 import dev.olog.msc.presentation.edit.EditItemViewModel
 import dev.olog.msc.presentation.edit.UpdateResult
 import dev.olog.msc.presentation.edit.UpdateSongInfo
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_edit_track.*
 import kotlinx.android.synthetic.main.fragment_edit_track.view.*
@@ -59,7 +59,7 @@ class EditTrackFragment : BaseEditItemFragment() {
                 bitrate.text = it.bitrate
                 format.text = it.format
                 sampling.text = it.sampling
-                val model = DisplayableItem(0, MediaId.songId(it.id), "", image = it.image)
+                val model = ImageModel(MediaId.songId(it.id), it.image)
                 setImage(model)
             }
             hideLoader()

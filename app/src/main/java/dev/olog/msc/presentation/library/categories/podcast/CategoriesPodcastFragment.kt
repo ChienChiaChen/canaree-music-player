@@ -2,15 +2,15 @@ package dev.olog.msc.presentation.library.categories.podcast
 
 import android.os.Bundle
 import android.view.View
+import dev.olog.msc.FloatingWindowHelper
 import dev.olog.msc.R
 import dev.olog.msc.catchNothing
-import dev.olog.msc.floating.window.service.FloatingWindowHelper
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.sharedui.extensions.toggleVisibility
 import dev.olog.msc.utils.k.extension.act
-import dev.olog.msc.utils.k.extension.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_library_categories.*
 import kotlinx.android.synthetic.main.fragment_library_categories.view.*
 import javax.inject.Inject

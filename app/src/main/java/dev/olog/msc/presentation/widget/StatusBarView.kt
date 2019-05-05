@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import dev.olog.msc.R
-import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.isPortrait
+import dev.olog.msc.sharedui.AppTheme
 import dev.olog.msc.utils.k.extension.hasNotch
 
 /**

@@ -129,7 +129,7 @@
 
         <!--floating window service-->
         <service
-            android:name=".floating.window.service.FloatingWindowService"
+            android:name=".floatingwindowservice.FloatingWindowService"
             android:exported="false" />
 
 

@@ -14,7 +14,6 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.constants.AppConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.presentation.base.BaseFragment
@@ -22,13 +21,15 @@ import dev.olog.msc.presentation.base.adapter.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.tutorial.TutorialTapTarget
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.presentation.widget.SwipeableView
+import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.*
 import dev.olog.msc.shared.utils.isMarshmallow
+import dev.olog.msc.sharedui.AppTheme
+import dev.olog.msc.sharedui.extensions.toggleVisibility
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -236,7 +237,7 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         seekBarDisposable.unsubscribe()
 
         if (isPlaying){
-            seekBarDisposable = Observable.interval(PROGRESS_BAR_INTERVAL.toLong(), TimeUnit.MILLISECONDS, Schedulers.computation())
+            seekBarDisposable = Observable.interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS, Schedulers.computation())
                     .map { (it + 1) * PROGRESS_BAR_INTERVAL * speed + bookmark }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ viewModel.updateProgress(it.toInt()) }, Throwable::printStackTrace)

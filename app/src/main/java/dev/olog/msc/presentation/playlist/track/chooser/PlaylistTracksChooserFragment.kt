@@ -16,7 +16,6 @@ import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.presentation.DrawsOnTop
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.library.categories.track.CategoriesFragment
-import dev.olog.msc.presentation.theme.ThemedDialog
 import dev.olog.msc.presentation.utils.ImeUtils
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.presentation.widget.fast.scroller.WaveSideBarView
@@ -24,6 +23,9 @@ import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.utils.TextUtils
+import dev.olog.msc.sharedui.ThemedDialog
+import dev.olog.msc.sharedui.extensions.toggleSelected
+import dev.olog.msc.sharedui.extensions.toggleVisibility
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable
 import io.reactivex.Single

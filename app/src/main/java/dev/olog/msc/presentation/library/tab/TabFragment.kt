@@ -18,7 +18,11 @@ import dev.olog.msc.presentation.widget.fast.scroller.WaveSideBarView
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.msc.utils.k.extension.*
+import dev.olog.msc.sharedui.extensions.toggleVisibility
+import dev.olog.msc.utils.k.extension.act
+import dev.olog.msc.utils.k.extension.ctx
+import dev.olog.msc.utils.k.extension.subscribe
+import dev.olog.msc.utils.k.extension.withArguments
 import kotlinx.android.synthetic.main.fragment_tab.*
 import kotlinx.android.synthetic.main.fragment_tab.view.*
 import javax.inject.Inject

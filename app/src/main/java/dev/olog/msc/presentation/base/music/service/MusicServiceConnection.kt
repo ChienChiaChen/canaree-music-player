@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.base.music.service
 
 import android.support.v4.media.MediaBrowserCompat
+import dev.olog.msc.shared.MusicServiceConnectionState
 
 class MusicServiceConnection(
         private val activity: MusicGlueActivity

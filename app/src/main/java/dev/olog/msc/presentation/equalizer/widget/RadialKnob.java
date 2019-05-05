@@ -53,9 +53,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
+
 import dev.olog.msc.R;
-import dev.olog.msc.presentation.theme.AppTheme;
-import dev.olog.msc.utils.k.extension.ViewExtensionKt;
+import dev.olog.msc.sharedui.AppTheme;
+import dev.olog.msc.sharedui.extensions.ContextExtensionsKt;
 
 public class RadialKnob extends View {
 
@@ -115,7 +116,7 @@ public class RadialKnob extends View {
         super(context, attrs, defStyle);
 
         Resources res = getResources();
-        mHighlightColor = ViewExtensionKt.colorAccent(getContext());
+        mHighlightColor = ContextExtensionsKt.colorAccent(getContext());
         mBackgroundArcColor = ColorUtils.setAlphaComponent(mHighlightColor, (int) (255 * 0.5));
         mBackgroundArcColorDisabled = res.getColor(R.color.radial_knob_arc_bg_disabled);
         dividerColor = AppTheme.INSTANCE.isDarkTheme() ? Color.WHITE : ContextCompat.getColor(getContext(),  R.color.dark_grey);
@@ -126,7 +127,7 @@ public class RadialKnob extends View {
         mTextPaint.setElegantTextHeight(true);
         mTextPaint.setFakeBoldText(true);
         mTextPaint.setTextSize(res.getDimension(R.dimen.radial_text_size));
-        mTextPaint.setColor(ViewExtensionKt.textColorPrimary(getContext()));
+        mTextPaint.setColor(ContextExtensionsKt.textColorPrimary(getContext()));
 
         mTextOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2,
                 getResources().getDisplayMetrics());

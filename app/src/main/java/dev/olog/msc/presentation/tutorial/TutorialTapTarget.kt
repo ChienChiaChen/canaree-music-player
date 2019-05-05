@@ -5,11 +5,11 @@ import android.content.Context
 import android.view.View
 import androidx.core.content.ContextCompat
 import dev.olog.msc.R
+import dev.olog.msc.sharedui.extensions.colorAccent
+import dev.olog.msc.sharedui.extensions.windowBackground
 import dev.olog.msc.taptargetview.TapTarget
 import dev.olog.msc.taptargetview.TapTargetSequence
 import dev.olog.msc.taptargetview.TapTargetView
-import dev.olog.msc.utils.k.extension.colorAccent
-import dev.olog.msc.utils.k.extension.windowBackground
 
 object TutorialTapTarget {
 

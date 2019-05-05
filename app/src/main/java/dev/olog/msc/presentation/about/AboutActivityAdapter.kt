@@ -8,7 +8,7 @@ import dev.olog.msc.presentation.base.adapter.AbsAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.NavigatorAbout
-import dev.olog.msc.utils.k.extension.colorAccent
+import dev.olog.msc.sharedui.extensions.colorAccent
 import dev.olog.msc.utils.k.extension.setOnClickListener
 import kotlinx.android.synthetic.main.item_about.view.*
 

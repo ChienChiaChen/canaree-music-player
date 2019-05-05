@@ -14,8 +14,8 @@ import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 import dev.olog.msc.R
 import dev.olog.msc.presentation.base.ThemedActivity
-import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.pro.IBilling
+import dev.olog.msc.sharedui.AppTheme
 import dev.olog.msc.utils.k.extension.setLightStatusBar
 import kotlinx.android.synthetic.main.activity_preferences.*
 import javax.inject.Inject

@@ -4,13 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.VibrationEffect
 import android.os.Vibrator
-import androidx.annotation.DrawableRes
-import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+import dev.olog.msc.R
 import dev.olog.msc.shared.utils.isOreo
-
-fun Context.getAnimatedVectorDrawable (@DrawableRes id: Int): AnimatedVectorDrawableCompat {
-    return AnimatedVectorDrawableCompat.create(this, id)!!
-}
+import dev.olog.msc.sharedui.extensions.themeAttributeToColor
 
 @SuppressLint("NewApi")
 @Suppress("DEPRECATION")
@@ -22,4 +18,8 @@ fun Context.vibrate(time: Long){
     } else {
         vibrator.vibrate(time)
     }
+}
+
+fun Context.scrimColor(): Int {
+    return themeAttributeToColor(R.attr.scrimColor)
 }

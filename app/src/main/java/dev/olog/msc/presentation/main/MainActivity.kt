@@ -12,11 +12,11 @@ import com.crashlytics.android.Crashlytics
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import dev.olog.msc.FloatingWindowHelper
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.constants.FloatingWindowsConstants
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.floating.window.service.FloatingWindowHelper
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.musicservice.PendingIntents
 import dev.olog.msc.presentation.DrawsOnTop
@@ -29,13 +29,13 @@ import dev.olog.msc.presentation.library.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.library.folder.tree.FolderTreeFragment
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.preferences.PreferencesActivity
-import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.utils.animation.HasSafeTransition
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.utils.clamp
+import dev.olog.msc.sharedui.AppTheme
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject

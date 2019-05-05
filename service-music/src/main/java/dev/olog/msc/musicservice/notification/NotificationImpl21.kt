@@ -137,7 +137,7 @@ open class NotificationImpl21 @Inject constructor(
     }
 
     private fun buildContentIntent(): PendingIntent {
-        val intent = Intent(service, classes.mainClass())
+        val intent = Intent(service, classes.mainActivity())
         intent.action = PendingIntents.ACTION_CONTENT_VIEW
         return intent.asActivityPendingIntent(service)
     }

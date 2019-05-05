@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
 import dev.olog.msc.R
 import dev.olog.msc.presentation.base.BaseDialogFragment
-import dev.olog.msc.presentation.theme.AppTheme
+import dev.olog.msc.sharedui.AppTheme
 
 open class ScrollHmsPickerDialog : BaseDialogFragment() {
     interface HmsPickHandler {

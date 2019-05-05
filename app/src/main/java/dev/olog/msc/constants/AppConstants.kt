@@ -25,8 +25,6 @@ object AppConstants {
     var QUICK_ACTION = QuickActionView.Type.NONE
     var IMAGE_SHAPE = ImageShape.ROUND
 
-    const val PROGRESS_BAR_INTERVAL = 250
-
     fun initialize(context: Context){
         updateQuickAction(context)
         updateIconShape(context)

@@ -9,10 +9,10 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import dev.olog.msc.app.glide.GlideApp
 import dev.olog.msc.app.glide.GlideRequest
+import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.imageprovider.ImageUtils
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import dev.olog.msc.utils.img.CoverUtils
-import dev.olog.msc.utils.img.ImageUtils
 
 fun Context.getBitmap(
         model: ImageModel,

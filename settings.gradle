@@ -1,4 +1,4 @@
-include ':app', ':core', ':shared', ':traceur', ':taptargetview', ':service-music', ':imageprovider', ':data', ':api-lastfm', ':pro', ':service-floating_window'
+include ':app', ':core', ':shared', ':traceur', ':tap-target-view', ':service-music', ':image-provider', ':data', ':api-lastfm', ':pro', ':service-floating-window', ':shared-ui-components', ':offline-lyrics'
 
 //gradle.ext.exoplayerRoot = '/Users/eugeniuolog/AndroidStudioProjects/ExoPlayer'
 //gradle.ext.exoplayerModulePrefix = 'exoplayer-'
