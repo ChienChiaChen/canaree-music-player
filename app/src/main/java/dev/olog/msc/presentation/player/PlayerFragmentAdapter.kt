@@ -56,10 +56,10 @@ class PlayerFragmentAdapter (
                     mediaProvider.skipToQueueItem(item.trackNumber.toLong())
                 }
                 viewHolder.setOnLongClickListener(controller) { item, _, _ ->
-                    navigator.toDialog(item, viewHolder.itemView)
+                    navigator.toDialog(item.mediaId, viewHolder.itemView)
                 }
                 viewHolder.setOnClickListener(R.id.more, controller) { item, _, view ->
-                    navigator.toDialog(item, view)
+                    navigator.toDialog(item.mediaId, view)
                 }
                 viewHolder.elevateSongOnTouch()
 

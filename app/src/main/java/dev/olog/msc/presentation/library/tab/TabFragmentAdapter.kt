@@ -53,10 +53,10 @@ class TabFragmentAdapter (
                     }
                 }
                 viewHolder.setOnLongClickListener(controller) { item, _, _ ->
-                    navigator.toDialog(item, viewHolder.itemView)
+                    navigator.toDialog(item.mediaId, viewHolder.itemView)
                 }
                 viewHolder.setOnClickListener(R.id.more, controller) { item, _, view ->
-                    navigator.toDialog(item, view)
+                    navigator.toDialog(item.mediaId, view)
                 }
             }
             R.layout.item_tab_last_played_album_horizontal_list -> {

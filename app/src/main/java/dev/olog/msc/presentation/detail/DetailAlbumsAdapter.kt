@@ -22,7 +22,7 @@ class DetailAlbumsAdapter (
             navigator.toDetailFragment(item.mediaId)
         }
         viewHolder.setOnLongClickListener(controller) { item, _, _ ->
-            navigator.toDialog(item, viewHolder.itemView)
+            navigator.toDialog(item.mediaId, viewHolder.itemView)
         }
         viewHolder.elevateAlbumOnTouch()
     }

@@ -28,7 +28,7 @@ class SearchFragmentArtistAdapter @Inject constructor(
             viewModel.insertToRecent(item.mediaId)
         }
         viewHolder.setOnLongClickListener(controller) { item, _, _ ->
-            navigator.toDialog(item, viewHolder.itemView)
+            navigator.toDialog(item.mediaId, viewHolder.itemView)
         }
         viewHolder.elevateAlbumOnTouch()
     }

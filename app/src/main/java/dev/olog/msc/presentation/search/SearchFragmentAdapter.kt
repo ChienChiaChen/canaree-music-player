@@ -58,10 +58,10 @@ class SearchFragmentAdapter @Inject constructor(
 
                 }
                 viewHolder.setOnLongClickListener(controller) { item ,_, _ ->
-                    navigator.toDialog(item, viewHolder.itemView)
+                    navigator.toDialog(item.mediaId, viewHolder.itemView)
                 }
                 viewHolder.setOnClickListener(R.id.more, controller) { item, _, view ->
-                    navigator.toDialog(item, view)
+                    navigator.toDialog(item.mediaId, view)
                 }
 
             }
@@ -82,7 +82,7 @@ class SearchFragmentAdapter @Inject constructor(
                     viewModel.insertToRecent(item.mediaId)
                 }
                 viewHolder.setOnLongClickListener(controller) { item ,_, _ ->
-                    navigator.toDialog(item, viewHolder.itemView)
+                    navigator.toDialog(item.mediaId, viewHolder.itemView)
                 }
                 viewHolder.setOnClickListener(R.id.clear, controller) { item, _, _ ->
                     viewModel.deleteFromRecent(item.mediaId)

@@ -12,6 +12,8 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.Lazy
 import dev.olog.msc.R
 import dev.olog.msc.app.app
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.dialog.add.favorite.AddFavoriteDialog
@@ -30,7 +32,6 @@ import dev.olog.msc.presentation.edit.track.EditTrackFragment
 import dev.olog.msc.presentation.library.categories.podcast.CategoriesPodcastFragment
 import dev.olog.msc.presentation.library.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.main.MainActivity
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.offline.lyrics.OfflineLyricsFragment
 import dev.olog.msc.presentation.playing.queue.PlayingQueueFragment
 import dev.olog.msc.presentation.playlist.track.chooser.PlaylistTracksChooserFragment
@@ -40,12 +41,10 @@ import dev.olog.msc.presentation.recently.added.RecentlyAddedFragment
 import dev.olog.msc.presentation.related.artists.RelatedArtistFragment
 import dev.olog.msc.presentation.search.SearchFragment
 import dev.olog.msc.presentation.splash.SplashActivity
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.utils.k.extension.collapse
 import dev.olog.msc.utils.k.extension.fragmentTransaction
 import dev.olog.msc.utils.k.extension.hideFragmentsIfExists
-import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -263,10 +262,6 @@ class NavigatorImpl @Inject internal constructor(
                 addToBackStack(PlaylistTracksChooserFragment.TAG)
             }
         }
-    }
-
-    override fun toDialog(item: DisplayableItem, anchor: View) {
-        toDialog(item.mediaId, anchor)
     }
 
     override fun toDialog(mediaId: MediaId, anchor: View) {

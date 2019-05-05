@@ -168,7 +168,7 @@ ext {
             mediaRouter: "androidx.mediarouter:mediarouter:$android_x_media_router",
             recycler   : "androidx.recyclerview:recyclerview:$android_x_recycler",
             cardview   : "androidx.cardview:cardview:$android_x_cardview",
-            browser    : "androidx.cardview:cardview:$android_x_browser",
+            browser    : "androidx.browser:browser:$android_x_browser",
             material   : "com.google.android.material:material:$android_x_material",
             preference : "androidx.legacy:legacy-preference-v14:$android_x_preference",
             palette    : "androidx.palette:palette:$android_x_palette",
