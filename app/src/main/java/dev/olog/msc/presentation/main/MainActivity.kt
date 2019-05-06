@@ -18,7 +18,6 @@ import dev.olog.msc.constants.FloatingWindowsConstants
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.musicservice.MusicService
-import dev.olog.msc.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
 import dev.olog.msc.presentation.base.music.service.MusicGlueActivity
 import dev.olog.msc.presentation.dialog.rate.request.RateAppDialog
 import dev.olog.msc.presentation.library.categories.track.CategoriesFragment
@@ -37,6 +36,7 @@ import dev.olog.msc.utils.k.extension.collapse
 import dev.olog.msc.utils.k.extension.expand
 import dev.olog.msc.utils.k.extension.isExpanded
 import dev.olog.presentation.base.FloatingWindowHelper
+import dev.olog.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
 import dev.olog.presentation.base.extensions.asLiveData
 import dev.olog.presentation.base.extensions.getTopFragment
 import dev.olog.presentation.base.extensions.subscribe

@@ -16,11 +16,9 @@ import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.GlideApp
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.imageprovider.ImagesFolderUtils
-import dev.olog.msc.presentation.base.BaseBottomSheetFragment
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.ui.ThemedDialog
-import dev.olog.presentation.base.extensions.act
-import dev.olog.presentation.base.extensions.ctx
+import dev.olog.presentation.base.bottom.sheet.BaseBottomSheetFragment
 
 private const val PICK_IMAGE_CODE = 456
 

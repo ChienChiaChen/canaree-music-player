@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/image-provider" />
             <option value="$PROJECT_DIR$/offline-lyrics" />
             <option value="$PROJECT_DIR$/presentation-base" />
+            <option value="$PROJECT_DIR$/presentation-equalizer" />
             <option value="$PROJECT_DIR$/presentation-navigator" />
             <option value="$PROJECT_DIR$/presentation-offline-lyrics" />
             <option value="$PROJECT_DIR$/presentation-search" />

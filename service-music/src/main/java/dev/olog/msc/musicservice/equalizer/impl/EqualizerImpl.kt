@@ -1,8 +1,8 @@
 package dev.olog.msc.musicservice.equalizer.impl
 
 import android.media.audiofx.Equalizer
+import dev.olog.msc.core.equalizer.IEqualizer
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
-import dev.olog.msc.musicservice.equalizer.IEqualizer
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject

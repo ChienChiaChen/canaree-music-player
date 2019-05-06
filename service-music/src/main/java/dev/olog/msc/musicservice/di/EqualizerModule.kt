@@ -2,9 +2,9 @@ package dev.olog.msc.musicservice.di
 
 import dagger.Binds
 import dagger.Module
-import dev.olog.msc.musicservice.equalizer.IBassBoost
-import dev.olog.msc.musicservice.equalizer.IEqualizer
-import dev.olog.msc.musicservice.equalizer.IVirtualizer
+import dev.olog.msc.core.equalizer.IBassBoost
+import dev.olog.msc.core.equalizer.IEqualizer
+import dev.olog.msc.core.equalizer.IVirtualizer
 import dev.olog.msc.musicservice.equalizer.impl.BassBoostImpl
 import dev.olog.msc.musicservice.equalizer.impl.EqualizerImpl
 import dev.olog.msc.musicservice.equalizer.impl.VirtualizerImpl

@@ -114,6 +114,7 @@ dependencies {
     implementation project(':presentation-navigator')
     implementation project(':presentation-search')
     implementation project(':presentation-offline-lyrics')
+    implementation project(':presentation-equalizer')
 
     // data binding
     kapt librariesUi.dataBinding

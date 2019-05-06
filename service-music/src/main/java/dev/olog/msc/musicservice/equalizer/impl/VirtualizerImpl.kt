@@ -1,8 +1,8 @@
 package dev.olog.msc.musicservice.equalizer.impl
 
 import android.media.audiofx.Virtualizer
+import dev.olog.msc.core.equalizer.IVirtualizer
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
-import dev.olog.msc.musicservice.equalizer.IVirtualizer
 import javax.inject.Inject
 
 internal class VirtualizerImpl @Inject constructor(
