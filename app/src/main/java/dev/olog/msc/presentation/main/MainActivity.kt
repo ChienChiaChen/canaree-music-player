@@ -12,15 +12,13 @@ import com.crashlytics.android.Crashlytics
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dev.olog.msc.FloatingWindowHelper
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.constants.FloatingWindowsConstants
+import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.presentation.DrawsOnTop
-import dev.olog.msc.presentation.base.HasBilling
-import dev.olog.msc.presentation.base.HasSlidingPanel
 import dev.olog.msc.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
 import dev.olog.msc.presentation.base.music.service.MusicGlueActivity
 import dev.olog.msc.presentation.dialog.rate.request.RateAppDialog
@@ -34,9 +32,17 @@ import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.ui.extensions.getTopFragment
+import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.shared.utils.clamp
-import dev.olog.msc.sharedui.AppTheme
-import dev.olog.msc.utils.k.extension.*
+import dev.olog.msc.utils.k.extension.collapse
+import dev.olog.msc.utils.k.extension.expand
+import dev.olog.msc.utils.k.extension.isExpanded
+import dev.olog.presentation.base.FloatingWindowHelper
+import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.presentation.base.extensions.subscribe
+import dev.olog.presentation.base.interfaces.HasBilling
+import dev.olog.presentation.base.interfaces.HasSlidingPanel
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -50,6 +56,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     @Inject lateinit var presenter: MainActivityPresenter
     @Inject lateinit var navigator: Navigator
+    @Inject lateinit var classes: Classes
     // handles lifecycle itself
     @Inject override lateinit var billing: IBilling
 
@@ -177,7 +184,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     private fun handleIntent(intent: Intent) {
         when (intent.action){
             FloatingWindowsConstants.ACTION_START_SERVICE -> {
-                FloatingWindowHelper.startServiceIfHasOverlayPermission(this)
+                FloatingWindowHelper.startServiceIfHasOverlayPermission(this, classes::class.java)
             }
             AppConstants.SHORTCUT_SEARCH -> {
                 bottomNavigation.selectedItemId = R.id.navigation_search
@@ -230,7 +237,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         }
 
         if (requestCode == FloatingWindowHelper.REQUEST_CODE_HOVER_PERMISSION){
-            FloatingWindowHelper.startServiceIfHasOverlayPermission(this)
+            FloatingWindowHelper.startServiceIfHasOverlayPermission(this, classes.floatingWindowService())
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }

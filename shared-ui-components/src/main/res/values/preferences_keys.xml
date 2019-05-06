@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--immersive mode-->
+    <string name="prefs_immersive_key" translatable="false">key_immersive</string>
+
+    <!--player appearance-->
+    <string name="prefs_appearance_key" translatable="false">key_appearance</string>
+    <string name="prefs_appearance_entry_value_default" translatable="false">default</string>
+    <string name="prefs_appearance_entry_value_flat" translatable="false">flat</string>
+    <string name="prefs_appearance_entry_value_spotify" translatable="false">spotify</string>
+    <string name="prefs_appearance_entry_value_fullscreen" translatable="false">fullscreen</string>
+    <string name="prefs_appearance_entry_value_big_image" translatable="false">big_image</string>
+    <string name="prefs_appearance_entry_value_clean" translatable="false">clean</string>
+    <string name="prefs_appearance_entry_value_mini" translatable="false">mini</string>
+
+    <!--dark mode-->
+    <string name="prefs_dark_mode_key" translatable="false">key_dark_mode</string>
+    <string name="prefs_dark_mode_entry_value_white" translatable="false">white</string>
+    <string name="prefs_dark_mode_entry_value_gray" translatable="false">gray</string>
+    <string name="prefs_dark_mode_entry_value_dark" translatable="false">dark</string>
+    <string name="prefs_dark_mode_entry_value_black" translatable="false">black</string>
+
+    <!--icon shape-->
+    <string name="prefs_icon_shape_key" translatable="false">key_icon_shape</string>
+    <string name="prefs_icon_shape_square" translatable="false">square</string>
+    <string name="prefs_icon_shape_rounded" translatable="false">round</string>
+
+    <!--quick action-->
+    <string name="prefs_quick_action_key" translatable="false">key_quick_action</string>
+    <string name="prefs_quick_action_entry_value_hide" translatable="false">hide</string>
+    <string name="prefs_quick_action_entry_value_play" translatable="false">play</string>
+    <string name="prefs_quick_action_entry_value_shuffle" translatable="false">shuffle</string>
+</resources>

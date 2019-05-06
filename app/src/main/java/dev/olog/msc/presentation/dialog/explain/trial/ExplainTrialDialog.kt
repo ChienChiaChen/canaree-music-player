@@ -2,7 +2,7 @@ package dev.olog.msc.presentation.dialog.explain.trial
 
 import android.content.Context
 import dev.olog.msc.R
-import dev.olog.msc.sharedui.ThemedDialog
+import dev.olog.msc.shared.ui.ThemedDialog
 
 object ExplainTrialDialog {
 

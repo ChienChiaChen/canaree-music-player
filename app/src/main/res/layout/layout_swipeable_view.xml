@@ -23,7 +23,7 @@
         android:clickable="false"
         android:focusable="false">
 
-        <dev.olog.msc.sharedui.imageview.ForegroundImageView
+        <dev.olog.msc.shared.ui.imageview.ForegroundImageView
             android:id="@+id/cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

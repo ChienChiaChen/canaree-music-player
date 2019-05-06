@@ -19,10 +19,10 @@ import dev.olog.msc.core.interactor.all.*
 import dev.olog.msc.core.interactor.played.GetLastPlayedPodcastAlbumsUseCase
 import dev.olog.msc.core.interactor.played.GetLastPlayedPodcastArtistsUseCase
 import dev.olog.msc.presentation.library.tab.TabFragmentHeaders
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.*
 import dev.olog.msc.shared.utils.TextUtils
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import java.util.concurrent.TimeUnit
@@ -216,7 +216,7 @@ private fun Podcast.toTabDisplayableItem(): DisplayableItem {
     )
 }
 
-private fun PodcastArtist.toTabDisplayableItem(resources: Resources): DisplayableItem{
+private fun PodcastArtist.toTabDisplayableItem(resources: Resources): DisplayableItem {
     val songs = DisplayableItem.handleSongListSize(resources, songs)
     var albums = DisplayableItem.handleAlbumListSize(resources, albums)
     if (albums.isNotBlank()) albums+= TextUtils.MIDDLE_DOT_SPACED
@@ -231,7 +231,7 @@ private fun PodcastArtist.toTabDisplayableItem(resources: Resources): Displayabl
 }
 
 
-private fun PodcastAlbum.toTabDisplayableItem(): DisplayableItem{
+private fun PodcastAlbum.toTabDisplayableItem(): DisplayableItem {
     return DisplayableItem(
             R.layout.item_tab_album,
             MediaId.podcastAlbumId(id),

@@ -13,8 +13,8 @@ import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.domain.interactor.all.sibling.GetPodcastAlbumSiblingsByAlbumUseCase
 import dev.olog.msc.domain.interactor.all.sibling.GetPodcastAlbumSiblingsByArtistUseCase
 import dev.olog.msc.domain.interactor.all.sibling.GetPodcastPlaylistsSiblingsUseCase
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.extensions.mapToList
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 
 @Module

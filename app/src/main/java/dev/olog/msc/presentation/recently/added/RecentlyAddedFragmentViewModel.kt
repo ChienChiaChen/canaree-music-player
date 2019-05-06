@@ -7,10 +7,10 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.added.GetRecentlyAddedUseCase
 import dev.olog.msc.domain.interactor.GetItemTitleUseCase
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.mapToList
-import dev.olog.msc.utils.k.extension.asLiveData
+import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.presentation.base.model.DisplayableItem
 import javax.inject.Inject
 
 class RecentlyAddedFragmentViewModel @Inject constructor(

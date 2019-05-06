@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.R
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.utils.k.extension.act
-import dev.olog.msc.utils.k.extension.asLiveData
-import dev.olog.msc.utils.k.extension.subscribe
+import dev.olog.presentation.base.extensions.act
+import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.presentation.base.extensions.subscribe
 import io.reactivex.Single
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.fragment_special_thanks.view.*

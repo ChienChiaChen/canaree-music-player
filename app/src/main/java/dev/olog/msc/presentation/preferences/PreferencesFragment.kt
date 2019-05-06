@@ -17,10 +17,10 @@ import com.afollestad.materialdialogs.color.colorChooser
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.R
-import dev.olog.msc.app.glide.GlideApp
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
+import dev.olog.msc.imageprovider.GlideApp
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.isLowMemoryDevice
 import dev.olog.msc.presentation.preferences.blacklist.BlacklistFragment
@@ -28,9 +28,15 @@ import dev.olog.msc.presentation.preferences.categories.LibraryCategoriesFragmen
 import dev.olog.msc.presentation.preferences.last.fm.credentials.LastFmCredentialsFragment
 import dev.olog.msc.presentation.utils.ColorPalette
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.sharedui.AppTheme
-import dev.olog.msc.sharedui.ThemedDialog
-import dev.olog.msc.utils.k.extension.*
+import dev.olog.msc.shared.ui.ThemedDialog
+import dev.olog.msc.shared.ui.extensions.fragmentTransaction
+import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.utils.k.extension.forEach
+import dev.olog.presentation.base.ImageViews
+import dev.olog.presentation.base.extensions.act
+import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.presentation.base.extensions.ctx
+import dev.olog.presentation.base.extensions.subscribe
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -165,11 +171,11 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         when (key){
             getString(R.string.prefs_quick_action_key) -> {
-                AppConstants.updateQuickAction(act)
+                ImageViews.updateQuickAction(act)
                 requestMainActivityToRecreate()
             }
             getString(R.string.prefs_icon_shape_key) -> {
-                AppConstants.updateIconShape(act)
+                ImageViews.updateIconShape(act)
                 requestMainActivityToRecreate()
             }
             getString(R.string.prefs_immersive_key) -> {

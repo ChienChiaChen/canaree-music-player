@@ -11,8 +11,8 @@ import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.interactor.scrobble.GetLastFmUserCredentials
 import dev.olog.msc.core.interactor.scrobble.UpdateLastFmUserCredentials
 import dev.olog.msc.presentation.base.BaseDialogFragment
-import dev.olog.msc.sharedui.ThemedDialog
-import dev.olog.msc.utils.k.extension.ctx
+import dev.olog.msc.shared.ui.ThemedDialog
+import dev.olog.presentation.base.extensions.ctx
 import javax.inject.Inject
 
 class LastFmCredentialsFragment : BaseDialogFragment() {

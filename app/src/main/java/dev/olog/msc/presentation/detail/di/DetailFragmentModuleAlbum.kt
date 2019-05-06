@@ -13,8 +13,8 @@ import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.core.entity.track.Genre
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.domain.interactor.all.sibling.*
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.extensions.mapToList
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 
 @Module

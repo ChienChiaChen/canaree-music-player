@@ -13,24 +13,29 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.R
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.PlayingQueueGateway
-import dev.olog.msc.presentation.base.BaseFragment
-import dev.olog.msc.presentation.base.adapter.drag.TouchHelperAdapterCallback
-import dev.olog.msc.presentation.base.music.service.MediaProvider
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tutorial.TutorialTapTarget
-import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.presentation.widget.SwipeableView
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.*
+import dev.olog.msc.shared.ui.extensions.toggleVisibility
+import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.shared.ui.theme.ImageShape
 import dev.olog.msc.shared.utils.isMarshmallow
-import dev.olog.msc.sharedui.AppTheme
-import dev.olog.msc.sharedui.extensions.toggleVisibility
-import dev.olog.msc.utils.k.extension.*
+import dev.olog.msc.utils.k.extension.isCollapsed
+import dev.olog.msc.utils.k.extension.isExpanded
+import dev.olog.presentation.base.BaseFragment
+import dev.olog.presentation.base.ImageViews
+import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
+import dev.olog.presentation.base.extensions.act
+import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.presentation.base.extensions.subscribe
+import dev.olog.presentation.base.extensions.viewModelProvider
+import dev.olog.presentation.base.interfaces.MediaProvider
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -114,7 +119,7 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
                     handleSeekBar(bookmark, it.isPlaying(), it.playbackSpeed)
                 }
 
-        if (AppConstants.IMAGE_SHAPE == AppConstants.ImageShape.RECTANGLE){
+        if (ImageViews.IMAGE_SHAPE == ImageShape.RECTANGLE){
             view.coverWrapper?.radius = 0f
         }
 

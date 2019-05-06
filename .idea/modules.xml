@@ -9,7 +9,9 @@
       <module fileurl="file://$PROJECT_DIR$/data/data.iml" filepath="$PROJECT_DIR$/data/data.iml" />
       <module fileurl="file://$PROJECT_DIR$/image-provider/image-provider.iml" filepath="$PROJECT_DIR$/image-provider/image-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/offline-lyrics/offline-lyrics.iml" filepath="$PROJECT_DIR$/offline-lyrics/offline-lyrics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation-base/presentation-base.iml" filepath="$PROJECT_DIR$/presentation-base/presentation-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-navigator/presentation-navigator.iml" filepath="$PROJECT_DIR$/presentation-navigator/presentation-navigator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation-search/presentation-search.iml" filepath="$PROJECT_DIR$/presentation-search/presentation-search.iml" />
       <module fileurl="file://$PROJECT_DIR$/pro/pro.iml" filepath="$PROJECT_DIR$/pro/pro.iml" />
       <module fileurl="file://$PROJECT_DIR$/service-floating-window/service-floating-window.iml" filepath="$PROJECT_DIR$/service-floating-window/service-floating-window.iml" />
       <module fileurl="file://$PROJECT_DIR$/service-music/service-music.iml" filepath="$PROJECT_DIR$/service-music/service-music.iml" />

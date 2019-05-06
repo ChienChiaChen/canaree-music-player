@@ -6,7 +6,7 @@
 
     <data>
         <import type="android.view.View"/>
-        <variable name="item" type="dev.olog.msc.presentation.model.DisplayableItem"/>
+        <variable name="item" type="dev.olog.presentation.base.model.DisplayableItem"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,7 @@
         android:layout_margin="@dimen/item_album_margin"
         tools:background="@color/background">
 
-        <dev.olog.msc.presentation.widget.image.view.CircularImageView
+        <dev.olog.msc.shared.ui.imageview.CircularImageView
             android:id="@+id/cover"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -27,7 +27,7 @@
             app:imageAlbum="@{item}"
             tools:src="@drawable/placeholder_artist" />
 
-        <dev.olog.msc.presentation.widget.QuickActionView
+        <dev.olog.presentation.base.widgets.QuickActionView
             style="@style/QuickActionStyle"
             android:layout_width="@dimen/smallShuffleSize"
             android:layout_height="@dimen/smallShuffleSize"

@@ -15,10 +15,10 @@ import dev.olog.msc.presentation.equalizer.EqHelper
 import dev.olog.msc.presentation.equalizer.ResizeAnimation
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.dip
+import dev.olog.msc.shared.ui.extensions.colorAccent
+import dev.olog.msc.shared.ui.extensions.setPaddingBottom
+import dev.olog.msc.shared.ui.extensions.textColorPrimary
 import dev.olog.msc.shared.utils.clamp
-import dev.olog.msc.sharedui.extensions.colorAccent
-import dev.olog.msc.sharedui.extensions.setPaddingBottom
-import dev.olog.msc.sharedui.extensions.textColorPrimary
 import dev.olog.msc.utils.k.extension.vibrate
 
 class BandView (

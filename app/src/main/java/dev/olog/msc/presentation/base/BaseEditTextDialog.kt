@@ -10,11 +10,11 @@ import androidx.annotation.StringRes
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dev.olog.msc.R
-import dev.olog.msc.presentation.utils.ImeUtils
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.sharedui.ThemedDialog
-import dev.olog.msc.utils.k.extension.ctx
+import dev.olog.msc.shared.ui.ThemedDialog
+import dev.olog.presentation.base.extensions.ctx
+import dev.olog.presentation.base.utils.ImeUtils
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single

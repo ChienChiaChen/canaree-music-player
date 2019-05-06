@@ -3,7 +3,6 @@ package dev.olog.msc.domain.interactor.update
 import android.content.Context
 import com.crashlytics.android.Crashlytics
 import dev.olog.msc.app.IoSchedulers
-import dev.olog.msc.catchNothing
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
@@ -19,7 +18,7 @@ class UpdateTrackUseCase @Inject constructor(
         schedulers: IoSchedulers,
         private val gateway: UsedImageGateway
 
-): CompletableUseCaseWithParam<UpdateTrackUseCase.Data>(schedulers){
+) : CompletableUseCaseWithParam<UpdateTrackUseCase.Data>(schedulers) {
 
     override fun buildUseCaseObservable(param: Data): Completable {
         return Completable.create {
@@ -29,17 +28,21 @@ class UpdateTrackUseCase @Inject constructor(
                 val tag = audioFile.tagOrCreateAndSetDefault
                 try {
                     tag.setEncoding("UTF-8")
-                } catch (ex: Exception){
+                } catch (ex: Exception) {
                     Crashlytics.logException(ex)
                 }
 
                 for (field in param.fields) {
-                    catchNothing { tag.setField(field.key, field.value) }
+                    try {
+                        tag.setField(field.key, field.value)
+                    } catch (ex: Throwable){
+                        ex.printStackTrace()
+                    }
                 }
 
                 audioFile.commit()
 
-                if (param.id != null){
+                if (param.id != null) {
                     gateway.setForTrack(param.id, param.image)
                 }
 
@@ -47,7 +50,7 @@ class UpdateTrackUseCase @Inject constructor(
                 notifyItemChanged(context, param.path)
 
                 it.onComplete()
-            } catch (ex: Exception){
+            } catch (ex: Exception) {
                 it.onError(ex)
             }
         }

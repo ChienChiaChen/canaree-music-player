@@ -15,10 +15,10 @@ import dev.olog.msc.presentation.edit.BaseEditItemFragment
 import dev.olog.msc.presentation.edit.EditItemViewModel
 import dev.olog.msc.presentation.edit.UpdateResult
 import dev.olog.msc.presentation.edit.UpdateSongInfo
-import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.utils.k.extension.*
+import dev.olog.msc.utils.k.extension.extractText
+import dev.olog.presentation.base.extensions.*
 import kotlinx.android.synthetic.main.fragment_edit_track.*
 import kotlinx.android.synthetic.main.fragment_edit_track.view.*
 import javax.inject.Inject

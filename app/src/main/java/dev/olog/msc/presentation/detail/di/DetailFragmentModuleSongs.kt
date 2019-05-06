@@ -23,11 +23,11 @@ import dev.olog.msc.domain.interactor.all.related.artists.GetRelatedArtistsUseCa
 import dev.olog.msc.domain.interactor.all.sorted.GetSortedSongListByParamUseCase
 import dev.olog.msc.domain.interactor.all.sorted.util.GetSortOrderUseCase
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.mapToList
 import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.msc.utils.TimeUtils
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 
 @Module

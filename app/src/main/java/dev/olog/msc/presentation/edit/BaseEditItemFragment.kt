@@ -12,15 +12,15 @@ import androidx.annotation.StringRes
 import androidx.core.net.toUri
 import com.bumptech.glide.Priority
 import dev.olog.msc.R
-import dev.olog.msc.app.glide.GlideApp
 import dev.olog.msc.imageprovider.CoverUtils
+import dev.olog.msc.imageprovider.GlideApp
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.presentation.base.BaseBottomSheetFragment
 import dev.olog.msc.shared.Permissions
-import dev.olog.msc.sharedui.ThemedDialog
-import dev.olog.msc.utils.k.extension.act
-import dev.olog.msc.utils.k.extension.ctx
+import dev.olog.msc.shared.ui.ThemedDialog
+import dev.olog.presentation.base.extensions.act
+import dev.olog.presentation.base.extensions.ctx
 
 private const val PICK_IMAGE_CODE = 456
 

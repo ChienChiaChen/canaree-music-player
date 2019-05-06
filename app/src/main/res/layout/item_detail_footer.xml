@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="item" type="dev.olog.msc.presentation.model.DisplayableItem"/>
+        <variable name="item" type="dev.olog.presentation.base.model.DisplayableItem"/>
     </data>
 
     <LinearLayout
@@ -15,7 +15,7 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
-        <dev.olog.msc.presentation.widget.DottedSeparator
+        <dev.olog.msc.shared.ui.widgets.DottedSeparator
             android:id="@+id/separator"
             android:layout_width="match_parent"
             android:layout_height="2dp" />

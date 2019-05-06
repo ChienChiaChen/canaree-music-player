@@ -20,8 +20,8 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import dev.olog.msc.R
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.sharedui.AppTheme
-import dev.olog.msc.sharedui.extensions.colorAccent
+import dev.olog.msc.shared.ui.extensions.colorAccent
+import dev.olog.msc.shared.ui.theme.AppTheme
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor

@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.licenses
 
-import dev.olog.msc.presentation.base.BaseModel
 import dev.olog.msc.core.MediaId
+import dev.olog.presentation.base.model.BaseModel
 
 data class LicenseModel(
         override val type: Int,

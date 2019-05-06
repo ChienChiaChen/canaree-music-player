@@ -17,13 +17,8 @@
 
 
     <!--quick action-->
-    <string name="prefs_quick_action_key" translatable="false">key_quick_action</string>
     <string name="prefs_quick_action_title">Quick action</string>
     <string name="prefs_quick_action_summary">Change the action of the small icon next to images</string>
-
-    <string name="prefs_quick_action_entry_value_hide" translatable="false">hide</string>
-    <string name="prefs_quick_action_entry_value_play" translatable="false">play</string>
-    <string name="prefs_quick_action_entry_value_shuffle" translatable="false">shuffle</string>
 
     <string-array name="prefs_quick_action_entry_values">
         <item>@string/prefs_quick_action_entry_value_hide</item>
@@ -120,11 +115,7 @@
     <string name="prefs_gapless_summary">Allows gapless playback when crossfade is on</string>
 
     <!--icon shape-->
-    <string name="prefs_icon_shape_key" translatable="false">key_icon_shape</string>
     <string name="prefs_icon_shape_title">Icon shape</string>
-
-    <string name="prefs_icon_shape_square" translatable="false">square</string>
-    <string name="prefs_icon_shape_rounded" translatable="false">round</string>
 
     <string-array name="prefs_icon_shape_entry_values">
         <item>@string/prefs_icon_shape_square</item>

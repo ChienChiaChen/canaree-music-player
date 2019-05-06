@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.airbnb.lottie.LottieAnimationView
 import dev.olog.msc.core.entity.favorite.FavoriteEnum
-import dev.olog.msc.sharedui.AppTheme
+import dev.olog.msc.shared.ui.theme.AppTheme
 
 class LottieFavorite @JvmOverloads constructor(
         context: Context,

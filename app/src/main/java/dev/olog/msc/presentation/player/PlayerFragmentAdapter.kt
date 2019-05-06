@@ -12,14 +12,8 @@ import androidx.lifecycle.Lifecycle
 import com.jakewharton.rxbinding2.view.RxView
 import dev.olog.msc.BR
 import dev.olog.msc.R
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.presentation.base.HasSlidingPanel
-import dev.olog.msc.presentation.base.adapter.AbsAdapter
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.music.service.MediaProvider
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.widget.AnimatedImageView
 import dev.olog.msc.presentation.widget.SwipeableView
@@ -28,13 +22,24 @@ import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.isPortrait
+import dev.olog.msc.shared.ui.extensions.animateBackgroundColor
+import dev.olog.msc.shared.ui.extensions.animateTextColor
+import dev.olog.msc.shared.ui.extensions.toggleVisibility
+import dev.olog.msc.shared.ui.playpause.AnimatedPlayPauseImageView
+import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.shared.ui.theme.ImageShape
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.msc.sharedui.AppTheme
-import dev.olog.msc.sharedui.extensions.animateBackgroundColor
-import dev.olog.msc.sharedui.extensions.animateTextColor
-import dev.olog.msc.sharedui.extensions.toggleVisibility
-import dev.olog.msc.sharedui.playpause.AnimatedPlayPauseImageView
 import dev.olog.msc.utils.k.extension.*
+import dev.olog.presentation.base.ImageViews
+import dev.olog.presentation.base.adapter.AbsAdapter
+import dev.olog.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.presentation.base.extensions.elevateSongOnTouch
+import dev.olog.presentation.base.extensions.setOnClickListener
+import dev.olog.presentation.base.extensions.setOnLongClickListener
+import dev.olog.presentation.base.extensions.setOnMoveListener
+import dev.olog.presentation.base.interfaces.HasSlidingPanel
+import dev.olog.presentation.base.interfaces.MediaProvider
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_player_controls.view.*
 import kotlinx.android.synthetic.main.fragment_player_toolbar.view.*
@@ -105,7 +110,7 @@ class PlayerFragmentAdapter (
         }
 
         val view = holder.itemView
-        if (AppConstants.IMAGE_SHAPE == AppConstants.ImageShape.RECTANGLE){
+        if (ImageViews.IMAGE_SHAPE == ImageShape.RECTANGLE){
             view.coverWrapper?.radius = 0f
         }
 

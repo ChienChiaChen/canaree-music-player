@@ -42,9 +42,9 @@ import dev.olog.msc.presentation.related.artists.RelatedArtistFragment
 import dev.olog.msc.presentation.search.SearchFragment
 import dev.olog.msc.presentation.splash.SplashActivity
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.shared.ui.extensions.fragmentTransaction
+import dev.olog.msc.shared.ui.extensions.hideFragmentsIfExists
 import dev.olog.msc.utils.k.extension.collapse
-import dev.olog.msc.utils.k.extension.fragmentTransaction
-import dev.olog.msc.utils.k.extension.hideFragmentsIfExists
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 

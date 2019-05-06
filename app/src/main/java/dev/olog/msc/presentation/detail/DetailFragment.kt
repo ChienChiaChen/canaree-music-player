@@ -11,22 +11,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.BindingsAdapter
-import dev.olog.msc.presentation.base.BaseFragment
-import dev.olog.msc.presentation.base.adapter.drag.TouchHelperAdapterCallback
-import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.detail.scroll.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.viewModelProvider
-import dev.olog.msc.presentation.widget.image.view.ShapeImageView
 import dev.olog.msc.shared.extensions.deepCopy
 import dev.olog.msc.shared.extensions.isLandscape
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.sharedui.AppTheme
-import dev.olog.msc.sharedui.extensions.setVisible
-import dev.olog.msc.sharedui.extensions.toggleVisibility
-import dev.olog.msc.utils.k.extension.*
+import dev.olog.msc.shared.ui.extensions.setVisible
+import dev.olog.msc.shared.ui.extensions.toggleVisibility
+import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.utils.k.extension.removeLightStatusBar
+import dev.olog.msc.utils.k.extension.setLightStatusBar
+import dev.olog.presentation.base.BaseFragment
+import dev.olog.presentation.base.DisplayableItemBindingAdapter
+import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
+import dev.olog.presentation.base.extensions.*
+import dev.olog.presentation.base.interfaces.MediaProvider
+import dev.olog.presentation.base.widgets.ShapeImageView
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import javax.inject.Inject
@@ -128,7 +129,7 @@ class DetailFragment : BaseFragment() {
                 headerText.text = item[0].title
                 val cover = view.findViewById<View>(R.id.cover)
                 if (!isPortrait() && cover is ShapeImageView){
-                    BindingsAdapter.loadBigAlbumImage(cover, item[0])
+                    DisplayableItemBindingAdapter.loadBigAlbumImage(cover, item[0])
                 }
             }
         }

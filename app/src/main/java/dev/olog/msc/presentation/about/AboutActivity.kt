@@ -14,7 +14,7 @@ import dev.olog.msc.presentation.base.BaseActivity
 import dev.olog.msc.presentation.navigator.NavigatorAbout
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.utils.k.extension.subscribe
+import dev.olog.presentation.base.extensions.subscribe
 import kotlinx.android.synthetic.main.activity_about.*
 import javax.inject.Inject
 

@@ -13,8 +13,8 @@ import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.utils.TimeUtils
-import dev.olog.msc.utils.k.extension.act
 import dev.olog.msc.utils.k.extension.logStackStace
+import dev.olog.presentation.base.extensions.act
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

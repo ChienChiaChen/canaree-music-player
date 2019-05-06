@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import dev.olog.msc.R;
+import dev.olog.msc.shared.ui.extensions.ContextExtensionsKt;
 import dev.olog.msc.shared.utils.TextUtils;
-import dev.olog.msc.sharedui.extensions.ContextExtensionsKt;
 
 public class WaveSideBarView extends View {
 

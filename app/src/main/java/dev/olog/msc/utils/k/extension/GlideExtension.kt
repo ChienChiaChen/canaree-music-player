@@ -7,11 +7,7 @@ import androidx.core.graphics.drawable.toBitmap
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import dev.olog.msc.app.glide.GlideApp
-import dev.olog.msc.app.glide.GlideRequest
-import dev.olog.msc.imageprovider.CoverUtils
-import dev.olog.msc.imageprovider.ImageModel
-import dev.olog.msc.imageprovider.ImageUtils
+import dev.olog.msc.imageprovider.*
 import dev.olog.msc.shared.utils.assertBackgroundThread
 
 fun Context.getBitmap(

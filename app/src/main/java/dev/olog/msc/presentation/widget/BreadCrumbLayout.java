@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Vector;
 
 import dev.olog.msc.R;
+import dev.olog.msc.shared.ui.extensions.ContextExtensionsKt;
 import dev.olog.msc.shared.utils.ThreadUtilsKt;
-import dev.olog.msc.sharedui.extensions.ContextExtensionsKt;
 
 public class BreadCrumbLayout extends HorizontalScrollView implements View.OnClickListener {
 

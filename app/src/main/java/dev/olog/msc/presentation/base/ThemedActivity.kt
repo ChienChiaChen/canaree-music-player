@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
 import dev.olog.msc.R
 import dev.olog.msc.app.app
-import dev.olog.msc.sharedui.AppTheme
+import dev.olog.msc.shared.ui.theme.AppTheme
 
 interface ThemedActivity {
 

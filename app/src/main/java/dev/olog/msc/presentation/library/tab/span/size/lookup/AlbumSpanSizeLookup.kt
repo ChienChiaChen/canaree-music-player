@@ -2,10 +2,10 @@ package dev.olog.msc.presentation.library.tab.span.size.lookup
 
 import android.content.Context
 import dev.olog.msc.R
-import dev.olog.msc.presentation.base.adapter.AbsAdapter
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.extensions.configuration
 import dev.olog.msc.shared.extensions.isPortrait
+import dev.olog.presentation.base.adapter.AbsAdapter
+import dev.olog.presentation.base.model.DisplayableItem
 
 class AlbumSpanSizeLookup(
         private val context: Context,

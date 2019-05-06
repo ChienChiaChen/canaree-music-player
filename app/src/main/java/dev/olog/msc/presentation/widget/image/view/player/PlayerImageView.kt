@@ -9,14 +9,14 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
-import dev.olog.msc.app.glide.GlideApp
 import dev.olog.msc.imageprovider.CoverUtils
+import dev.olog.msc.imageprovider.GlideApp
 import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.shared.ui.extensions.getBitmap
+import dev.olog.msc.shared.ui.imageview.ForegroundImageView
+import dev.olog.msc.shared.ui.imageview.adaptive.AdaptiveColorImageView
+import dev.olog.msc.shared.ui.ripple.RippleUtils
 import dev.olog.msc.shared.utils.isMarshmallow
-import dev.olog.msc.sharedui.extensions.getBitmap
-import dev.olog.msc.sharedui.imageview.ForegroundImageView
-import dev.olog.msc.sharedui.imageview.adaptive.AdaptiveColorImageView
-import dev.olog.msc.utils.RippleUtils
 import dev.olog.msc.utils.k.extension.getImage
 import dev.olog.msc.utils.k.extension.getMediaId
 

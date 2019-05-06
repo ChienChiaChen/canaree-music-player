@@ -9,20 +9,16 @@ import dev.olog.msc.R
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.presentation.base.BaseFragment
-import dev.olog.msc.presentation.base.music.service.MediaProvider
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.parentViewModelProvider
 import dev.olog.msc.presentation.widget.fast.scroller.WaveSideBarView
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.msc.sharedui.extensions.toggleVisibility
-import dev.olog.msc.utils.k.extension.act
-import dev.olog.msc.utils.k.extension.ctx
-import dev.olog.msc.utils.k.extension.subscribe
-import dev.olog.msc.utils.k.extension.withArguments
+import dev.olog.presentation.base.BaseFragment
+import dev.olog.presentation.base.extensions.*
+import dev.olog.presentation.base.interfaces.MediaProvider
+import dev.olog.presentation.base.model.DisplayableItem
 import kotlinx.android.synthetic.main.fragment_tab.*
 import kotlinx.android.synthetic.main.fragment_tab.view.*
 import javax.inject.Inject
@@ -216,7 +212,7 @@ class TabFragment : BaseFragment() {
                 val sortOrder = viewModel.getAllTracksSortOrder()
                 when (sortOrder.type){
                     SortType.ARTIST -> item.subtitle!!
-                    SortType.ALBUM -> item.subtitle!!.substring(item.subtitle.indexOf(TextUtils.MIDDLE_DOT) + 1).trim()
+                    SortType.ALBUM -> item.subtitle!!.substring(item.subtitle!!.indexOf(TextUtils.MIDDLE_DOT) + 1).trim()
                     else -> item.title
                 }
             }

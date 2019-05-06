@@ -9,9 +9,9 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import dev.olog.msc.R
 import dev.olog.msc.shared.extensions.isPortrait
-import dev.olog.msc.sharedui.AppTheme
-import dev.olog.msc.sharedui.extensions.getAnimatedVectorDrawable
-import dev.olog.msc.sharedui.extensions.textColorTertiary
+import dev.olog.msc.shared.ui.extensions.getAnimatedVectorDrawable
+import dev.olog.msc.shared.ui.extensions.textColorTertiary
+import dev.olog.msc.shared.ui.theme.AppTheme
 
 @Keep
 class AnimatedImageView @JvmOverloads constructor(

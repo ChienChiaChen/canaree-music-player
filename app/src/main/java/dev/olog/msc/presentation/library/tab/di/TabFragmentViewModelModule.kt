@@ -21,10 +21,10 @@ import dev.olog.msc.domain.interactor.all.sorted.GetAllAlbumsSortedUseCase
 import dev.olog.msc.domain.interactor.all.sorted.GetAllArtistsSortedUseCase
 import dev.olog.msc.domain.interactor.all.sorted.GetAllSongsSortedUseCase
 import dev.olog.msc.presentation.library.tab.TabFragmentHeaders
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.*
 import dev.olog.msc.shared.utils.TextUtils
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 
@@ -252,7 +252,7 @@ private fun Song.toTabDisplayableItem(): DisplayableItem {
 
 
 
-private fun Album.toTabDisplayableItem(): DisplayableItem{
+private fun Album.toTabDisplayableItem(): DisplayableItem {
     return DisplayableItem(
             R.layout.item_tab_album,
             MediaId.albumId(id),
@@ -262,7 +262,7 @@ private fun Album.toTabDisplayableItem(): DisplayableItem{
     )
 }
 
-private fun Artist.toTabDisplayableItem(resources: Resources): DisplayableItem{
+private fun Artist.toTabDisplayableItem(resources: Resources): DisplayableItem {
     val songs = DisplayableItem.handleSongListSize(resources, songs)
     var albums = DisplayableItem.handleAlbumListSize(resources, albums)
     if (albums.isNotBlank()) albums+= TextUtils.MIDDLE_DOT_SPACED
@@ -277,7 +277,7 @@ private fun Artist.toTabDisplayableItem(resources: Resources): DisplayableItem{
 }
 
 
-private fun Genre.toTabDisplayableItem(resources: Resources): DisplayableItem{
+private fun Genre.toTabDisplayableItem(resources: Resources): DisplayableItem {
     return DisplayableItem(
             R.layout.item_tab_album,
             MediaId.genreId(id),

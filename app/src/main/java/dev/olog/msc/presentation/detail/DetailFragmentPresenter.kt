@@ -6,7 +6,7 @@ import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.domain.interactor.playlist.MoveItemInPlaylistUseCase
 import dev.olog.msc.domain.interactor.playlist.RemoveFromPlaylistUseCase
-import dev.olog.msc.presentation.model.DisplayableItem
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Completable
 import javax.inject.Inject
 

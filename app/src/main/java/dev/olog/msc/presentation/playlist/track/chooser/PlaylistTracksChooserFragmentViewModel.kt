@@ -13,14 +13,14 @@ import dev.olog.msc.core.interactor.all.GetAllPodcastUseCase
 import dev.olog.msc.core.interactor.all.GetAllSongsUseCase
 import dev.olog.msc.domain.interactor.playlist.InsertCustomTrackListRequest
 import dev.olog.msc.domain.interactor.playlist.InsertCustomTrackListToPlaylist
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.playlist.track.chooser.model.PlaylistTrack
 import dev.olog.msc.presentation.playlist.track.chooser.model.toDisplayableItem
 import dev.olog.msc.presentation.playlist.track.chooser.model.toPlaylistTrack
 import dev.olog.msc.shared.extensions.mapToList
 import dev.olog.msc.shared.extensions.toList
 import dev.olog.msc.shared.extensions.toggle
-import dev.olog.msc.utils.k.extension.asLiveData
+import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables

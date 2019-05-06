@@ -16,8 +16,8 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.Target
 import dev.olog.msc.R
-import dev.olog.msc.app.glide.GlideApp
 import dev.olog.msc.imageprovider.CoverUtils
+import dev.olog.msc.imageprovider.GlideApp
 import dev.olog.msc.presentation.widget.image.view.PlayerShadowImageView.Companion.DOWNSCALE_FACTOR
 import dev.olog.msc.presentation.widget.image.view.player.PlayerImageView
 import dev.olog.msc.presentation.widget.image.view.player.toPlayerImage

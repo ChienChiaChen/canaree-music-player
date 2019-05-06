@@ -108,7 +108,9 @@ dependencies {
     implementation project(':shared-ui-components')
     implementation project(':offline-lyrics')
 
+    implementation project(':presentation-base')
     implementation project(':presentation-navigator')
+    implementation project(':presentation-search')
 
     // data binding
     kapt librariesUi.dataBinding
@@ -148,7 +150,7 @@ dependencies {
     implementation librariesCore.rxJava
     implementation librariesCore.rxAndroid
     implementation librariesCore.rxKotlin
-    implementation librariesCore.rxBindings
+    implementation librariesCore.rxBinding
     debugImplementation librariesCore.rxLint
 
     implementation librariesUi.slidingPanel

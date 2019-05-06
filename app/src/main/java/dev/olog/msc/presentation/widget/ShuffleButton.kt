@@ -10,11 +10,11 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import dev.olog.msc.R
 import dev.olog.msc.shared.extensions.isPortrait
-import dev.olog.msc.sharedui.AppTheme
-import dev.olog.msc.sharedui.extensions.colorAccent
-import dev.olog.msc.sharedui.extensions.getAnimatedVectorDrawable
-import dev.olog.msc.sharedui.extensions.textColorSecondary
-import dev.olog.msc.sharedui.extensions.textColorTertiary
+import dev.olog.msc.shared.ui.extensions.colorAccent
+import dev.olog.msc.shared.ui.extensions.getAnimatedVectorDrawable
+import dev.olog.msc.shared.ui.extensions.textColorSecondary
+import dev.olog.msc.shared.ui.extensions.textColorTertiary
+import dev.olog.msc.shared.ui.theme.AppTheme
 
 class ShuffleButton @JvmOverloads constructor(
         context: Context,

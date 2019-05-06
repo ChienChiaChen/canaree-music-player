@@ -1,6 +1,13 @@
 apply plugin: 'com.android.library'
 apply from: '../base_module.gradle'
 
+android {
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+
+}
+
 dependencies {
     implementation project(':shared')
 
@@ -11,8 +18,8 @@ dependencies {
     implementation librariesAndroidX.coreKtx
     implementation librariesAndroidX.palette
     implementation librariesUi.blurkit
+    implementation librariesUi.glide
+    implementation librariesAndroidX.palette
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation librariesAndroidX.preference
 }

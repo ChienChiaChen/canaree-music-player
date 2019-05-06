@@ -7,7 +7,7 @@
     <data>
         <import type="android.view.View"/>
         <variable name="isCurrentSong" type="boolean"/>
-        <variable name="item" type="dev.olog.msc.presentation.model.DisplayableItem"/>
+        <variable name="item" type="dev.olog.presentation.base.model.DisplayableItem"/>
         <variable name="trackIndex" type="String"/>
     </data>
 
@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <dev.olog.msc.presentation.widget.image.view.ShapeImageView
+                <dev.olog.presentation.base.widgets.ShapeImageView
                     android:id="@+id/cover"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

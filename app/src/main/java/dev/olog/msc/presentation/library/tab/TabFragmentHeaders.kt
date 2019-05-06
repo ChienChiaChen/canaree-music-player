@@ -2,8 +2,8 @@ package dev.olog.msc.presentation.library.tab
 
 import android.content.res.Resources
 import dev.olog.msc.R
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
+import dev.olog.presentation.base.model.DisplayableItem
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,7 +19,7 @@ class TabFragmentHeaders @Inject constructor(
             MediaId.headerId("auto playlist"), resources.getString(R.string.tab_auto_playlists))
 
     val shuffleHeader = DisplayableItem(R.layout.item_tab_shuffle,
-            MediaId.headerId("tab shuffle"),"")
+            MediaId.headerId("tab shuffle"), "")
 
     val allAlbumsHeader = listOf(
             DisplayableItem(R.layout.item_tab_header, MediaId.headerId("all albums"), resources.getString(R.string.tab_all_albums))

@@ -8,11 +8,11 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.domain.interactor.GetItemTitleUseCase
 import dev.olog.msc.domain.interactor.all.related.artists.GetRelatedArtistsUseCase
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.extensions.mapToList
 import dev.olog.msc.shared.extensions.safeCompare
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.msc.utils.k.extension.asLiveData
+import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.presentation.base.model.DisplayableItem
 import java.text.Collator
 import javax.inject.Inject
 

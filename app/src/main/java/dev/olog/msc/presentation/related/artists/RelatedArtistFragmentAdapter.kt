@@ -4,13 +4,13 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import dev.olog.msc.BR
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.presentation.base.adapter.AbsAdapter
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.utils.k.extension.elevateAlbumOnTouch
-import dev.olog.msc.utils.k.extension.setOnClickListener
-import dev.olog.msc.utils.k.extension.setOnLongClickListener
+import dev.olog.presentation.base.adapter.AbsAdapter
+import dev.olog.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.presentation.base.extensions.elevateAlbumOnTouch
+import dev.olog.presentation.base.extensions.setOnClickListener
+import dev.olog.presentation.base.extensions.setOnLongClickListener
+import dev.olog.presentation.base.model.DisplayableItem
 import javax.inject.Inject
 
 class RelatedArtistFragmentAdapter @Inject constructor(

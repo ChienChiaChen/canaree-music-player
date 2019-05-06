@@ -5,8 +5,8 @@ import android.content.Context
 import android.os.VibrationEffect
 import android.os.Vibrator
 import dev.olog.msc.R
+import dev.olog.msc.shared.ui.extensions.themeAttributeToColor
 import dev.olog.msc.shared.utils.isOreo
-import dev.olog.msc.sharedui.extensions.themeAttributeToColor
 
 @SuppressLint("NewApi")
 @Suppress("DEPRECATION")

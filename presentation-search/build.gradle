@@ -1,0 +1,16 @@
+apply plugin: 'com.android.library'
+apply from: '../presentation_module.gradle'
+
+android {
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+}
+
+dependencies {
+    implementation project(':presentation-base')
+
+    implementation librariesUi.lottie
+    implementation librariesCore.rxBinding
+    implementation librariesUtils.fuzzywuzzy
+}

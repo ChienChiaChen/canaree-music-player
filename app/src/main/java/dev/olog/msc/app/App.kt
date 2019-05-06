@@ -21,9 +21,10 @@ import dev.olog.msc.presentation.image.creation.ImagesCreator
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.TrackUtils
+import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.shared.updatePermissionValve
-import dev.olog.msc.sharedui.AppTheme
 import dev.olog.msc.traceur.Traceur
+import dev.olog.presentation.base.ImageViews
 import io.alterac.blurkit.BlurKit
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -85,6 +86,7 @@ class App : BaseApp() {
                 getString(R.string.common_unknown_artist),
                 getString(R.string.common_unknown_album)
         )
+        ImageViews.initialize(this)
         AppTheme.initialize(this)
         PreferenceManager.setDefaultValues(this, R.xml.prefs, false)
     }

@@ -8,8 +8,8 @@ import dev.olog.msc.R
 import dev.olog.msc.musicservice.equalizer.IEqualizer
 import dev.olog.msc.presentation.base.BaseBottomSheetFragment
 import dev.olog.msc.presentation.equalizer.widget.RadialKnob
-import dev.olog.msc.utils.k.extension.asLiveData
-import dev.olog.msc.utils.k.extension.subscribe
+import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.presentation.base.extensions.subscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_equalizer.*
 import kotlinx.android.synthetic.main.fragment_equalizer.view.*

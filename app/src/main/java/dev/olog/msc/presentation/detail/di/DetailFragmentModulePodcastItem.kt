@@ -14,10 +14,10 @@ import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.core.interactor.item.GetPodcastAlbumUseCase
 import dev.olog.msc.core.interactor.item.GetPodcastArtistUseCase
 import dev.olog.msc.core.interactor.item.GetPodcastPlaylistUseCase
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.asFlowable
 import dev.olog.msc.shared.utils.TextUtils
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Flowable
 
 @Module

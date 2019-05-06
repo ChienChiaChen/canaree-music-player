@@ -18,7 +18,7 @@ import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.extensions.asServicePendingIntent
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
-import dev.olog.msc.sharedui.image.processor.ImageProcessorResult
+import dev.olog.msc.shared.ui.processor.ImageProcessorResult
 import javax.inject.Inject
 
 abstract class BaseWidget : AbsWidgetApp() {

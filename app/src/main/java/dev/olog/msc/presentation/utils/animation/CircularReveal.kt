@@ -11,8 +11,8 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import androidx.core.animation.addListener
-import dev.olog.msc.sharedui.AppTheme
-import dev.olog.msc.sharedui.extensions.windowBackground
+import dev.olog.msc.shared.ui.extensions.windowBackground
+import dev.olog.msc.shared.ui.theme.AppTheme
 
 private fun startColor(context: Context): Int{
     if (AppTheme.isDarkTheme()){

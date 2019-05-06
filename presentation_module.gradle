@@ -1,0 +1,40 @@
+apply from: '../base_module.gradle'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    dataBinding.enabled = true
+
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+
+}
+
+dependencies {
+    implementation project(':core')
+    implementation project(':shared')
+    implementation project(':shared-ui-components')
+    implementation project(':image-provider')
+    implementation project(':presentation-base')
+    implementation project(':presentation-navigator')
+
+    // data binding
+    kapt librariesUi.dataBinding
+
+    implementation librariesAndroidX.core
+    implementation librariesAndroidX.material
+    implementation librariesAndroidX.recycler
+    implementation librariesUi.constraintLayout
+
+    implementation librariesCore.lifecycleRuntime
+    implementation librariesCore.lifecycleExtensions
+    implementation librariesCore.lifecycleJava8
+
+    implementation librariesCore.rxAndroid
+
+    implementation librariesCore.daggerAndroid
+    implementation librariesCore.daggerAndroidSupport
+    kapt librariesCore.daggerAndroidProcessor
+
+    implementation librariesUi.slidingPanel
+}

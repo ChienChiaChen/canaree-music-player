@@ -12,11 +12,13 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.entity.sort.SortArranging
+import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.presentation.base.BaseActivity
-import dev.olog.msc.presentation.detail.sort.DetailSort
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.MusicServiceConnectionState
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.presentation.base.interfaces.MediaProvider
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -143,11 +145,11 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
         return null
     }
 
-    override fun playFromMediaId(mediaId: MediaId, sort: DetailSort?) {
-        val bundle = if (sort != null){
+    override fun playFromMediaId(mediaId: MediaId, sortType: SortType?, sortArranging: SortArranging?) {
+        val bundle = if (sortType != null && sortArranging != null){
             Bundle().apply {
-                putString(MusicConstants.ARGUMENT_SORT_TYPE, sort.sortType.toString())
-                putString(MusicConstants.ARGUMENT_SORT_ARRANGING, sort.sortArranging.toString())
+                putString(MusicConstants.ARGUMENT_SORT_TYPE, sortType.toString())
+                putString(MusicConstants.ARGUMENT_SORT_ARRANGING, sortArranging.toString())
             }
         } else null
 

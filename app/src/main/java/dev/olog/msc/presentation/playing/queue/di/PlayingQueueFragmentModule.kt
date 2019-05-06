@@ -7,9 +7,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.dagger.ViewModelKey
 import dev.olog.msc.presentation.playing.queue.PlayingQueueFragment
 import dev.olog.msc.presentation.playing.queue.PlayingQueueFragmentViewModel
+import dev.olog.presentation.base.ViewModelKey
 
 @Module(includes = [PlayingQueueFragmentModule.Binding::class])
 class PlayingQueueFragmentModule(

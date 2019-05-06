@@ -4,7 +4,7 @@
 
     <data>
         <import type="android.view.View"/>
-        <variable name="item" type="dev.olog.msc.presentation.model.DisplayableItem"/>
+        <variable name="item" type="dev.olog.presentation.base.model.DisplayableItem"/>
     </data>
 
     <LinearLayout
@@ -34,7 +34,7 @@
             android:paddingBottom="12dp"
             android:textAppearance="@style/Headline6"/>
 
-        <dev.olog.msc.presentation.widget.DottedSeparator
+        <dev.olog.msc.shared.ui.widgets.DottedSeparator
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginBottom="8dp"

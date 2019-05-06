@@ -2,9 +2,9 @@ package dev.olog.msc.presentation.widget.fast.scroller
 
 import android.content.Context
 import android.util.AttributeSet
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.msc.shared.utils.runOnMainThread
+import dev.olog.presentation.base.model.DisplayableItem
 
 class RxWaveSideBarView @JvmOverloads constructor(
         context: Context,

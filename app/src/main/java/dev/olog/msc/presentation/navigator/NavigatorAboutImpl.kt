@@ -8,7 +8,7 @@ import dev.olog.msc.presentation.licenses.LicensesFragment
 import dev.olog.msc.presentation.special.thanks.SpecialThanksFragment
 import dev.olog.msc.presentation.utils.openPlayStore
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.utils.k.extension.fragmentTransaction
+import dev.olog.msc.shared.ui.extensions.fragmentTransaction
 import dev.olog.msc.utils.k.extension.isIntentSafe
 import javax.inject.Inject
 

@@ -5,18 +5,17 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import dev.olog.msc.BR
 import dev.olog.msc.R
-import dev.olog.msc.app.glide.GlideApp
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.adapter.AbsAdapter
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.music.service.MediaProvider
-import dev.olog.msc.presentation.detail.sort.DetailSort
-import dev.olog.msc.presentation.model.DisplayableItem
+import dev.olog.msc.imageprovider.GlideApp
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.utils.k.extension.elevateAlbumOnTouch
-import dev.olog.msc.utils.k.extension.elevateSongOnTouch
-import dev.olog.msc.utils.k.extension.setOnClickListener
-import dev.olog.msc.utils.k.extension.setOnLongClickListener
+import dev.olog.presentation.base.adapter.AbsAdapter
+import dev.olog.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.presentation.base.extensions.elevateAlbumOnTouch
+import dev.olog.presentation.base.extensions.elevateSongOnTouch
+import dev.olog.presentation.base.extensions.setOnClickListener
+import dev.olog.presentation.base.extensions.setOnLongClickListener
+import dev.olog.presentation.base.interfaces.MediaProvider
+import dev.olog.presentation.base.model.DisplayableItem
 
 class TabFragmentAdapter (
         lifecycle: Lifecycle,
@@ -45,7 +44,7 @@ class TabFragmentAdapter (
                 viewHolder.setOnClickListener(controller) { item, _, _ ->
                     if (item.isPlayable && !item.mediaId.isPodcast){
                         val sort = viewModel.getAllTracksSortOrder()
-                        mediaProvider.playFromMediaId(item.mediaId, DetailSort(sort.type, sort.arranging))
+                        mediaProvider.playFromMediaId(item.mediaId, sort.type, sort.arranging)
                     } else if (item.isPlayable){
                         mediaProvider.playFromMediaId(item.mediaId)
                     } else {

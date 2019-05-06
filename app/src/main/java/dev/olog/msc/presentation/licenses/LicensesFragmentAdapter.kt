@@ -5,9 +5,9 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import dev.olog.msc.BR
 import dev.olog.msc.databinding.ItemLicenseBinding
-import dev.olog.msc.presentation.base.adapter.AbsAdapter
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.utils.k.extension.setOnClickListener
+import dev.olog.presentation.base.adapter.AbsAdapter
+import dev.olog.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.presentation.base.extensions.setOnClickListener
 import kotlinx.android.synthetic.main.item_license.view.*
 
 class LicensesFragmentAdapter (lifecycle: Lifecycle)

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import dev.olog.msc.R
+import dev.olog.msc.shared.ui.imageview.ParallaxImageView
 
 class ParallaxRecyclerView(
         context: Context,

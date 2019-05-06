@@ -9,7 +9,7 @@ import dev.olog.msc.core.interactor.queue.ObservePlayingQueueUseCase
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.debounceFirst
-import dev.olog.msc.utils.k.extension.asLiveData
+import dev.olog.presentation.base.extensions.asLiveData
 import io.reactivex.rxkotlin.Observables
 import javax.inject.Inject
 

@@ -4,8 +4,8 @@ import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.shared.TrackUtils
+import dev.olog.presentation.base.model.DisplayableItem
 import java.io.File
 
 data class PlaylistTrack (

@@ -5,12 +5,4 @@
         <attr name="avd" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="ParallaxView">
-        <attr name="parallax" format="float"/>
-    </declare-styleable>
-
-    <declare-styleable name="RoundedCornersImageView">
-        <attr name="imageViewCornerRadius" format="integer"/>
-    </declare-styleable>
-
 </resources>

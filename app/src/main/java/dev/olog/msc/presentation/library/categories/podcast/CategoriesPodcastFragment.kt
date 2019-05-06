@@ -2,15 +2,15 @@ package dev.olog.msc.presentation.library.categories.podcast
 
 import android.os.Bundle
 import android.view.View
-import dev.olog.msc.FloatingWindowHelper
 import dev.olog.msc.R
-import dev.olog.msc.catchNothing
+import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.sharedui.extensions.toggleVisibility
-import dev.olog.msc.utils.k.extension.act
+import dev.olog.msc.shared.ui.extensions.toggleVisibility
+import dev.olog.presentation.base.BaseFragment
+import dev.olog.presentation.base.FloatingWindowHelper
+import dev.olog.presentation.base.extensions.act
 import kotlinx.android.synthetic.main.fragment_library_categories.*
 import kotlinx.android.synthetic.main.fragment_library_categories.view.*
 import javax.inject.Inject
@@ -26,8 +26,12 @@ class CategoriesPodcastFragment : BaseFragment() {
         }
     }
 
-    @Inject lateinit var navigator: Navigator
-    @Inject lateinit var presenter : CategoriesPodcastFragmentPresenter
+    @Inject
+    lateinit var classes: Classes
+    @Inject
+    lateinit var navigator: Navigator
+    @Inject
+    lateinit var presenter: CategoriesPodcastFragmentPresenter
 
     private val pagerAdapter by lazyFast {
         CategoriesPodcastFragmentViewPager(
@@ -47,7 +51,13 @@ class CategoriesPodcastFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        more.setOnClickListener { catchNothing { navigator.toMainPopup(it, createMediaId()) } }
+        more.setOnClickListener {
+            try {
+                navigator.toMainPopup(it, createMediaId())
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        }
         floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
         viewPager.addOnPageChangeListener(onPageChangeListener)
     }
@@ -63,8 +73,8 @@ class CategoriesPodcastFragment : BaseFragment() {
         viewPager.removeOnPageChangeListener(onPageChangeListener)
     }
 
-    private fun startServiceOrRequestOverlayPermission(){
-        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!)
+    private fun startServiceOrRequestOverlayPermission() {
+        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, classes.floatingWindowService())
     }
 
     private val onPageChangeListener = object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {

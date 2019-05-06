@@ -5,10 +5,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
-import dev.olog.msc.dagger.ViewModelKey
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.edit.album.EditAlbumFragment
 import dev.olog.msc.presentation.edit.album.EditAlbumFragmentViewModel
-import dev.olog.msc.core.MediaId
+import dev.olog.presentation.base.ViewModelKey
 
 @Module(includes = [EditAlbumFragmentModule.Binding::class])
 class EditAlbumFragmentModule(private val fragment: EditAlbumFragment) {

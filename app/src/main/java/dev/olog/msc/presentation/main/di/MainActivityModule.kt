@@ -13,13 +13,13 @@ import dagger.multibindings.IntoMap
 import dev.olog.msc.core.dagger.qualifier.ActivityContext
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
 import dev.olog.msc.core.dagger.scope.PerActivity
-import dev.olog.msc.dagger.ViewModelKey
-import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.edit.EditItemViewModel
 import dev.olog.msc.presentation.main.MainActivity
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.navigator.NavigatorImpl
 import dev.olog.msc.pro.ProModule
+import dev.olog.presentation.base.ViewModelKey
+import dev.olog.presentation.base.interfaces.MediaProvider
 
 @Module(includes = [MainActivityModule.Binding::class, ProModule::class])
 class MainActivityModule(

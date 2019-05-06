@@ -2,17 +2,17 @@ package dev.olog.msc.presentation.library.categories.track
 
 import android.os.Bundle
 import android.view.View
-import dev.olog.msc.FloatingWindowHelper
 import dev.olog.msc.R
-import dev.olog.msc.catchNothing
+import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tutorial.TutorialTapTarget
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.sharedui.extensions.toggleVisibility
-import dev.olog.msc.utils.k.extension.act
+import dev.olog.msc.shared.ui.extensions.toggleVisibility
+import dev.olog.presentation.base.BaseFragment
+import dev.olog.presentation.base.FloatingWindowHelper
+import dev.olog.presentation.base.extensions.act
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -32,8 +32,12 @@ class CategoriesFragment : BaseFragment() {
         }
     }
 
-    @Inject lateinit var presenter : CategoriesFragmentPresenter
-    @Inject lateinit var navigator: Navigator
+    @Inject
+    lateinit var presenter: CategoriesFragmentPresenter
+    @Inject
+    lateinit var navigator: Navigator
+    @Inject
+    lateinit var classes: Classes
 
     private val pagerAdapter by lazyFast {
         CategoriesViewPager(
@@ -55,7 +59,13 @@ class CategoriesFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         viewPager.addOnPageChangeListener(onPageChangeListener)
-        more.setOnClickListener { catchNothing { navigator.toMainPopup(it, createMediaId()) } }
+        more.setOnClickListener {
+            try {
+                navigator.toMainPopup(it, createMediaId())
+            } catch (ex: Exception){
+                ex.printStackTrace()
+            }
+        }
         floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
 
         floatingWindowTutorialDisposable = presenter.showFloatingWindowTutorialIfNeverShown()
@@ -76,8 +86,8 @@ class CategoriesFragment : BaseFragment() {
         return pagerAdapter.getCategoryAtPosition(viewPager.currentItem)
     }
 
-    private fun startServiceOrRequestOverlayPermission(){
-        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!)
+    private fun startServiceOrRequestOverlayPermission() {
+        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, classes.floatingWindowService())
     }
 
     private val onPageChangeListener = object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {

@@ -7,8 +7,8 @@ import androidx.core.text.isDigitsOnly
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.sharedui.ThemedDialog
-import dev.olog.msc.sharedui.extensions.enableForService
+import dev.olog.msc.shared.ui.ThemedDialog
+import dev.olog.msc.shared.ui.extensions.enableForService
 
 object OfflineLyricsSyncAdjustementDialog {
 

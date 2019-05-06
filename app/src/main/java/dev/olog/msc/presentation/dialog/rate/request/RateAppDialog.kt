@@ -11,7 +11,7 @@ import dev.olog.msc.R
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
 import dev.olog.msc.presentation.utils.openPlayStore
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.sharedui.ThemedDialog
+import dev.olog.msc.shared.ui.ThemedDialog
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

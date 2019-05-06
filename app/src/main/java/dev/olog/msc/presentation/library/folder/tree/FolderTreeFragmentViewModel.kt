@@ -16,8 +16,8 @@ import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.interactor.all.GetAllFoldersUseCase
 import dev.olog.msc.shared.extensions.*
-import dev.olog.msc.utils.k.extension.asLiveData
 import dev.olog.msc.utils.k.extension.logStackStace
+import dev.olog.presentation.base.extensions.asLiveData
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables

@@ -3,11 +3,11 @@ package dev.olog.msc.presentation.library.tab
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import dagger.Lazy
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.utils.k.extension.asLiveData
+import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 import javax.inject.Inject
 

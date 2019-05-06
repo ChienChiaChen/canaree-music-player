@@ -45,7 +45,7 @@
         android:tint="@android:color/white"
         android:layout_marginStart="16dp"/>
 
-    <dev.olog.msc.sharedui.playpause.AnimatedPlayPauseImageView
+    <dev.olog.msc.shared.ui.playpause.AnimatedPlayPauseImageView
         android:id="@+id/playPause"
         android:layout_width="@dimen/player_shuffle_size"
         android:layout_height="@dimen/player_shuffle_size"

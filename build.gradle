@@ -119,7 +119,7 @@ ext {
             rxJava                : "io.reactivex.rxjava2:rxjava:$rx_java",
             rxKotlin              : "io.reactivex.rxjava2:rxkotlin:$rx_kotlin",
             rxLint                : "nl.littlerobots.rxlint:rxlint:$rx_lint",
-            rxBindings            : "com.jakewharton.rxbinding2:rxbinding:$rx_binding",
+            rxBinding            : "com.jakewharton.rxbinding2:rxbinding:$rx_binding",
             rxAndroid             : "io.reactivex.rxjava2:rxandroid:$rx_android",
 //            lifecycle
             lifecycleRuntime      : "androidx.lifecycle:lifecycle-runtime:$lifecycle",

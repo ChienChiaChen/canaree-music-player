@@ -5,17 +5,17 @@ import androidx.lifecycle.Lifecycle
 import dev.olog.msc.BR
 import dev.olog.msc.R
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.presentation.base.adapter.AbsAdapter
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
-import dev.olog.msc.sharedui.extensions.textColorPrimary
-import dev.olog.msc.sharedui.extensions.textColorSecondary
-import dev.olog.msc.utils.k.extension.elevateSongOnTouch
-import dev.olog.msc.utils.k.extension.setOnClickListener
-import dev.olog.msc.utils.k.extension.setOnLongClickListener
-import dev.olog.msc.utils.k.extension.setOnMoveListener
+import dev.olog.msc.shared.ui.extensions.textColorPrimary
+import dev.olog.msc.shared.ui.extensions.textColorSecondary
+import dev.olog.presentation.base.adapter.AbsAdapter
+import dev.olog.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.presentation.base.extensions.elevateSongOnTouch
+import dev.olog.presentation.base.extensions.setOnClickListener
+import dev.olog.presentation.base.extensions.setOnLongClickListener
+import dev.olog.presentation.base.extensions.setOnMoveListener
+import dev.olog.presentation.base.interfaces.MediaProvider
 import kotlinx.android.synthetic.main.item_playing_queue.view.*
 import javax.inject.Inject
 

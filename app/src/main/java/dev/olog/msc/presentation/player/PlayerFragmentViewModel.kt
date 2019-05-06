@@ -10,9 +10,9 @@ import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.core.interactor.favorite.ObserveFavoriteAnimationUseCase
-import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.sharedui.AppTheme
-import dev.olog.msc.sharedui.imageview.adaptive.*
+import dev.olog.msc.shared.ui.imageview.adaptive.*
+import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

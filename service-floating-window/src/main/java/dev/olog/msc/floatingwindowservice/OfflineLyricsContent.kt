@@ -25,10 +25,10 @@ import dev.olog.msc.offlinelyrics.OfflineLyricsSyncAdjustementDialog
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.sharedui.extensions.animateBackgroundColor
-import dev.olog.msc.sharedui.extensions.animateTextColor
-import dev.olog.msc.sharedui.extensions.toggleVisibility
-import dev.olog.msc.sharedui.imageview.BlurImageView
+import dev.olog.msc.shared.ui.extensions.animateBackgroundColor
+import dev.olog.msc.shared.ui.extensions.animateTextColor
+import dev.olog.msc.shared.ui.extensions.toggleVisibility
+import dev.olog.msc.shared.ui.imageview.BlurImageView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

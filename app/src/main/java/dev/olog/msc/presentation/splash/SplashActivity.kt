@@ -11,8 +11,8 @@ import dev.olog.msc.presentation.base.BaseActivity
 import dev.olog.msc.presentation.dialog.explain.trial.ExplainTrialDialog
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.ui.extensions.simpleDialog
 import dev.olog.msc.shared.updatePermissionValve
-import dev.olog.msc.utils.k.extension.simpleDialog
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : BaseActivity(), View.OnClickListener {
