@@ -29,14 +29,10 @@ import dev.olog.msc.presentation.preferences.last.fm.credentials.LastFmCredentia
 import dev.olog.msc.presentation.utils.ColorPalette
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.ThemedDialog
-import dev.olog.msc.shared.ui.extensions.fragmentTransaction
 import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.utils.k.extension.forEach
 import dev.olog.presentation.base.ImageViews
-import dev.olog.presentation.base.extensions.act
-import dev.olog.presentation.base.extensions.asLiveData
-import dev.olog.presentation.base.extensions.ctx
-import dev.olog.presentation.base.extensions.subscribe
+import dev.olog.presentation.base.extensions.*
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

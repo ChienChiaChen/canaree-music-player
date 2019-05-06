@@ -12,4 +12,6 @@
     <string name="offline_lyrics_ok">OK</string>
     <string name="offline_lyrics_cancel">Cancel</string>
     <string name="offline_lyrics_back">Back</string>
+
+    <string name="common_new_playlist">Playlist name</string>
 </resources>

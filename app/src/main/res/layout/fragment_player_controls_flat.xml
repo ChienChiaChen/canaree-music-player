@@ -36,7 +36,7 @@
             app:cardCornerRadius="@dimen/default_corner_radius"
             android:stateListAnimator="@animator/elevate_on_activated">
 
-            <dev.olog.msc.presentation.widget.image.view.player.PlayerImageView
+            <dev.olog.presentation.base.widgets.image.view.PlayerImageView
                 android:id="@+id/bigCover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -194,7 +194,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_marginEnd="@dimen/player_title_margin_horizontal" />
 
-        <dev.olog.msc.shared.ui.widgets.DottedSeparator
+        <dev.olog.presentation.base.widgets.DottedSeparator
             android:id="@+id/separator"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

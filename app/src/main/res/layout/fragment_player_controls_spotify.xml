@@ -38,7 +38,7 @@
             android:clipToPadding="false"
             android:clipChildren="false">
 
-            <dev.olog.msc.presentation.widget.image.view.player.PlayerImageView
+            <dev.olog.presentation.base.widgets.image.view.PlayerImageView
                 android:id="@+id/bigCover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -179,7 +179,7 @@
             android:focusable="true"
             android:background="?attr/selectableItemBackgroundBorderless" />
 
-        <dev.olog.msc.shared.ui.widgets.DottedSeparator
+        <dev.olog.presentation.base.widgets.DottedSeparator
             android:id="@+id/separator"
             app:layout_constraintTop_toBottomOf="@+id/playerControls"
             app:layout_constraintStart_toStartOf="parent"

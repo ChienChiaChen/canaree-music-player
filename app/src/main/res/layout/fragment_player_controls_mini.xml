@@ -32,7 +32,7 @@
                 android:layout_marginTop="@dimen/item_song_cover_margin_vertical"
                 android:layout_marginBottom="@dimen/item_song_cover_margin_vertical">
 
-                <dev.olog.msc.presentation.widget.image.view.player.PlayerImageView
+                <dev.olog.presentation.base.widgets.image.view.PlayerImageView
                     android:id="@+id/bigCover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -105,7 +105,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <dev.olog.msc.shared.ui.widgets.DottedSeparator
+        <dev.olog.presentation.base.widgets.DottedSeparator
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:layout_constraintEnd_toEndOf="parent"

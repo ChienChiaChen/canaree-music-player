@@ -15,7 +15,6 @@ import dev.olog.msc.presentation.edit.UpdateArtistInfo
 import dev.olog.msc.presentation.edit.UpdateResult
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.utils.k.extension.extractText
 import dev.olog.presentation.base.extensions.*
 import kotlinx.android.synthetic.main.fragment_edit_artist.*
 import kotlinx.android.synthetic.main.fragment_edit_artist.view.*

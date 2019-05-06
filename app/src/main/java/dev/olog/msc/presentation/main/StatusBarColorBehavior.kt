@@ -8,8 +8,8 @@ import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.shared.utils.isMarshmallow
-import dev.olog.msc.utils.k.extension.removeLightStatusBar
-import dev.olog.msc.utils.k.extension.setLightStatusBar
+import dev.olog.presentation.base.extensions.removeLightStatusBar
+import dev.olog.presentation.base.extensions.setLightStatusBar
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 

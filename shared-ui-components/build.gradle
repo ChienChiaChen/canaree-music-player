@@ -5,7 +5,9 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
     }
-
+    lintOptions {
+        disable 'MissingTranslation'
+    }
 }
 
 dependencies {

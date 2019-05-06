@@ -8,8 +8,8 @@ import dev.olog.msc.presentation.licenses.LicensesFragment
 import dev.olog.msc.presentation.special.thanks.SpecialThanksFragment
 import dev.olog.msc.presentation.utils.openPlayStore
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.shared.ui.extensions.fragmentTransaction
-import dev.olog.msc.utils.k.extension.isIntentSafe
+import dev.olog.presentation.base.extensions.fragmentTransaction
+import dev.olog.presentation.base.extensions.isIntentSafe
 import javax.inject.Inject
 
 private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms

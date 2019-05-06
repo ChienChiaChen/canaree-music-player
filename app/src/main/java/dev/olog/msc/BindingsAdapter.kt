@@ -16,9 +16,9 @@ import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.presentation.library.folder.tree.DisplayableFile
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
 import dev.olog.msc.presentation.special.thanks.SpecialThanksModel
-import dev.olog.msc.shared.ui.ripple.RippleTarget
 import dev.olog.presentation.base.model.DisplayableItem
-import dev.olog.presentation.base.widgets.QuickActionView
+import dev.olog.presentation.base.ripple.RippleTarget
+import dev.olog.presentation.base.widgets.image.view.QuickActionView
 
 object BindingsAdapter {
 

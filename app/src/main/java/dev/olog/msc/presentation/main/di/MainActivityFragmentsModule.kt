@@ -7,7 +7,7 @@ import dev.olog.msc.presentation.equalizer.EqualizerFragment
 import dev.olog.msc.presentation.library.categories.podcast.CategoriesPodcastFragment
 import dev.olog.msc.presentation.library.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.mini.player.MiniPlayerFragment
-import dev.olog.msc.presentation.offline.lyrics.OfflineLyricsFragment
+import dev.olog.msc.presentation.offlinelyrics.OfflineLyricsFragment
 
 @Module
 abstract class MainActivityFragmentsModule {

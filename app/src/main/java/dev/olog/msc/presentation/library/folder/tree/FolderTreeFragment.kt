@@ -10,7 +10,6 @@ import dev.olog.msc.presentation.widget.BreadCrumbLayout
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.safeGetCanonicalFile
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import dev.olog.msc.shared.ui.extensions.windowBackground
 import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.presentation.base.BaseFragment
 import dev.olog.presentation.base.extensions.asLiveData

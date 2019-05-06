@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         tools:ignore="RtlSymmetry">
 
-        <dev.olog.msc.shared.ui.imageview.ParallaxImageView
+        <dev.olog.presentation.base.widgets.image.view.ParallaxImageView
             android:id="@+id/cover"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -1,0 +1,12 @@
+apply plugin: 'com.android.library'
+apply from: '../presentation_module.gradle'
+
+dependencies {
+    implementation project(':presentation-base')
+    implementation project(':offline-lyrics')
+    implementation project(':tap-target-view')
+
+    implementation librariesUi.blurkit
+    implementation librariesUtils.customTabs
+    implementation librariesAndroidX.browser
+}

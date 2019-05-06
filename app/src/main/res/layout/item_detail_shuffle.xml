@@ -10,7 +10,7 @@
         android:paddingBottom="8dp"
         android:background="?attr/selectableItemBackground">
 
-        <dev.olog.msc.shared.ui.widgets.DottedSeparator
+        <dev.olog.presentation.base.widgets.DottedSeparator
             android:id="@+id/separator"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="@+id/img"

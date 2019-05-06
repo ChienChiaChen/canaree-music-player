@@ -5,6 +5,4 @@
   <string name="tutorial_sort_by_arrow">Clica na seta para inverter a ordem</string>
   <string name="tutorial_floating_window">Clica para abrir uma janela flutuante com a letra e o vídeo do youtube</string>
   <string name="tutorial_lyrics">Mostrar letra guardada</string>
-  <string name="tutorial_add_lyrics">Adicionar ou mudar letra</string>
-  <string name="tutorial_search_lyrics">Procurar letra na internet</string>
 </resources>

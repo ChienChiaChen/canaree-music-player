@@ -18,7 +18,6 @@ import dev.olog.msc.constants.FloatingWindowsConstants
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.musicservice.MusicService
-import dev.olog.msc.presentation.DrawsOnTop
 import dev.olog.msc.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
 import dev.olog.msc.presentation.base.music.service.MusicGlueActivity
 import dev.olog.msc.presentation.dialog.rate.request.RateAppDialog
@@ -32,7 +31,6 @@ import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.extensions.dimen
-import dev.olog.msc.shared.ui.extensions.getTopFragment
 import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.shared.utils.clamp
 import dev.olog.msc.utils.k.extension.collapse
@@ -40,7 +38,9 @@ import dev.olog.msc.utils.k.extension.expand
 import dev.olog.msc.utils.k.extension.isExpanded
 import dev.olog.presentation.base.FloatingWindowHelper
 import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.presentation.base.extensions.getTopFragment
 import dev.olog.presentation.base.extensions.subscribe
+import dev.olog.presentation.base.interfaces.DrawsOnTop
 import dev.olog.presentation.base.interfaces.HasBilling
 import dev.olog.presentation.base.interfaces.HasSlidingPanel
 import kotlinx.android.synthetic.main.activity_main.*

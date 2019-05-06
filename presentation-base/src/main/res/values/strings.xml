@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">PresentationBase</string>
+    <string name="app_name" translatable="false">PresentationBase</string>
+    <string name="common_new_playlist">Playlist name</string>
 </resources>

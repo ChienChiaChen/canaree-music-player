@@ -195,7 +195,7 @@
 
                 </com.google.android.material.bottomappbar.BottomAppBar>
 
-                <dev.olog.msc.presentation.widget.BottomAppBarFab
+                <dev.olog.msc.shared.ui.widgets.BottomAppBarFab
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_anchor="@id/bar"

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import dagger.android.support.DaggerAppCompatActivity
 import dev.olog.msc.R
 import dev.olog.msc.shared.ui.theme.AppTheme
-import dev.olog.msc.utils.k.extension.setLightStatusBar
+import dev.olog.presentation.base.extensions.setLightStatusBar
 
 abstract class BaseActivity : DaggerAppCompatActivity(), ThemedActivity {
 

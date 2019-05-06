@@ -20,14 +20,12 @@ import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.setVisible
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.ui.theme.AppTheme
-import dev.olog.msc.utils.k.extension.removeLightStatusBar
-import dev.olog.msc.utils.k.extension.setLightStatusBar
 import dev.olog.presentation.base.BaseFragment
 import dev.olog.presentation.base.DisplayableItemBindingAdapter
 import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.presentation.base.extensions.*
 import dev.olog.presentation.base.interfaces.MediaProvider
-import dev.olog.presentation.base.widgets.ShapeImageView
+import dev.olog.presentation.base.widgets.image.view.ShapeImageView
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import javax.inject.Inject

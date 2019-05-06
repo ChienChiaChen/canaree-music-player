@@ -9,9 +9,9 @@ import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.GlideApp
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.imageprovider.ImagesFolderUtils
-import dev.olog.msc.shared.ui.ripple.RippleTarget
 import dev.olog.presentation.base.model.DisplayableItem
-import dev.olog.presentation.base.widgets.QuickActionView
+import dev.olog.presentation.base.ripple.RippleTarget
+import dev.olog.presentation.base.widgets.image.view.QuickActionView
 
 object DisplayableItemBindingAdapter {
 

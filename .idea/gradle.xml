@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/offline-lyrics" />
             <option value="$PROJECT_DIR$/presentation-base" />
             <option value="$PROJECT_DIR$/presentation-navigator" />
+            <option value="$PROJECT_DIR$/presentation-offline-lyrics" />
             <option value="$PROJECT_DIR$/presentation-search" />
             <option value="$PROJECT_DIR$/pro" />
             <option value="$PROJECT_DIR$/service-floating-window" />

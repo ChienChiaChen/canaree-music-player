@@ -32,7 +32,7 @@ import dev.olog.msc.presentation.edit.track.EditTrackFragment
 import dev.olog.msc.presentation.library.categories.podcast.CategoriesPodcastFragment
 import dev.olog.msc.presentation.library.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.main.MainActivity
-import dev.olog.msc.presentation.offline.lyrics.OfflineLyricsFragment
+import dev.olog.msc.presentation.offlinelyrics.OfflineLyricsFragment
 import dev.olog.msc.presentation.playing.queue.PlayingQueueFragment
 import dev.olog.msc.presentation.playlist.track.chooser.PlaylistTracksChooserFragment
 import dev.olog.msc.presentation.popup.PopupMenuFactory
@@ -42,9 +42,9 @@ import dev.olog.msc.presentation.related.artists.RelatedArtistFragment
 import dev.olog.msc.presentation.search.SearchFragment
 import dev.olog.msc.presentation.splash.SplashActivity
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.shared.ui.extensions.fragmentTransaction
-import dev.olog.msc.shared.ui.extensions.hideFragmentsIfExists
 import dev.olog.msc.utils.k.extension.collapse
+import dev.olog.presentation.base.extensions.fragmentTransaction
+import dev.olog.presentation.base.extensions.hideFragmentsIfExists
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 

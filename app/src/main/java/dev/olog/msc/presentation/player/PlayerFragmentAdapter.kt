@@ -10,7 +10,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import com.jakewharton.rxbinding2.view.RxView
-import dev.olog.msc.BR
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
@@ -29,7 +28,8 @@ import dev.olog.msc.shared.ui.playpause.AnimatedPlayPauseImageView
 import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.shared.ui.theme.ImageShape
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.msc.utils.k.extension.*
+import dev.olog.msc.utils.k.extension.isCollapsed
+import dev.olog.msc.utils.k.extension.isExpanded
 import dev.olog.presentation.base.ImageViews
 import dev.olog.presentation.base.adapter.AbsAdapter
 import dev.olog.presentation.base.adapter.DataBoundViewHolder
@@ -40,6 +40,7 @@ import dev.olog.presentation.base.extensions.setOnMoveListener
 import dev.olog.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.presentation.base.interfaces.MediaProvider
 import dev.olog.presentation.base.model.DisplayableItem
+import dev.olog.presentation.base.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_player_controls.view.*
 import kotlinx.android.synthetic.main.fragment_player_toolbar.view.*

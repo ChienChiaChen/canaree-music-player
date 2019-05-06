@@ -34,7 +34,7 @@
         android:layout_marginBottom="8dp"
         android:paddingStart="16dp" />
 
-    <dev.olog.msc.shared.ui.widgets.StatusBarView
+    <dev.olog.presentation.base.widgets.StatusBarView
         android:id="@+id/statusBar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

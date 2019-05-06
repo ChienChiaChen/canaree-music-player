@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.preference.PreferenceManager
 import dev.olog.msc.shared.ui.theme.ImageShape
-import dev.olog.presentation.base.widgets.QuickActionView
+import dev.olog.presentation.base.widgets.image.view.QuickActionView
 
 object ImageViews {
 
