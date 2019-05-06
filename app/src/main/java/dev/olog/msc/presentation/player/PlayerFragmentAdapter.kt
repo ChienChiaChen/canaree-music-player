@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import com.jakewharton.rxbinding2.view.RxView
+import dev.olog.msc.BR
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle

@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import dev.olog.msc.R
 import dev.olog.msc.shared.ui.extensions.colorAccent
+import dev.olog.msc.shared.ui.extensions.windowBackground
 import dev.olog.msc.taptargetview.TapTarget
 import dev.olog.msc.taptargetview.TapTargetSequence
 import dev.olog.msc.taptargetview.TapTargetView
