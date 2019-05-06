@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import dev.olog.msc.shared.R
+import dev.olog.msc.shared.ui.R
 import dev.olog.msc.shared.utils.clamp
 import kotlin.math.abs
 

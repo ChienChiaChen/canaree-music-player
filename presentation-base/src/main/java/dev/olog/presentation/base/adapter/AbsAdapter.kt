@@ -9,9 +9,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.msc.shared.R
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.presentation.base.R
 import dev.olog.presentation.base.drag.TouchableAdapter
 import dev.olog.presentation.base.model.BaseModel
 import io.reactivex.disposables.Disposable

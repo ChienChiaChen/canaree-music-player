@@ -3,7 +3,7 @@ package dev.olog.msc.shared.ui.theme
 import android.app.Application
 import android.content.Context
 import android.preference.PreferenceManager
-import dev.olog.msc.shared.R
+import dev.olog.msc.shared.ui.R
 
 object AppTheme {
 

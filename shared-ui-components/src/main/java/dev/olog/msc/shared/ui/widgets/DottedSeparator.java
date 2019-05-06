@@ -8,7 +8,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import dev.olog.msc.shared.R;
+import dev.olog.msc.shared.ui.R;
 import dev.olog.msc.shared.ui.theme.AppTheme;
 
 public class DottedSeparator extends View {

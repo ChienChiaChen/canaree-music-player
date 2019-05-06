@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
-import dev.olog.msc.shared.R;
+import dev.olog.msc.shared.ui.R;
 
 @Keep
 public class ForegroundImageView extends AppCompatImageView {

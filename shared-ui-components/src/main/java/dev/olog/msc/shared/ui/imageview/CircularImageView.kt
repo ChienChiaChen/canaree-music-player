@@ -3,7 +3,7 @@ package dev.olog.msc.shared.ui.imageview
 import android.content.Context
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
-import dev.olog.msc.shared.R
+import dev.olog.msc.shared.ui.R
 
 class CircularImageView @JvmOverloads constructor(
         context: Context,

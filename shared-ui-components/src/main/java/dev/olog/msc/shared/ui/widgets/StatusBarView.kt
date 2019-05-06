@@ -3,10 +3,10 @@ package dev.olog.msc.shared.ui.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import dev.olog.msc.shared.R
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.isPortrait
+import dev.olog.msc.shared.ui.R
 import dev.olog.msc.shared.ui.extensions.hasNotch
 import dev.olog.msc.shared.ui.theme.AppTheme
 

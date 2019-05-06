@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import dev.olog.msc.shared.R
+import dev.olog.msc.shared.ui.R
 
 private val colorEvaluator by lazy { ArgbEvaluator() }
 

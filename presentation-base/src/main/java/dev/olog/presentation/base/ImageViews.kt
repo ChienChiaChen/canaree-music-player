@@ -3,7 +3,6 @@ package dev.olog.presentation.base
 import android.app.Application
 import android.content.Context
 import android.preference.PreferenceManager
-import dev.olog.msc.shared.R
 import dev.olog.msc.shared.ui.theme.ImageShape
 import dev.olog.presentation.base.widgets.QuickActionView
 
