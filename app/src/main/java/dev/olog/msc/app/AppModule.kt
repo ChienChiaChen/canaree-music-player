@@ -23,8 +23,6 @@ import dev.olog.msc.floatingwindowservice.FloatingWindowService
 import dev.olog.msc.imageprovider.IImageProvider
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.offlinelyrics.domain.ILyricsFromMetadata
-import dev.olog.msc.presentation.app.widget.defaul.WidgetColored
-import dev.olog.msc.presentation.app.widget.queue.WidgetColoredWithQueue
 import dev.olog.msc.presentation.main.MainActivity
 import java.text.Collator
 import java.util.*
@@ -54,8 +52,8 @@ class AppModule(private val app: App) {
         return object : WidgetClasses {
             override fun get(): List<Class<*>> {
                 return listOf(
-                        WidgetColored::class.java,
-                        WidgetColoredWithQueue::class.java
+                        dev.olog.msc.appwidgets.base.WidgetColored::class.java,
+                        dev.olog.msc.appwidgets.queue.WidgetColoredWithQueue::class.java
                 )
             }
         }

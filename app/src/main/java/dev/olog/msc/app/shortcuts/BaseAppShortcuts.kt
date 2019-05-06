@@ -14,10 +14,10 @@ import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.imageprovider.getBitmap
 import dev.olog.msc.presentation.main.MainActivity
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.utils.k.extension.getBitmap
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

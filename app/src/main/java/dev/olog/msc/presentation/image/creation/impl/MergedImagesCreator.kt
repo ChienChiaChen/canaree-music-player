@@ -4,10 +4,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.ImageModel
-import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.imageprovider.extractImageName
-import dev.olog.msc.utils.k.extension.getBitmap
+import dev.olog.msc.imageprovider.getBitmap
+import dev.olog.msc.shared.utils.assertBackgroundThread
 import java.io.File
 import java.io.FileOutputStream
 

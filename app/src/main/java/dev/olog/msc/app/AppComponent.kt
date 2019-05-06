@@ -5,6 +5,7 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dev.olog.msc.apilastfm.LastFmModule
 import dev.olog.msc.app.shortcuts.AppShortcutsModule
+import dev.olog.msc.appwidgets.di.WidgetBindingModule
 import dev.olog.msc.data.di.PreferenceModule
 import dev.olog.msc.data.di.RepositoryHelperModule
 import dev.olog.msc.data.di.RepositoryModule
@@ -13,7 +14,6 @@ import dev.olog.msc.musicservice.di.EqualizerModule
 import dev.olog.msc.musicservice.di.MusicServiceInjector
 import dev.olog.msc.presentation.ViewModelModule
 import dev.olog.msc.presentation.about.di.AboutActivityInjector
-import dev.olog.msc.presentation.app.widget.WidgetBindingModule
 import dev.olog.msc.presentation.main.di.MainActivityInjector
 import dev.olog.msc.presentation.preferences.di.PreferencesActivityInjector
 import dev.olog.msc.presentation.shortcuts.playlist.chooser.di.PlaylistChooserActivityInjector

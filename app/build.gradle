@@ -108,6 +108,8 @@ dependencies {
     implementation project(':shared-ui-components')
     implementation project(':offline-lyrics')
 
+    implementation project(':app-widgets')
+
     implementation project(':presentation-base')
     implementation project(':presentation-navigator')
     implementation project(':presentation-search')

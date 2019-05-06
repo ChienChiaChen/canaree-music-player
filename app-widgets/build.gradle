@@ -1,0 +1,14 @@
+apply plugin: 'com.android.library'
+apply from: '../base_module.gradle'
+
+dependencies {
+    implementation project(':shared')
+    implementation project(':shared-ui-components')
+    implementation project(':core')
+    implementation project(':image-provider')
+
+    implementation librariesAndroidX.core
+    implementation librariesAndroidX.coreKtx
+    implementation librariesCore.daggerAndroid
+    kapt librariesCore.daggerAndroidProcessor
+}

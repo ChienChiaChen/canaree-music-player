@@ -135,7 +135,7 @@
 
         <!--widget -->
         <receiver
-            android:name=".presentation.app.widget.defaul.WidgetColored"
+            android:name=".appwidgets.base.WidgetColored"
             android:label="@string/app_widget_default">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -149,7 +149,7 @@
 
         <!--widget with queue-->
         <receiver
-            android:name=".presentation.app.widget.queue.WidgetColoredWithQueue"
+            android:name=".appwidgets.queue.WidgetColoredWithQueue"
             android:label="@string/app_widget_with_queue">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -162,7 +162,7 @@
 
         <!--widget with queue service-->
         <service
-            android:name=".presentation.app.widget.queue.QueueWidgetService"
+            android:name=".appwidgets.queue.QueueWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
 
