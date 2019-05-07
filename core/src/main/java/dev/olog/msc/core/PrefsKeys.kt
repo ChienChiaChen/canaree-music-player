@@ -27,6 +27,7 @@ interface PrefsKeys {
     fun quickAction(): Int
     fun playerAppearance(): Int
     fun darkMode(): Int
+    fun usedEqualizer(): Int
 
     fun showFolderAsTreeView(): Int
 

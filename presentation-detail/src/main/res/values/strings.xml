@@ -29,13 +29,4 @@
         <item quantity="other">%d new tracks</item>
     </plurals>
 
-    <string name="detail_sort_by">Sort by</string>
-
-    <string name="sort_by_title">@string/common_title</string>
-    <string name="sort_by_artist">@string/common_artist</string>
-    <string name="sort_by_album">@string/common_album</string>
-    <string name="sort_by_duration">@string/common_duration</string>
-    <string name="sort_by_recently_added">@string/common_recently_added</string>
-    <string name="sort_by_custom">@string/common_custom</string>
-    <string name="sort_by_track">@string/common_track_number</string>
 </resources>

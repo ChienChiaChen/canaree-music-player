@@ -2,15 +2,14 @@ package dev.olog.msc.presentation.navigator
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.R
 import dev.olog.msc.presentation.licenses.LicensesFragment
 import dev.olog.msc.presentation.special.thanks.SpecialThanksFragment
-import dev.olog.presentation.base.openPlayStore
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.presentation.base.extensions.fragmentTransaction
 import dev.olog.presentation.base.extensions.isIntentSafe
+import dev.olog.presentation.base.openPlayStore
 import javax.inject.Inject
 
 private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
@@ -54,7 +53,7 @@ class NavigatorAboutImpl @Inject constructor() : NavigatorAbout {
             if (activity.packageManager.isIntentSafe(intent)) {
                 activity.startActivity(intent)
             } else {
-                activity.toast(R.string.common_browser_not_found)
+                activity.toast("Browser not found")
             }
         }
     }
@@ -78,7 +77,7 @@ class NavigatorAboutImpl @Inject constructor() : NavigatorAbout {
             if (activity.packageManager.isIntentSafe(intent)) {
                 activity.startActivity(intent)
             } else {
-                activity.toast(R.string.common_browser_not_found)
+                activity.toast("Browser not found")
             }
         }
     }
@@ -90,7 +89,7 @@ class NavigatorAboutImpl @Inject constructor() : NavigatorAbout {
             if (activity.packageManager.isIntentSafe(intent)) {
                 activity.startActivity(intent)
             } else {
-                activity.toast(R.string.common_browser_not_found)
+                activity.toast("Browser not found")
             }
         }
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.imagecreation.domain.GetAllFoldersNewRequestUseCase
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class ImagesCreator @Inject constructor(
-        @ProcessLifecycle private val context: Context,
+        @ApplicationContext private val context: Context,
         @ProcessLifecycle lifecycle: Lifecycle,
         private val getAllFoldersUseCase: GetAllFoldersNewRequestUseCase,
         private val getAllPlaylistsUseCase: GetAllPlaylistsNewRequestUseCase,

@@ -6,11 +6,7 @@
         <item quantity="one"><![CDATA[Adicionar <b>%1$d música</b> à lista de reprodução:]]></item>
         <item quantity="other"><![CDATA[Adicionar <b>%1$d músicas</b> à lista de reprodução:]]></item>
     </plurals>
-    <string name="added_song_x_to_playlist_y">%1$s adicionada à lista de reprodução %2$s</string>
-    <plurals name="xx_songs_added_to_playlist_y">
-        <item quantity="one">%1$d música adicionada à lista de reprodução %2$s</item>
-        <item quantity="other">%1$d músicas adicionadas à lista de reprodução %2$s</item>
-    </plurals>
+
     <string name="popup_new_playlist">Nova lista de reprodução</string>
     <string name="popup_no_playlist">Ainda não tens listas de reprodução</string>
     <string name="new_playlist_hint">Nome da lista de reprodução</string>

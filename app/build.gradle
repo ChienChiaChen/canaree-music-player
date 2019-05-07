@@ -135,6 +135,7 @@ dependencies {
     implementation project(':presentation-preferences')
     implementation project(':presentation-recently-added')
     implementation project(':presentation-related-artists')
+    implementation project(':presentation-popup')
 
     // data binding
     kapt librariesUi.dataBinding

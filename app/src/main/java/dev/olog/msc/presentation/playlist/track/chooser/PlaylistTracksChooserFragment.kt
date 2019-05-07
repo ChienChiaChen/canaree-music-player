@@ -22,8 +22,8 @@ import dev.olog.msc.shared.ui.ThemedDialog
 import dev.olog.msc.shared.ui.extensions.toggleSelected
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.extensions.*
+import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.interfaces.DrawsOnTop
 import dev.olog.presentation.base.utils.ImeUtils
 import io.reactivex.Observable

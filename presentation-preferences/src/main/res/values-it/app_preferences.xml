@@ -3,7 +3,6 @@
 <resources>
   <!--entry values are used as keys, do not translate-->
   <!--however, entries are human readable -->
-  <string name="settings">Impostazioni</string>
   <string name="prefs_not_premium">Acquista la versione pro per iniziare a personalizzare</string>
   <string name="prefs_not_premium_action">Acquista</string>
   <!--categories-->

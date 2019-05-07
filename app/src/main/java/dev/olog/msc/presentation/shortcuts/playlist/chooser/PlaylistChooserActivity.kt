@@ -2,8 +2,8 @@ package dev.olog.msc.presentation.shortcuts.playlist.chooser
 
 import android.os.Bundle
 import dev.olog.msc.R
-import dev.olog.presentation.base.activity.BaseActivity
 import dev.olog.msc.shared.extensions.isPortrait
+import dev.olog.presentation.base.activity.BaseActivity
 import dev.olog.presentation.base.extensions.asLiveData
 import dev.olog.presentation.base.extensions.subscribe
 import kotlinx.android.synthetic.main.activity_playlist_chooser.*

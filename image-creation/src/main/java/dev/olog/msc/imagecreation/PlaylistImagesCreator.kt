@@ -41,7 +41,7 @@ internal class PlaylistImagesCreator @Inject constructor(
 
     private fun makeImage(playlist: Playlist, albumsId: List<Long>) : Boolean {
         assertBackgroundThread()
-        val folderName = ImagesFolderUtils.getFolderName(ImagesFolderUtils.PLAYLIST)
+        val folderName = ImagesFolderUtils.PLAYLIST
         return MergedImagesCreator.makeImages(ctx, albumsId, folderName, "${playlist.id}")
     }
 

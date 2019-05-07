@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Nastavení</string>
+    <string name="about">O aplikaci</string>
+
+    <string name="sort_by">Seřadit podle</string>
+    <string name="sort_by_date">Datum</string>
+    <string name="sort_by_ascending">Vzestupně</string>
+    <string name="sort_by_descending">Sestupně</string>
+
+</resources>

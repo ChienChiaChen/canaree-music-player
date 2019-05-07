@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import dev.olog.msc.R
+
 import dev.olog.msc.shared.extensions.configuration
 import kotlinx.android.synthetic.main.activity_debug_configuration.*
 

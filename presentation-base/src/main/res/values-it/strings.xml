@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="common_new_playlist">Nome della playlist</string>
+    <string name="settings">Impostazioni</string>
+    <string name="about">Informazioni</string>
+
+    <string name="sort_by">Ordina per</string>
+    <string name="sort_by_date">Data</string>
+    <string name="sort_by_ascending">Crecente</string>
+    <string name="sort_by_descending">Decrescente</string>
 </resources>

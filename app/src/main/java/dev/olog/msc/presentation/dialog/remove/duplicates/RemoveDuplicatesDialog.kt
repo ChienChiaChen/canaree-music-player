@@ -3,9 +3,10 @@ package dev.olog.msc.presentation.dialog.remove.duplicates
 import android.content.Context
 import android.content.DialogInterface
 import dev.olog.msc.R
+
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.BaseDialog
-import dev.olog.msc.utils.k.extension.asHtml
+import dev.olog.presentation.base.extensions.asHtml
 import dev.olog.presentation.base.extensions.withArguments
 import io.reactivex.Completable
 import javax.inject.Inject

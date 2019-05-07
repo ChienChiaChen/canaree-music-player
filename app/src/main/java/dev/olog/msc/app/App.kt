@@ -10,12 +10,13 @@ import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
+
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.interactor.SleepTimerUseCase
-import dev.olog.msc.imagecreation.ImagesCreator
+import dev.olog.msc.imagecreation.IImageCreator
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.Permissions
@@ -37,7 +38,7 @@ lateinit var app: Context
 class App : BaseApp() {
 
     @Suppress("unused") @Inject lateinit var appShortcuts: AppShortcuts
-    @Suppress("unused") @Inject lateinit var imagesCreator: ImagesCreator
+    @Suppress("unused") @Inject lateinit var imagesCreator: IImageCreator
     @Suppress("unused") @Inject lateinit var keepDataAlive: KeepDataAlive
 
     @Inject lateinit var lastFmGateway: LastFmGateway

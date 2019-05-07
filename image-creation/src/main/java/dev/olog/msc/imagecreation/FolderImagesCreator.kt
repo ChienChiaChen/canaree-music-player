@@ -44,7 +44,7 @@ internal class FolderImagesCreator @Inject constructor(
 
     private fun makeImage(map: Map.Entry<String, List<Song>>) : Boolean {
         assertBackgroundThread()
-        val folderName = ImagesFolderUtils.getFolderName(ImagesFolderUtils.FOLDER)
+        val folderName = ImagesFolderUtils.FOLDER
         val normalizedPath = map.key.replace(File.separator, "")
         return MergedImagesCreator.makeImages(ctx, map.value.map { it.albumId },
                 folderName, normalizedPath)

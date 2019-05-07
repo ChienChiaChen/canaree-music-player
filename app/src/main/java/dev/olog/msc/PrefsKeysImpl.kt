@@ -35,6 +35,7 @@ class PrefsKeysImpl @Inject constructor(): PrefsKeys {
     override fun playerAppearance(): Int = R.string.prefs_appearance_key
     override fun darkMode(): Int = R.string.prefs_accent_dark_key
     override fun showFolderAsTreeView(): Int = R.string.prefs_folder_tree_view_key
+    override fun usedEqualizer(): Int = R.string.prefs_used_equalizer_key
 
     override fun autoPlaylist(): Int = R.array.common_auto_playlists
 

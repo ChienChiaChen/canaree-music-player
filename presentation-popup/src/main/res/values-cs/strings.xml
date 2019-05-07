@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="share_song_x"><![CDATA[Sdílet <b><font color="black">%1$s</b></font>…]]></string>
+    <string name="about_buy_pro">Koupit Pro verzi</string>
+
+
+</resources>

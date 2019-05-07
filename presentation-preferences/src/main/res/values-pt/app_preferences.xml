@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="settings">Configurações</string>
     <string name="prefs_not_premium">Comprar a versão Pro para customizar</string>
     <string name="prefs_not_premium_action">Comprar</string>
 

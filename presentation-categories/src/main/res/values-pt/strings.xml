@@ -5,13 +5,4 @@
     <string name="category_header">Biblioteca</string>
     <string name="category_no_tab_visible">E agora?</string>
 
-    <string name="category_sort_by">Ordenar por</string>
-    <string name="category_sort_by_title">Título</string>
-    <string name="category_sort_by_artist">Artista</string>
-    <string name="category_sort_by_album">Álbum</string>
-    <string name="category_sort_by_duration">Duração</string>
-    <string name="category_sort_by_date">Data</string>
-    <string name="category_sort_by_ascending">Ascendente</string>
-    <string name="category_sort_by_descending">Descendente</string>
-
 </resources>

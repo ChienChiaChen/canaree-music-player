@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="about">Sobre</string>
     <string name="about_author">Autor</string>
     <string name="about_version">Versão</string>
     <string name="about_join_community">Comunidade</string>
@@ -18,7 +17,6 @@
 
     <!-- Fuzzy -->
     <string name="about_privacy_policy_description">Importante para os dois</string>
-    <string name="about_buy_pro">Comprar a versão Pro</string>
     <string name="about_buy_pro_description">Comprar a versão Pro para desbloquear todas as funcionalidades</string>
     <string name="about_buy_pro_description_trial">Versão de teste, todas as funcionalidades estão desbloqueadas</string>
 

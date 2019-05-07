@@ -5,6 +5,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import dev.olog.msc.BR
 import dev.olog.msc.R
+
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
 import dev.olog.msc.shared.ui.ThemedDialog

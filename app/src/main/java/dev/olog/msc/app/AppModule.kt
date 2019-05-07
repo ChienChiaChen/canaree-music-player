@@ -15,10 +15,10 @@ import dev.olog.msc.SongComparatorImpl
 import dev.olog.msc.app.glide.GlideImageProvider
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.IEncrypter
+import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.interactor.sort.ISongComparator
 import dev.olog.msc.domain.interactor.LyricsFromMetadata
 import dev.olog.msc.floatingwindowservice.FloatingWindowService
@@ -95,6 +95,7 @@ class AppModule(private val app: App) {
             override fun floatingWindowService(): Class<*> = FloatingWindowService::class.java
             override fun shortcutActivity(): Class<*> = ShortcutsActivity::class.java
             override fun playlistChooser(): Class<*> = PlaylistChooserActivity::class.java
+
         }
     }
 

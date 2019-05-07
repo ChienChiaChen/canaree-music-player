@@ -25,7 +25,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(), ThemedActivity {
     }
 
     @StyleRes
-    private fun getActivityTheme() = when {
+    private fun getActivityTheme() : Int = when {
         AppTheme.isWhiteMode() -> R.style.AppThemeWhite
         AppTheme.isGrayMode() -> R.style.AppThemeGray
         AppTheme.isDarkMode() -> R.style.AppThemeDark

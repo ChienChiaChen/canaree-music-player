@@ -2,6 +2,7 @@ package dev.olog.msc.presentation.dialog.create.playlist
 
 import android.content.Context
 import dev.olog.msc.R
+
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.BaseEditTextDialog
 import dev.olog.presentation.base.extensions.withArguments

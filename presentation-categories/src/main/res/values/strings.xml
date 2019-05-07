@@ -14,14 +14,4 @@
 
     <string name="category_no_tab_visible">And now?</string>
 
-    <string name="category_sort_by">Sort by</string>
-    <string name="category_sort_by_title">@string/common_title</string>
-    <string name="category_sort_by_artist">@string/common_artist</string>
-    <string name="category_sort_by_album_artist">Album artist</string>
-    <string name="category_sort_by_album">@string/common_album</string>
-    <string name="category_sort_by_duration">@string/common_duration</string>
-    <string name="category_sort_by_date">Date</string>
-    <string name="category_sort_by_ascending">Ascending</string>
-    <string name="category_sort_by_descending">Descending</string>
-
 </resources>

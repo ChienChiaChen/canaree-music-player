@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Ajustes</string>
+    <string name="about">Información</string>
+
+    <string name="sort_by">Ordenar por</string>
+    <string name="sort_by_date">Fecha</string>
+    <string name="sort_by_ascending">Creciente</string>
+    <string name="sort_by_descending">Decreciente</string>
+
+</resources>
