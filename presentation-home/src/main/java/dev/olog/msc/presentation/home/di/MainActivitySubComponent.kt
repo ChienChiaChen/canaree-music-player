@@ -15,7 +15,6 @@ import dev.olog.msc.pro.ProModule
 //        RecentlyAddedFragmentInjector::class,
 //        RelatedArtistFragmentInjector::class,
 
-//        PlayingQueueFragmentInjector::class,
 //        PlaylistTracksChooserInjector::class,
 
         // dialogs

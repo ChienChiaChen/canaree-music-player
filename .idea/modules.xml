@@ -22,11 +22,12 @@
       <module fileurl="file://$PROJECT_DIR$/presentation-offline-lyrics/presentation-offline-lyrics.iml" filepath="$PROJECT_DIR$/presentation-offline-lyrics/presentation-offline-lyrics.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-player/presentation-player.iml" filepath="$PROJECT_DIR$/presentation-player/presentation-player.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-player-mini/presentation-player-mini.iml" filepath="$PROJECT_DIR$/presentation-player-mini/presentation-player-mini.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation-playing-queue/presentation-playing-queue.iml" filepath="$PROJECT_DIR$/presentation-playing-queue/presentation-playing-queue.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-search/presentation-search.iml" filepath="$PROJECT_DIR$/presentation-search/presentation-search.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-sleep-timer/presentation-sleep-timer.iml" filepath="$PROJECT_DIR$/presentation-sleep-timer/presentation-sleep-timer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation-splash/presentation-splash.iml" filepath="$PROJECT_DIR$/presentation-splash/presentation-splash.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-tabs/presentation-tabs.iml" filepath="$PROJECT_DIR$/presentation-tabs/presentation-tabs.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-tabs-folder-tree/presentation-tabs-folder-tree.iml" filepath="$PROJECT_DIR$/presentation-tabs-folder-tree/presentation-tabs-folder-tree.iml" />
-      <module fileurl="file://$PROJECT_DIR$/presentationplayingqueue/presentationplayingqueue.iml" filepath="$PROJECT_DIR$/presentationplayingqueue/presentationplayingqueue.iml" />
       <module fileurl="file://$PROJECT_DIR$/pro/pro.iml" filepath="$PROJECT_DIR$/pro/pro.iml" />
       <module fileurl="file://$PROJECT_DIR$/service-floating-window/service-floating-window.iml" filepath="$PROJECT_DIR$/service-floating-window/service-floating-window.iml" />
       <module fileurl="file://$PROJECT_DIR$/service-music/service-music.iml" filepath="$PROJECT_DIR$/service-music/service-music.iml" />

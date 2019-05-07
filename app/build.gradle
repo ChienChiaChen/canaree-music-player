@@ -129,6 +129,8 @@ dependencies {
     implementation project(':presentation-tabs-folder-tree')
     implementation project(':presentation-categories')
     implementation project(':presentation-detail')
+    implementation project(':presentation-playing-queue')
+    implementation project(':presentation-splash')
 
     // data binding
     kapt librariesUi.dataBinding

@@ -21,6 +21,7 @@ import dev.olog.msc.presentation.equalizer.di.EqualizerInjector
 import dev.olog.msc.presentation.home.di.MainActivityInjector
 import dev.olog.msc.presentation.offlinelyrics.di.OfflineLyricsInjector
 import dev.olog.msc.presentation.player.di.PlayerFragmentModule
+import dev.olog.msc.presentation.playing.queue.di.PlayingQueueFragmentInjector
 import dev.olog.msc.presentation.preferences.di.PreferencesActivityInjector
 import dev.olog.msc.presentation.search.di.SearchFragmentInjector
 import dev.olog.msc.presentation.shortcuts.playlist.chooser.di.PlaylistChooserActivityInjector
@@ -60,6 +61,7 @@ import javax.inject.Singleton
         PlayerFragmentModule::class,
         SearchFragmentInjector::class,
         EditItemInjector::class,
+        PlayingQueueFragmentInjector::class,
 
 //        // music service
         MusicServiceInjector::class,

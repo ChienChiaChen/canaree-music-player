@@ -27,11 +27,12 @@
             <option value="$PROJECT_DIR$/presentation-offline-lyrics" />
             <option value="$PROJECT_DIR$/presentation-player" />
             <option value="$PROJECT_DIR$/presentation-player-mini" />
+            <option value="$PROJECT_DIR$/presentation-playing-queue" />
             <option value="$PROJECT_DIR$/presentation-search" />
             <option value="$PROJECT_DIR$/presentation-sleep-timer" />
+            <option value="$PROJECT_DIR$/presentation-splash" />
             <option value="$PROJECT_DIR$/presentation-tabs" />
             <option value="$PROJECT_DIR$/presentation-tabs-folder-tree" />
-            <option value="$PROJECT_DIR$/presentationplayingqueue" />
             <option value="$PROJECT_DIR$/pro" />
             <option value="$PROJECT_DIR$/service-floating-window" />
             <option value="$PROJECT_DIR$/service-music" />
