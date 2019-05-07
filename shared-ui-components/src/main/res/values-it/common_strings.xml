@@ -62,4 +62,10 @@
     <string name="common_moved_to_play_next">Verrà riprodotto come successivo</string>
     <string name="common_enabled">Abilitato</string>
     <string name="common_disabled">Disabilitato</string>
+
+    <string name="common_ok">OK</string>
+    <string name="common_no">No</string>
+    <string name="common_save">Salva</string>
+    <string name="common_cancel">Annulla</string>
+    <string name="common_back">Indietro</string>
 </resources>

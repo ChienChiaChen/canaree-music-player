@@ -71,4 +71,10 @@
     <string name="common_enabled">Ativado</string>
     <string name="common_disabled">Desativado</string>
 
+    <string name="common_ok">OK</string>
+    <string name="common_no">Não</string>
+    <string name="common_save">Guardar</string>
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_back">Para trás</string>
+
 </resources>

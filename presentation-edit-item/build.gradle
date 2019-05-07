@@ -1,0 +1,19 @@
+apply plugin: 'com.android.library'
+apply from: '../presentation_module.gradle'
+
+android {
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+}
+
+dependencies {
+    implementation project(':jaudiotagger')
+
+    implementation librariesAndroidX.coreKtx
+
+    implementation librariesCore.rxBinding
+    implementation librariesUi.glide
+    implementation librariesUtils.optional
+
+}

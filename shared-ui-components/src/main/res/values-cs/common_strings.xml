@@ -41,4 +41,10 @@
     <string name="common_moved_to_play_next">Přesunuto do Přehrát další</string>
     <string name="common_enabled">Povoleno</string>
     <string name="common_disabled">Zakázáno</string>
+
+    <string name="common_ok">OK</string>
+    <string name="common_no">Ne</string>
+    <string name="common_save">Uložit</string>
+    <string name="common_cancel">Zrušení</string>
+    <string name="common_back">Zadní</string>
 </resources>

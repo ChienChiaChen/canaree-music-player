@@ -113,4 +113,10 @@
     <string name="common_enabled">Enabled</string>
     <string name="common_disabled">Disabled</string>
 
+    <string name="common_ok">OK</string>
+    <string name="common_no">No</string>
+    <string name="common_save">Save</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_back">Back</string>
+
 </resources>

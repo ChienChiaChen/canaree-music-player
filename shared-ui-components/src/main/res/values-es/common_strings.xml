@@ -57,4 +57,10 @@
     <string name="common_filter">Filtrar..</string>
     <string name="common_enabled">Habilitado</string>
     <string name="common_disabled">Desactivado</string>
+
+    <string name="common_ok">OK</string>
+    <string name="common_no">No</string>
+    <string name="common_save">Salvar</string>
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_back">Atrás</string>
 </resources>

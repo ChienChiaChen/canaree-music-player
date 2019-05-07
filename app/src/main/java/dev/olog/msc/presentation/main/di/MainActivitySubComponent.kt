@@ -13,9 +13,9 @@ import dev.olog.msc.presentation.dialog.play.next.di.PlayNextDialogInjector
 import dev.olog.msc.presentation.dialog.remove.duplicates.di.RemoveDuplicatesDialogInjector
 import dev.olog.msc.presentation.dialog.rename.di.RenameDialogInjector
 import dev.olog.msc.presentation.dialog.set.ringtone.di.SetRingtoneDialogInjector
-import dev.olog.msc.presentation.edit.album.di.EditAlbumFragmentInjector
-import dev.olog.msc.presentation.edit.artist.di.EditArtistFragmentInjector
-import dev.olog.msc.presentation.edit.track.di.EditTrackFragmentInjector
+import dev.olog.msc.presentation.edititem.album.di.EditAlbumFragmentInjector
+import dev.olog.msc.presentation.edititem.artist.di.EditArtistFragmentInjector
+import dev.olog.msc.presentation.edititem.track.di.EditTrackFragmentInjector
 import dev.olog.msc.presentation.library.folder.tree.di.FolderTreeFragmentModule
 import dev.olog.msc.presentation.library.tab.di.TabFragmentInjector
 import dev.olog.msc.presentation.main.MainActivity

@@ -7,10 +7,10 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.data.HttpUrlFetcher
 import com.bumptech.glide.load.model.GlideUrl
-import dev.olog.msc.NetworkUtils
 import dev.olog.msc.R
 import dev.olog.msc.shared.extensions.defer
 import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.shared.utils.NetworkUtils
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable

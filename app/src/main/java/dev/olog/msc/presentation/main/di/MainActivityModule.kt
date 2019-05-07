@@ -13,7 +13,7 @@ import dagger.multibindings.IntoMap
 import dev.olog.msc.core.dagger.qualifier.ActivityContext
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
 import dev.olog.msc.core.dagger.scope.PerActivity
-import dev.olog.msc.presentation.edit.EditItemViewModel
+import dev.olog.msc.presentation.edititem.EditItemViewModel
 import dev.olog.msc.presentation.main.MainActivity
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.navigator.NavigatorImpl

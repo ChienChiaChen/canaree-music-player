@@ -9,8 +9,10 @@
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/data/data.iml" filepath="$PROJECT_DIR$/data/data.iml" />
       <module fileurl="file://$PROJECT_DIR$/image-provider/image-provider.iml" filepath="$PROJECT_DIR$/image-provider/image-provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jaudiotagger/jaudiotagger.iml" filepath="$PROJECT_DIR$/jaudiotagger/jaudiotagger.iml" />
       <module fileurl="file://$PROJECT_DIR$/offline-lyrics/offline-lyrics.iml" filepath="$PROJECT_DIR$/offline-lyrics/offline-lyrics.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-base/presentation-base.iml" filepath="$PROJECT_DIR$/presentation-base/presentation-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation-edit-item/presentation-edit-item.iml" filepath="$PROJECT_DIR$/presentation-edit-item/presentation-edit-item.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-equalizer/presentation-equalizer.iml" filepath="$PROJECT_DIR$/presentation-equalizer/presentation-equalizer.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-navigator/presentation-navigator.iml" filepath="$PROJECT_DIR$/presentation-navigator/presentation-navigator.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-offline-lyrics/presentation-offline-lyrics.iml" filepath="$PROJECT_DIR$/presentation-offline-lyrics/presentation-offline-lyrics.iml" />

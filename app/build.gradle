@@ -107,6 +107,7 @@ dependencies {
     implementation project(':service-floating-window')
     implementation project(':shared-ui-components')
     implementation project(':offline-lyrics')
+    implementation project(':jaudiotagger')
 
     implementation project(':app-widgets')
 
@@ -115,6 +116,7 @@ dependencies {
     implementation project(':presentation-search')
     implementation project(':presentation-offline-lyrics')
     implementation project(':presentation-equalizer')
+    implementation project(':presentation-edit-item')
 
     // data binding
     kapt librariesUi.dataBinding

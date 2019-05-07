@@ -25,10 +25,10 @@ import dev.olog.msc.presentation.dialog.play.next.PlayNextDialog
 import dev.olog.msc.presentation.dialog.remove.duplicates.RemoveDuplicatesDialog
 import dev.olog.msc.presentation.dialog.rename.RenameDialog
 import dev.olog.msc.presentation.dialog.set.ringtone.SetRingtoneDialog
-import dev.olog.msc.presentation.edit.EditItemDialogFactory
-import dev.olog.msc.presentation.edit.album.EditAlbumFragment
-import dev.olog.msc.presentation.edit.artist.EditArtistFragment
-import dev.olog.msc.presentation.edit.track.EditTrackFragment
+import dev.olog.msc.presentation.edititem.EditItemDialogFactory
+import dev.olog.msc.presentation.edititem.album.EditAlbumFragment
+import dev.olog.msc.presentation.edititem.artist.EditArtistFragment
+import dev.olog.msc.presentation.edititem.track.EditTrackFragment
 import dev.olog.msc.presentation.library.categories.podcast.CategoriesPodcastFragment
 import dev.olog.msc.presentation.library.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.main.MainActivity
