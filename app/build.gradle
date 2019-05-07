@@ -103,6 +103,7 @@ dependencies {
     implementation project(':shared-ui-components')
     implementation project(':offline-lyrics')
     implementation project(':image-provider')
+    implementation project(':image-creation')
 
     implementation project(':api-lastfm')
 

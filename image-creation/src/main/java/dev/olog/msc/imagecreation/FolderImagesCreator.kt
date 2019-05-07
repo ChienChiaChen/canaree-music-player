@@ -1,20 +1,20 @@
-package dev.olog.msc.presentation.image.creation
+package dev.olog.msc.imagecreation
 
 import android.content.Context
 import android.provider.MediaStore
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.domain.interactor.all.newrequest.GetAllSongsNewRequestUseCase
-import dev.olog.msc.presentation.image.creation.impl.MergedImagesCreator
-import dev.olog.msc.shared.utils.assertBackgroundThread
+import dev.olog.msc.imagecreation.domain.GetAllSongsNewRequestUseCase
+import dev.olog.msc.imagecreation.impl.MergedImagesCreator
 import dev.olog.msc.imageprovider.ImagesFolderUtils
+import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Flowable
 import java.io.File
 import javax.inject.Inject
 
 private val MEDIA_STORE_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
-class FolderImagesCreator @Inject constructor(
+internal class FolderImagesCreator @Inject constructor(
         @ApplicationContext private val ctx: Context,
         private val getAllSongsUseCase: GetAllSongsNewRequestUseCase,
         private val imagesThreadPool: ImagesThreadPool

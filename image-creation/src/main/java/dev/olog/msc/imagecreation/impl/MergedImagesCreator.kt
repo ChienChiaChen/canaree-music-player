@@ -1,4 +1,4 @@
-package dev.olog.msc.presentation.image.creation.impl
+package dev.olog.msc.imagecreation.impl
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -11,7 +11,7 @@ import dev.olog.msc.shared.utils.assertBackgroundThread
 import java.io.File
 import java.io.FileOutputStream
 
-object MergedImagesCreator {
+internal object MergedImagesCreator {
 
     fun makeImages(context: Context, albumIdList: List<Long>, parentFolder: String, itemId: String) : Boolean {
         assertBackgroundThread()

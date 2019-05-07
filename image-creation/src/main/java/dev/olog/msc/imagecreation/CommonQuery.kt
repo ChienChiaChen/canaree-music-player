@@ -1,10 +1,10 @@
-package dev.olog.msc
+package dev.olog.msc.imagecreation
 
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.MediaStore
 
-internal object TempQuery {
+internal object CommonQuery {
     fun extractAlbumIdsFromSongs(contentResolver: ContentResolver, uri: Uri): List<Long> {
         val result = mutableListOf<Long>()
 

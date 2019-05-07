@@ -1,10 +1,10 @@
-package dev.olog.msc.presentation.image.creation.impl
+package dev.olog.msc.imagecreation.impl
 
 import android.graphics.*
 import dev.olog.msc.shared.utils.assertBackgroundThread
 
 
-object MergedImageUtils {
+internal object MergedImageUtils {
 
     private const val IMAGE_SIZE = 1600
     private const val PARTS = 3

@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/canaree-music-player.iml" filepath="$PROJECT_DIR$/.idea/canaree-music-player.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/data/data.iml" filepath="$PROJECT_DIR$/data/data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/image-creation/image-creation.iml" filepath="$PROJECT_DIR$/image-creation/image-creation.iml" />
       <module fileurl="file://$PROJECT_DIR$/image-provider/image-provider.iml" filepath="$PROJECT_DIR$/image-provider/image-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaudiotagger/jaudiotagger.iml" filepath="$PROJECT_DIR$/jaudiotagger/jaudiotagger.iml" />
       <module fileurl="file://$PROJECT_DIR$/offline-lyrics/offline-lyrics.iml" filepath="$PROJECT_DIR$/offline-lyrics/offline-lyrics.iml" />

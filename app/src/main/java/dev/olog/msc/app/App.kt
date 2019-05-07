@@ -16,8 +16,8 @@ import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.interactor.SleepTimerUseCase
+import dev.olog.msc.imagecreation.ImagesCreator
 import dev.olog.msc.musicservice.MusicService
-import dev.olog.msc.presentation.image.creation.ImagesCreator
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.TrackUtils

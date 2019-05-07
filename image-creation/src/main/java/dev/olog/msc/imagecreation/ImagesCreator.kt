@@ -1,25 +1,24 @@
-package dev.olog.msc.presentation.image.creation
+package dev.olog.msc.imagecreation
 
+import android.content.Context
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import dev.olog.msc.app.app
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.domain.interactor.all.newrequest.GetAllFoldersNewRequestUseCase
-import dev.olog.msc.domain.interactor.all.newrequest.GetAllGenresNewRequestUseCase
-import dev.olog.msc.domain.interactor.all.newrequest.GetAllPlaylistsNewRequestUseCase
-import dev.olog.msc.isLowMemoryDevice
+import dev.olog.msc.imagecreation.domain.GetAllFoldersNewRequestUseCase
+import dev.olog.msc.imagecreation.domain.GetAllGenresNewRequestUseCase
+import dev.olog.msc.imagecreation.domain.GetAllPlaylistsNewRequestUseCase
+import dev.olog.msc.imagecreation.utils.isLowMemoryDevice
 import dev.olog.msc.shared.extensions.asFlowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Flowables
 import io.reactivex.rxkotlin.addTo
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ImagesCreator @Inject constructor(
+internal class ImagesCreator @Inject constructor(
+        @ProcessLifecycle private val context: Context,
         @ProcessLifecycle lifecycle: Lifecycle,
         private val getAllFoldersUseCase: GetAllFoldersNewRequestUseCase,
         private val getAllPlaylistsUseCase: GetAllPlaylistsNewRequestUseCase,
@@ -30,7 +29,7 @@ class ImagesCreator @Inject constructor(
         private val genreImagesCreator: GenreImagesCreator,
         private val appPreferencesUseCase: AppPreferencesGateway
 
-) : DefaultLifecycleObserver {
+) : DefaultLifecycleObserver, IImageCreator {
 
     private val subscriptions = CompositeDisposable()
 
@@ -39,7 +38,7 @@ class ImagesCreator @Inject constructor(
     }
 
     override fun onStart(owner: LifecycleOwner) {
-        if (isLowMemoryDevice(app)){
+        if (isLowMemoryDevice(context)){
             return
         }
 

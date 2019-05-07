@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/app-widgets" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/image-creation" />
             <option value="$PROJECT_DIR$/image-provider" />
             <option value="$PROJECT_DIR$/jaudiotagger" />
             <option value="$PROJECT_DIR$/offline-lyrics" />
