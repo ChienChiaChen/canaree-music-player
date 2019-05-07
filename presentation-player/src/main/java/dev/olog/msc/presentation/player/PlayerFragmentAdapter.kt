@@ -14,7 +14,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.player.widgets.SwipeableView
+import dev.olog.presentation.base.widgets.SwipeableView
 import dev.olog.msc.presentation.player.widgets.audiowave.AudioWaveViewWrapper
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.extensions.isPaused

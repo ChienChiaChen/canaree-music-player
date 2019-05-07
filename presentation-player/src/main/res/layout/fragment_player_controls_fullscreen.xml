@@ -39,7 +39,7 @@
             android:focusable="false"
             android:clipChildren="false">
 
-            <dev.olog.msc.presentation.player.widgets.SwipeableView
+            <dev.olog.presentation.base.widgets.SwipeableView
                 android:id="@+id/swipeableView"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

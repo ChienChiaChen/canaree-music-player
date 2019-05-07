@@ -15,7 +15,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.player.widgets.SwipeableView
+import dev.olog.presentation.base.widgets.SwipeableView
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.*
