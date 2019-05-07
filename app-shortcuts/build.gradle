@@ -1,0 +1,17 @@
+apply plugin: 'com.android.library'
+apply from: '../base_module.gradle'
+
+dependencies {
+    implementation project(':core')
+    implementation project(':image-provider')
+    implementation project(':shared')
+    implementation project(':shared-ui-components')
+
+    implementation librariesCore.lifecycleRuntime
+    implementation librariesCore.lifecycleExtensions
+    implementation librariesCore.lifecycleJava8
+
+    implementation librariesAndroidX.coreKtx
+    implementation librariesCore.rxAndroid
+
+}

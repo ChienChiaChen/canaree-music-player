@@ -94,21 +94,27 @@ android {
 
 dependencies {
     implementation project(':core')
-    implementation project(':shared')
+
+    implementation project(':jaudiotagger')
     implementation project(':traceur')
     implementation project(':tap-target-view')
-    implementation project(':service-music')
-    implementation project(':image-provider')
-    implementation project(':api-lastfm')
-    implementation project(':data')
-    implementation project(':pro')
-    implementation project(':service-floating-window')
+
+    implementation project(':shared')
     implementation project(':shared-ui-components')
     implementation project(':offline-lyrics')
-    implementation project(':jaudiotagger')
+    implementation project(':image-provider')
+
+    implementation project(':api-lastfm')
+
+    implementation project(':data')
+
+    implementation project(':service-music')
+    implementation project(':service-floating-window')
 
     implementation project(':app-widgets')
+    implementation project(':app-shortcuts')
 
+    implementation project(':pro')
     implementation project(':presentation-base')
     implementation project(':presentation-navigator')
     implementation project(':presentation-search')

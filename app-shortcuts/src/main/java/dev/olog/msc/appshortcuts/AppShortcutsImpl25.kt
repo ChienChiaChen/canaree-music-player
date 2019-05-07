@@ -1,4 +1,4 @@
-package dev.olog.msc.app.shortcuts
+package dev.olog.msc.appshortcuts
 
 import android.content.Context
 import android.content.Intent
@@ -9,21 +9,19 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import androidx.lifecycle.Lifecycle
-import dev.olog.msc.R
-import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.Classes
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
-import dev.olog.msc.presentation.main.MainActivity
-import dev.olog.msc.presentation.shortcuts.ShortcutsActivity
-import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivity
 import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.ShortcutsConstants
 import dev.olog.msc.shared.utils.isNougat_MR1
 
 @RequiresApi(Build.VERSION_CODES.N_MR1)
-open class AppShortcutsImpl25(
+internal open class AppShortcutsImpl25(
         context: Context,
-        @ProcessLifecycle lifecycle: Lifecycle
+        @ProcessLifecycle lifecycle: Lifecycle,
+        classes: Classes
 
-) : BaseAppShortcuts(context, lifecycle) {
+) : BaseAppShortcuts(context, lifecycle, classes) {
 
     protected val shortcutManager : ShortcutManager = context.getSystemService<ShortcutManager>()!!
 
@@ -47,7 +45,7 @@ open class AppShortcutsImpl25(
     }
 
     private fun search(): ShortcutInfo {
-        return ShortcutInfo.Builder(context, AppConstants.SHORTCUT_SEARCH)
+        return ShortcutInfo.Builder(context, ShortcutsConstants.SHORTCUT_SEARCH)
                 .setShortLabel(context.getString(R.string.shortcut_search))
                 .setIcon(Icon.createWithResource(context, R.drawable.shortcut_search))
                 .setIntent(createSearchIntent())
@@ -71,7 +69,7 @@ open class AppShortcutsImpl25(
     }
 
     private fun playlistChooser(): ShortcutInfo {
-        return ShortcutInfo.Builder(context, AppConstants.SHORTCUT_PLAYLIST_CHOOSER)
+        return ShortcutInfo.Builder(context, ShortcutsConstants.SHORTCUT_PLAYLIST_CHOOSER)
                 .setShortLabel(context.getString(R.string.shortcut_playlist_chooser))
                 .setIcon(Icon.createWithResource(context, R.drawable.shortcut_playlist_add))
                 .setIntent(createPlaylistChooserIntent())
@@ -79,26 +77,26 @@ open class AppShortcutsImpl25(
     }
 
     private fun createSearchIntent(): Intent {
-        val intent = Intent(context, MainActivity::class.java)
-        intent.action = AppConstants.SHORTCUT_SEARCH
+        val intent = Intent(context, classes.mainActivity())
+        intent.action = ShortcutsConstants.SHORTCUT_SEARCH
         return intent
     }
 
     private fun createPlayIntent(): Intent {
-        val intent = Intent(context, ShortcutsActivity::class.java)
+        val intent = Intent(context, classes.shortcutActivity())
         intent.action = MusicConstants.ACTION_PLAY
         return intent
     }
 
     private fun createShuffleIntent(): Intent {
-        val intent = Intent(context, ShortcutsActivity::class.java)
+        val intent = Intent(context, classes.shortcutActivity())
         intent.action = MusicConstants.ACTION_SHUFFLE
         return intent
     }
 
     private fun createPlaylistChooserIntent(): Intent {
-        val intent = Intent(context, PlaylistChooserActivity::class.java)
-        intent.action = AppConstants.SHORTCUT_PLAYLIST_CHOOSER
+        val intent = Intent(context, classes.playlistChooser())
+        intent.action = ShortcutsConstants.SHORTCUT_PLAYLIST_CHOOSER
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         return intent
     }

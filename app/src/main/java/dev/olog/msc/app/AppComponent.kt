@@ -4,7 +4,7 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dev.olog.msc.apilastfm.LastFmModule
-import dev.olog.msc.app.shortcuts.AppShortcutsModule
+import dev.olog.msc.appshortcuts.AppShortcutsModule
 import dev.olog.msc.appwidgets.di.WidgetBindingModule
 import dev.olog.msc.data.di.PreferenceModule
 import dev.olog.msc.data.di.RepositoryHelperModule

@@ -1,4 +1,4 @@
-package dev.olog.msc.app.shortcuts
+package dev.olog.msc.appshortcuts
 
 import android.content.Context
 import android.content.Intent
@@ -8,14 +8,14 @@ import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import dev.olog.msc.R
-import dev.olog.msc.constants.AppConstants
+
 import dev.olog.msc.core.AppShortcuts
+import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.imageprovider.getBitmap
-import dev.olog.msc.presentation.main.MainActivity
+import dev.olog.msc.shared.ShortcutsConstants
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.Completable
@@ -23,9 +23,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-abstract class BaseAppShortcuts(
+internal abstract class BaseAppShortcuts(
         protected val context: Context,
-        @ProcessLifecycle lifecycle: Lifecycle
+        @ProcessLifecycle lifecycle: Lifecycle,
+        protected val classes: Classes
 
 ) : AppShortcuts, DefaultLifecycleObserver {
 
@@ -41,9 +42,9 @@ abstract class BaseAppShortcuts(
             disposable.unsubscribe()
             disposable = Completable.create {
 
-                val intent = Intent(context, MainActivity::class.java)
-                intent.action = AppConstants.SHORTCUT_DETAIL
-                intent.putExtra(AppConstants.SHORTCUT_DETAIL_MEDIA_ID, mediaId.toString())
+                val intent = Intent(context, classes.mainActivity())
+                intent.action = ShortcutsConstants.SHORTCUT_DETAIL
+                intent.putExtra(ShortcutsConstants.SHORTCUT_DETAIL_MEDIA_ID, mediaId.toString())
 
                 val model = ImageModel(mediaId, image)
                 val bitmap = context.getBitmap(model, 128, { circleCrop() })

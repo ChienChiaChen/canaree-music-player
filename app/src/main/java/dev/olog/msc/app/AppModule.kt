@@ -24,6 +24,8 @@ import dev.olog.msc.imageprovider.IImageProvider
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.offlinelyrics.domain.ILyricsFromMetadata
 import dev.olog.msc.presentation.main.MainActivity
+import dev.olog.msc.presentation.shortcuts.ShortcutsActivity
+import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivity
 import java.text.Collator
 import java.util.*
 import javax.inject.Singleton
@@ -89,6 +91,8 @@ class AppModule(private val app: App) {
             override fun mainActivity(): Class<*> = MainActivity::class.java
             override fun musicService(): Class<*> = MusicService::class.java
             override fun floatingWindowService(): Class<*> = FloatingWindowService::class.java
+            override fun shortcutActivity(): Class<*> = ShortcutsActivity::class.java
+            override fun playlistChooser(): Class<*> = PlaylistChooserActivity::class.java
         }
     }
 
