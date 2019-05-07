@@ -8,12 +8,12 @@ import com.bumptech.glide.load.Options
 import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.shared.ui.C
 import java.io.File
@@ -25,7 +25,8 @@ class GlideImageLoader(
         private val lastFmGateway: LastFmGateway,
         private val uriLoader: ModelLoader<Uri, InputStream>,
         private val songGateway: SongGateway,
-        private val podcastGateway: PodcastGateway
+        private val podcastGateway: PodcastGateway,
+        private val appPreferencesGateway: AppPreferencesGateway
 
 ) : ModelLoader<ImageModel, InputStream> {
 
@@ -52,7 +53,7 @@ class GlideImageLoader(
                         ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideAlbumFetcher(context, model.mediaId, lastFmGateway))
                     }
                 }
-                AppConstants.IGNORE_MEDIA_STORE_COVERS -> {
+                appPreferencesGateway.ignoreMediaStoreCover() -> {
                     ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideOriginalImageFetcher(model.mediaId, songGateway, podcastGateway))
                 }
                 else -> {
@@ -85,13 +86,14 @@ class GlideImageLoader(
             private val context: Context,
             private val lastFmGateway: LastFmGateway,
             private val songGateway: SongGateway,
-            private val podcastGateway: PodcastGateway
+            private val podcastGateway: PodcastGateway,
+            private val preferencesGateway: AppPreferencesGateway
 
     ) : ModelLoaderFactory<ImageModel, InputStream> {
 
         override fun build(multiFactory: MultiModelLoaderFactory): ModelLoader<ImageModel, InputStream> {
             val uriLoader = multiFactory.build(Uri::class.java, InputStream::class.java)
-            return GlideImageLoader(context, lastFmGateway, uriLoader, songGateway, podcastGateway)
+            return GlideImageLoader(context, lastFmGateway, uriLoader, songGateway, podcastGateway, preferencesGateway)
         }
 
         override fun teardown() {

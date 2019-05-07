@@ -24,6 +24,9 @@
       <module fileurl="file://$PROJECT_DIR$/presentation-player/presentation-player.iml" filepath="$PROJECT_DIR$/presentation-player/presentation-player.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-player-mini/presentation-player-mini.iml" filepath="$PROJECT_DIR$/presentation-player-mini/presentation-player-mini.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-playing-queue/presentation-playing-queue.iml" filepath="$PROJECT_DIR$/presentation-playing-queue/presentation-playing-queue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation-preferences/presentation-preferences.iml" filepath="$PROJECT_DIR$/presentation-preferences/presentation-preferences.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation-recently-added/presentation-recently-added.iml" filepath="$PROJECT_DIR$/presentation-recently-added/presentation-recently-added.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation-related-artists/presentation-related-artists.iml" filepath="$PROJECT_DIR$/presentation-related-artists/presentation-related-artists.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-search/presentation-search.iml" filepath="$PROJECT_DIR$/presentation-search/presentation-search.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-sleep-timer/presentation-sleep-timer.iml" filepath="$PROJECT_DIR$/presentation-sleep-timer/presentation-sleep-timer.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-splash/presentation-splash.iml" filepath="$PROJECT_DIR$/presentation-splash/presentation-splash.iml" />

@@ -10,7 +10,6 @@ import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.PodcastGateway
@@ -81,7 +80,6 @@ class App : BaseApp() {
     }
 
     private fun initializeConstants() {
-        AppConstants.initialize(this)
         TrackUtils.initialize(
                 getString(R.string.common_unknown_artist),
                 getString(R.string.common_unknown_album)

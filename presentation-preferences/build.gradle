@@ -1,0 +1,20 @@
+apply plugin: 'com.android.library'
+apply from: '../presentation_module.gradle'
+
+android {
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+}
+
+dependencies {
+    implementation project(':pro')
+
+    implementation librariesAndroidX.preference
+
+    api librariesUi.materialDialogsCore
+    api librariesUi.materialDialogsColor
+    api librariesUi.glide
+
+    implementation librariesAndroidX.coreKtx
+}

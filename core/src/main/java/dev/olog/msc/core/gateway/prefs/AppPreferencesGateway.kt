@@ -67,6 +67,8 @@ interface AppPreferencesGateway : Sorting {
 
     fun getShowFolderAsTreeView(): Boolean
 
+    fun ignoreMediaStoreCover(): Boolean
+
 }
 
 interface Sorting {

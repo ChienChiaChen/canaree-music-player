@@ -132,6 +132,9 @@ dependencies {
     implementation project(':presentation-detail')
     implementation project(':presentation-playing-queue')
     implementation project(':presentation-splash')
+    implementation project(':presentation-preferences')
+    implementation project(':presentation-recently-added')
+    implementation project(':presentation-related-artists')
 
     // data binding
     kapt librariesUi.dataBinding
@@ -185,8 +188,6 @@ dependencies {
     implementation librariesUtils.fuzzywuzzy
     implementation librariesUtils.aesCrypto
     implementation librariesUtils.customTabs
-    implementation librariesUi.materialDialogsCore
-    implementation librariesUi.materialDialogsColor
     implementation librariesUi.blurkit
 
     // debug

@@ -11,10 +11,6 @@ object ImagesFolderUtils {
     const val PLAYLIST = "playlist"
     const val GENRE = "genre"
 
-    fun getFolderName(folderName: String): String {
-        return folderName
-    }
-
     fun isChoosedImage(image: String): Boolean{
         return image.startsWith("content://com.android.providers.media.documents/document")
     }

@@ -118,5 +118,6 @@
     <string name="common_save">Save</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_back">Back</string>
+    <string name="common_reset">Reset</string>
 
 </resources>

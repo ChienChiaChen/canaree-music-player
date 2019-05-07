@@ -476,4 +476,8 @@ internal class AppPreferencesImpl @Inject constructor(
     override fun getShowFolderAsTreeView(): Boolean {
         return preferences.getBoolean(context.getString(prefsKeys.showFolderAsTreeView()), false)
     }
+
+    override fun ignoreMediaStoreCover(): Boolean {
+        return preferences.getBoolean(context.getString(prefsKeys.ignoreMediaStoreCover()), false)
+    }
 }
