@@ -13,7 +13,8 @@ import com.afollestad.materialdialogs.color.ColorCallback
 import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 import dev.olog.msc.R
-import dev.olog.msc.presentation.base.ThemedActivity
+import dev.olog.msc.core.PrefsKeys
+import dev.olog.presentation.base.activity.ThemedActivity
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.presentation.base.extensions.setLightStatusBar
@@ -25,16 +26,16 @@ class PreferencesActivity : DaggerAppCompatActivity(),
         ThemedActivity {
 
     companion object {
-        const val REQUEST_CODE = 1221
         const val EXTRA_NEED_TO_RECREATE = "EXTRA_NEED_TO_RECREATE"
     }
 
     @Inject lateinit var billing: IBilling
+    @Inject lateinit var prefsKeys: PrefsKeys
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         setTheme(getActivityTheme())
-        themeAccentColor(this, theme)
+        themeAccentColor(this, theme, prefsKeys)
         super.onCreate(savedInstanceState)
         window.setLightStatusBar()
         setContentView(R.layout.activity_preferences)

@@ -3,10 +3,11 @@ package dev.olog.msc.presentation.navigator
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.R
 import dev.olog.msc.presentation.licenses.LicensesFragment
 import dev.olog.msc.presentation.special.thanks.SpecialThanksFragment
-import dev.olog.msc.presentation.utils.openPlayStore
+import dev.olog.presentation.base.openPlayStore
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.presentation.base.extensions.fragmentTransaction
 import dev.olog.presentation.base.extensions.isIntentSafe
@@ -14,14 +15,11 @@ import javax.inject.Inject
 
 private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
 
-class NavigatorAboutImpl @Inject internal constructor(
-        private val activity: AppCompatActivity
-
-) : NavigatorAbout {
+class NavigatorAboutImpl @Inject constructor() : NavigatorAbout {
 
     private var lastRequest: Long = -1
 
-    override fun toLicensesFragment() {
+    override fun toLicensesFragment(activity: FragmentActivity) {
         if (allowed()) {
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
@@ -32,7 +30,7 @@ class NavigatorAboutImpl @Inject internal constructor(
         }
     }
 
-    override fun toSpecialThanksFragment() {
+    override fun toSpecialThanksFragment(activity: FragmentActivity) {
         if (allowed()) {
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
@@ -43,13 +41,13 @@ class NavigatorAboutImpl @Inject internal constructor(
         }
     }
 
-    override fun toMarket() {
+    override fun toMarket(activity: FragmentActivity) {
         if (allowed()){
             openPlayStore(activity)
         }
     }
 
-    override fun toPrivacyPolicy() {
+    override fun toPrivacyPolicy(activity: FragmentActivity) {
         if (allowed()){
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse("https://deveugeniuolog.wixsite.com/next/privacy-policy")
@@ -73,7 +71,7 @@ class NavigatorAboutImpl @Inject internal constructor(
 //        }
 //    }
 
-    override fun joinCommunity() {
+    override fun joinCommunity(activity: FragmentActivity) {
         if (allowed()){
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse("https://plus.google.com/u/1/communities/112263979767803607353")
@@ -85,7 +83,7 @@ class NavigatorAboutImpl @Inject internal constructor(
         }
     }
 
-    override fun joinBeta() {
+    override fun joinBeta(activity: FragmentActivity) {
         if (allowed()){
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse("https://play.google.com/apps/testing/dev.olog.msc")

@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.popup.artist
 
-import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
 import dev.olog.msc.core.AppShortcuts
@@ -16,9 +15,7 @@ import dev.olog.presentation.base.interfaces.MediaProvider
 import javax.inject.Inject
 
 class ArtistPopupListener @Inject constructor(
-        private val activity: Activity,
         private val navigator: Navigator,
-        private val mediaProvider: MediaProvider,
         getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
         addToPlaylistUseCase: AddToPlaylistUseCase,
         private val appShortcuts: AppShortcuts
@@ -69,33 +66,33 @@ class ArtistPopupListener @Inject constructor(
 
     private fun toCreatePlaylist(){
         if (song == null){
-            navigator.toCreatePlaylistDialog(getMediaId(), artist.songs, artist.name)
+            navigator.toCreatePlaylistDialog(activity, getMediaId(), artist.songs, artist.name)
         } else {
-            navigator.toCreatePlaylistDialog(getMediaId(), -1, song!!.title)
+            navigator.toCreatePlaylistDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 
     private fun playFromMediaId(){
-        mediaProvider.playFromMediaId(getMediaId())
+        (activity as MediaProvider).playFromMediaId(getMediaId())
     }
 
     private fun playShuffle(){
-        mediaProvider.shuffle(getMediaId())
+        (activity as MediaProvider).shuffle(getMediaId())
     }
 
     private fun playLater(){
         if (song == null){
-            navigator.toPlayLater(getMediaId(), artist.songs, artist.name)
+            navigator.toPlayLater(activity, getMediaId(), artist.songs, artist.name)
         } else {
-            navigator.toPlayLater(getMediaId(), -1, song!!.title)
+            navigator.toPlayLater(activity, getMediaId(), -1, song!!.title)
         }
     }
 
     private fun playNext(){
         if (song == null){
-            navigator.toPlayNext(getMediaId(), artist.songs, artist.name)
+            navigator.toPlayNext(activity, getMediaId(), artist.songs, artist.name)
         } else {
-            navigator.toPlayNext(getMediaId(), -1, song!!.title)
+            navigator.toPlayNext(activity, getMediaId(), -1, song!!.title)
         }
     }
 
@@ -103,17 +100,17 @@ class ArtistPopupListener @Inject constructor(
 
     private fun addToFavorite(){
         if (song == null){
-            navigator.toAddToFavoriteDialog(getMediaId(), artist.songs, artist.name)
+            navigator.toAddToFavoriteDialog(activity, getMediaId(), artist.songs, artist.name)
         } else {
-            navigator.toAddToFavoriteDialog(getMediaId(), -1, song!!.title)
+            navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 
     private fun delete(){
         if (song == null){
-            navigator.toDeleteDialog(getMediaId(), artist.songs, artist.name)
+            navigator.toDeleteDialog(activity, getMediaId(), artist.songs, artist.name)
         } else {
-            navigator.toDeleteDialog(getMediaId(), -1, song!!.title)
+            navigator.toDeleteDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 

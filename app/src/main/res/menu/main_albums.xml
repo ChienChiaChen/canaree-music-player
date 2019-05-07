@@ -43,19 +43,4 @@
 
     </item>
 
-    <item android:id="@+id/share"
-        android:title="@string/popup_share_app"/>
-
-    <!--<group>-->
-
-        <!--<item-->
-            <!--android:id="@+id/gridSpan"-->
-            <!--android:title="@string/popup_grid_size">-->
-
-            <!--<menu/>-->
-
-        <!--</item>-->
-
-    <!--</group>-->
-
 </menu>

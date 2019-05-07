@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name" translatable="false">PresentationCategories</string>
+
+    <string name="category_header">Library</string>
+
+    <string-array name="categories">
+        <item>@string/category_folders</item>
+        <item>@string/category_playlists</item>
+        <item>@string/category_songs</item>
+        <item>@string/category_albums</item>
+        <item>@string/category_artists</item>
+        <item>@string/category_genres</item>
+    </string-array>
+
+    <string name="category_no_tab_visible">And now?</string>
+
+    <string name="category_sort_by">Sort by</string>
+    <string name="category_sort_by_title">@string/common_title</string>
+    <string name="category_sort_by_artist">@string/common_artist</string>
+    <string name="category_sort_by_album_artist">Album artist</string>
+    <string name="category_sort_by_album">@string/common_album</string>
+    <string name="category_sort_by_duration">@string/common_duration</string>
+    <string name="category_sort_by_date">Date</string>
+    <string name="category_sort_by_ascending">Ascending</string>
+    <string name="category_sort_by_descending">Descending</string>
+
+</resources>

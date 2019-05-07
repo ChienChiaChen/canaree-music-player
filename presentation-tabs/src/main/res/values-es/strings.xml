@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tab_auto_playlists">Listas de reproducción automáticas</string>
+    <string name="tab_all_playlists">Todas las listas de reproducción</string>
+    <string name="tab_all_albums">Todos los álbumes</string>
+    <string name="tab_all_artists">Todos los artistas</string>
+    <string name="tab_recent_played">Escuchado recientemente</string>
+    <string name="tab_recent_added">Recientemente añadido</string>
+
+    <string-array name="tab_new_items">
+        <item>Nuevos álbumes</item>
+        <item>Nuevos artistas</item>
+    </string-array>
+
+    <string name="tab_podcast_duration">%d min</string>
+
+    <string-array name="tab_empty_state">
+        <item>Sin carpetas</item>
+        <item>No listas de reproducción</item>
+        <item>@string/common_no_tracks</item>
+        <item>No hay álbum</item>
+        <item>Ningún artista</item>
+        <item>No género</item>
+    </string-array>
+
+    <string-array name="tab_empty_podcast">
+        <item>No listas de reproducción</item>
+        <item>No podcasts</item>
+        <item>No hay álbum</item>
+        <item>Ningún artista</item>
+    </string-array>
+
+</resources>

@@ -14,6 +14,7 @@ import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.ui.ThemedDialog
 import dev.olog.presentation.base.extensions.ctx
+import dev.olog.presentation.base.fragment.BaseDialogFragment
 import dev.olog.presentation.base.utils.ImeUtils
 import io.reactivex.Completable
 import io.reactivex.Observable

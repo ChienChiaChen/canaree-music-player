@@ -1,5 +1,6 @@
 package dev.olog.msc.presentation.popup
 
+import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.PodcastArtist
@@ -31,15 +32,15 @@ class MenuListenerFactory @Inject constructor(
         private val podcastArtistPopupListener: Provider<PodcastArtistPopupListener>
 ) {
 
-    fun folder(folder: Folder, song: Song?) = folderPopupListener.get().setData(folder, song)
-    fun playlist(playlist: Playlist, song: Song?) = playlistPopupListener.get().setData(playlist, song)
-    fun song(song: Song) = songPopupListener.get().setData(song)
-    fun album(album: Album, song: Song?) = albumPopupListener.get().setData(album, song)
-    fun artist(artist: Artist, song: Song?) = artistPopupListener.get().setData(artist, song)
-    fun genre(genre: Genre, song: Song?) = genrePopupListener.get().setData(genre, song)
-    fun podcast(podcast: Podcast) = podcastPopupListener.get().setData(podcast)
-    fun podcastPlaylist(podcastPlaylist: PodcastPlaylist, song: Podcast?) = podcastPlaylistPopupListener.get().setData(podcastPlaylist, song)
-    fun podcastAlbum(podcastAlbum: PodcastAlbum, song: Podcast?) = podcastAlbumPopupListener.get().setData(podcastAlbum, song)
-    fun podcastArtist(podcastArtist: PodcastArtist, song: Podcast?) = podcastArtistPopupListener.get().setData(podcastArtist, song)
+    fun folder(activity: FragmentActivity, folder: Folder, song: Song?) = folderPopupListener.get().setData(folder, song).setActivity(activity)
+    fun playlist(activity: FragmentActivity, playlist: Playlist, song: Song?) = playlistPopupListener.get().setData(playlist, song).setActivity(activity)
+    fun song(activity: FragmentActivity, song: Song) = songPopupListener.get().setData(song).setActivity(activity)
+    fun album(activity: FragmentActivity, album: Album, song: Song?) = albumPopupListener.get().setData(album, song).setActivity(activity)
+    fun artist(activity: FragmentActivity, artist: Artist, song: Song?) = artistPopupListener.get().setData(artist, song).setActivity(activity)
+    fun genre(activity: FragmentActivity, genre: Genre, song: Song?) = genrePopupListener.get().setData(genre, song).setActivity(activity)
+    fun podcast(activity: FragmentActivity, podcast: Podcast) = podcastPopupListener.get().setData(podcast).setActivity(activity)
+    fun podcastPlaylist(activity: FragmentActivity, podcastPlaylist: PodcastPlaylist, song: Podcast?) = podcastPlaylistPopupListener.get().setData(podcastPlaylist, song).setActivity(activity)
+    fun podcastAlbum(activity: FragmentActivity, podcastAlbum: PodcastAlbum, song: Podcast?) = podcastAlbumPopupListener.get().setData(podcastAlbum, song).setActivity(activity)
+    fun podcastArtist(activity: FragmentActivity, podcastArtist: PodcastArtist, song: Podcast?) = podcastArtistPopupListener.get().setData(podcastArtist, song).setActivity(activity)
 
 }

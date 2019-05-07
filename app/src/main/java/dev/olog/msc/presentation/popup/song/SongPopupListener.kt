@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.popup.song
 
-import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
@@ -13,7 +12,6 @@ import dev.olog.msc.presentation.popup.AbsPopupListener
 import javax.inject.Inject
 
 class SongPopupListener @Inject constructor(
-        private val activity: Activity,
         private val navigator: Navigator,
         getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
         addToPlaylistUseCase: AddToPlaylistUseCase
@@ -54,23 +52,23 @@ class SongPopupListener @Inject constructor(
     }
 
     private fun toCreatePlaylist(){
-        navigator.toCreatePlaylistDialog(getMediaId(), -1, song.title)
+        navigator.toCreatePlaylistDialog(activity, getMediaId(), -1, song.title)
     }
 
     private fun playLater(){
-        navigator.toPlayLater(getMediaId(), -1, song.title)
+        navigator.toPlayLater(activity, getMediaId(), -1, song.title)
     }
 
     private fun playNext(){
-        navigator.toPlayNext(getMediaId(), -1, song.title)
+        navigator.toPlayNext(activity, getMediaId(), -1, song.title)
     }
 
     private fun addToFavorite(){
-        navigator.toAddToFavoriteDialog(getMediaId(), -1, song.title)
+        navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, song.title)
     }
 
     private fun delete(){
-        navigator.toDeleteDialog(getMediaId(), -1, song.title)
+        navigator.toDeleteDialog(activity, getMediaId(), -1, song.title)
     }
 
 }

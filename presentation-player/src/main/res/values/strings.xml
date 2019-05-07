@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name" translatable="false">PresentationPlayer</string>
+
+    <string name="player_now_playing" translatable="false">Now Playing</string>
+    <string name="player_load_more_song">more songs loads as you listen</string>
+</resources>

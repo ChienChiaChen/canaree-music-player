@@ -7,7 +7,7 @@ import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.domain.interactor.GetItemTitleUseCase
-import dev.olog.msc.domain.interactor.all.related.artists.GetRelatedArtistsUseCase
+import dev.olog.msc.presentation.detail.domain.GetRelatedArtistsUseCase
 import dev.olog.msc.shared.extensions.mapToList
 import dev.olog.msc.shared.extensions.safeCompare
 import dev.olog.msc.shared.utils.TextUtils

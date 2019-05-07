@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name" translatable="false">PresentationTabs</string>
+
+    <string name="tab_auto_playlists">Auto playlists</string>
+    <string name="tab_all_playlists">All playlists</string>
+    <string name="tab_all_albums">All albums</string>
+    <string name="tab_all_artists">All artists</string>
+    <string name="tab_recent_played">Recently played</string>
+    <string name="tab_recent_added">Recently added</string>
+
+    <color name="tab_layout_selected">@color/text_color_primary</color>
+    <color name="tab_layout_unselected">@color/light_grey</color>
+
+    <string-array name="tab_new_items">
+        <item>New albums</item>
+        <item>New artist</item>
+    </string-array>
+
+    <string name="tab_podcast_duration">%d min</string>
+
+    <string-array name="tab_empty_state">
+        <item>No folders</item>
+        <item>No playlist</item>
+        <item>@string/common_no_tracks</item>
+        <item>No albums</item>
+        <item>No artists</item>
+        <item>No genres</item>
+    </string-array>
+
+    <string-array name="tab_empty_podcast">
+        <item>No playlist</item>
+        <item>No podcasts</item>
+        <item>No albums</item>
+        <item>No artists</item>
+    </string-array>
+
+</resources>

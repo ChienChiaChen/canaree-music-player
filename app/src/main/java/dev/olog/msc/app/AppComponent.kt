@@ -3,6 +3,7 @@ package dev.olog.msc.app
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
+import dev.olog.msc.NavigatorModule
 import dev.olog.msc.apilastfm.LastFmModule
 import dev.olog.msc.appshortcuts.AppShortcutsModule
 import dev.olog.msc.appwidgets.di.WidgetBindingModule
@@ -14,9 +15,18 @@ import dev.olog.msc.musicservice.di.EqualizerModule
 import dev.olog.msc.musicservice.di.MusicServiceInjector
 import dev.olog.msc.presentation.ViewModelModule
 import dev.olog.msc.presentation.about.di.AboutActivityInjector
-import dev.olog.msc.presentation.main.di.MainActivityInjector
+import dev.olog.msc.presentation.detail.di.DetailFragmentInjector
+import dev.olog.msc.presentation.edititem.di.EditItemInjector
+import dev.olog.msc.presentation.equalizer.di.EqualizerInjector
+import dev.olog.msc.presentation.home.di.MainActivityInjector
+import dev.olog.msc.presentation.offlinelyrics.di.OfflineLyricsInjector
+import dev.olog.msc.presentation.player.di.PlayerFragmentModule
 import dev.olog.msc.presentation.preferences.di.PreferencesActivityInjector
+import dev.olog.msc.presentation.search.di.SearchFragmentInjector
 import dev.olog.msc.presentation.shortcuts.playlist.chooser.di.PlaylistChooserActivityInjector
+import dev.olog.msc.presentation.sleeptimer.di.SleepTimerInjector
+import dev.olog.msc.presentation.tabs.di.TabFragmentInjector
+import dev.olog.msc.presentation.tabs.foldertree.di.FolderTreeFragmentModule
 import javax.inject.Singleton
 
 @Component(modules = arrayOf(
@@ -32,13 +42,24 @@ import javax.inject.Singleton
         PreferenceModule::class,
 //
 //        // presentation
+        NavigatorModule::class,
         ActivityBindingsModule::class,
+        EqualizerInjector::class,
+        OfflineLyricsInjector::class,
+        SleepTimerInjector::class,
         WidgetBindingModule::class,
         MainActivityInjector::class,
         AboutActivityInjector::class,
         PreferencesActivityInjector::class,
         PlaylistChooserActivityInjector::class,
         ViewModelModule::class,
+
+        TabFragmentInjector::class,
+        FolderTreeFragmentModule::class,
+        DetailFragmentInjector::class,
+        PlayerFragmentModule::class,
+        SearchFragmentInjector::class,
+        EditItemInjector::class,
 
 //        // music service
         MusicServiceInjector::class,

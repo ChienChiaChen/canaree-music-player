@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.search
 
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.core.dagger.scope.PerFragment
@@ -23,7 +24,8 @@ class SearchFragmentGenreAdapter @Inject constructor(
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
         viewHolder.setOnClickListener(controller) { item, _, _ ->
-            navigator.toDetailFragment(item.mediaId)
+            val activity = viewHolder.itemView.context as FragmentActivity
+            navigator.toDetailFragment(activity, item.mediaId)
             viewModel.insertToRecent(item.mediaId)
         }
         viewHolder.setOnLongClickListener(controller) { item, _, _ ->

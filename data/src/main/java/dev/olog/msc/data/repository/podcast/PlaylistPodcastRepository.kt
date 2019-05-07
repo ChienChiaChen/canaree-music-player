@@ -9,7 +9,7 @@ import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.PodcastPlaylistGateway
-import dev.olog.msc.data.PrefsKeys
+import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.PodcastPlaylistEntity
 import dev.olog.msc.data.entity.PodcastPlaylistTrackEntity

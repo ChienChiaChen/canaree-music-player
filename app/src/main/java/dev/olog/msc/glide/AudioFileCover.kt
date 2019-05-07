@@ -9,14 +9,12 @@ import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import com.bumptech.glide.signature.ObjectKey
+import dev.olog.msc.presentation.tabs.foldertree.model.AudioFileCover
 import org.jaudiotagger.audio.AudioFileIO
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.InputStream
 
-data class AudioFileCover(
-        val filePath: String
-)
 
 class AudioFileCoverLoader : ModelLoader<AudioFileCover, InputStream> {
 

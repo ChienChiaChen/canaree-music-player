@@ -121,6 +121,14 @@ dependencies {
     implementation project(':presentation-offline-lyrics')
     implementation project(':presentation-equalizer')
     implementation project(':presentation-edit-item')
+    implementation project(':presentation-home')
+    implementation project(':presentation-player')
+    implementation project(':presentation-player-mini')
+    implementation project(':presentation-sleep-timer')
+    implementation project(':presentation-tabs')
+    implementation project(':presentation-tabs-folder-tree')
+    implementation project(':presentation-categories')
+    implementation project(':presentation-detail')
 
     // data binding
     kapt librariesUi.dataBinding
@@ -189,7 +197,6 @@ dependencies {
     implementation(librariesFirebase.crashlytics) {
         transitive = true
     }
-    implementation librariesFirebase.messaging
 
     testImplementation "junit:junit:$rootProject.junit"
     testImplementation "org.mockito:mockito-core:$rootProject.mockito"

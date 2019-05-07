@@ -6,12 +6,12 @@ import android.os.Environment
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.Sorting
-import dev.olog.msc.data.PrefsKeys
 import dev.olog.msc.shared.extensions.safeGetCanonicalPath
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -471,5 +471,9 @@ internal class AppPreferencesImpl @Inject constructor(
     override fun observeLockscreenArtworkEnabled(): Observable<Boolean> {
         return rxPreferences.getBoolean(context.getString(prefsKeys.showLockscreenArtwork()), false)
                 .asObservable()
+    }
+
+    override fun getShowFolderAsTreeView(): Boolean {
+        return preferences.getBoolean(context.getString(prefsKeys.showFolderAsTreeView()), false)
     }
 }

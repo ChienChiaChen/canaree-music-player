@@ -65,6 +65,8 @@ interface AppPreferencesGateway : Sorting {
 
     fun observeLockscreenArtworkEnabled(): Observable<Boolean>
 
+    fun getShowFolderAsTreeView(): Boolean
+
 }
 
 interface Sorting {

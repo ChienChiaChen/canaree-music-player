@@ -1,0 +1,19 @@
+apply plugin: 'com.android.library'
+apply from: '../presentation_module.gradle'
+
+android {
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+}
+
+dependencies {
+    implementation project(':pro')
+    implementation project(':tap-target-view')
+    implementation project(':presentation-player-mini')
+
+    implementation librariesCore.rxBinding
+    implementation librariesUi.lottie
+    implementation librariesUi.glide
+    implementation librariesAndroidX.palette
+}

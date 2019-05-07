@@ -13,9 +13,8 @@ import dev.olog.presentation.base.extensions.setOnClickListener
 import dev.olog.presentation.base.extensions.setOnLongClickListener
 import dev.olog.presentation.base.interfaces.MediaProvider
 import dev.olog.presentation.base.model.DisplayableItem
-import javax.inject.Inject
 
-class RecentlyAddedFragmentAdapter @Inject constructor(
+class RecentlyAddedFragmentAdapter(
         @FragmentLifecycle lifecycle: Lifecycle,
         private val navigator: Navigator,
         private val mediaProvider: MediaProvider

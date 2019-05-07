@@ -11,8 +11,8 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.interactor.all.GetAllPodcastUseCase
 import dev.olog.msc.core.interactor.all.GetAllSongsUseCase
-import dev.olog.msc.domain.interactor.playlist.InsertCustomTrackListRequest
-import dev.olog.msc.domain.interactor.playlist.InsertCustomTrackListToPlaylist
+import dev.olog.msc.presentation.detail.domain.playlist.InsertCustomTrackListRequest
+import dev.olog.msc.presentation.detail.domain.playlist.InsertCustomTrackListToPlaylist
 import dev.olog.msc.presentation.playlist.track.chooser.model.PlaylistTrack
 import dev.olog.msc.presentation.playlist.track.chooser.model.toDisplayableItem
 import dev.olog.msc.presentation.playlist.track.chooser.model.toPlaylistTrack

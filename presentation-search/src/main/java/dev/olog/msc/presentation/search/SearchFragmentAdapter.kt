@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.search
 
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
@@ -22,14 +23,13 @@ class SearchFragmentAdapter @Inject constructor(
         private val playlistAdapter: SearchFragmentPlaylistAdapter,
         private val genreAdapter: SearchFragmentGenreAdapter,
         private val recycledViewPool: RecyclerView.RecycledViewPool,
-        private val mediaProvider: MediaProvider,
         private val navigator: Navigator,
         private val viewModel: SearchFragmentViewModel
 
 ) : AbsAdapter<DisplayableItem>(lifecycle) {
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
-        when (viewType){
+        when (viewType) {
             R.layout.item_search_albums_horizontal_list -> {
                 val list = viewHolder.itemView as RecyclerView
                 setupHorizontalList(list, albumAdapter)
@@ -52,11 +52,12 @@ class SearchFragmentAdapter @Inject constructor(
             }
             R.layout.item_search_song -> {
                 viewHolder.setOnClickListener(controller) { item, _, _ ->
+                    val mediaProvider = viewHolder.itemView.context as MediaProvider
                     mediaProvider.playFromMediaId(item.mediaId)
                     viewModel.insertToRecent(item.mediaId)
 
                 }
-                viewHolder.setOnLongClickListener(controller) { item ,_, _ ->
+                viewHolder.setOnLongClickListener(controller) { item, _, _ ->
                     navigator.toDialog(item.mediaId, viewHolder.itemView)
                 }
                 viewHolder.setOnClickListener(R.id.more, controller) { item, _, view ->
@@ -72,15 +73,17 @@ class SearchFragmentAdapter @Inject constructor(
             R.layout.item_search_recent,
             R.layout.item_search_recent_album,
             R.layout.item_search_recent_artist -> {
-                viewHolder.setOnClickListener(controller) { item, _, _  ->
-                    if (item.isPlayable){
+                viewHolder.setOnClickListener(controller) { item, _, _ ->
+                    if (item.isPlayable) {
+                        val mediaProvider = viewHolder.itemView.context as MediaProvider
                         mediaProvider.playFromMediaId(item.mediaId)
                     } else {
-                        navigator.toDetailFragment(item.mediaId)
+                        val activity = viewHolder.itemView.context as FragmentActivity
+                        navigator.toDetailFragment(activity, item.mediaId)
                     }
                     viewModel.insertToRecent(item.mediaId)
                 }
-                viewHolder.setOnLongClickListener(controller) { item ,_, _ ->
+                viewHolder.setOnLongClickListener(controller) { item, _, _ ->
                     navigator.toDialog(item.mediaId, viewHolder.itemView)
                 }
                 viewHolder.setOnClickListener(R.id.clear, controller) { item, _, _ ->
@@ -88,7 +91,7 @@ class SearchFragmentAdapter @Inject constructor(
                 }
             }
         }
-        when (viewType){
+        when (viewType) {
             R.layout.item_search_song,
             R.layout.item_search_recent,
             R.layout.item_search_recent_album,
@@ -96,7 +99,7 @@ class SearchFragmentAdapter @Inject constructor(
         }
     }
 
-    private fun setupHorizontalList(list: RecyclerView, adapter: AbsAdapter<*>){
+    private fun setupHorizontalList(list: RecyclerView, adapter: AbsAdapter<*>) {
         val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(list.context,
                 androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
         list.layoutManager = layoutManager
@@ -118,7 +121,10 @@ class SearchFragmentAdapter @Inject constructor(
     }
 
     override val onSwipeLeftAction = { position: Int ->
-        controller.getItem(position)?.let { mediaProvider.addToPlayNext(it.mediaId) } ?: Any()
+        controller.getItem(position)?.let {
+//            val mediaProvider = viewHolder.itemView.context as MediaProvider TODO
+//            mediaProvider.addToPlayNext(it.mediaId)
+        } ?: Any()
     }
 
 }

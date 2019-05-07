@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.related.artists
 
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import dev.olog.msc.BR
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
@@ -22,7 +23,8 @@ class RelatedArtistFragmentAdapter @Inject constructor(
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
         viewHolder.setOnClickListener(controller) { item, _, _ ->
-            navigator.toDetailFragment(item.mediaId)
+            val activity = viewHolder.itemView.context as FragmentActivity
+            navigator.toDetailFragment(activity, item.mediaId)
         }
         viewHolder.setOnLongClickListener(controller) { item, _, _ ->
             navigator.toDialog(item.mediaId, viewHolder.itemView)

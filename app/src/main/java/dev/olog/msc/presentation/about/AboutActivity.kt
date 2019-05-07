@@ -10,7 +10,7 @@ import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.R
-import dev.olog.msc.presentation.base.BaseActivity
+import dev.olog.presentation.base.activity.BaseActivity
 import dev.olog.msc.presentation.navigator.NavigatorAbout
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.extensions.lazyFast

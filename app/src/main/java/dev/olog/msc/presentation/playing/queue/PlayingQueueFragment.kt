@@ -11,7 +11,7 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import dev.olog.presentation.base.BaseFragment
+import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.FloatingWindowHelper
 import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.presentation.base.extensions.act
@@ -76,7 +76,7 @@ class PlayingQueueFragment : BaseFragment() {
         super.onResume()
         more.setOnClickListener {
             try {
-                navigator.toMainPopup(it, MediaIdCategory.PLAYING_QUEUE)
+                navigator.toMainPopup(requireActivity(), it, MediaIdCategory.PLAYING_QUEUE)
             } catch (ex: Throwable){
                 ex.printStackTrace()
             }

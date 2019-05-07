@@ -8,8 +8,6 @@ android {
 }
 
 dependencies {
-    implementation project(':presentation-base')
-
     implementation librariesUi.lottie
     implementation librariesCore.rxBinding
     implementation librariesUtils.fuzzywuzzy

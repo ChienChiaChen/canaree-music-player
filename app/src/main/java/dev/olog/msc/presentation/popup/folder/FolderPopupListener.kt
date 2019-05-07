@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.popup.folder
 
-import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
 import dev.olog.msc.core.AppShortcuts
@@ -16,9 +15,7 @@ import dev.olog.presentation.base.interfaces.MediaProvider
 import javax.inject.Inject
 
 class FolderPopupListener @Inject constructor(
-        private val activity: Activity,
         private val navigator: Navigator,
-        private val mediaProvider: MediaProvider,
         getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
         addToPlaylistUseCase: AddToPlaylistUseCase,
         private val appShortcuts: AppShortcuts
@@ -35,7 +32,7 @@ class FolderPopupListener @Inject constructor(
     }
 
     private fun getMediaId(): MediaId {
-        if (song != null){
+        if (song != null) {
             return MediaId.playableItem(MediaId.folderId(folder.path), song!!.id)
         } else {
             return MediaId.folderId(folder.path)
@@ -47,7 +44,7 @@ class FolderPopupListener @Inject constructor(
 
         onPlaylistSubItemClick(activity, itemId, getMediaId(), folder.size, folder.title)
 
-        when (itemId){
+        when (itemId) {
             AbsPopup.NEW_PLAYLIST_ID -> toCreatePlaylist()
             R.id.play -> playFromMediaId()
             R.id.playShuffle -> playShuffle()
@@ -67,52 +64,52 @@ class FolderPopupListener @Inject constructor(
         return true
     }
 
-    private fun toCreatePlaylist(){
-        if (song == null){
-            navigator.toCreatePlaylistDialog(getMediaId(), folder.size, folder.title)
+    private fun toCreatePlaylist() {
+        if (song == null) {
+            navigator.toCreatePlaylistDialog(activity, getMediaId(), folder.size, folder.title)
         } else {
-            navigator.toCreatePlaylistDialog(getMediaId(), -1, song!!.title)
+            navigator.toCreatePlaylistDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 
-    private fun playFromMediaId(){
-        mediaProvider.playFromMediaId(getMediaId())
+    private fun playFromMediaId() {
+        (activity as MediaProvider).playFromMediaId(getMediaId())
     }
 
-    private fun playShuffle(){
-        mediaProvider.shuffle(getMediaId())
+    private fun playShuffle() {
+        (activity as MediaProvider).shuffle(getMediaId())
     }
 
-    private fun playLater(){
-        if (song == null){
-            navigator.toPlayLater(getMediaId(), folder.size, folder.title)
+    private fun playLater() {
+        if (song == null) {
+            navigator.toPlayLater(activity, getMediaId(), folder.size, folder.title)
         } else {
-            navigator.toPlayLater(getMediaId(), -1, song!!.title)
+            navigator.toPlayLater(activity, getMediaId(), -1, song!!.title)
         }
     }
 
-    private fun playNext(){
-        if (song == null){
-            navigator.toPlayNext(getMediaId(), folder.size, folder.title)
+    private fun playNext() {
+        if (song == null) {
+            navigator.toPlayNext(activity, getMediaId(), folder.size, folder.title)
         } else {
-            navigator.toPlayNext(getMediaId(), -1, song!!.title)
+            navigator.toPlayNext(activity, getMediaId(), -1, song!!.title)
         }
     }
 
 
-    private fun addToFavorite(){
-        if (song == null){
-            navigator.toAddToFavoriteDialog(getMediaId(), folder.size, folder.title)
+    private fun addToFavorite() {
+        if (song == null) {
+            navigator.toAddToFavoriteDialog(activity, getMediaId(), folder.size, folder.title)
         } else {
-            navigator.toAddToFavoriteDialog(getMediaId(), -1, song!!.title)
+            navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 
-    private fun delete(){
-        if (song == null){
-            navigator.toDeleteDialog(getMediaId(), folder.size, folder.title)
+    private fun delete() {
+        if (song == null) {
+            navigator.toDeleteDialog(activity, getMediaId(), folder.size, folder.title)
         } else {
-            navigator.toDeleteDialog(getMediaId(), -1, song!!.title)
+            navigator.toDeleteDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 

@@ -1,19 +1,19 @@
 package dev.olog.msc.presentation.navigator
 
+import androidx.fragment.app.FragmentActivity
+
 interface NavigatorAbout {
 
-    fun toLicensesFragment()
+    fun toLicensesFragment(activity: FragmentActivity)
 
-    fun toSpecialThanksFragment()
+    fun toSpecialThanksFragment(activity: FragmentActivity)
 
-    fun toMarket()
+    fun toMarket(activity: FragmentActivity)
 
-    fun toPrivacyPolicy()
+    fun toPrivacyPolicy(activity: FragmentActivity)
 
-//    fun toDeveloperProfile()
+    fun joinCommunity(activity: FragmentActivity)
 
-    fun joinCommunity()
-
-    fun joinBeta()
+    fun joinBeta(activity: FragmentActivity)
 
 }

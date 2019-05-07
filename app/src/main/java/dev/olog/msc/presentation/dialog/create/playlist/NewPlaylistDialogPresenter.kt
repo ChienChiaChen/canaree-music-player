@@ -7,8 +7,8 @@ import dev.olog.msc.core.interactor.item.GetPodcastUseCase
 import dev.olog.msc.core.interactor.item.GetSongUseCase
 import dev.olog.msc.core.interactor.queue.GetPlayingQueueUseCase
 import dev.olog.msc.domain.interactor.all.GetPlaylistsBlockingUseCase
-import dev.olog.msc.domain.interactor.playlist.InsertCustomTrackListRequest
-import dev.olog.msc.domain.interactor.playlist.InsertCustomTrackListToPlaylist
+import dev.olog.msc.presentation.detail.domain.playlist.InsertCustomTrackListRequest
+import dev.olog.msc.presentation.detail.domain.playlist.InsertCustomTrackListToPlaylist
 import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Completable
 import javax.inject.Inject

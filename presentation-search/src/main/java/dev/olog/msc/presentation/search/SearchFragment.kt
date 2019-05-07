@@ -13,7 +13,7 @@ import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.ui.extensions.setGone
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import dev.olog.presentation.base.BaseFragment
+import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.FloatingWindowHelper
 import dev.olog.presentation.base.FragmentTags
 import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
@@ -149,7 +149,7 @@ class SearchFragment : BaseFragment() {
         floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
         more.setOnClickListener {
             try {
-                navigator.toMainPopup(it, null)
+                navigator.toMainPopup(requireActivity(), it, null)
             } catch (ex: Throwable) {
                 ex.printStackTrace()
             }

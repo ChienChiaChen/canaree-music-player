@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.popup.podcastplaylist
 
-import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
 import dev.olog.msc.core.AppShortcuts
@@ -18,9 +17,7 @@ import dev.olog.presentation.base.interfaces.MediaProvider
 import javax.inject.Inject
 
 class PodcastPlaylistPopupListener @Inject constructor(
-        private val activity: Activity,
         private val navigator: Navigator,
-        private val mediaProvider: MediaProvider,
         getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
         addToPlaylistUseCase: AddToPlaylistUseCase,
         private val appShortcuts: AppShortcuts
@@ -72,14 +69,14 @@ class PodcastPlaylistPopupListener @Inject constructor(
     }
 
     private fun removeDuplicates(){
-        navigator.toRemoveDuplicatesDialog(MediaId.podcastPlaylistId(playlist.id), playlist.title)
+        navigator.toRemoveDuplicatesDialog(activity, MediaId.podcastPlaylistId(playlist.id), playlist.title)
     }
 
     private fun toCreatePlaylist(){
         if (podcast == null){
-            navigator.toCreatePlaylistDialog(getMediaId(), playlist.size, playlist.title)
+            navigator.toCreatePlaylistDialog(activity, getMediaId(), playlist.size, playlist.title)
         } else {
-            navigator.toCreatePlaylistDialog(getMediaId(), -1, podcast!!.title)
+            navigator.toCreatePlaylistDialog(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
@@ -87,7 +84,7 @@ class PodcastPlaylistPopupListener @Inject constructor(
         if (playlist.size == 0){
             activity.toast(R.string.common_empty_list)
         } else {
-            mediaProvider.playFromMediaId(getMediaId())
+            (activity as MediaProvider).playFromMediaId(getMediaId())
         }
     }
 
@@ -95,49 +92,49 @@ class PodcastPlaylistPopupListener @Inject constructor(
         if (playlist.size == 0){
             activity.toast(R.string.common_empty_list)
         } else {
-            mediaProvider.shuffle(getMediaId())
+            (activity as MediaProvider).shuffle(getMediaId())
         }
     }
 
     private fun playLater(){
         if (podcast == null){
-            navigator.toPlayLater(getMediaId(), playlist.size, playlist.title)
+            navigator.toPlayLater(activity, getMediaId(), playlist.size, playlist.title)
         } else {
-            navigator.toPlayLater(getMediaId(), -1, podcast!!.title)
+            navigator.toPlayLater(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
     private fun playNext(){
         if (podcast == null){
-            navigator.toPlayNext(getMediaId(), playlist.size, playlist.title)
+            navigator.toPlayNext(activity, getMediaId(), playlist.size, playlist.title)
         } else {
-            navigator.toPlayNext(getMediaId(), -1, podcast!!.title)
+            navigator.toPlayNext(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
 
     private fun addToFavorite(){
         if (podcast == null){
-            navigator.toAddToFavoriteDialog(getMediaId(), playlist.size, playlist.title)
+            navigator.toAddToFavoriteDialog(activity, getMediaId(), playlist.size, playlist.title)
         } else {
-            navigator.toAddToFavoriteDialog(getMediaId(), -1, podcast!!.title)
+            navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
     private fun delete(){
         if (podcast == null){
-            navigator.toDeleteDialog(getMediaId(), playlist.size, playlist.title)
+            navigator.toDeleteDialog(activity, getMediaId(), playlist.size, playlist.title)
         } else {
-            navigator.toDeleteDialog(getMediaId(), -1, podcast!!.title)
+            navigator.toDeleteDialog(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
     private fun rename(){
-        navigator.toRenameDialog(getMediaId(), playlist.title)
+        navigator.toRenameDialog(activity, getMediaId(), playlist.title)
     }
 
     private fun clearPlaylist(){
-        navigator.toClearPlaylistDialog(getMediaId(), playlist.title)
+        navigator.toClearPlaylistDialog(activity, getMediaId(), playlist.title)
     }
 
 

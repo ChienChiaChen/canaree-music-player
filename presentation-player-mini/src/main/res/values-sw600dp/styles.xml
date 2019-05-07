@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MiniPlayerText">
+        <item name="android:gravity">bottom|center_horizontal</item>
+    </style>
+
+    <style name="MiniPlayerSubText">
+        <item name="android:gravity">top|center_horizontal</item>
+    </style>
+</resources>

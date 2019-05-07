@@ -17,7 +17,7 @@
         android:clipChildren="false"
         android:clipToPadding="false">
 
-        <dev.olog.msc.presentation.widget.image.view.ShadowImageView
+        <dev.olog.msc.presentation.player.widgets.shadow.ShadowImageView
             android:id="@+id/cover"
             android:layout_width="200dp"
             android:layout_height="200dp"

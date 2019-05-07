@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.popup.podcastalbum
 
-import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
 import dev.olog.msc.core.AppShortcuts
@@ -17,9 +16,7 @@ import dev.olog.presentation.base.interfaces.MediaProvider
 import javax.inject.Inject
 
 class PodcastAlbumPopupListener @Inject constructor(
-        private val activity: Activity,
         private val navigator: Navigator,
-        private val mediaProvider: MediaProvider,
         getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
         addToPlaylistUseCase: AddToPlaylistUseCase,
         private val appShortcuts: AppShortcuts
@@ -29,14 +26,14 @@ class PodcastAlbumPopupListener @Inject constructor(
     private lateinit var album: PodcastAlbum
     private var podcast: Podcast? = null
 
-    fun setData(album: PodcastAlbum, podcast: Podcast?): PodcastAlbumPopupListener{
+    fun setData(album: PodcastAlbum, podcast: Podcast?): PodcastAlbumPopupListener {
         this.album = album
         this.podcast = podcast
         return this
     }
 
     private fun getMediaId(): MediaId {
-        if (podcast != null){
+        if (podcast != null) {
             return MediaId.playableItem(MediaId.podcastAlbumId(album.id), podcast!!.id)
         } else {
             return MediaId.podcastAlbumId(album.id)
@@ -48,7 +45,7 @@ class PodcastAlbumPopupListener @Inject constructor(
 
         onPlaylistSubItemClick(activity, itemId, getMediaId(), album.songs, album.title)
 
-        when (itemId){
+        when (itemId) {
             AbsPopup.NEW_PLAYLIST_ID -> toCreatePlaylist()
             R.id.play -> playFromMediaId()
             R.id.playShuffle -> playShuffle()
@@ -66,57 +63,57 @@ class PodcastAlbumPopupListener @Inject constructor(
         return true
     }
 
-    private fun toCreatePlaylist(){
-        if (podcast == null){
-            navigator.toCreatePlaylistDialog(getMediaId(), album.songs, album.title)
+    private fun toCreatePlaylist() {
+        if (podcast == null) {
+            navigator.toCreatePlaylistDialog(activity, getMediaId(), album.songs, album.title)
         } else {
-            navigator.toCreatePlaylistDialog(getMediaId(), -1, podcast!!.title)
+            navigator.toCreatePlaylistDialog(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
-    private fun playFromMediaId(){
-        mediaProvider.playFromMediaId(getMediaId())
+    private fun playFromMediaId() {
+        (activity as MediaProvider).playFromMediaId(getMediaId())
     }
 
-    private fun playShuffle(){
-        mediaProvider.shuffle(getMediaId())
+    private fun playShuffle() {
+        (activity as MediaProvider).shuffle(getMediaId())
     }
 
-    private fun playLater(){
-        if (podcast == null){
-            navigator.toPlayLater(getMediaId(), album.songs, album.title)
+    private fun playLater() {
+        if (podcast == null) {
+            navigator.toPlayLater(activity, getMediaId(), album.songs, album.title)
         } else {
-            navigator.toPlayLater(getMediaId(), -1, podcast!!.title)
+            navigator.toPlayLater(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
-    private fun playNext(){
-        if (podcast == null){
-            navigator.toPlayNext(getMediaId(), album.songs, album.title)
+    private fun playNext() {
+        if (podcast == null) {
+            navigator.toPlayNext(activity, getMediaId(), album.songs, album.title)
         } else {
-            navigator.toPlayNext(getMediaId(), -1, podcast!!.title)
+            navigator.toPlayNext(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
 
-    private fun addToFavorite(){
-        if (podcast == null){
-            navigator.toAddToFavoriteDialog(getMediaId(), album.songs, album.title)
+    private fun addToFavorite() {
+        if (podcast == null) {
+            navigator.toAddToFavoriteDialog(activity, getMediaId(), album.songs, album.title)
         } else {
-            navigator.toAddToFavoriteDialog(getMediaId(), -1, podcast!!.title)
+            navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
-    private fun delete(){
-        if (podcast == null){
-            navigator.toDeleteDialog(getMediaId(), album.songs, album.title)
+    private fun delete() {
+        if (podcast == null) {
+            navigator.toDeleteDialog(activity, getMediaId(), album.songs, album.title)
         } else {
-            navigator.toDeleteDialog(getMediaId(), -1, podcast!!.title)
+            navigator.toDeleteDialog(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
-    private fun viewArtist(){
-        navigator.toDetailFragment(MediaId.podcastArtistId(album.artistId))
+    private fun viewArtist() {
+        navigator.toDetailFragment(activity, MediaId.podcastArtistId(album.artistId))
     }
 
 

@@ -19,7 +19,7 @@ import dev.olog.msc.shared.ui.extensions.animateBackgroundColor
 import dev.olog.msc.shared.ui.extensions.animateTextColor
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.ui.theme.AppTheme
-import dev.olog.presentation.base.BaseFragment
+import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.extensions.*
 import dev.olog.presentation.base.interfaces.DrawsOnTop
 import dev.olog.presentation.base.interfaces.MediaProvider

@@ -21,13 +21,13 @@ import javax.inject.Inject
 
 class PlayingQueueFragmentAdapter @Inject constructor(
         @FragmentLifecycle lifecycle: Lifecycle,
-        private val mediaProvider: MediaProvider,
         private val navigator: Navigator
 
 ) : AbsAdapter<DisplayableQueueSong>(lifecycle) {
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
         viewHolder.setOnClickListener(controller) { item, _, _ ->
+            val mediaProvider = viewHolder.itemView.context as MediaProvider
             mediaProvider.skipToQueueItem(item.mediaId.leaf!!)
         }
 
@@ -52,11 +52,11 @@ class PlayingQueueFragmentAdapter @Inject constructor(
     }
 
     override val onDragAction = { from: Int, to: Int ->
-        mediaProvider.swap(from, to)
+//        mediaProvider.swap(from, to) TODO
     }
 
     override val onSwipeRightAction = { position: Int ->
-        mediaProvider.remove(position)
+//        mediaProvider.remove(position) TODO
     }
 
 }

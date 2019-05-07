@@ -3,4 +3,6 @@ apply from: '../base_module.gradle'
 
 dependencies {
     implementation project(':core')
+
+    implementation librariesAndroidX.appcompat
 }

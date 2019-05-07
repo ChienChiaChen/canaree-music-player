@@ -1,0 +1,12 @@
+apply plugin: 'com.android.library'
+apply from: '../presentation_module.gradle'
+
+android {
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+}
+
+dependencies {
+    implementation librariesUi.glide
+}

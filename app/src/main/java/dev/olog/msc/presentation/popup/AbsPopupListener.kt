@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.widget.PopupMenu
+import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlaylistType
@@ -12,6 +13,7 @@ import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.domain.interactor.all.GetPlaylistsBlockingUseCase
 import dev.olog.msc.domain.interactor.dialog.AddToPlaylistUseCase
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.popup.folder.FolderPopupListener
 import dev.olog.msc.shared.FileProvider
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
@@ -24,6 +26,13 @@ abstract class AbsPopupListener(
         private val podcastPlaylist: Boolean
 
 ) : PopupMenu.OnMenuItemClickListener {
+
+    protected lateinit var activity: FragmentActivity
+
+    fun setActivity(activity: FragmentActivity): AbsPopupListener {
+        this.activity = activity
+        return this
+    }
 
     val playlists by lazyFast {
         getPlaylistBlockingUseCase.execute(if (podcastPlaylist) PlaylistType.PODCAST
@@ -55,7 +64,7 @@ abstract class AbsPopupListener(
         context.toast(context.getString(R.string.popup_error_message))
     }
 
-    protected fun share(activity: Activity, song: Song){
+    protected fun share(activity: FragmentActivity, song: Song){
         val intent = Intent()
         intent.action = Intent.ACTION_SEND
         intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForPath(activity, song.path))
@@ -74,19 +83,19 @@ abstract class AbsPopupListener(
     }
 
     protected fun viewInfo(navigator: Navigator, mediaId: MediaId){
-        navigator.toEditInfoFragment(mediaId)
+        navigator.toEditInfoFragment(activity, mediaId)
     }
 
     protected  fun viewAlbum(navigator: Navigator, mediaId: MediaId){
-        navigator.toDetailFragment(mediaId)
+        navigator.toDetailFragment(activity, mediaId)
     }
 
     protected  fun viewArtist(navigator: Navigator, mediaId: MediaId){
-        navigator.toDetailFragment(mediaId)
+        navigator.toDetailFragment(activity, mediaId)
     }
 
     protected fun setRingtone(navigator: Navigator, mediaId: MediaId, song: Song){
-        navigator.toSetRingtoneDialog(mediaId, song.title, song.artist)
+        navigator.toSetRingtoneDialog(activity, mediaId, song.title, song.artist)
     }
 
 

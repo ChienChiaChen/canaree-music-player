@@ -7,7 +7,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import dev.olog.msc.R
-import dev.olog.msc.presentation.base.BaseDialogFragment
+import dev.olog.presentation.base.fragment.BaseDialogFragment
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.ThemedDialog
 import dev.olog.presentation.base.extensions.asLiveData

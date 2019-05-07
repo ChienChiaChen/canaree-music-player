@@ -24,6 +24,7 @@ dependencies {
     implementation librariesAndroidX.coreKtx
     implementation librariesAndroidX.material
     implementation librariesAndroidX.recycler
+    implementation librariesAndroidX.media
     implementation librariesUi.constraintLayout
 
     implementation librariesCore.lifecycleRuntime

@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import dev.olog.msc.R
-import dev.olog.msc.presentation.base.BaseActivity
+import dev.olog.presentation.base.activity.BaseActivity
 import dev.olog.msc.presentation.dialog.explain.trial.ExplainTrialDialog
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.extensions.lazyFast

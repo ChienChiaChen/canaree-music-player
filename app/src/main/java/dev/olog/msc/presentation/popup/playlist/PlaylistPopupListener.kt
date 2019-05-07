@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.popup.playlist
 
-import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
 import dev.olog.msc.core.AppShortcuts
@@ -17,9 +16,7 @@ import dev.olog.presentation.base.interfaces.MediaProvider
 import javax.inject.Inject
 
 class PlaylistPopupListener @Inject constructor(
-        private val activity: Activity,
         private val navigator: Navigator,
-        private val mediaProvider: MediaProvider,
         getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
         addToPlaylistUseCase: AddToPlaylistUseCase,
         private val appShortcuts: AppShortcuts
@@ -72,14 +69,14 @@ class PlaylistPopupListener @Inject constructor(
     }
 
     private fun removeDuplicates(){
-        navigator.toRemoveDuplicatesDialog(MediaId.playlistId(playlist.id), playlist.title)
+        navigator.toRemoveDuplicatesDialog(activity, MediaId.playlistId(playlist.id), playlist.title)
     }
 
     private fun toCreatePlaylist(){
         if (song == null){
-            navigator.toCreatePlaylistDialog(getMediaId(), playlist.size, playlist.title)
+            navigator.toCreatePlaylistDialog(activity, getMediaId(), playlist.size, playlist.title)
         } else {
-            navigator.toCreatePlaylistDialog(getMediaId(), -1, song!!.title)
+            navigator.toCreatePlaylistDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 
@@ -87,7 +84,7 @@ class PlaylistPopupListener @Inject constructor(
         if (playlist.size == 0){
             activity.toast(R.string.common_empty_list)
         } else {
-            mediaProvider.playFromMediaId(getMediaId())
+            (activity as MediaProvider).playFromMediaId(getMediaId())
         }
     }
 
@@ -95,49 +92,49 @@ class PlaylistPopupListener @Inject constructor(
         if (playlist.size == 0){
             activity.toast(R.string.common_empty_list)
         } else {
-            mediaProvider.shuffle(getMediaId())
+            (activity as MediaProvider).shuffle(getMediaId())
         }
     }
 
     private fun playLater(){
         if (song == null){
-            navigator.toPlayLater(getMediaId(), playlist.size, playlist.title)
+            navigator.toPlayLater(activity, getMediaId(), playlist.size, playlist.title)
         } else {
-            navigator.toPlayLater(getMediaId(), -1, song!!.title)
+            navigator.toPlayLater(activity, getMediaId(), -1, song!!.title)
         }
     }
 
     private fun playNext(){
         if (song == null){
-            navigator.toPlayNext(getMediaId(), playlist.size, playlist.title)
+            navigator.toPlayNext(activity, getMediaId(), playlist.size, playlist.title)
         } else {
-            navigator.toPlayNext(getMediaId(), -1, song!!.title)
+            navigator.toPlayNext(activity, getMediaId(), -1, song!!.title)
         }
     }
 
 
     private fun addToFavorite(){
         if (song == null){
-            navigator.toAddToFavoriteDialog(getMediaId(), playlist.size, playlist.title)
+            navigator.toAddToFavoriteDialog(activity, getMediaId(), playlist.size, playlist.title)
         } else {
-            navigator.toAddToFavoriteDialog(getMediaId(), -1, song!!.title)
+            navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 
     private fun delete(){
         if (song == null){
-            navigator.toDeleteDialog(getMediaId(), playlist.size, playlist.title)
+            navigator.toDeleteDialog(activity, getMediaId(), playlist.size, playlist.title)
         } else {
-            navigator.toDeleteDialog(getMediaId(), -1, song!!.title)
+            navigator.toDeleteDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 
     private fun rename(){
-        navigator.toRenameDialog(getMediaId(), playlist.title)
+        navigator.toRenameDialog(activity, getMediaId(), playlist.title)
     }
 
     private fun clearPlaylist(){
-        navigator.toClearPlaylistDialog(getMediaId(), playlist.title)
+        navigator.toClearPlaylistDialog(activity, getMediaId(), playlist.title)
     }
 
 

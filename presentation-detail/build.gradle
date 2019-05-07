@@ -1,0 +1,15 @@
+apply plugin: 'com.android.library'
+apply from: '../presentation_module.gradle'
+
+android {
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+}
+
+dependencies {
+    implementation project(':tap-target-view')
+
+    implementation librariesCore.rxBinding
+    implementation librariesAndroidX.coreKtx
+}

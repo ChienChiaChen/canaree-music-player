@@ -1,0 +1,21 @@
+apply plugin: 'com.android.library'
+apply from: '../presentation_module.gradle'
+
+dependencies {
+    implementation project(':pro')
+    implementation project(':presentation-player')
+    implementation project(':presentation-player-mini')
+    implementation project(':presentation-categories')
+//    TODO bad
+    implementation project(':presentation-tabs-folder-tree')
+    implementation project(':presentation-detail')
+
+    implementation librariesCore.lifecycleRuntime
+    implementation librariesCore.lifecycleExtensions
+    implementation librariesCore.lifecycleJava8
+    implementation librariesCore.lifecycleRx
+
+    implementation librariesUi.slidingPanel
+
+    implementation librariesAndroidX.coreKtx
+}

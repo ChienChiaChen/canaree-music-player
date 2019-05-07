@@ -1,6 +1,6 @@
 package dev.olog.msc
 
-import dev.olog.msc.data.PrefsKeys
+import dev.olog.msc.core.PrefsKeys
 import javax.inject.Inject
 
 class PrefsKeysImpl @Inject constructor(): PrefsKeys {
@@ -34,6 +34,7 @@ class PrefsKeysImpl @Inject constructor(): PrefsKeys {
     override fun quickAction(): Int = R.string.prefs_quick_action_key
     override fun playerAppearance(): Int = R.string.prefs_appearance_key
     override fun darkMode(): Int = R.string.prefs_accent_dark_key
+    override fun showFolderAsTreeView(): Int = R.string.prefs_folder_tree_view_key
 
     override fun autoPlaylist(): Int = R.array.common_auto_playlists
 

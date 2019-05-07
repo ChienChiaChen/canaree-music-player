@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.presentation.base.BaseFragment
+import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.extensions.act
 import dev.olog.presentation.base.extensions.subscribe
 import dev.olog.presentation.base.extensions.viewModelProvider

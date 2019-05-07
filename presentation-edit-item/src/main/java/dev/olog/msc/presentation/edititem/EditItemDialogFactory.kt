@@ -26,21 +26,16 @@ import java.io.IOException
 import javax.inject.Inject
 
 class EditItemDialogFactory @Inject constructor(
-        @ActivityLifecycle lifecycle: Lifecycle,
         @ApplicationContext private val context: Context,
         private val getSongUseCase: GetSongUseCase,
         private val getPodcastUseCase: GetPodcastUseCase,
         private val getSongListByParamUseCase: GetSongListByParamUseCase
 
-) : DefaultLifecycleObserver {
+) {
 
     private var toDialogDisposable : Disposable? = null
 
-    init {
-        lifecycle.addObserver(this)
-    }
-
-    override fun onDestroy(owner: LifecycleOwner) {
+    fun dispose(){
         toDialogDisposable.unsubscribe()
     }
 

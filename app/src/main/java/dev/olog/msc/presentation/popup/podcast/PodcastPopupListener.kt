@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.popup.podcast
 
-import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
@@ -14,7 +13,6 @@ import dev.olog.msc.presentation.popup.AbsPopupListener
 import javax.inject.Inject
 
 class PodcastPopupListener @Inject constructor(
-        private val activity: Activity,
         private val navigator: Navigator,
         getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
         addToPlaylistUseCase: AddToPlaylistUseCase
@@ -54,23 +52,23 @@ class PodcastPopupListener @Inject constructor(
     }
 
     private fun toCreatePlaylist(){
-        navigator.toCreatePlaylistDialog(getMediaId(), -1, podcast.title)
+        navigator.toCreatePlaylistDialog(activity, getMediaId(), -1, podcast.title)
     }
 
     private fun playLater(){
-        navigator.toPlayLater(getMediaId(), -1, podcast.title)
+        navigator.toPlayLater(activity, getMediaId(), -1, podcast.title)
     }
 
     private fun playNext(){
-        navigator.toPlayNext(getMediaId(), -1, podcast.title)
+        navigator.toPlayNext(activity, getMediaId(), -1, podcast.title)
     }
 
     private fun addToFavorite(){
-        navigator.toAddToFavoriteDialog(getMediaId(), -1, podcast.title)
+        navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, podcast.title)
     }
 
     private fun delete(){
-        navigator.toDeleteDialog(getMediaId(), -1, podcast.title)
+        navigator.toDeleteDialog(activity, getMediaId(), -1, podcast.title)
     }
 
 }

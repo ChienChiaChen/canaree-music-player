@@ -1,11 +1,11 @@
 package dev.olog.msc.presentation.popup.main
 
-import android.app.Activity
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
+import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
 import dev.olog.msc.app.app
@@ -15,23 +15,23 @@ import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.presentation.home.MainActivity
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
+import dev.olog.presentation.base.interfaces.HasBilling
 import javax.inject.Inject
-
 
 private const val DEBUG_ID = -123
 private const val SAVE_AS_PLAYLIST_ID = -12345
 
 class MainPopupDialog @Inject constructor(
-        private val billing: IBilling,
         private val activityNavigator: Navigator,
         private val navigator: MainPopupNavigator,
         private val gateway: AppPreferencesGateway
 
 ){
 
-    fun show(activity: Activity, anchor: View, category: MediaIdCategory?){
+    fun show(activity: FragmentActivity, anchor: View, category: MediaIdCategory?){
         val popup = PopupMenu(activity, anchor, Gravity.BOTTOM or Gravity.END)
         val layoutId = when (category){
             MediaIdCategory.ALBUMS -> R.menu.main_albums
@@ -41,7 +41,7 @@ class MainPopupDialog @Inject constructor(
         }
         popup.inflate(layoutId)
 
-        if (billing.isOnlyPremium()){
+        if (activity is HasBilling && activity.billing.isOnlyPremium()){
             popup.menu.removeItem(R.id.premium)
         }
 
@@ -62,14 +62,17 @@ class MainPopupDialog @Inject constructor(
 
         popup.setOnMenuItemClickListener {
             when (it.itemId){
-                R.id.premium -> billing.purchasePremium()
-                R.id.about -> navigator.toAboutActivity()
-                R.id.equalizer -> navigator.toEqualizer()
-                R.id.settings -> navigator.toSettingsActivity()
-                R.id.sleepTimer -> navigator.toSleepTimer()
-                R.id.share -> activityNavigator.toShareApp()
-                DEBUG_ID -> navigator.toDebugConfiguration()
-                SAVE_AS_PLAYLIST_ID -> activityNavigator.toCreatePlaylistDialog(MediaId.playingQueueId, -1, "")
+                R.id.premium -> {
+                    if (activity is HasBilling) {
+                        activity.billing.purchasePremium()
+                    }
+                }
+                R.id.about -> navigator.toAboutActivity(activity)
+                R.id.equalizer -> navigator.toEqualizer(activity)
+                R.id.settings -> navigator.toSettingsActivity(activity)
+                R.id.sleepTimer -> navigator.toSleepTimer(activity)
+                DEBUG_ID -> navigator.toDebugConfiguration(activity)
+                SAVE_AS_PLAYLIST_ID -> activityNavigator.toCreatePlaylistDialog(activity, MediaId.playingQueueId, -1, "")
                 else -> {
                     when (category){
                         MediaIdCategory.ALBUMS -> handleAllAlbumsSorting(it, sortModel!!)

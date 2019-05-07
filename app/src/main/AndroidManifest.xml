@@ -38,7 +38,7 @@
 
         <!--main activity-->
         <activity
-            android:name=".presentation.main.MainActivity"
+            android:name=".presentation.home.MainActivity"
             android:launchMode="singleTop"
             android:colorMode="wideColorGamut"
             tools:ignore="UnusedAttribute">

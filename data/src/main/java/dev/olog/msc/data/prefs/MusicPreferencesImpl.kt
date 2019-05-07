@@ -7,7 +7,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
-import dev.olog.msc.data.PrefsKeys
+import dev.olog.msc.core.PrefsKeys
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers

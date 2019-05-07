@@ -1,20 +1,20 @@
 package dev.olog.msc.presentation.navigator
 
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.google.android.gms.appinvite.AppInviteInvitation
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.Lazy
 import dev.olog.msc.R
-import dev.olog.msc.app.app
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.presentation.categories.podcast.CategoriesPodcastFragment
+import dev.olog.msc.presentation.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.dialog.add.favorite.AddFavoriteDialog
 import dev.olog.msc.presentation.dialog.clear.playlist.ClearPlaylistDialog
@@ -29,9 +29,6 @@ import dev.olog.msc.presentation.edititem.EditItemDialogFactory
 import dev.olog.msc.presentation.edititem.album.EditAlbumFragment
 import dev.olog.msc.presentation.edititem.artist.EditArtistFragment
 import dev.olog.msc.presentation.edititem.track.EditTrackFragment
-import dev.olog.msc.presentation.library.categories.podcast.CategoriesPodcastFragment
-import dev.olog.msc.presentation.library.categories.track.CategoriesFragment
-import dev.olog.msc.presentation.main.MainActivity
 import dev.olog.msc.presentation.offlinelyrics.OfflineLyricsFragment
 import dev.olog.msc.presentation.playing.queue.PlayingQueueFragment
 import dev.olog.msc.presentation.playlist.track.chooser.PlaylistTracksChooserFragment
@@ -42,7 +39,7 @@ import dev.olog.msc.presentation.related.artists.RelatedArtistFragment
 import dev.olog.msc.presentation.search.SearchFragment
 import dev.olog.msc.presentation.splash.SplashActivity
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.utils.k.extension.collapse
+import dev.olog.presentation.base.extensions.collapse
 import dev.olog.presentation.base.extensions.fragmentTransaction
 import dev.olog.presentation.base.extensions.hideFragmentsIfExists
 import io.reactivex.disposables.Disposable
@@ -51,42 +48,42 @@ import javax.inject.Inject
 private const val NEXT_REQUEST_THRESHOLD : Long = 400 // ms
 
 class NavigatorImpl @Inject internal constructor(
-        private val activity: AppCompatActivity,
+        @ProcessLifecycle lifecycle: Lifecycle,
         private val popupFactory: PopupMenuFactory,
         private val mainPopup: Lazy<MainPopupDialog>,
         private val editItemDialogFactory: EditItemDialogFactory
 
-) : DefaultLifecycleObserver, Navigator {
+) : Navigator, DefaultLifecycleObserver {
+
+    init {
+        lifecycle.addObserver(this)
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        editItemDialogFactory.dispose()
+    }
 
     private var lastRequest: Long = -1
 
     private var popupDisposable: Disposable? = null
 
-    init {
-        activity.lifecycle.addObserver(this)
-    }
-
-    override fun onDestroy(owner: LifecycleOwner) {
-        popupDisposable.unsubscribe()
-    }
-
-    override fun toFirstAccess(requestCode: Int) {
+    override fun toFirstAccess(activity: FragmentActivity, requestCode: Int) {
         val intent = Intent(activity, SplashActivity::class.java)
         activity.startActivityForResult(intent, requestCode)
     }
 
-    private fun anyFragmentOnUpperFragmentContainer(): Boolean {
+    private fun anyFragmentOnUpperFragmentContainer(activity: FragmentActivity): Boolean {
         return activity.supportFragmentManager.fragments
                 .any { (it.view?.parent as View?)?.id == R.id.upperFragmentContainer  }
     }
 
-    private fun getFragmentOnFragmentContainer(): androidx.fragment.app.Fragment? {
+    private fun getFragmentOnFragmentContainer(activity: FragmentActivity): androidx.fragment.app.Fragment? {
         return activity.supportFragmentManager.fragments
                 .firstOrNull { (it.view?.parent as View?)?.id == R.id.fragmentContainer  }
     }
 
-    override fun toLibraryCategories(forceRecreate: Boolean) {
-        if (anyFragmentOnUpperFragmentContainer()){
+    override fun toLibraryCategories(activity: FragmentActivity, forceRecreate: Boolean) {
+        if (anyFragmentOnUpperFragmentContainer(activity)){
             activity.onBackPressed()
         }
 
@@ -109,8 +106,8 @@ class NavigatorImpl @Inject internal constructor(
         }
     }
 
-    override fun toPodcastCategories(forceRecreate: Boolean) {
-        if (anyFragmentOnUpperFragmentContainer()){
+    override fun toPodcastCategories(activity: FragmentActivity, forceRecreate: Boolean) {
+        if (anyFragmentOnUpperFragmentContainer(activity)){
             activity.onBackPressed()
         }
 
@@ -133,8 +130,8 @@ class NavigatorImpl @Inject internal constructor(
         }
     }
 
-    override fun toSearchFragment() {
-        if (anyFragmentOnUpperFragmentContainer()){
+    override fun toSearchFragment(activity: FragmentActivity) {
+        if (anyFragmentOnUpperFragmentContainer(activity)){
             activity.onBackPressed()
         }
 
@@ -154,8 +151,8 @@ class NavigatorImpl @Inject internal constructor(
         }
     }
 
-    override fun toPlayingQueueFragment() {
-        if (anyFragmentOnUpperFragmentContainer()){
+    override fun toPlayingQueueFragment(activity: FragmentActivity) {
+        if (anyFragmentOnUpperFragmentContainer(activity)){
             activity.onBackPressed()
         }
 
@@ -175,7 +172,7 @@ class NavigatorImpl @Inject internal constructor(
         }
     }
 
-    override fun toDetailFragment(mediaId: MediaId) {
+    override fun toDetailFragment(activity: FragmentActivity, mediaId: MediaId) {
 
         if (allowed()){
             activity.findViewById<SlidingUpPanelLayout>(R.id.slidingPanel).collapse()
@@ -183,38 +180,38 @@ class NavigatorImpl @Inject internal constructor(
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                getFragmentOnFragmentContainer()?.let { hide(it) }
+                getFragmentOnFragmentContainer(activity)?.let { hide(it) }
                 replace(R.id.upperFragmentContainer, DetailFragment.newInstance(mediaId), DetailFragment.TAG)
                 addToBackStack(DetailFragment.TAG)
             }
         }
     }
 
-    override fun toRelatedArtists(mediaId: MediaId) {
+    override fun toRelatedArtists(activity: FragmentActivity, mediaId: MediaId) {
         if (allowed()){
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                getFragmentOnFragmentContainer()?.let { hide(it) }
+                getFragmentOnFragmentContainer(activity)?.let { hide(it) }
                 replace(R.id.upperFragmentContainer, RelatedArtistFragment.newInstance(mediaId), RelatedArtistFragment.TAG)
                 addToBackStack(RelatedArtistFragment.TAG)
             }
         }
     }
 
-    override fun toRecentlyAdded(mediaId: MediaId) {
+    override fun toRecentlyAdded(activity: FragmentActivity, mediaId: MediaId) {
         if (allowed()){
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                getFragmentOnFragmentContainer()?.let { hide(it) }
+                getFragmentOnFragmentContainer(activity)?.let { hide(it) }
                 replace(R.id.upperFragmentContainer, RecentlyAddedFragment.newInstance(mediaId), RecentlyAddedFragment.TAG)
                 addToBackStack(RecentlyAddedFragment.TAG)
             }
         }
     }
 
-    override fun toOfflineLyrics() {
+    override fun toOfflineLyrics(activity: FragmentActivity) {
         if (allowed()){
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
@@ -226,7 +223,7 @@ class NavigatorImpl @Inject internal constructor(
         }
     }
 
-    override fun toEditInfoFragment(mediaId: MediaId) {
+    override fun toEditInfoFragment(activity: FragmentActivity, mediaId: MediaId) {
         if (allowed()) {
             when {
                 mediaId.isLeaf -> {
@@ -252,12 +249,12 @@ class NavigatorImpl @Inject internal constructor(
         }
     }
 
-    override fun toChooseTracksForPlaylistFragment(type: PlaylistType) {
+    override fun toChooseTracksForPlaylistFragment(activity: FragmentActivity, type: PlaylistType) {
         if (allowed()){
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                getFragmentOnFragmentContainer()?.let { hide(it) }
+                getFragmentOnFragmentContainer(activity)?.let { hide(it) }
                 replace(R.id.upperFragmentContainer, PlaylistTracksChooserFragment.newInstance(type), PlaylistTracksChooserFragment.TAG)
                 addToBackStack(PlaylistTracksChooserFragment.TAG)
             }
@@ -272,7 +269,7 @@ class NavigatorImpl @Inject internal constructor(
         }
     }
 
-    override fun toMainPopup(anchor: View, category: MediaIdCategory?) {
+    override fun toMainPopup(activity: FragmentActivity, anchor: View, category: MediaIdCategory?) {
         mainPopup.get().show(activity, anchor, category)
     }
 
@@ -282,57 +279,49 @@ class NavigatorImpl @Inject internal constructor(
         return allowed
     }
 
-    override fun toSetRingtoneDialog(mediaId: MediaId, title: String, artist: String) {
+    override fun toSetRingtoneDialog(activity: FragmentActivity, mediaId: MediaId, title: String, artist: String) {
         val fragment = SetRingtoneDialog.newInstance(mediaId, title, artist)
         fragment.show(activity.supportFragmentManager, SetRingtoneDialog.TAG)
     }
 
-    override fun toAddToFavoriteDialog(mediaId: MediaId, listSize: Int, itemTitle: String) {
+    override fun toAddToFavoriteDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String) {
         val fragment = AddFavoriteDialog.newInstance(mediaId, listSize, itemTitle)
         fragment.show(activity.supportFragmentManager, AddFavoriteDialog.TAG)
     }
 
-    override fun toPlayLater(mediaId: MediaId, listSize: Int, itemTitle: String) {
+    override fun toPlayLater(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String) {
         val fragment = PlayLaterDialog.newInstance(mediaId, listSize, itemTitle)
         fragment.show(activity.supportFragmentManager, PlayLaterDialog.TAG)
     }
 
-    override fun toPlayNext(mediaId: MediaId, listSize: Int, itemTitle: String) {
+    override fun toPlayNext(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String) {
         val fragment = PlayNextDialog.newInstance(mediaId, listSize, itemTitle)
         fragment.show(activity.supportFragmentManager, PlayNextDialog.TAG)
     }
 
-    override fun toRenameDialog(mediaId: MediaId, itemTitle: String) {
+    override fun toRenameDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String) {
         val fragment = RenameDialog.newInstance(mediaId, itemTitle)
         fragment.show(activity.supportFragmentManager, RenameDialog.TAG)
     }
 
-    override fun toDeleteDialog(mediaId: MediaId, listSize: Int, itemTitle: String) {
+    override fun toDeleteDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String) {
         val fragment = DeleteDialog.newInstance(mediaId, listSize, itemTitle)
         fragment.show(activity.supportFragmentManager, DeleteDialog.TAG)
     }
 
-    override fun toCreatePlaylistDialog(mediaId: MediaId, listSize: Int, itemTitle: String) {
+    override fun toCreatePlaylistDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String) {
         val fragment = NewPlaylistDialog.newInstance(mediaId, listSize, itemTitle)
         fragment.show(activity.supportFragmentManager, NewPlaylistDialog.TAG)
     }
 
-    override fun toClearPlaylistDialog(mediaId: MediaId, itemTitle: String) {
+    override fun toClearPlaylistDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String) {
         val fragment = ClearPlaylistDialog.newInstance(mediaId, itemTitle)
         fragment.show(activity.supportFragmentManager, ClearPlaylistDialog.TAG)
     }
 
-    override fun toRemoveDuplicatesDialog(mediaId: MediaId, itemTitle: String) {
+    override fun toRemoveDuplicatesDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String) {
         val fragment = RemoveDuplicatesDialog.newInstance(mediaId, itemTitle)
         fragment.show(activity.supportFragmentManager, RemoveDuplicatesDialog.TAG)
     }
 
-    override fun toShareApp() {
-        val intent = AppInviteInvitation.IntentBuilder(app.getString(R.string.share_app_title))
-                .setMessage(app.getString(R.string.share_app_message))
-                .setDeepLink(Uri.parse("https://deveugeniuolog.wixsite.com/next"))
-                .setAndroidMinimumVersionCode(Build.VERSION_CODES.LOLLIPOP)
-                .build()
-        activity.startActivityForResult(intent, MainActivity.INVITE_FRIEND_CODE)
-    }
 }

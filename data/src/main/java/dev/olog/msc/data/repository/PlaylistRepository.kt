@@ -12,7 +12,7 @@ import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.data.PrefsKeys
+import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.PlaylistMostPlayedEntity
 import dev.olog.msc.data.mapper.extractId

@@ -1,55 +1,54 @@
 package dev.olog.msc.presentation.navigator
 
 import android.view.View
+import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
 
 interface Navigator {
 
-    fun toFirstAccess(requestCode: Int)
+    fun toFirstAccess(activity: FragmentActivity, requestCode: Int)
 
-    fun toLibraryCategories(forceRecreate: Boolean)
-    fun toPodcastCategories(forceRecreate: Boolean)
+    fun toLibraryCategories(activity: FragmentActivity, forceRecreate: Boolean)
+    fun toPodcastCategories(activity: FragmentActivity, forceRecreate: Boolean)
 
-    fun toDetailFragment(mediaId: MediaId)
+    fun toDetailFragment(activity: FragmentActivity, mediaId: MediaId)
 
-    fun toSearchFragment()
+    fun toSearchFragment(activity: FragmentActivity)
 
-    fun toRelatedArtists(mediaId: MediaId)
+    fun toRelatedArtists(activity: FragmentActivity, mediaId: MediaId)
 
-    fun toRecentlyAdded(mediaId: MediaId)
+    fun toRecentlyAdded(activity: FragmentActivity, mediaId: MediaId)
 
-    fun toPlayingQueueFragment()
+    fun toPlayingQueueFragment(activity: FragmentActivity)
 
-    fun toChooseTracksForPlaylistFragment(type: PlaylistType)
+    fun toChooseTracksForPlaylistFragment(activity: FragmentActivity, type: PlaylistType)
 
-    fun toEditInfoFragment(mediaId: MediaId)
+    fun toEditInfoFragment(activity: FragmentActivity, mediaId: MediaId)
 
-    fun toOfflineLyrics()
+    fun toOfflineLyrics(activity: FragmentActivity)
 
     fun toDialog(mediaId: MediaId, anchor: View)
 
-    fun toMainPopup(anchor: View, category: MediaIdCategory?)
+    fun toMainPopup(activity: FragmentActivity, anchor: View, category: MediaIdCategory?)
 
-    fun toSetRingtoneDialog(mediaId: MediaId, title: String, artist: String)
+    fun toSetRingtoneDialog(activity: FragmentActivity, mediaId: MediaId, title: String, artist: String)
 
-    fun toCreatePlaylistDialog(mediaId: MediaId, listSize: Int, itemTitle: String)
+    fun toCreatePlaylistDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String)
 
-    fun toAddToFavoriteDialog(mediaId: MediaId, listSize: Int, itemTitle: String)
+    fun toAddToFavoriteDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String)
 
-    fun toPlayLater(mediaId: MediaId, listSize: Int, itemTitle: String)
+    fun toPlayLater(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String)
 
-    fun toPlayNext(mediaId: MediaId, listSize: Int, itemTitle: String)
+    fun toPlayNext(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String)
 
-    fun toRenameDialog(mediaId: MediaId, itemTitle: String)
+    fun toRenameDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String)
 
-    fun toClearPlaylistDialog(mediaId: MediaId, itemTitle: String)
+    fun toClearPlaylistDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String)
 
-    fun toDeleteDialog(mediaId: MediaId, listSize: Int, itemTitle: String)
+    fun toDeleteDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String)
 
-    fun toRemoveDuplicatesDialog(mediaId: MediaId, itemTitle: String)
-
-    fun toShareApp()
+    fun toRemoveDuplicatesDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String)
 
 }
