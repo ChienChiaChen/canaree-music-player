@@ -11,6 +11,7 @@ import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.presentation.edititem.*
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
+import dev.olog.msc.shared.ui.C
 import dev.olog.presentation.base.extensions.*
 import kotlinx.android.synthetic.main.fragment_edit_artist.*
 import kotlinx.android.synthetic.main.fragment_edit_artist.view.*

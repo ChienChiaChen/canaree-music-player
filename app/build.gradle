@@ -93,8 +93,6 @@ android {
 }
 
 dependencies {
-    implementation files('libs/jaudiotagger-android-2.2.3.jar')
-
     implementation project(':core')
     implementation project(':shared')
     implementation project(':traceur')

@@ -13,6 +13,7 @@ import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.presentation.edititem.*
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
+import dev.olog.msc.shared.ui.C
 import dev.olog.presentation.base.extensions.*
 import kotlinx.android.synthetic.main.fragment_edit_album.*
 import kotlinx.android.synthetic.main.fragment_edit_album.view.*

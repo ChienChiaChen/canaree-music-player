@@ -15,6 +15,7 @@ import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.shared.ui.C
 import java.io.File
 import java.io.InputStream
 import java.security.MessageDigest
@@ -37,7 +38,7 @@ class GlideImageLoader(
             return uriLoader.buildLoadData(Uri.parse(model.image), width, height, options)
         }
 
-        if (model.image == AppConstants.NO_IMAGE){
+        if (model.image == C.NO_IMAGE){
             return uriLoader.buildLoadData(Uri.EMPTY, width, height, options)
         }
 

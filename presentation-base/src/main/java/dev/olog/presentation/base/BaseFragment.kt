@@ -8,10 +8,15 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.support.DaggerFragment
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.presentation.base.interfaces.HasSlidingPanel
+import javax.inject.Inject
 
 abstract class BaseFragment : DaggerFragment() {
+
+    // workaround to avoid duplicated classes
+    @Inject internal lateinit var songGateway: SongGateway
 
     @CallSuper
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
