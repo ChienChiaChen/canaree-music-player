@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">PresentationRelatedArtists</string>
+    <string name="app_name" translatable="false">PresentationRelatedArtists</string>
+
+    <string-array name="related_artists_header">
+        <item>Related artists to folder %s</item>
+        <item>Related artists to playlist %s</item>
+        <item>Invalid</item>
+        <item>Related artists to album %s</item>
+        <item>Related artists to artist %s</item>
+        <item>Related artists to genre %s</item>
+    </string-array>
+
 </resources>

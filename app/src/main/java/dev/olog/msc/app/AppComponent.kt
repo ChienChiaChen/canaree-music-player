@@ -24,6 +24,7 @@ import dev.olog.msc.presentation.offlinelyrics.di.OfflineLyricsInjector
 import dev.olog.msc.presentation.player.di.PlayerFragmentModule
 import dev.olog.msc.presentation.playing.queue.di.PlayingQueueFragmentInjector
 import dev.olog.msc.presentation.preferences.di.PreferencesActivityInjector
+import dev.olog.msc.presentation.recently.added.di.RecentlyAddedFragmentInjector
 import dev.olog.msc.presentation.search.di.SearchFragmentInjector
 import dev.olog.msc.presentation.shortcuts.playlist.chooser.di.PlaylistChooserActivityInjector
 import dev.olog.msc.presentation.sleeptimer.di.SleepTimerInjector
@@ -63,6 +64,7 @@ import javax.inject.Singleton
         SearchFragmentInjector::class,
         EditItemInjector::class,
         PlayingQueueFragmentInjector::class,
+        RecentlyAddedFragmentInjector::class,
 
         ImageCreationInjector::class,
 

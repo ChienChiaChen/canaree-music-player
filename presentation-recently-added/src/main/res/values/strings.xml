@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">PresentationRecentlyAdded</string>
+    <string name="app_name" translatable="false">PresentationRecentlyAdded</string>
+
+
+    <string-array name="recently_added_header">
+        <item>Recently added to folder %s</item>
+        <item>Recently added to playlist %s</item>
+        <item>Invalid</item>
+        <item>Recently added to album %s</item>
+        <item>Recently added to artist %s</item>
+        <item>Recently added to genre %s</item>
+    </string-array>
 </resources>
