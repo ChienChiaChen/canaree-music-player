@@ -4,8 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.R
-import dev.olog.msc.presentation.licenses.LicensesFragment
-import dev.olog.msc.presentation.special.thanks.SpecialThanksFragment
+import dev.olog.msc.presentation.about.licenses.LicensesFragment
+import dev.olog.msc.presentation.about.thanks.SpecialThanksFragment
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.presentation.base.extensions.fragmentTransaction
 import dev.olog.presentation.base.extensions.isIntentSafe

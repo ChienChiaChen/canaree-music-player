@@ -5,12 +5,7 @@
 
     <string name="share_song_x"><![CDATA[Condividi <b><font color="black">%1$s</b></font>…]]></string>
 
-    <string name="added_song_x_to_playlist_y">%1$s aggiunto alla playlist %2$s</string>
 
-    <plurals name="xx_songs_added_to_playlist_y">
-        <item quantity="one">%1$d brano aggiunto alla playlist %2$s</item>
-        <item quantity="other">%1$d brani aggiunti alla playlist %2$s</item>
-    </plurals>
     <string name="about_buy_pro">Acquista la version Pro</string>
 
 </resources>

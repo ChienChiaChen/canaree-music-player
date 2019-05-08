@@ -29,8 +29,5 @@
   <string name="popup_positive_remove">Rimuovi</string>
   <string name="popup_neutral_reset">Ripristina</string>
   <string name="popup_error_message">Qualcosa è andato storto</string>
-  <string name="popup_permission">Permesso</string>
-  <string name="popup_request_permission_write_settings">
-        Per poter cambiare la suoneria l\'app deve disporre del seguente permesso
-    </string>
+
 </resources>

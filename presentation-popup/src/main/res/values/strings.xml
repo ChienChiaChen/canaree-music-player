@@ -8,6 +8,7 @@
     <string name="song_not_shareable">Could not share this song</string>
 
     <string name="added_song_x_to_playlist_y">%1$s added to playlist %2$s</string>
+
     <plurals name="xx_songs_added_to_playlist_y">
         <item quantity="one">%1$d song added to playlist %2$s</item>
         <item quantity="other">%1$d songs added to playlist %2$s</item>

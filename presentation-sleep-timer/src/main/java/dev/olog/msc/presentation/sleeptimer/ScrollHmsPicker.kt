@@ -1,5 +1,6 @@
 package dev.olog.msc.presentation.sleeptimer
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Parcel
@@ -215,6 +216,7 @@ class ScrollHmsPicker @JvmOverloads constructor(
         }
 
         private companion object {
+            @SuppressLint("ParcelCreator")
             @JvmStatic
             val CREATOR = object : Parcelable.Creator<SavedState> {
                 override fun createFromParcel(source: Parcel?): SavedState = SavedState(source)

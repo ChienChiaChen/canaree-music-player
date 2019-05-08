@@ -1,11 +1,11 @@
 package dev.olog.presentation.base.extensions
 
+import android.os.Build
 import android.text.Html
 import android.text.Spanned
-import dev.olog.msc.shared.utils.isNougat
 
 fun String.asHtml(): Spanned {
-    return if (isNougat()){
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
         Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
     } else {
         @Suppress("DEPRECATION")

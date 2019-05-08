@@ -12,21 +12,22 @@ import com.afollestad.materialdialogs.color.ColorCallback
 import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 import dev.olog.msc.core.PrefsKeys
+import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.presentation.base.activity.ThemedActivity
 import dev.olog.presentation.base.extensions.setLightStatusBar
+import dev.olog.presentation.base.interfaces.HasBilling
 import kotlinx.android.synthetic.main.activity_preferences.*
 import javax.inject.Inject
 
 class PreferencesActivity : DaggerAppCompatActivity(),
-        ColorCallback,
-        ThemedActivity {
+        ColorCallback, ThemedActivity, HasBilling {
 
     companion object {
         const val EXTRA_NEED_TO_RECREATE = "EXTRA_NEED_TO_RECREATE"
     }
 
-//    @Inject lateinit var billing: IBilling
+    @Inject override lateinit var billing: IBilling
     @Inject lateinit var prefsKeys: PrefsKeys
 
     override fun onCreate(savedInstanceState: Bundle?) {

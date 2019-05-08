@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="popup_error_message">Algo salió mal</string>
+    <string name="popup_play_next">Añadir en la parte inferior de la cola</string>
+    <string name="popup_play_later">Añadir a la cola</string>
+    <string name="popup_clear_playlist">Eliminar todas las pistas</string>
+    <string name="popup_set_as_ringtone">Establecer como tono de llamada</string>
+    <string name="popup_permission">Permiso</string>
+    <string name="popup_rename">Renombrar</string>
+
+</resources>

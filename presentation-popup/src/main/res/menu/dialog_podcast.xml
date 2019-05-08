@@ -35,6 +35,6 @@
         android:title="@string/popup_share"/>
 
     <item android:id="@+id/delete"
-        android:title="@string/popup_delete"/>
+        android:title="@string/common_delete"/>
 
 </menu>

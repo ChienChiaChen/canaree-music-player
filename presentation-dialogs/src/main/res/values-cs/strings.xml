@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="popup_error_message">Něco se nezdařilo</string>
+    <string name="popup_permission">Oprávnění</string>
+    <string name="popup_request_permission_write_settings">        Prosíme aby jste přijali následující oprávnění ke změně vyzvánění
+    </string>
+</resources>

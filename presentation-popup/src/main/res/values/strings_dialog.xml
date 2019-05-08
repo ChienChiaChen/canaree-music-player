@@ -40,12 +40,6 @@
 
     <string name="popup_error_message">Something went wrong</string>
 
-
-    <string name="popup_permission">Permission</string>
-    <string name="popup_request_permission_write_settings">
-        Please accept the following permission in order to change the ringtone
-    </string>
-
     <string name="popup_grid_size">Grid size</string>
 
 </resources>

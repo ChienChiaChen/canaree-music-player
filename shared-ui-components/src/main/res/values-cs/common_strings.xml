@@ -47,4 +47,7 @@
     <string name="common_save">Uložit</string>
     <string name="common_cancel">Zrušení</string>
     <string name="common_back">Zadní</string>
+    <string name="common_remove">Odstranit</string>
+    <string name="common_create">Vytvořit</string>
+
 </resources>

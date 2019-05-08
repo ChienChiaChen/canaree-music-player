@@ -63,4 +63,7 @@
     <string name="common_save">Salvar</string>
     <string name="common_cancel">Cancelar</string>
     <string name="common_back">Atrás</string>
+    <string name="common_remove">Retirar</string>
+    <string name="common_create">Crear</string>
+    <string name="common_delete">Eliminar</string>
 </resources>

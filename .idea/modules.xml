@@ -13,9 +13,11 @@
       <module fileurl="file://$PROJECT_DIR$/image-provider/image-provider.iml" filepath="$PROJECT_DIR$/image-provider/image-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaudiotagger/jaudiotagger.iml" filepath="$PROJECT_DIR$/jaudiotagger/jaudiotagger.iml" />
       <module fileurl="file://$PROJECT_DIR$/offline-lyrics/offline-lyrics.iml" filepath="$PROJECT_DIR$/offline-lyrics/offline-lyrics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation-about/presentation-about.iml" filepath="$PROJECT_DIR$/presentation-about/presentation-about.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-base/presentation-base.iml" filepath="$PROJECT_DIR$/presentation-base/presentation-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-categories/presentation-categories.iml" filepath="$PROJECT_DIR$/presentation-categories/presentation-categories.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-detail/presentation-detail.iml" filepath="$PROJECT_DIR$/presentation-detail/presentation-detail.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation-dialogs/presentation-dialogs.iml" filepath="$PROJECT_DIR$/presentation-dialogs/presentation-dialogs.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-edit-item/presentation-edit-item.iml" filepath="$PROJECT_DIR$/presentation-edit-item/presentation-edit-item.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-equalizer/presentation-equalizer.iml" filepath="$PROJECT_DIR$/presentation-equalizer/presentation-equalizer.iml" />
       <module fileurl="file://$PROJECT_DIR$/presentation-home/presentation-home.iml" filepath="$PROJECT_DIR$/presentation-home/presentation-home.iml" />

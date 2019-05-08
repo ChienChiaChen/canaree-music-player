@@ -68,4 +68,7 @@
     <string name="common_save">Salva</string>
     <string name="common_cancel">Annulla</string>
     <string name="common_back">Indietro</string>
+    <string name="common_remove">Elimina</string>
+    <string name="common_create">Crea</string>
+    <string name="common_delete">Elimina</string>
 </resources>

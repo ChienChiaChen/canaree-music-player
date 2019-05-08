@@ -31,7 +31,6 @@
     <string name="popup_positive_remove">Remover</string>
     <string name="popup_neutral_reset">Reset</string>
     <string name="popup_error_message">Alguma coisa correu mal</string>
-    <string name="popup_permission">Permissão</string>
-    <string name="popup_request_permission_write_settings">Por favor aceita a permissão para mudar o toque</string>
+
 
 </resources>

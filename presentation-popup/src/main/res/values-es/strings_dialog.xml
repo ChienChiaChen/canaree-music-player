@@ -28,6 +28,6 @@
     <string name="popup_positive_remove">Retirar</string>
     <string name="popup_neutral_reset">Reiniciar</string>
     <string name="popup_error_message">Algo salió mal</string>
-    <string name="popup_permission">Permiso</string>
+
 
 </resources>

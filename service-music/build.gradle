@@ -1,6 +1,12 @@
 apply plugin: 'com.android.library'
 apply from: '../base_module.gradle'
 
+android {
+    lintOptions {
+        abortOnError false
+    }
+}
+
 dependencies {
     implementation project(':core')
     implementation project(':shared')

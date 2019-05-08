@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="popup_error_message">Alguma coisa correu mal</string>
+    <string name="popup_play_next">Reproduzir próximo</string>
+    <string name="popup_play_later">Reproduzir depois</string>
+    <string name="popup_clear_playlist">Limpar lista de reprodução</string>
+    <string name="popup_set_as_ringtone">Definir como toque</string>
+    <string name="popup_permission">Permissão</string>
+    <string name="popup_request_permission_write_settings">Por favor aceita a permissão para mudar o toque</string>
+    <string name="popup_rename">Mudar o nome</string>
+
+    <string name="added_song_x_to_playlist_y">%1$s adicionada à lista de reprodução %2$s</string>
+    <plurals name="xx_songs_added_to_playlist_y">
+        <item quantity="one">%1$d música adicionada à lista de reprodução %2$s</item>
+        <item quantity="other">%1$d músicas adicionadas à lista de reprodução %2$s</item>
+    </plurals>
+</resources>

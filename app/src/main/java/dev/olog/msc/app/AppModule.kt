@@ -10,6 +10,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import dagger.Module
 import dagger.Provides
 import dev.olog.msc.LastFmEncrypter
+import dev.olog.msc.LyricsFromMetadata
 import dev.olog.msc.PrefsKeysImpl
 import dev.olog.msc.SongComparatorImpl
 import dev.olog.msc.app.glide.GlideImageProvider
@@ -20,7 +21,6 @@ import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.core.interactor.sort.ISongComparator
-import dev.olog.msc.domain.interactor.LyricsFromMetadata
 import dev.olog.msc.floatingwindowservice.FloatingWindowService
 import dev.olog.msc.imageprovider.IImageProvider
 import dev.olog.msc.musicservice.MusicService

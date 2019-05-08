@@ -119,5 +119,9 @@
     <string name="common_cancel">Cancel</string>
     <string name="common_back">Back</string>
     <string name="common_reset">Reset</string>
+    <string name="common_remove">Remove</string>
+    <string name="common_create">Create</string>
+    <string name="common_delete">Delete</string>
+
 
 </resources>

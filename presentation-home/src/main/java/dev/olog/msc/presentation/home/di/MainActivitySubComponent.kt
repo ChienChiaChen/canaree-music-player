@@ -10,23 +10,10 @@ import dev.olog.msc.pro.ProModule
         MainActivityModule::class,
         MainActivityFragmentsModule::class,
         ProModule::class
-//
+// TODO
 //        // fragments
-//        RecentlyAddedFragmentInjector::class,
-//        RelatedArtistFragmentInjector::class,
 
 //        PlaylistTracksChooserInjector::class,
-
-        // dialogs
-//        AddFavoriteDialogInjector::class,
-//        PlayNextDialogInjector::class,
-//        PlayLaterDialogInjector::class,
-//        SetRingtoneDialogInjector::class,
-//        RenameDialogInjector::class,
-//        ClearPlaylistDialogInjector::class,
-//        DeleteDialogInjector::class,
-//        NewPlaylistDialogInjector::class,
-//        RemoveDuplicatesDialogInjector::class TODO
 ))
 @PerActivity
 interface MainActivitySubComponent : AndroidInjector<MainActivity> {

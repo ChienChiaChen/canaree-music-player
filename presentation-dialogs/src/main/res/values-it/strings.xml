@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="popup_error_message">Qualcosa è andato storto</string>
+    <string name="popup_play_next">Aggiungi in fondo alla coda</string>
+    <string name="popup_play_later">Aggiungi alla coda</string>
+    <string name="popup_clear_playlist">Rimuovi tutti i brani</string>
+    <string name="popup_set_as_ringtone">Imposta come suoneria</string>
+    <string name="popup_permission">Permesso</string>
+    <string name="popup_request_permission_write_settings">
+        Per poter cambiare la suoneria l\'app deve disporre del seguente permesso
+    </string>
+    <string name="popup_rename">Rinomina</string>
+
+    <string name="added_song_x_to_playlist_y">%1$s aggiunto alla playlist %2$s</string>
+
+    <plurals name="xx_songs_added_to_playlist_y">
+        <item quantity="one">%1$d brano aggiunto alla playlist %2$s</item>
+        <item quantity="other">%1$d brani aggiunti alla playlist %2$s</item>
+    </plurals>
+</resources>
