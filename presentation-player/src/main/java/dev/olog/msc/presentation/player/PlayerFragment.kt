@@ -15,21 +15,24 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.presentation.base.widgets.SwipeableView
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.*
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.shared.ui.theme.ImageShape
 import dev.olog.msc.shared.utils.isMarshmallow
-import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.ImageViews
 import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.presentation.base.extensions.*
+import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.interfaces.HasBilling
 import dev.olog.presentation.base.interfaces.MediaProvider
 import dev.olog.presentation.base.model.DisplayableItem
+import dev.olog.presentation.base.theme.player.theme.isBigImage
+import dev.olog.presentation.base.theme.player.theme.isClean
+import dev.olog.presentation.base.theme.player.theme.isFullscreen
+import dev.olog.presentation.base.theme.player.theme.isMini
+import dev.olog.presentation.base.widgets.SwipeableView
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -74,7 +77,7 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         val statusBarAlpha = if (!isMarshmallow()) 1f else 0f
         view.statusBar?.alpha = statusBarAlpha
 
-        if (isPortrait() && AppTheme.isBigImageTheme()){
+        if (isPortrait() && context.isBigImage()){
             val set = ConstraintSet()
             set.clone(view as ConstraintLayout)
             set.connect(view.list.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
@@ -87,7 +90,7 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
                 .distinctUntilChanged()
                 .mapToList { it.toDisplayableItem() }
                 .map { queue ->
-                    if (!AppTheme.isMiniTheme()){
+                    if (!context.isMini()){
                         val copy = queue.toMutableList()
                         if (copy.size > PlayingQueueGateway.MINI_QUEUE_SIZE - 1){
                             copy.add(viewModel.footerLoadMore)
@@ -116,7 +119,7 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
             view.coverWrapper?.radius = 0f
         }
 
-        if (act.isLandscape && !AppTheme.isFullscreenTheme() && !AppTheme.isMiniTheme()){
+        if (act.isLandscape && !context.isFullscreen() && !context.isMini()){
 
             mediaProvider.onMetadataChanged()
                     .asLiveData()
@@ -126,7 +129,7 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
                     .asLiveData()
                     .subscribe(viewLifecycleOwner) { state ->
                         if (state.isPlaying() || state.isPaused()){
-                            if (AppTheme.isCleanTheme()){
+                            if (context.isClean()){
                                 bigCover?.isActivated = state.isPlaying()
                             } else {
                                 coverWrapper?.isActivated = state.isPlaying()
@@ -322,9 +325,9 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
 
     override fun provideLayoutId(): Int {
         return when {
-            AppTheme.isFullscreenTheme() -> R.layout.fragment_player_fullscreen
-            AppTheme.isCleanTheme() -> R.layout.fragment_player_clean
-            AppTheme.isMiniTheme() -> R.layout.fragment_player_mini
+            context.isFullscreen() -> R.layout.fragment_player_fullscreen
+            context.isClean() -> R.layout.fragment_player_clean
+            context.isMini() -> R.layout.fragment_player_mini
             else -> R.layout.fragment_player
         }
     }

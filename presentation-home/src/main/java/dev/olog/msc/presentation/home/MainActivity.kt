@@ -16,7 +16,6 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.extensions.dimen
-import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.shared.utils.clamp
 import dev.olog.presentation.base.ActivityCodes
 import dev.olog.presentation.base.FloatingWindowHelper
@@ -25,6 +24,7 @@ import dev.olog.presentation.base.activity.MusicGlueActivity
 import dev.olog.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
 import dev.olog.presentation.base.extensions.*
 import dev.olog.presentation.base.interfaces.*
+import dev.olog.presentation.base.theme.player.theme.isMini
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -85,7 +85,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
             }
         }
 
-        if (AppTheme.isMiniTheme()){
+        if (isMini()){
             slidingPanel.setParallaxOffset(0)
             playerLayout.layoutParams = SlidingUpPanelLayout.LayoutParams(
                     SlidingUpPanelLayout.LayoutParams.MATCH_PARENT, SlidingUpPanelLayout.LayoutParams.WRAP_CONTENT

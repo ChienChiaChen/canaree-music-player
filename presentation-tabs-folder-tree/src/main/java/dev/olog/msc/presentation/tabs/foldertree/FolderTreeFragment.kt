@@ -10,13 +10,14 @@ import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.safeGetCanonicalFile
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.ui.extensions.windowBackground
-import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.presentation.base.extensions.asLiveData
 import dev.olog.presentation.base.extensions.ctx
 import dev.olog.presentation.base.extensions.subscribe
 import dev.olog.presentation.base.extensions.viewModelProvider
 import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.interfaces.CanHandleOnBackPressed
+import dev.olog.presentation.base.theme.dark.mode.isDark
+import dev.olog.presentation.base.theme.dark.mode.isGrayMode
 import kotlinx.android.synthetic.main.fragment_folder_tree.*
 import kotlinx.android.synthetic.main.fragment_folder_tree.view.*
 import javax.inject.Inject
@@ -45,10 +46,10 @@ class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback,
         view.fastScroller.attachRecyclerView(view.list)
         view.fastScroller.showBubble(false)
 
-        if (AppTheme.isDarkTheme()){
+        if (context.isDark()){
             view.bread_crumbs.setBackgroundColor(ctx.windowBackground())
         }
-        if (AppTheme.isGrayMode()){
+        if (context.isGrayMode()){
             view.bread_crumbs.setBackgroundColor(ContextCompat.getColor(ctx, R.color.toolbar))
         }
 

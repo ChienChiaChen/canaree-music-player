@@ -18,12 +18,12 @@ import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.setVisible
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.presentation.base.DisplayableItemBindingAdapter
 import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.presentation.base.extensions.*
 import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.interfaces.CanChangeStatusBarColor
+import dev.olog.presentation.base.theme.dark.mode.isDark
 import dev.olog.presentation.base.widgets.image.view.ShapeImageView
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
@@ -187,7 +187,7 @@ class DetailFragment : BaseFragment(), CanChangeStatusBarColor {
     }
 
     private fun setLightStatusBar(){
-        if (AppTheme.isDarkTheme()){
+        if (context.isDark()){
             return
         }
 

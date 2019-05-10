@@ -5,7 +5,7 @@ import android.content.DialogInterface
 import androidx.annotation.ColorRes
 
 import dev.olog.msc.shared.ui.extensions.colorAccentId
-import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.presentation.base.theme.dark.mode.isDark
 
 class SleepTimerPickerDialogBuilder(
         context: Context,
@@ -14,7 +14,7 @@ class SleepTimerPickerDialogBuilder(
 ) {
     private var reference: Int = -1
     @ColorRes
-    var colorBackground: Int = if (AppTheme.isDarkTheme()) R.color.dark_dialog_background else android.R.color.white
+    var colorBackground: Int = if (context.isDark()) R.color.dark_dialog_background else android.R.color.white
     @ColorRes
     private var colorNormal: Int = android.R.color.darker_gray
     @ColorRes

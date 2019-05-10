@@ -15,7 +15,9 @@ import dev.olog.msc.shared.ui.extensions.colorAccent
 import dev.olog.msc.shared.ui.extensions.getAnimatedVectorDrawable
 import dev.olog.msc.shared.ui.extensions.textColorSecondary
 import dev.olog.msc.shared.ui.extensions.textColorTertiary
-import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.presentation.base.theme.dark.mode.isDark
+import dev.olog.presentation.base.theme.player.theme.isClean
+import dev.olog.presentation.base.theme.player.theme.isFullscreen
 
 class RepeatButton @JvmOverloads constructor(
         context: Context,
@@ -82,9 +84,9 @@ class RepeatButton @JvmOverloads constructor(
 
     private fun getDefaultColor(): Int {
         return when {
-            context.isPortrait && AppTheme.isCleanTheme() && !AppTheme.isDarkTheme() -> 0xFF_8d91a6.toInt()
-            AppTheme.isFullscreenTheme() -> Color.WHITE
-            AppTheme.isDarkTheme() -> {
+            context.isPortrait && context.isClean() && !context.isDark() -> 0xFF_8d91a6.toInt()
+            context.isFullscreen() -> Color.WHITE
+            context.isDark() -> {
                 alpha = .7f
                 context.textColorSecondary()
             }

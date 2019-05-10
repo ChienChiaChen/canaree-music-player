@@ -7,8 +7,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.isLandscape
-import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.presentation.base.R
+import dev.olog.presentation.base.theme.dark.mode.isWhite
 
 class DimBottomSheetDialog(context: Context, theme: Int)
     : BottomSheetDialog(context, theme) {
@@ -16,7 +16,7 @@ class DimBottomSheetDialog(context: Context, theme: Int)
     private var behavior: BottomSheetBehavior<FrameLayout>? = null
 
     private fun getScrimColor(): Int {
-        if (AppTheme.isWhiteTheme()) {
+        if (context.isWhite()) {
             return 0x88FFFFFF.toInt()
         }
         return 0xAA232323.toInt()

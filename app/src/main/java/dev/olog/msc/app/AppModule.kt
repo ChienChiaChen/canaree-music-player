@@ -28,6 +28,12 @@ import dev.olog.msc.offlinelyrics.domain.ILyricsFromMetadata
 import dev.olog.msc.presentation.home.MainActivity
 import dev.olog.msc.presentation.shortcuts.ShortcutsActivity
 import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivity
+import dev.olog.presentation.base.theme.dark.mode.DarkMode
+import dev.olog.presentation.base.theme.dark.mode.IDarkMode
+import dev.olog.presentation.base.theme.immersive.IImmersive
+import dev.olog.presentation.base.theme.immersive.Immersive
+import dev.olog.presentation.base.theme.player.theme.IPlayerTheme
+import dev.olog.presentation.base.theme.player.theme.PlayerTheme
 import java.text.Collator
 import java.util.*
 import javax.inject.Singleton
@@ -56,8 +62,8 @@ class AppModule(private val app: App) {
         return object : WidgetClasses {
             override fun get(): List<Class<*>> {
                 return listOf(
-                        dev.olog.msc.appwidgets.base.WidgetColored::class.java,
-                        dev.olog.msc.appwidgets.queue.WidgetColoredWithQueue::class.java
+                    dev.olog.msc.appwidgets.base.WidgetColored::class.java,
+                    dev.olog.msc.appwidgets.queue.WidgetColoredWithQueue::class.java
                 )
             }
         }
@@ -115,7 +121,22 @@ class AppModule(private val app: App) {
     }
 
     @Provides
-    fun provideSongComparator(impl: SongComparatorImpl): ISongComparator{
+    fun provideSongComparator(impl: SongComparatorImpl): ISongComparator {
+        return impl
+    }
+
+    @Provides
+    fun provideDarkMode(impl: DarkMode): IDarkMode {
+        return impl
+    }
+
+    @Provides
+    fun providePlayerTheme(impl: PlayerTheme): IPlayerTheme {
+        return impl
+    }
+
+    @Provides
+    fun provideImmersive(impl: Immersive): IImmersive {
         return impl
     }
 

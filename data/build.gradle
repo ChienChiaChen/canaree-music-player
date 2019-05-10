@@ -23,9 +23,9 @@ dependencies {
     implementation librariesAndroidX.coreKtx
 
     // db
-    api librariesPersistency.sqlBrite
-    api librariesPersistency.room
-    kapt librariesPersistency.roomProcessor
+    implementation librariesPersistency.sqlBrite
+    implementation librariesPersistency.room
+    implementation librariesPersistency.roomProcessor
     implementation librariesPersistency.roomRx
-    api librariesPersistency.rxPrefs
+    implementation librariesPersistency.rxPrefs
 }

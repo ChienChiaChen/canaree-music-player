@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.shared.ui.extensions.tint
-import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.shared.ui.theme.HasDarkMode
 
 object CoverUtils {
 
@@ -63,7 +63,7 @@ object CoverUtils {
 
         val icon = drawable.getDrawable(1) as Drawable
 
-        if (AppTheme.isDarkTheme()){
+        if ((context.applicationContext as HasDarkMode).isDark()){
             icon.tint(0xFF_88898c.toInt())
             gradient.colors = intArrayOf(0xff_282828.toInt(), 0xff_282828.toInt())
         } else {

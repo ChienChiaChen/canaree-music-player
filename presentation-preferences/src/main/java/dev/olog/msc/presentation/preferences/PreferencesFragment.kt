@@ -28,10 +28,10 @@ import dev.olog.msc.presentation.preferences.utils.forEach
 import dev.olog.msc.presentation.preferences.utils.isLowMemoryDevice
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.ThemedDialog
-import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.presentation.base.ImageViews
 import dev.olog.presentation.base.extensions.*
 import dev.olog.presentation.base.interfaces.HasBilling
+import dev.olog.presentation.base.theme.dark.mode.isWhite
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -133,8 +133,8 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
         }
         accentColorChooser.setOnPreferenceClickListener {
             val prefs = PreferenceManager.getDefaultSharedPreferences(act.applicationContext)
-            val key = getString(if (AppTheme.isWhiteTheme()) R.string.prefs_accent_light_key else R.string.prefs_accent_dark_key)
-            val defaultColor = ContextCompat.getColor(act, (if (AppTheme.isWhiteTheme()) R.color.accent else R.color.accent_secondary))
+            val key = getString(if (context.isWhite()) R.string.prefs_accent_light_key else R.string.prefs_accent_dark_key)
+            val defaultColor = ContextCompat.getColor(act, (if (context.isWhite()) R.color.accent else R.color.accent_secondary))
 
             MaterialDialog(act)
                     .colorChooser(
@@ -173,12 +173,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
                 ImageViews.updateIconShape(act)
                 requestMainActivityToRecreate()
             }
-            getString(R.string.prefs_immersive_key) -> {
-                AppTheme.updateImmersive(act)
-                (act as PreferencesActivity).recreateActivity()
-            }
             getString(R.string.prefs_dark_mode_key) -> {
-                AppTheme.updateDarkMode(act)
                 requestMainActivityToRecreate()
                 act.finish()
                 act.startActivity(Intent(act, act::class.java),
@@ -186,7 +181,6 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
                 )
             }
             getString(R.string.prefs_appearance_key) -> {
-                AppTheme.updateTheme(act)
                 requestMainActivityToRecreate()
             }
             getString(R.string.prefs_ignore_media_store_cover_key) -> {

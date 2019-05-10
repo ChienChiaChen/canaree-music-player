@@ -20,8 +20,8 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.ui.extensions.colorAccent
-import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.presentation.base.R
+import dev.olog.presentation.base.theme.dark.mode.isDark
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
@@ -77,7 +77,7 @@ class RxFastScroller @JvmOverloads constructor(
             if (typedArray != null) {
                 try {
                     bubbleColor = context.colorAccent()
-                    handleColor = if (AppTheme.isDarkTheme()) Color.WHITE else ContextCompat.getColor(context, R.color.dark_grey)
+                    handleColor = if (context.isDark()) Color.WHITE else ContextCompat.getColor(context, R.color.dark_grey)
                     textColor = typedArray.getColor(R.styleable.FastScroller_bubbleTextColor, textColor)
                     hideScrollbar = typedArray.getBoolean(R.styleable.FastScroller_hideScrollbar, true)
                 } finally {

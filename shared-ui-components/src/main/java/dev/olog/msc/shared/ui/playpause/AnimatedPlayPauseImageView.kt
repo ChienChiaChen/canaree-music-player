@@ -7,7 +7,8 @@ import androidx.annotation.Keep
 import androidx.appcompat.widget.AppCompatImageButton
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.ui.extensions.textColorTertiary
-import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.shared.ui.theme.HasDarkMode
+import dev.olog.msc.shared.ui.theme.HasPlayerTheme
 
 @Keep
 class AnimatedPlayPauseImageView @JvmOverloads constructor(
@@ -19,7 +20,7 @@ class AnimatedPlayPauseImageView @JvmOverloads constructor(
     private val behavior = PlayPauseBehaviorImpl(this)
 
     init {
-        if (AppTheme.isDarkTheme()){
+        if ((context.applicationContext as HasDarkMode).isDark()){
             setColorFilter(0xFF_FFFFFF.toInt())
         }
     }
@@ -42,8 +43,8 @@ class AnimatedPlayPauseImageView @JvmOverloads constructor(
 
     private fun getDefaultColor(): Int{
         return when {
-            context.isPortrait && AppTheme.isCleanTheme() && !AppTheme.isDarkTheme() -> 0xFF_8d91a6.toInt()
-            AppTheme.isFullscreenTheme() || AppTheme.isDarkTheme() -> Color.WHITE
+            context.isPortrait && (context.applicationContext as HasPlayerTheme).isClean() && !(context.applicationContext as HasDarkMode).isDark() -> 0xFF_8d91a6.toInt()
+            (context.applicationContext as HasPlayerTheme).isFullscreen() || (context.applicationContext as HasDarkMode).isDark() -> Color.WHITE
             else -> context.textColorTertiary()
         }
     }

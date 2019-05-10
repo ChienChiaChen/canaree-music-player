@@ -13,10 +13,10 @@ import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import dev.olog.msc.shared.ui.theme.AppTheme
-import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.extensions.*
+import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.interfaces.MediaProvider
+import dev.olog.presentation.base.theme.player.theme.isMini
 import dev.olog.presentation.base.utils.getArtist
 import dev.olog.presentation.base.utils.getDuration
 import dev.olog.presentation.base.utils.getTitle
@@ -51,7 +51,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
 
         val media = activity as MediaProvider
 
-        view.coverWrapper.toggleVisibility(AppTheme.isMiniTheme(), true)
+        view.coverWrapper.toggleVisibility(context.isMini(), true)
 
         media.onMetadataChanged()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -179,7 +179,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
     }
 
     private fun updateImage(metadata: MediaMetadataCompat){
-        if (!AppTheme.isMiniTheme()){
+        if (!context.isMini()){
             return
         }
         bigCover.loadImage(metadata)

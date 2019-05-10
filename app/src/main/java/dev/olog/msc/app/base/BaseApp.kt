@@ -1,4 +1,4 @@
-package dev.olog.msc.app
+package dev.olog.msc.app.base
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -7,6 +7,7 @@ import dagger.android.HasActivityInjector
 import dagger.android.HasBroadcastReceiverInjector
 import dagger.android.HasServiceInjector
 import dagger.android.support.DaggerApplication
+import dev.olog.msc.app.app
 
 abstract class BaseApp: DaggerApplication(),
         HasActivityInjector,

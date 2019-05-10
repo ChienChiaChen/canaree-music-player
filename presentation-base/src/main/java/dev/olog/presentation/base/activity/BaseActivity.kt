@@ -11,12 +11,18 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import dev.olog.msc.core.PrefsKeys
-import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.shared.ui.theme.HasImmersive
 import dev.olog.presentation.base.R
 import dev.olog.presentation.base.extensions.setLightStatusBar
+import dev.olog.presentation.base.theme.dark.mode.isBlackMode
+import dev.olog.presentation.base.theme.dark.mode.isDarkMode
+import dev.olog.presentation.base.theme.dark.mode.isGrayMode
+import dev.olog.presentation.base.theme.dark.mode.isWhiteMode
 import javax.inject.Inject
 
-abstract class BaseActivity : AppCompatActivity(), ThemedActivity, HasSupportFragmentInjector {
+abstract class BaseActivity : AppCompatActivity(),
+    ThemedActivity,
+    HasSupportFragmentInjector {
 
     @Inject
     lateinit var prefsKeys: PrefsKeys
@@ -35,10 +41,10 @@ abstract class BaseActivity : AppCompatActivity(), ThemedActivity, HasSupportFra
 
     @StyleRes
     private fun getActivityTheme(): Int = when {
-        AppTheme.isWhiteMode() -> R.style.AppThemeWhite
-        AppTheme.isGrayMode() -> R.style.AppThemeGray
-        AppTheme.isDarkMode() -> R.style.AppThemeDark
-        AppTheme.isBlackMode() -> R.style.AppThemeBlack
+        isWhiteMode() -> R.style.AppThemeWhite
+        isGrayMode() -> R.style.AppThemeGray
+        isDarkMode() -> R.style.AppThemeDark
+        isBlackMode() -> R.style.AppThemeBlack
         else -> throw IllegalStateException("invalid theme")
     }
 
@@ -49,7 +55,7 @@ abstract class BaseActivity : AppCompatActivity(), ThemedActivity, HasSupportFra
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && AppTheme.isImmersiveMode()) {
+        if (hasFocus && (applicationContext as HasImmersive).isEnabled()) {
             window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or
                     View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
@@ -60,4 +66,5 @@ abstract class BaseActivity : AppCompatActivity(), ThemedActivity, HasSupportFra
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return supportFragmentInjector
     }
+
 }

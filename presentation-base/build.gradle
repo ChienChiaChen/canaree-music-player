@@ -41,6 +41,8 @@ dependencies {
     implementation librariesCore.daggerAndroidSupport
     kapt librariesCore.daggerAndroidProcessor
 
+    implementation librariesPersistency.rxPrefs
+
     implementation librariesUi.glide
     implementation librariesUi.slidingPanel
     implementation librariesAndroidX.palette

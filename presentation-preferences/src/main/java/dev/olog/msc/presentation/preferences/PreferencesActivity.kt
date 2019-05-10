@@ -13,10 +13,11 @@ import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.pro.IBilling
-import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.shared.ui.theme.HasImmersive
 import dev.olog.presentation.base.activity.ThemedActivity
 import dev.olog.presentation.base.extensions.setLightStatusBar
 import dev.olog.presentation.base.interfaces.HasBilling
+import dev.olog.presentation.base.theme.dark.mode.*
 import kotlinx.android.synthetic.main.activity_preferences.*
 import javax.inject.Inject
 
@@ -54,16 +55,16 @@ class PreferencesActivity : DaggerAppCompatActivity(),
     }
 
     private fun getActivityTheme() = when {
-        AppTheme.isWhiteMode() -> R.style.AppThemeWhite
-        AppTheme.isGrayMode() -> R.style.AppThemeGray
-        AppTheme.isDarkMode() -> R.style.AppThemeDark
-        AppTheme.isBlackMode() -> R.style.AppThemeBlack
+        isWhiteMode() -> R.style.AppThemeWhite
+        isGrayMode() -> R.style.AppThemeGray
+        isDarkMode() -> R.style.AppThemeDark
+        isBlackMode() -> R.style.AppThemeBlack
         else -> throw IllegalStateException("invalid theme")
     }
 
     override fun invoke(dialog: MaterialDialog, color: Int) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val key = getString(if (AppTheme.isWhiteTheme()) R.string.prefs_accent_light_key else R.string.prefs_accent_dark_key)
+        val key = getString(if (isWhite()) R.string.prefs_accent_light_key else R.string.prefs_accent_dark_key)
         prefs.edit {
             putInt(key, color)
         }
@@ -83,7 +84,7 @@ class PreferencesActivity : DaggerAppCompatActivity(),
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && AppTheme.isImmersiveMode()){
+        if (hasFocus && (applicationContext as HasImmersive).isEnabled()){
             window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or
                     View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or

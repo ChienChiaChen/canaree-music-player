@@ -5,13 +5,14 @@ import android.content.res.Resources
 import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import dev.olog.msc.core.PrefsKeys
-import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.shared.ui.theme.HasImmersive
 import dev.olog.presentation.base.R
+import dev.olog.presentation.base.theme.dark.mode.isWhite
 
 interface ThemedActivity {
 
     fun themeAccentColor(context: Context, theme: Resources.Theme, prefsKeys: PrefsKeys){
-        if (AppTheme.isImmersiveMode()){
+        if ((context.applicationContext as HasImmersive).isEnabled()){
             theme.applyStyle(R.style.ThemeImmersive, true)
         }
         theme.applyStyle(getAccentStyle(context.applicationContext, prefsKeys), true)
@@ -19,7 +20,7 @@ interface ThemedActivity {
 
     private fun getAccentStyle(context: Context, prefsKeys: PrefsKeys): Int {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val color = if (AppTheme.isWhiteTheme()){
+        val color = if (context.isWhite()){
             prefs.getInt(context.getString(prefsKeys.colorAccentLightMode()), ContextCompat.getColor(context, R.color.accent))
         } else {
             prefs.getInt(context.getString(prefsKeys.colorAccentDarkMode()), ContextCompat.getColor(context, R.color.accent_secondary))
@@ -93,7 +94,7 @@ interface ThemedActivity {
             getColorResource(context, R.color.md_deep_orange_A400) -> R.style.ThemeAccentDeepOrange400
             getColorResource(context, R.color.md_deep_orange_A700) -> R.style.ThemeAccentDeepOrange700
             // prevent strange color crash
-            else -> if (AppTheme.isWhiteTheme()) R.style.ThemeAccentIndigo400 else R.style.ThemeAccentYellow700
+            else -> if (context.isWhite()) R.style.ThemeAccentIndigo400 else R.style.ThemeAccentYellow700
         }
     }
 

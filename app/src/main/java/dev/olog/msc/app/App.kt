@@ -9,6 +9,7 @@ import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
+import dev.olog.msc.app.base.ThemedApp
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.PodcastGateway
@@ -19,7 +20,6 @@ import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.TrackUtils
-import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.shared.updatePermissionValve
 import dev.olog.msc.traceur.Traceur
 import dev.olog.presentation.base.ImageViews
@@ -31,17 +31,28 @@ import javax.inject.Inject
 lateinit var app: Context
 
 
-class App : BaseApp() {
+class App : ThemedApp() {
 
-    @Suppress("unused") @Inject lateinit var appShortcuts: AppShortcuts
-    @Suppress("unused") @Inject lateinit var imagesCreator: IImageCreator
-    @Suppress("unused") @Inject lateinit var keepDataAlive: KeepDataAlive
+    @Suppress("unused")
+    @Inject
+    lateinit var appShortcuts: AppShortcuts
+    @Suppress("unused")
+    @Inject
+    lateinit var imagesCreator: IImageCreator
+    @Suppress("unused")
+    @Inject
+    lateinit var keepDataAlive: KeepDataAlive
 
-    @Inject lateinit var lastFmGateway: LastFmGateway
-    @Inject lateinit var songGateway: SongGateway
-    @Inject lateinit var podcastGateway: PodcastGateway
-    @Inject lateinit var alarmManager: AlarmManager
-    @Inject lateinit var sleepTimerUseCase: SleepTimerUseCase
+    @Inject
+    lateinit var lastFmGateway: LastFmGateway
+    @Inject
+    lateinit var songGateway: SongGateway
+    @Inject
+    lateinit var podcastGateway: PodcastGateway
+    @Inject
+    lateinit var alarmManager: AlarmManager
+    @Inject
+    lateinit var sleepTimerUseCase: SleepTimerUseCase
 
     override fun initializeApp() {
         initializeComponents()
@@ -61,17 +72,15 @@ class App : BaseApp() {
             Traceur.enableLogging()
 //            LeakCanary.install(this)
 //            Stetho.initializeWithDefaults(this)
-//            StrictMode.initialize()
         }
     }
 
     private fun initializeConstants() {
         TrackUtils.initialize(
-                getString(R.string.common_unknown_artist),
-                getString(R.string.common_unknown_album)
+            getString(R.string.common_unknown_artist),
+            getString(R.string.common_unknown_album)
         )
         ImageViews.initialize(this)
-        AppTheme.initialize(this)
         PreferenceManager.setDefaultValues(this, R.xml.prefs, false)
     }
 

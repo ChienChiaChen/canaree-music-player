@@ -8,11 +8,9 @@ import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
-fun Disposable?.unsubscribe(){
-    this?.let {
-        if (!isDisposed){
-            dispose()
-        }
+inline fun Disposable?.unsubscribe(){
+    if (this != null && !isDisposed) {
+        dispose()
     }
 }
 

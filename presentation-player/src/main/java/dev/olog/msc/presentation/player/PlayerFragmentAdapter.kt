@@ -14,7 +14,6 @@ import com.jakewharton.rxbinding2.view.RxView
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.presentation.base.widgets.SwipeableView
 import dev.olog.msc.presentation.player.widgets.audiowave.AudioWaveViewWrapper
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.extensions.isPaused
@@ -25,7 +24,6 @@ import dev.olog.msc.shared.ui.extensions.animateTextColor
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.ui.imageview.AnimatedImageView
 import dev.olog.msc.shared.ui.playpause.AnimatedPlayPauseImageView
-import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.shared.ui.theme.ImageShape
 import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.presentation.base.ImageViews
@@ -36,7 +34,11 @@ import dev.olog.presentation.base.interfaces.HasBilling
 import dev.olog.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.presentation.base.interfaces.MediaProvider
 import dev.olog.presentation.base.model.DisplayableItem
+import dev.olog.presentation.base.theme.player.theme.isClean
+import dev.olog.presentation.base.theme.player.theme.isFullscreen
+import dev.olog.presentation.base.theme.player.theme.isMini
 import dev.olog.presentation.base.utils.*
+import dev.olog.presentation.base.widgets.SwipeableView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_player_controls.view.*
 import kotlinx.android.synthetic.main.fragment_player_toolbar.view.*
@@ -353,7 +355,8 @@ class PlayerFragmentAdapter (
                     openPlaybackSpeedPopup(playbackSpeed)
                 }, Throwable::printStackTrace)
 
-        if (view.context.isPortrait || AppTheme.isFullscreenTheme() || AppTheme.isMiniTheme()){
+        val context = view.context
+        if (view.context.isPortrait || context.isFullscreen() || context.isMini()){
 
             mediaProvider.onStateChanged()
                     .takeUntil(RxView.detaches(view))
@@ -396,7 +399,7 @@ class PlayerFragmentAdapter (
                     .subscribe({ mediaProvider.skipToPrevious() }, Throwable::printStackTrace)
 
             presenter.observePlayerControlsVisibility((view.context as HasBilling).billing)
-                    .filter { !AppTheme.isFullscreenTheme() && !AppTheme.isMiniTheme() }
+                    .filter { !context.isFullscreen() && !context.isMini() }
                     .takeUntil(RxView.detaches(view))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ visible ->
@@ -456,7 +459,7 @@ class PlayerFragmentAdapter (
         val isPlaying = playbackState.isPlaying()
         if (isPlaying || playbackState.isPaused()){
             view.nowPlaying?.isActivated = isPlaying
-            if (AppTheme.isCleanTheme()){
+            if (view.context.isClean()){
                 view.bigCover?.isActivated = isPlaying
             } else {
                 view.coverWrapper?.isActivated = isPlaying

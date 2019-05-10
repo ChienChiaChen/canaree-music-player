@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.SeekBar
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
-
 import dev.olog.msc.offlinelyrics.EditLyricsDialog
 import dev.olog.msc.offlinelyrics.NoScrollTouchListener
 import dev.olog.msc.offlinelyrics.OfflineLyricsSyncAdjustementDialog
@@ -18,11 +17,11 @@ import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.ui.extensions.animateBackgroundColor
 import dev.olog.msc.shared.ui.extensions.animateTextColor
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import dev.olog.msc.shared.ui.theme.AppTheme
-import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.extensions.*
+import dev.olog.presentation.base.fragment.BaseFragment
 import dev.olog.presentation.base.interfaces.DrawsOnTop
 import dev.olog.presentation.base.interfaces.MediaProvider
+import dev.olog.presentation.base.theme.dark.mode.isWhite
 import dev.olog.presentation.base.utils.getArtist
 import dev.olog.presentation.base.utils.getDuration
 import dev.olog.presentation.base.utils.getId
@@ -153,7 +152,7 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
     }
 
     private fun searchLyrics(){
-        val toolbarColor = if (AppTheme.isWhiteTheme()) R.color.toolbar else R.color.theme_dark_toolbar
+        val toolbarColor = if (context.isWhite()) R.color.toolbar else R.color.theme_dark_toolbar
         val customTabIntent = CustomTabsIntent.Builder()
                 .enableUrlBarHiding()
                 .setToolbarColor(ContextCompat.getColor(ctx, toolbarColor))

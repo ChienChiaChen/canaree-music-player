@@ -13,9 +13,8 @@ import android.widget.Button
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
-
-import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.presentation.base.fragment.BaseDialogFragment
+import dev.olog.presentation.base.theme.dark.mode.isDark
 
 open class ScrollHmsPickerDialog : BaseDialogFragment() {
     interface HmsPickHandler {
@@ -27,9 +26,9 @@ open class ScrollHmsPickerDialog : BaseDialogFragment() {
     @ColorRes
     var colorNormal: Int = android.R.color.darker_gray
     @ColorRes
-    var colorSelected: Int = if (AppTheme.isDarkTheme()) R.color.accent_secondary else R.color.accent
+    var colorSelected: Int = if (context.isDark()) R.color.accent_secondary else R.color.accent
     @ColorRes
-    var colorBackground: Int = if (AppTheme.isDarkTheme()) R.color.dark_dialog_background else android.R.color.white
+    var colorBackground: Int = if (context.isDark()) R.color.dark_dialog_background else android.R.color.white
     var dismissListener: DialogInterface.OnDismissListener? = null
     var pickListener: HmsPickHandler? = null
 
@@ -42,7 +41,7 @@ open class ScrollHmsPickerDialog : BaseDialogFragment() {
             picker.setColorNormal(colorNormal)
             picker.setColorSelected(colorSelected)
         }
-        if (AppTheme.isDarkTheme()){
+        if (context.isDark()){
             val background = ContextCompat.getColor(view.context, R.color.theme_dark_background)
             (view as MaterialCardView).backgroundTintList = ColorStateList.valueOf(background)
             hmsPicker.backgroundTintList = ColorStateList.valueOf(background)

@@ -7,7 +7,7 @@ import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.ui.R
-import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.shared.ui.theme.HasImmersive
 import dev.olog.presentation.base.extensions.hasNotch
 
 /**
@@ -30,7 +30,7 @@ class StatusBarView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val height = when {
-            AppTheme.isImmersiveMode() -> 0
+            (context.applicationContext as HasImmersive).isEnabled() -> 0
             hasNotch -> statusBarHeightPlusNotch
             else -> defaultStatusBarHeight
         }

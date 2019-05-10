@@ -3,9 +3,10 @@ package dev.olog.presentation.base.extensions
 import android.graphics.Color
 import android.view.View
 import android.view.Window
-import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.shared.ui.theme.HasImmersive
 import dev.olog.msc.shared.utils.isMarshmallow
 import dev.olog.msc.shared.utils.isOreo
+import dev.olog.presentation.base.theme.dark.mode.isDark
 
 fun Window.setLightStatusBar(){
     decorView.systemUiVisibility = 0
@@ -14,13 +15,13 @@ fun Window.setLightStatusBar(){
 
     var flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
 
-    if (AppTheme.isImmersiveMode()){
+    if ((context.applicationContext as HasImmersive).isEnabled()){
         flags = flags or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     }
 
-    if (isMarshmallow() && !AppTheme.isDarkTheme()){
+    if (isMarshmallow() && !context.isDark()){
         flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         if (isOreo()){
@@ -39,13 +40,13 @@ fun Window.removeLightStatusBar(){
 
     var flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
 
-    if (AppTheme.isImmersiveMode()){
+    if ((context.applicationContext as HasImmersive).isEnabled()){
         flags = flags or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     }
 
-    if (isOreo() && !AppTheme.isDarkTheme()){
+    if (isOreo() && !context.isDark()){
         flags = flags or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         navigationBarColor = Color.WHITE
     }

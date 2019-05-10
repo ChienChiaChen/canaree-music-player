@@ -11,7 +11,8 @@ import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.ui.R
 import dev.olog.msc.shared.ui.extensions.getAnimatedVectorDrawable
 import dev.olog.msc.shared.ui.extensions.textColorTertiary
-import dev.olog.msc.shared.ui.theme.AppTheme
+import dev.olog.msc.shared.ui.theme.HasDarkMode
+import dev.olog.msc.shared.ui.theme.HasPlayerTheme
 
 @Keep
 class AnimatedImageView @JvmOverloads constructor(
@@ -24,7 +25,7 @@ class AnimatedImageView @JvmOverloads constructor(
     private val animator: ViewPropertyAnimator = animate()
 
     init {
-        if (AppTheme.isDarkTheme()){
+        if ((context.applicationContext as HasDarkMode).isDark()){
             setColorFilter(0xFF_FFFFFF.toInt())
         }
 
@@ -63,8 +64,8 @@ class AnimatedImageView @JvmOverloads constructor(
 
     private fun getDefaultColor(): Int{
         return when {
-            context.isPortrait && AppTheme.isCleanTheme() && !AppTheme.isDarkTheme() -> 0xFF_8d91a6.toInt()
-            AppTheme.isFullscreenTheme() || AppTheme.isDarkTheme() -> Color.WHITE
+            context.isPortrait && (context.applicationContext as HasPlayerTheme).isClean() && !(context.applicationContext as HasDarkMode).isDark() -> 0xFF_8d91a6.toInt()
+            (context.applicationContext as HasPlayerTheme).isFullscreen() || (context.applicationContext as HasDarkMode).isDark() -> Color.WHITE
             else -> context.textColorTertiary()
         }
     }
