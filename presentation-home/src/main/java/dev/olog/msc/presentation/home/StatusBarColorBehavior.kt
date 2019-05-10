@@ -1,17 +1,15 @@
 package dev.olog.msc.presentation.home
 
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.ui.theme.AppTheme
 import dev.olog.msc.shared.utils.isMarshmallow
-import dev.olog.presentation.base.FragmentTags
 import dev.olog.presentation.base.extensions.removeLightStatusBar
 import dev.olog.presentation.base.extensions.setLightStatusBar
+import dev.olog.presentation.base.interfaces.CanChangeStatusBarColor
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -82,14 +80,14 @@ class StatusBarColorBehavior @Inject constructor(
         }
     }
 
-    private fun searchForDetailFragmentOnPortraitMode(): DetailFragment? {
+    private fun searchForDetailFragmentOnPortraitMode(): CanChangeStatusBarColor? {
         if (activity.isPortrait){
             val fm = activity.supportFragmentManager
             val backStackEntryCount = fm.backStackEntryCount - 1
             if (backStackEntryCount > -1){
                 val entry = fm.getBackStackEntryAt(backStackEntryCount)
                 val fragment = fm.findFragmentByTag(entry.name)
-                if (fragment is DetailFragment) {
+                if (fragment is CanChangeStatusBarColor) {
                     return fragment
                 }
             }

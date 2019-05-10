@@ -13,7 +13,6 @@ import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.tabs.foldertree.FolderTreeFragment
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.extensions.dimen
@@ -25,10 +24,7 @@ import dev.olog.presentation.base.RateAppDialog
 import dev.olog.presentation.base.activity.MusicGlueActivity
 import dev.olog.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
 import dev.olog.presentation.base.extensions.*
-import dev.olog.presentation.base.interfaces.DrawsOnTop
-import dev.olog.presentation.base.interfaces.HasBilling
-import dev.olog.presentation.base.interfaces.HasSafeTransition
-import dev.olog.presentation.base.interfaces.HasSlidingPanel
+import dev.olog.presentation.base.interfaces.*
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -253,8 +249,8 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         categories?.view?.findViewById<androidx.viewpager.widget.ViewPager>(R.id.viewPager)?.let { pager ->
             val currentItem = pager.adapter?.instantiateItem(pager, pager.currentItem) as Fragment
 
-            return if (currentItem is FolderTreeFragment){
-                currentItem.pop()
+            return if (currentItem is CanHandleOnBackPressed){
+                currentItem.handle()
             } else false
 
         } ?: return false

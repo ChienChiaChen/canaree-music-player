@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
+
 android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -30,6 +31,17 @@ android {
         }
         abi {
             enableSplit = true
+        }
+    }
+
+    flavorDimensions "version"
+
+    productFlavors {
+        mock {
+            dimension "version"
+        }
+        prod {
+            dimension "version"
         }
     }
 

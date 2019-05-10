@@ -3,6 +3,17 @@ apply from: '../base_module.gradle'
 
 android {
 
+    flavorDimensions "version"
+
+    productFlavors {
+        mock {
+            dimension "version"
+        }
+        prod {
+            dimension "version"
+        }
+    }
+
     buildTypes {
         release {
             buildConfigField 'String', "LAST_FM_KEY", last_fm_key

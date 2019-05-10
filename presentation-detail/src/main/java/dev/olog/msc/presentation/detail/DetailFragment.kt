@@ -23,13 +23,14 @@ import dev.olog.presentation.base.DisplayableItemBindingAdapter
 import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.presentation.base.extensions.*
 import dev.olog.presentation.base.fragment.BaseFragment
+import dev.olog.presentation.base.interfaces.CanChangeStatusBarColor
 import dev.olog.presentation.base.widgets.image.view.ShapeImageView
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-class DetailFragment : BaseFragment() {
+class DetailFragment : BaseFragment(), CanChangeStatusBarColor {
 
     companion object {
         const val TAG = "DetailFragment"
@@ -165,7 +166,11 @@ class DetailFragment : BaseFragment() {
         clear.setOnClickListener(null)
     }
 
-    fun adjustStatusBarColor(lightStatusBar: Boolean = hasLightStatusBarColor){
+    override fun adjustStatusBarColor() {
+        adjustStatusBarColor(hasLightStatusBarColor)
+    }
+
+    override fun adjustStatusBarColor(lightStatusBar: Boolean){
         if (lightStatusBar){
             setLightStatusBar()
         } else {

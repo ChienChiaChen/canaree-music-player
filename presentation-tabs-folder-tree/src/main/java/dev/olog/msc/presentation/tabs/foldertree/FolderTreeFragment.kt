@@ -16,11 +16,13 @@ import dev.olog.presentation.base.extensions.ctx
 import dev.olog.presentation.base.extensions.subscribe
 import dev.olog.presentation.base.extensions.viewModelProvider
 import dev.olog.presentation.base.fragment.BaseFragment
+import dev.olog.presentation.base.interfaces.CanHandleOnBackPressed
 import kotlinx.android.synthetic.main.fragment_folder_tree.*
 import kotlinx.android.synthetic.main.fragment_folder_tree.view.*
 import javax.inject.Inject
 
-class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback {
+class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback,
+    CanHandleOnBackPressed {
 
     companion object {
 
@@ -81,7 +83,7 @@ class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback {
         viewModel.nextFolder(crumb.file.safeGetCanonicalFile())
     }
 
-    fun pop(): Boolean{
+    override fun handle(): Boolean {
         return viewModel.popFolder()
     }
 

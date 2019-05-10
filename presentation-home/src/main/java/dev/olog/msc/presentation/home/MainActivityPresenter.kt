@@ -5,17 +5,17 @@ import dev.olog.msc.presentation.home.domain.IsRepositoryEmptyUseCase
 import javax.inject.Inject
 
 class MainActivityPresenter @Inject constructor(
-        private val appPreferencesUseCase: AppPreferencesGateway,
-        val isRepositoryEmptyUseCase: IsRepositoryEmptyUseCase
+    private val appPreferencesUseCase: AppPreferencesGateway,
+    val isRepositoryEmptyUseCase: IsRepositoryEmptyUseCase
 ) {
 
-    fun isFirstAccess() : Boolean {
+    fun isFirstAccess(): Boolean {
         return appPreferencesUseCase.isFirstAccess()
     }
 
     fun getLastBottomViewPage(): Int = appPreferencesUseCase.getLastBottomViewPage()
 
-    fun setLastBottomViewPage(page: Int){
+    fun setLastBottomViewPage(page: Int) {
         appPreferencesUseCase.setLastBottomViewPage(page)
     }
 
