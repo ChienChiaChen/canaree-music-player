@@ -35,16 +35,22 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         private const val SPLASH_REQUEST_CODE = 0
     }
 
-    @Inject lateinit var presenter: MainActivityPresenter
-    @Inject lateinit var navigator: Navigator
-    @Inject lateinit var classes: Classes
+    @Inject
+    lateinit var presenter: MainActivityPresenter
+    @Inject
+    lateinit var navigator: Navigator
+    @Inject
+    lateinit var classes: Classes
     // handles lifecycle itself
-    @Inject override lateinit var billing: IBilling
+    @Inject
+    override lateinit var billing: IBilling
 
-    @Suppress("unused") @Inject
+    @Suppress("unused")
+    @Inject
     lateinit var statusBarColorBehavior: StatusBarColorBehavior
-    @Suppress("unused") @Inject
-    lateinit var rateAppDialog : RateAppDialog
+    @Suppress("unused")
+    @Inject
+    lateinit var rateAppDialog: RateAppDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,53 +58,60 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
         slidingPanel.panelHeight = dimen(R.dimen.sliding_panel_peek) + dimen(R.dimen.bottom_navigation_height)
 
-        presenter.isRepositoryEmptyUseCase.execute()
-                .asLiveData()
-                .subscribe(this, this::handleEmptyRepository)
+        presenter.observeIsRepositoryEmpty()
+            .subscribe(this, this::handleEmptyRepository)
 
         val canReadStorage = Permissions.canReadStorage(this)
         val isFirstAccess = presenter.isFirstAccess()
         val toFirstAccess = !canReadStorage || isFirstAccess
-        if (toFirstAccess){
+        if (toFirstAccess) {
             navigator.toFirstAccess(this, SPLASH_REQUEST_CODE)
             return
         } else if (savedInstanceState == null) {
-            var navigateTo = presenter.getLastBottomViewPage()
-            if (!presenter.canShowPodcastCategory()){
-                bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
-                if (navigateTo == R.id.navigation_podcasts) {
-                    navigateTo = R.id.navigation_songs
-                    presenter.setLastBottomViewPage(navigateTo)
-                }
-            }
-            bottomNavigation.selectedItemId = navigateTo
-            bottomNavigate(navigateTo, false)
+            handleOnActivityCreated()
         } else {
-            if (!presenter.canShowPodcastCategory()){
-                val currentId = presenter.getLastBottomViewPage()
-                bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
-                if (currentId == R.id.navigation_podcasts){
-                    bottomNavigation.selectedItemId = R.id.navigation_songs
-                    presenter.setLastBottomViewPage(R.id.navigation_songs)
-                    bottomNavigate(bottomNavigation.selectedItemId, true)
-                }
-            }
+            handleOnActivityResumed()
         }
 
-        if (isMini()){
+        if (isMini()) {
             slidingPanel.setParallaxOffset(0)
             playerLayout.layoutParams = SlidingUpPanelLayout.LayoutParams(
-                    SlidingUpPanelLayout.LayoutParams.MATCH_PARENT, SlidingUpPanelLayout.LayoutParams.WRAP_CONTENT
+                SlidingUpPanelLayout.LayoutParams.MATCH_PARENT, SlidingUpPanelLayout.LayoutParams.WRAP_CONTENT
             )
         }
 
         bottomWrapper.doOnPreDraw {
-            if (slidingPanel.isExpanded()){
+            if (slidingPanel.isExpanded()) {
                 bottomWrapper.translationY = bottomWrapper.height.toFloat()
             }
         }
 
         intent?.let { handleIntent(it) }
+    }
+
+    private fun handleOnActivityCreated() {
+        var navigateTo = presenter.getLastBottomViewPage()
+        if (!presenter.canShowPodcastCategory()) {
+            bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
+            if (navigateTo == R.id.navigation_podcasts) {
+                navigateTo = R.id.navigation_songs
+                presenter.setLastBottomViewPage(navigateTo)
+            }
+        }
+        bottomNavigation.selectedItemId = navigateTo
+        bottomNavigate(navigateTo, false)
+    }
+
+    private fun handleOnActivityResumed() {
+        if (!presenter.canShowPodcastCategory()){
+            val currentId = presenter.getLastBottomViewPage()
+            bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
+            if (currentId == R.id.navigation_podcasts){
+                bottomNavigation.selectedItemId = R.id.navigation_songs
+                presenter.setLastBottomViewPage(R.id.navigation_songs)
+                bottomNavigate(bottomNavigation.selectedItemId, true)
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -118,8 +131,8 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         handleFakeView(slidingPanel.panelState)
     }
 
-    private fun handleFakeView(state: SlidingUpPanelLayout.PanelState){
-        when (state){
+    private fun handleFakeView(state: SlidingUpPanelLayout.PanelState) {
+        when (state) {
             SlidingUpPanelLayout.PanelState.EXPANDED,
             SlidingUpPanelLayout.PanelState.ANCHORED -> {
                 fakeView.isClickable = true
@@ -134,8 +147,8 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         }
     }
 
-    private fun bottomNavigate(itemId: Int, forceRecreate: Boolean){
-        when (itemId){
+    private fun bottomNavigate(itemId: Int, forceRecreate: Boolean) {
+        when (itemId) {
             R.id.navigation_songs -> navigator.toLibraryCategories(this, forceRecreate)
             R.id.navigation_search -> navigator.toSearchFragment(this)
             R.id.navigation_podcasts -> navigator.toPodcastCategories(this, forceRecreate)
@@ -157,13 +170,17 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
             bottomWrapper.translationY = bottomWrapper.height * clamp(slideOffset, 0f, 1f)
         }
 
-        override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState, newState: SlidingUpPanelLayout.PanelState) {
+        override fun onPanelStateChanged(
+            panel: View,
+            previousState: SlidingUpPanelLayout.PanelState,
+            newState: SlidingUpPanelLayout.PanelState
+        ) {
             handleFakeView(newState)
         }
     }
 
     private fun handleIntent(intent: Intent) {
-        when (intent.action){
+        when (intent.action) {
             FloatingWindowsConstants.ACTION_START_SERVICE -> {
                 FloatingWindowHelper.startServiceIfHasOverlayPermission(this, classes.musicService())
             }
@@ -192,8 +209,8 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         setIntent(null)
     }
 
-    private fun handleEmptyRepository(isEmpty: Boolean){
-        if (isEmpty){
+    private fun handleEmptyRepository(isEmpty: Boolean) {
+        if (isEmpty) {
             slidingPanel.panelHeight = dimen(R.dimen.bottom_navigation_height)
         } else {
             slidingPanel.panelHeight = dimen(R.dimen.sliding_panel_peek) + dimen(R.dimen.bottom_navigation_height)
@@ -201,8 +218,8 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK){
-            when (requestCode){
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
                 SPLASH_REQUEST_CODE -> {
                     bottomNavigate(bottomNavigation.selectedItemId, false)
                     slidingPanel.collapse()
@@ -216,7 +233,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
             }
         }
 
-        if (requestCode == FloatingWindowHelper.REQUEST_CODE_HOVER_PERMISSION){
+        if (requestCode == FloatingWindowHelper.REQUEST_CODE_HOVER_PERMISSION) {
             FloatingWindowHelper.startServiceIfHasOverlayPermission(this, classes.floatingWindowService())
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -225,7 +242,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     override fun onBackPressed() {
         try {
-            if (tryPopFolderBack()){
+            if (tryPopFolderBack()) {
                 return
             }
 
@@ -240,7 +257,8 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
                 slidingPanel.isExpanded() -> slidingPanel.collapse()
                 else -> super.onBackPressed()
             }
-        } catch (ex: IllegalStateException){ /*random fragment manager crashes */}
+        } catch (ex: IllegalStateException) { /*random fragment manager crashes */
+        }
 
     }
 
@@ -249,7 +267,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         categories?.view?.findViewById<androidx.viewpager.widget.ViewPager>(R.id.viewPager)?.let { pager ->
             val currentItem = pager.adapter?.instantiateItem(pager, pager.currentItem) as Fragment
 
-            return if (currentItem is CanHandleOnBackPressed){
+            return if (currentItem is CanHandleOnBackPressed) {
                 currentItem.handle()
             } else false
 

@@ -10,9 +10,6 @@ import dev.olog.msc.pro.ProModule
         MainActivityModule::class,
         MainActivityFragmentsModule::class,
         ProModule::class
-// TODO
-//        // fragments
-
 //        PlaylistTracksChooserInjector::class,
 ))
 @PerActivity

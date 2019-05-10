@@ -17,7 +17,7 @@ class IsRepositoryEmptyUseCase @Inject constructor(
 
     override fun buildUseCaseObservable(): Observable<Boolean> {
         return playingQueueUseCase.execute()
-                .debounceFirst(500, TimeUnit.MILLISECONDS)
+                .debounceFirst(250, TimeUnit.MILLISECONDS)
                 .map { it.isEmpty() }
                 .distinctUntilChanged()
     }

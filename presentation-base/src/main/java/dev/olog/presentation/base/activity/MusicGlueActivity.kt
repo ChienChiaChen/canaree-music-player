@@ -45,8 +45,6 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
     internal val queueTitlePublisher = BehaviorSubject.create<String>()
     internal val extrasPublisher = BehaviorSubject.create<Bundle>()
 
-
-
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

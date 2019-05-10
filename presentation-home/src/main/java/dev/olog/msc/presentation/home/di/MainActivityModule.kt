@@ -1,35 +1,37 @@
 package dev.olog.msc.presentation.home.di
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.IntoMap
 import dev.olog.msc.presentation.home.MainActivity
+import dev.olog.msc.presentation.home.MainActivityPresenter
 import dev.olog.msc.pro.ProModule
+import dev.olog.presentation.base.ViewModelKey
 
 @Module(includes = [ProModule::class])
 class MainActivityModule(
-        private val activity: MainActivity
+    private val activity: MainActivity
 ) {
 
     @Provides
     fun provideInstance() = activity
-//
-//    @Provides
-//    @ActivityContext
-//    internal fun provideContext(): Context = activity
-//
-//    @Provides
-//    @ActivityLifecycle
-//    internal fun provideLifecycle(): Lifecycle = activity.lifecycle
-//
-//    @Provides
-//    internal fun provideLifecycleOwner(): LifecycleOwner = activity
-//
 
     @Provides
     internal fun provideSupportActivity(): AppCompatActivity = activity
-//
-//    @Provides
-//    internal fun provideFragmentActivity(): androidx.fragment.app.FragmentActivity = activity
+
+    @Module
+    companion object {
+
+        @Provides
+        @JvmStatic
+        @IntoMap
+        @ViewModelKey(MainActivityPresenter::class)
+        internal fun provideViewModel(viewModel: MainActivityPresenter): ViewModel {
+            return viewModel
+        }
+
+    }
 
 }
