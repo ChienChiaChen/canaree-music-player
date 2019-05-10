@@ -10,11 +10,11 @@ import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.FolderMostPlayedEntity
 import dev.olog.msc.data.mapper.toFolder
+import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.safeCompare
 import io.reactivex.Completable
 import io.reactivex.CompletableSource
 import io.reactivex.Observable
-import java.text.Collator
 import javax.inject.Inject
 
 internal class FolderRepository @Inject constructor(

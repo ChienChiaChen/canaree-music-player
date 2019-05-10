@@ -10,13 +10,13 @@ import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.safeCompare
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import java.text.Collator
 import javax.inject.Inject
 
 internal class FavoriteRepository @Inject constructor(

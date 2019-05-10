@@ -10,7 +10,7 @@ import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
-inline fun Disposable?.unsubscribe(){
+inline fun Disposable?.unsubscribe() {
     if (this != null && !isDisposed) {
         dispose()
     }
@@ -20,7 +20,6 @@ inline fun <T> Observable<T>.asFlowable(backpressureStrategy: BackpressureStrate
         : Flowable<T> {
     return this.toFlowable(backpressureStrategy)
 }
-
 
 
 inline fun <T, R> Flowable<List<T>>.mapToList(crossinline mapper: (T) -> R): Flowable<List<R>> {
@@ -35,16 +34,26 @@ inline fun <T, R> Single<List<T>>.mapToList(noinline mapper: (T) -> R): Single<L
     return flatMap { Flowable.fromIterable(it).map(mapper).toList() }
 }
 
-inline fun <T> Observable<T>.debounceFirst(timeout: Long = 200L, unit: TimeUnit = TimeUnit.MILLISECONDS): Observable<T>{
+inline fun <T> Observable<T>.debounceFirst(
+    timeout: Long = 200L,
+    unit: TimeUnit = TimeUnit.MILLISECONDS
+): Observable<T> {
     return this.asFlowable()
-            .compose(FlowableFirstThenDebounce.get(timeout, unit))
-            .toObservable()
+        .compose(FlowableFirstThenDebounce.get(timeout, unit))
+        .toObservable()
 }
 
-inline fun <T> Flowable<T>.debounceFirst(timeout: Long = 200L, unit: TimeUnit = TimeUnit.MILLISECONDS): Flowable<T>{
+inline fun <T> Flowable<T>.debounceFirst(timeout: Long = 200L, unit: TimeUnit = TimeUnit.MILLISECONDS): Flowable<T> {
     return this.compose(FlowableFirstThenDebounce.get(timeout, unit))
 }
 
 inline fun <T> Single<T>.defer(): Single<T> {
     return Single.defer { this }
+}
+
+inline fun <T> Observable<T>.countTime(): Observable<T> {
+    var start = System.currentTimeMillis()
+    return this.doOnSubscribe {
+        start = System.currentTimeMillis()
+    }.doOnNext { println("done in ${System.currentTimeMillis() - start}") }
 }

@@ -14,13 +14,13 @@ import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.mapper.toAlbum
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.shared.TrackUtils
+import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.debounceFirst
 import dev.olog.msc.shared.extensions.safeCompare
 import dev.olog.msc.shared.onlyWithStoragePermission
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
-import java.text.Collator
 import javax.inject.Inject
 
 private val MEDIA_STORE_URI = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
