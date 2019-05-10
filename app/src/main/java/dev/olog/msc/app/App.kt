@@ -3,7 +3,6 @@ package dev.olog.msc.app
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
-import android.os.Looper
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceManager
 import dagger.android.AndroidInjector
@@ -25,8 +24,6 @@ import dev.olog.msc.shared.updatePermissionValve
 import dev.olog.msc.traceur.Traceur
 import dev.olog.presentation.base.ImageViews
 import io.alterac.blurkit.BlurKit
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 
@@ -48,7 +45,6 @@ class App : BaseApp() {
 
     override fun initializeApp() {
         initializeComponents()
-        initRxMainScheduler()
         initializeConstants()
         resetSleepTimer()
 
@@ -57,16 +53,6 @@ class App : BaseApp() {
 
     override fun onStart(owner: LifecycleOwner) {
         updatePermissionValve(this, Permissions.canReadStorage(this))
-    }
-
-    override fun onStop(owner: LifecycleOwner) {
-        updatePermissionValve(this, false)
-    }
-
-    private fun initRxMainScheduler() {
-        RxAndroidPlugins.setInitMainThreadSchedulerHandler {
-            AndroidSchedulers.from(Looper.getMainLooper(), true)
-        }
     }
 
     private fun initializeComponents() {
