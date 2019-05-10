@@ -7,7 +7,6 @@ import dev.olog.msc.apilastfm.artist.info.ArtistInfo
 import dev.olog.msc.apilastfm.artist.search.ArtistSearch
 import dev.olog.msc.apilastfm.track.info.TrackInfo
 import dev.olog.msc.apilastfm.track.search.TrackSearch
-import dev.olog.msc.core.gateway.LastFmGateway.Companion.LAST_FM_API_KEY
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -19,7 +18,7 @@ private const val DEFAULT_SEARCH_PAGES = MAX_SEARCH_PAGES
 
 private const val DEFAULT_AUTO_CORRECT = 1L
 
-private const val BASE_URL = "?api_key=$LAST_FM_API_KEY&format=json"
+private const val BASE_URL = "?api_key=${BuildConfig.LAST_FM_KEY}&format=json"
 
 interface LastFmService {
 

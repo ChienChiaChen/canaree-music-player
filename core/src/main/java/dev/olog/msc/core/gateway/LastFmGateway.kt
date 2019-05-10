@@ -6,11 +6,6 @@ import io.reactivex.Single
 
 interface LastFmGateway {
 
-    companion object {
-        const val LAST_FM_API_KEY = "56553f687cba2aa671c99caff536def1"
-        const val LAST_FM_API_SECRET = "b81ab835211b283398a16343ab0e6b66"
-    }
-
     fun shouldFetchTrack(trackId: Long): Single<Boolean>
     fun getTrack(trackId: Long): Single<Optional<LastFmTrack?>>
     fun deleteTrack(trackId: Long)
