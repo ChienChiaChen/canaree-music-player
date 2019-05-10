@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.msc.presentation.tabs.data
 
 import android.content.res.Resources
@@ -12,7 +14,7 @@ import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.presentation.base.model.DisplayableItem
 import java.util.concurrent.TimeUnit
 
-internal fun PodcastPlaylist.toTabDisplayableItem(resources: Resources): DisplayableItem {
+internal inline fun PodcastPlaylist.toTabDisplayableItem(resources: Resources): DisplayableItem {
 
     val size = DisplayableItem.handleSongListSize(resources, size)
 
@@ -26,7 +28,7 @@ internal fun PodcastPlaylist.toTabDisplayableItem(resources: Resources): Display
 }
 
 
-internal fun PodcastPlaylist.toAutoPlaylist(): DisplayableItem {
+internal inline fun PodcastPlaylist.toAutoPlaylist(): DisplayableItem {
 
     return DisplayableItem(
         R.layout.item_tab_auto_playlist,
@@ -37,7 +39,7 @@ internal fun PodcastPlaylist.toAutoPlaylist(): DisplayableItem {
     )
 }
 
-internal fun Podcast.toTabDisplayableItem(resources: Resources): DisplayableItem {
+internal inline fun Podcast.toTabDisplayableItem(resources: Resources): DisplayableItem {
     val artist = TrackUtils.adjustArtist(this.artist)
 
     val duration = resources.getString(R.string.tab_podcast_duration, TimeUnit.MILLISECONDS.toMinutes(this.duration))
@@ -53,7 +55,7 @@ internal fun Podcast.toTabDisplayableItem(resources: Resources): DisplayableItem
     )
 }
 
-internal fun PodcastArtist.toTabDisplayableItem(resources: Resources): DisplayableItem {
+internal inline fun PodcastArtist.toTabDisplayableItem(resources: Resources): DisplayableItem {
     val songs = DisplayableItem.handleSongListSize(resources, songs)
     var albums = DisplayableItem.handleAlbumListSize(resources, albums)
     if (albums.isNotBlank()) albums+= TextUtils.MIDDLE_DOT_SPACED
@@ -68,7 +70,7 @@ internal fun PodcastArtist.toTabDisplayableItem(resources: Resources): Displayab
 }
 
 
-internal fun PodcastAlbum.toTabDisplayableItem(): DisplayableItem {
+internal inline fun PodcastAlbum.toTabDisplayableItem(): DisplayableItem {
     return DisplayableItem(
         R.layout.item_tab_album,
         MediaId.podcastAlbumId(id),
@@ -78,7 +80,7 @@ internal fun PodcastAlbum.toTabDisplayableItem(): DisplayableItem {
     )
 }
 
-internal fun PodcastAlbum.toTabLastPlayedDisplayableItem(): DisplayableItem {
+internal inline fun PodcastAlbum.toTabLastPlayedDisplayableItem(): DisplayableItem {
     return DisplayableItem(
         R.layout.item_tab_album_last_played,
         MediaId.podcastAlbumId(id),
@@ -88,7 +90,7 @@ internal fun PodcastAlbum.toTabLastPlayedDisplayableItem(): DisplayableItem {
     )
 }
 
-internal fun PodcastArtist.toTabLastPlayedDisplayableItem(resources: Resources): DisplayableItem {
+internal inline fun PodcastArtist.toTabLastPlayedDisplayableItem(resources: Resources): DisplayableItem {
     val songs = DisplayableItem.handleSongListSize(resources, songs)
     var albums = DisplayableItem.handleAlbumListSize(resources, albums)
     if (albums.isNotBlank()) albums+= TextUtils.MIDDLE_DOT_SPACED

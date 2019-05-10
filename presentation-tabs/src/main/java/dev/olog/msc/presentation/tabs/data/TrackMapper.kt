@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.msc.presentation.tabs.data
 
 import android.content.res.Resources
@@ -8,7 +10,7 @@ import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.presentation.base.model.DisplayableItem
 
-internal fun Folder.toTabDisplayableItem(resources: Resources): DisplayableItem {
+internal inline fun Folder.toTabDisplayableItem(resources: Resources): DisplayableItem {
     return DisplayableItem(
         R.layout.item_tab_album,
         MediaId.folderId(path),
@@ -18,7 +20,7 @@ internal fun Folder.toTabDisplayableItem(resources: Resources): DisplayableItem 
     )
 }
 
-internal fun Playlist.toAutoPlaylist(): DisplayableItem {
+internal inline fun Playlist.toAutoPlaylist(): DisplayableItem {
 
     return DisplayableItem(
         R.layout.item_tab_auto_playlist,
@@ -29,7 +31,7 @@ internal fun Playlist.toAutoPlaylist(): DisplayableItem {
     )
 }
 
-internal fun Playlist.toTabDisplayableItem(resources: Resources): DisplayableItem {
+internal inline fun Playlist.toTabDisplayableItem(resources: Resources): DisplayableItem {
 
     val size = DisplayableItem.handleSongListSize(resources, size)
 
@@ -42,7 +44,7 @@ internal fun Playlist.toTabDisplayableItem(resources: Resources): DisplayableIte
     )
 }
 
-internal fun Song.toTabDisplayableItem(): DisplayableItem {
+internal inline fun Song.toTabDisplayableItem(): DisplayableItem {
     val artist = TrackUtils.adjustArtist(this.artist)
     val album = TrackUtils.adjustAlbum(this.album)
 
@@ -57,7 +59,7 @@ internal fun Song.toTabDisplayableItem(): DisplayableItem {
 }
 
 
-internal fun Album.toTabDisplayableItem(): DisplayableItem {
+internal inline fun Album.toTabDisplayableItem(): DisplayableItem {
     return DisplayableItem(
         R.layout.item_tab_album,
         MediaId.albumId(id),
@@ -67,7 +69,7 @@ internal fun Album.toTabDisplayableItem(): DisplayableItem {
     )
 }
 
-internal fun Artist.toTabDisplayableItem(resources: Resources): DisplayableItem {
+internal inline fun Artist.toTabDisplayableItem(resources: Resources): DisplayableItem {
     val songs = DisplayableItem.handleSongListSize(resources, songs)
     var albums = DisplayableItem.handleAlbumListSize(resources, albums)
     if (albums.isNotBlank()) albums += TextUtils.MIDDLE_DOT_SPACED
@@ -82,7 +84,7 @@ internal fun Artist.toTabDisplayableItem(resources: Resources): DisplayableItem 
 }
 
 
-internal fun Genre.toTabDisplayableItem(resources: Resources): DisplayableItem {
+internal inline fun Genre.toTabDisplayableItem(resources: Resources): DisplayableItem {
     return DisplayableItem(
         R.layout.item_tab_album,
         MediaId.genreId(id),
@@ -92,7 +94,7 @@ internal fun Genre.toTabDisplayableItem(resources: Resources): DisplayableItem {
     )
 }
 
-internal fun Album.toTabLastPlayedDisplayableItem(): DisplayableItem {
+internal inline fun Album.toTabLastPlayedDisplayableItem(): DisplayableItem {
     return DisplayableItem(
         R.layout.item_tab_album_last_played,
         MediaId.albumId(id),
@@ -102,7 +104,7 @@ internal fun Album.toTabLastPlayedDisplayableItem(): DisplayableItem {
     )
 }
 
-internal fun Artist.toTabLastPlayedDisplayableItem(resources: Resources): DisplayableItem {
+internal inline fun Artist.toTabLastPlayedDisplayableItem(resources: Resources): DisplayableItem {
     val songs = DisplayableItem.handleSongListSize(resources, songs)
     var albums = DisplayableItem.handleAlbumListSize(resources, albums)
     if (albums.isNotBlank()) albums += TextUtils.MIDDLE_DOT_SPACED

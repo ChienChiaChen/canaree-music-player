@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import dev.olog.presentation.base.R;
 import dev.olog.presentation.base.theme.dark.mode.DarkModeExtensionKt;
 
+// TODO consumes too much memory only for drawing a dotted separator
 public class DottedSeparator extends View {
 
     public DottedSeparator(Context context) {
