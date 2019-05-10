@@ -21,7 +21,6 @@ import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.updatePermissionValve
-import dev.olog.msc.traceur.Traceur
 import dev.olog.presentation.base.ImageViews
 import io.alterac.blurkit.BlurKit
 import javax.inject.Inject
@@ -69,7 +68,7 @@ class App : ThemedApp() {
     private fun initializeComponents() {
         BlurKit.init(this)
         if (BuildConfig.DEBUG) {
-            Traceur.enableLogging()
+//            Traceur.enableLogging()
 //            LeakCanary.install(this)
 //            Stetho.initializeWithDefaults(this)
         }

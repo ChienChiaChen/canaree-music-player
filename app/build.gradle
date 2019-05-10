@@ -112,7 +112,6 @@ dependencies {
     implementation project(':core')
 
     implementation project(':jaudiotagger')
-    implementation project(':traceur')
     implementation project(':tap-target-view')
 
     implementation project(':shared')
