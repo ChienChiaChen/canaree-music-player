@@ -5,7 +5,6 @@ import android.content.res.Resources
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
-
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
@@ -22,7 +21,10 @@ import dev.olog.msc.core.interactor.played.GetLastPlayedPodcastArtistsUseCase
 import dev.olog.msc.presentation.tabs.R
 import dev.olog.msc.presentation.tabs.TabFragmentHeaders
 import dev.olog.msc.shared.TrackUtils
-import dev.olog.msc.shared.extensions.*
+import dev.olog.msc.shared.extensions.doIf
+import dev.olog.msc.shared.extensions.mapToList
+import dev.olog.msc.shared.extensions.startWith
+import dev.olog.msc.shared.extensions.startWithIfNotEmpty
 import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
@@ -47,16 +49,14 @@ class TabFragmentPodcastModule {
         val autoPlaylistObs = autoPlaylistUseCase.execute()
                 .mapToList { it.toAutoPlaylist() }
                 .map { it.startWith(headers.autoPlaylistHeader) }
-                .defer()
 
         val playlistObs = podcastUseCase.execute()
                 .mapToList { it.toTabDisplayableItem(resources) }
                 .map { it.startWithIfNotEmpty(headers.allPlaylistHeader) }
-                .defer()
 
         return Observables.combineLatest(playlistObs, autoPlaylistObs) { playlist, autoPlaylist ->
             autoPlaylist.plus(playlist)
-        }.defer()
+        }
     }
 
     @Provides
@@ -69,7 +69,7 @@ class TabFragmentPodcastModule {
 
         return useCase.execute()
                 .mapToList { it.toTabDisplayableItem(context) }
-                .defer()
+
     }
 
     @Provides
@@ -85,7 +85,7 @@ class TabFragmentPodcastModule {
         val allObs = useCase.execute()
                 .mapToList { it.toTabDisplayableItem(resources) }
                 .map { it.toMutableList() }
-                .defer()
+
 
         val lastPlayedObs = Observables.combineLatest(
                 lastPlayedArtistsUseCase.execute().distinctUntilChanged(),
@@ -96,10 +96,10 @@ class TabFragmentPodcastModule {
                     .doIf(last.count() > 0) { addAll(headers.recentArtistHeaders) }
                     .doIf(result.isNotEmpty()) { addAll(headers.allArtistsHeader) }
         }.distinctUntilChanged()
-                .defer()
+
 
         return Observables.combineLatest(allObs, lastPlayedObs) { all, recent -> recent.plus(all) }
-                .defer()
+
     }
 
     @Provides
@@ -114,7 +114,7 @@ class TabFragmentPodcastModule {
         val allObs = useCase.execute()
                 .mapToList { it.toTabDisplayableItem() }
                 .map { it.toMutableList() }
-                .defer()
+
 
         val lastPlayedObs = Observables.combineLatest(
                 lastPlayedAlbumsUseCase.execute().distinctUntilChanged(),
@@ -125,10 +125,10 @@ class TabFragmentPodcastModule {
                     .doIf(last.count() > 0) { addAll(headers.recentAlbumHeaders) }
                     .doIf(result.isNotEmpty()) { addAll(headers.allAlbumsHeader) }
         }.distinctUntilChanged()
-                .defer()
+
 
         return Observables.combineLatest(allObs, lastPlayedObs) { all, recent -> recent.plus(all) }
-                .defer()
+
     }
 
     @Provides
@@ -139,7 +139,7 @@ class TabFragmentPodcastModule {
 
         return useCase.execute()
                 .mapToList { it.toTabLastPlayedDisplayableItem() }
-                .defer()
+
     }
 
     @Provides
@@ -151,7 +151,7 @@ class TabFragmentPodcastModule {
 
         return useCase.execute()
                 .mapToList { it.toTabLastPlayedDisplayableItem(resources) }
-                .defer()
+
     }
 
     @Provides
@@ -162,7 +162,7 @@ class TabFragmentPodcastModule {
 
         return useCase.execute()
                 .mapToList { it.toTabLastPlayedDisplayableItem() }
-                .defer()
+
     }
 
     @Provides
@@ -174,7 +174,7 @@ class TabFragmentPodcastModule {
 
         return useCase.execute()
                 .mapToList { it.toTabLastPlayedDisplayableItem(resources) }
-                .defer()
+
     }
 
 }

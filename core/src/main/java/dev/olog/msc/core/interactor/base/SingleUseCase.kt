@@ -5,15 +5,15 @@ import io.reactivex.Single
 
 
 abstract class SingleUseCase<T>(
-        private val schedulers: Schedulers
+    private val schedulers: Schedulers
 ) {
 
     protected abstract fun buildUseCaseObservable(): Single<T>
 
     fun execute(): Single<T> {
-        return Single.defer { this.buildUseCaseObservable()
-                .subscribeOn(schedulers.worker)
-                .observeOn(schedulers.ui) }
+        return this.buildUseCaseObservable()
+            .subscribeOn(schedulers.worker)
+            .observeOn(schedulers.ui)
     }
 
 }

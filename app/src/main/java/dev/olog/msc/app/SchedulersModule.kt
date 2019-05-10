@@ -5,6 +5,7 @@ import dagger.Module
 import dev.olog.msc.core.executors.ComputationScheduler
 import dev.olog.msc.core.executors.IoScheduler
 import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,7 +29,7 @@ class ComputationSchedulers @Inject constructor(): ComputationScheduler {
         get() = Schedulers.computation()
 
     override val ui: Scheduler
-        get() = Schedulers.computation()
+        get() = AndroidSchedulers.mainThread()
 }
 
 class IoSchedulers @Inject constructor(): IoScheduler {
@@ -37,5 +38,5 @@ class IoSchedulers @Inject constructor(): IoScheduler {
         get() = Schedulers.io()
 
     override val ui: Scheduler
-        get() = Schedulers.io()
+        get() = AndroidSchedulers.mainThread()
 }

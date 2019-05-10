@@ -10,9 +10,9 @@ abstract class CompletableUseCaseWithParam<in Param>(
     protected abstract fun buildUseCaseObservable(param: Param): Completable
 
     fun execute(param: Param): Completable {
-        return Completable.defer { this.buildUseCaseObservable(param)
+        return this.buildUseCaseObservable(param)
                 .subscribeOn(schedulers.worker)
-                .observeOn(schedulers.ui) }
+                .observeOn(schedulers.ui)
     }
 
 }
