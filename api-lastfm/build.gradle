@@ -31,13 +31,15 @@ dependencies {
     implementation project(':shared')
     implementation project(':data')
 
+    implementation librariesPersistency.room
+
     implementation librariesAndroidX.annotations
 
     implementation librariesUtils.fuzzywuzzy
-    api librariesUtils.gson
+    implementation librariesUtils.gson
 
-    api librariesUtils.optional
-    api librariesNetwork.retrofit
+    implementation librariesUtils.optional
+    implementation librariesNetwork.retrofit
     implementation librariesNetwork.retrofitRx
     implementation librariesNetwork.retrofitGson
     implementation librariesNetwork.retrofitInterceptor

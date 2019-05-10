@@ -134,7 +134,7 @@ class TabFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         sidebar.setListener(letterTouchListener)
-        fab.setOnClickListener {
+        fab?.setOnClickListener {
             if (category == MediaIdCategory.PLAYLISTS){
                 navigator.toChooseTracksForPlaylistFragment(requireActivity(), PlaylistType.TRACK)
             } else {

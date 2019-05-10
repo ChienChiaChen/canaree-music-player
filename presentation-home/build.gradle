@@ -11,7 +11,9 @@ dependencies {
     implementation project(':pro')
     implementation project(':presentation-player')
     implementation project(':presentation-player-mini')
+
     implementation project(':presentation-categories')
+    implementation project(':presentation-tabs')
 
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions

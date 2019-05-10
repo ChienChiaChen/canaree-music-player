@@ -25,7 +25,7 @@ dependencies {
     // db
     implementation librariesPersistency.sqlBrite
     implementation librariesPersistency.room
-    implementation librariesPersistency.roomProcessor
+    kapt librariesPersistency.roomProcessor
     implementation librariesPersistency.roomRx
     implementation librariesPersistency.rxPrefs
 }

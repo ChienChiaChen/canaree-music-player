@@ -209,6 +209,15 @@ dependencies {
     implementation librariesUtils.customTabs
     implementation librariesUi.blurkit
 
+//    db
+    implementation librariesPersistency.sqlBrite
+    implementation librariesPersistency.room
+    implementation librariesPersistency.rxPrefs
+
+    implementation librariesUtils.optional
+    implementation librariesNetwork.retrofit
+    implementation librariesUtils.gson
+
     // debug
     debugImplementation librariesDebug.leakCanary
     debugImplementation librariesDebug.leakCanarySupport

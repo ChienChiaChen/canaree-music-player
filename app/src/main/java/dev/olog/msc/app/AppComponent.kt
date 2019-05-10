@@ -38,7 +38,6 @@ import dev.olog.msc.presentation.related.artists.di.RelatedArtistFragmentInjecto
 import dev.olog.msc.presentation.search.di.SearchFragmentInjector
 import dev.olog.msc.presentation.shortcuts.playlist.chooser.di.PlaylistChooserActivityInjector
 import dev.olog.msc.presentation.sleeptimer.di.SleepTimerInjector
-import dev.olog.msc.presentation.tabs.di.TabFragmentInjector
 import dev.olog.msc.presentation.tabs.foldertree.di.FolderTreeFragmentModule
 import javax.inject.Singleton
 
@@ -67,7 +66,6 @@ import javax.inject.Singleton
         PlaylistChooserActivityInjector::class,
         ViewModelModule::class,
 
-        TabFragmentInjector::class,
         FolderTreeFragmentModule::class,
         DetailFragmentInjector::class,
         PlayerFragmentModule::class,
