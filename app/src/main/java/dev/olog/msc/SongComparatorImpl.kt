@@ -4,13 +4,11 @@ import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.sort.ComparatorUtils
 import dev.olog.msc.core.interactor.sort.ISongComparator
+import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.safeCompare
-import java.text.Collator
 import javax.inject.Inject
 
-class SongComparatorImpl @Inject constructor(
-        private val collator: Collator
-) : ISongComparator {
+class SongComparatorImpl @Inject constructor() : ISongComparator {
     override fun getAscending(sortType: SortType): Comparator<Song> {
         return when (sortType) {
             SortType.TITLE -> Comparator { o1, o2 -> collator.safeCompare(o1.title, o2.title) }

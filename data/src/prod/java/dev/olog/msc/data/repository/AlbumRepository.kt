@@ -30,7 +30,6 @@ internal class AlbumRepository @Inject constructor(
         private val rxContentResolver: BriteContentResolver,
         private val songGateway: SongGateway,
         appDatabase: AppDatabase,
-        private val collator: Collator,
         private val usedImageGateway: UsedImageGateway
 
 ) : AlbumGateway {

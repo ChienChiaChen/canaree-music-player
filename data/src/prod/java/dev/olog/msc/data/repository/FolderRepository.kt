@@ -20,8 +20,7 @@ import javax.inject.Inject
 internal class FolderRepository @Inject constructor(
         @ApplicationContext private val context: Context,
         private val songGateway: SongGateway,
-        appDatabase: AppDatabase,
-        private val collator: Collator
+        appDatabase: AppDatabase
 
 ): FolderGateway {
 

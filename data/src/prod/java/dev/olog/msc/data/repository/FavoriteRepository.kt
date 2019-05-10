@@ -22,8 +22,7 @@ import javax.inject.Inject
 internal class FavoriteRepository @Inject constructor(
     appDatabase: AppDatabase,
     private val songGateway: SongGateway,
-    private val podcastGateway: PodcastGateway,
-    private val collator: Collator
+    private val podcastGateway: PodcastGateway
 
 ) : FavoriteGateway {
 

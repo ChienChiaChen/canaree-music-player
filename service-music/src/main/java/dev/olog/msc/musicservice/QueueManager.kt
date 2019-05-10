@@ -18,12 +18,12 @@ import dev.olog.msc.musicservice.model.*
 import dev.olog.msc.musicservice.voice.VoiceSearch
 import dev.olog.msc.musicservice.voice.VoiceSearchParams
 import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.safeCompare
 import dev.olog.msc.shared.extensions.swap
 import dev.olog.msc.shared.utils.clamp
 import io.reactivex.Single
 import io.reactivex.functions.Function
-import java.text.Collator
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -39,7 +39,6 @@ internal class QueueManager @Inject constructor(
         private val getRecentlyAddedUseCase: GetRecentlyAddedUseCase,
         private val getSongByFileUseCase: GetSongByFileUseCase,
         private val genreGateway: GenreGateway,
-        private val collator: Collator,
         private val enhancedShuffle: EnhancedShuffle,
         private val podcastPosition: PodcastPositionUseCase
 
@@ -129,9 +128,9 @@ internal class QueueManager @Inject constructor(
             val sortOrder = SortType.valueOf(extras.getString(MusicConstants.ARGUMENT_SORT_TYPE)!!)
             val arranging = SortArranging.valueOf(extras.getString(MusicConstants.ARGUMENT_SORT_ARRANGING)!!)
             return if (arranging == SortArranging.ASCENDING){
-                list.sortedWith(getAscendingComparator(sortOrder, collator))
+                list.sortedWith(getAscendingComparator(sortOrder))
             } else {
-                list.sortedWith(getDescendingComparator(sortOrder, collator))
+                list.sortedWith(getDescendingComparator(sortOrder))
             }
         } catch (ex: Exception){
             list
@@ -329,7 +328,7 @@ internal class QueueManager @Inject constructor(
     }
 }
 
-private fun getAscendingComparator(sortType: SortType, collator: Collator): Comparator<MediaEntity> {
+private fun getAscendingComparator(sortType: SortType): Comparator<MediaEntity> {
     return when (sortType){
         SortType.TITLE -> Comparator { o1, o2 -> collator.safeCompare(o1.title, o2.title) }
         SortType.ARTIST -> Comparator { o1, o2 -> collator.safeCompare(o1.artist, o2.artist) }
@@ -342,7 +341,7 @@ private fun getAscendingComparator(sortType: SortType, collator: Collator): Comp
     }
 }
 
-private fun getDescendingComparator(sortType: SortType, collator: Collator): Comparator<MediaEntity> {
+private fun getDescendingComparator(sortType: SortType): Comparator<MediaEntity> {
     return when (sortType){
         SortType.TITLE -> Comparator { o1, o2 -> collator.safeCompare(o2.title, o1.title) }
         SortType.ARTIST -> Comparator { o1, o2 -> collator.safeCompare(o2.artist, o1.artist) }

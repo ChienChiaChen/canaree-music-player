@@ -23,6 +23,8 @@ import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.updatePermissionValve
 import dev.olog.presentation.base.ImageViews
 import io.alterac.blurkit.BlurKit
+import io.reactivex.Completable
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -66,7 +68,10 @@ class App : ThemedApp() {
     }
 
     private fun initializeComponents() {
-        BlurKit.init(this)
+        initializeAsync {
+            BlurKit.init(this)
+        }
+
         if (BuildConfig.DEBUG) {
 //            Traceur.enableLogging()
 //            LeakCanary.install(this)
@@ -91,4 +96,11 @@ class App : ThemedApp() {
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerAppComponent.builder().create(this)
     }
+
+    private fun initializeAsync(what: () -> Unit){
+        val disposable = Completable.fromCallable { what }
+            .subscribeOn(Schedulers.computation())
+            .subscribe({}, Throwable::printStackTrace)
+    }
+
 }

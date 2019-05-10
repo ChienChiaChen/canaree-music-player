@@ -10,11 +10,11 @@ import android.provider.BaseColumns
 import android.provider.MediaStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.interactor.all.GetAllFoldersUseCase
+import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.*
 import dev.olog.presentation.base.extensions.asLiveData
 import io.reactivex.Observable
@@ -23,14 +23,12 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import java.io.File
-import java.text.Collator
 import javax.inject.Inject
 
 class FolderTreeFragmentViewModel @Inject constructor(
         @ApplicationContext private val context: Context,
         private val appPreferencesUseCase: AppPreferencesGateway,
-        private val getAllFoldersUseCase: GetAllFoldersUseCase,
-        private val collator: Collator
+        private val getAllFoldersUseCase: GetAllFoldersUseCase
 
 ) : ViewModel() {
 

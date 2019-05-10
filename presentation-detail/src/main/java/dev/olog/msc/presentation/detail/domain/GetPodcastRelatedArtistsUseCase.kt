@@ -7,17 +7,16 @@ import dev.olog.msc.core.interactor.GetSongListByParamUseCase
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.interactor.item.GetPodcastArtistUseCase
 import dev.olog.msc.shared.TrackUtils
+import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.safeCompare
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toFlowable
-import java.text.Collator
 import javax.inject.Inject
 
 class GetPodcastRelatedArtistsUseCase @Inject constructor(
         private val executors: ComputationScheduler,
         private val getSongListByParamUseCase: GetSongListByParamUseCase,
-        private val getPodcastArtistUseCase: GetPodcastArtistUseCase,
-        private val collator: Collator
+        private val getPodcastArtistUseCase: GetPodcastArtistUseCase
 
 ) : ObservableUseCaseWithParam<List<PodcastArtist>, MediaId>(executors) {
 

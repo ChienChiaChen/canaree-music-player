@@ -26,7 +26,6 @@ internal class PodcastArtistRepository @Inject constructor(
         appDatabase: AppDatabase,
         private val rxContentResolver: BriteContentResolver,
         private val podcastGateway: PodcastGateway,
-        private val collator: Collator,
         private val usedImageGateway: UsedImageGateway
 
 ) : PodcastArtistGateway {

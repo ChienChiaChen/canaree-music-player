@@ -22,14 +22,38 @@ import javax.inject.Singleton
 class LastFmModule {
 
     @Provides
+    @Impl
+    internal fun provideLastFmRest(@ApplicationContext context: Context): LastFmService {
+        val client = provideOkHttp(context)
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://ws.audioscrobbler.com/2.0/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+            .client(client)
+            .build()
+
+        return retrofit.create(LastFmService::class.java)
+    }
+
+    @Provides
     @Singleton
-    internal fun provideOkHttp(@ApplicationContext context: Context): OkHttpClient {
+    @Proxy
+    internal fun provideLastFmProxy(proxy: LastFmProxy): LastFmService = proxy
+
+    @Provides
+    @Singleton
+    internal fun provideLastFmRepository(repository: LastFmRepository): LastFmGateway {
+        return repository
+    }
+
+    private fun provideOkHttp(context: Context): OkHttpClient {
         return OkHttpClient.Builder()
-                .addNetworkInterceptor(logInterceptor())
-                .addInterceptor(headerInterceptor(context))
-                .connectTimeout(1, TimeUnit.SECONDS)
-                .readTimeout(1, TimeUnit.SECONDS)
-                .build()
+            .addNetworkInterceptor(logInterceptor())
+            .addInterceptor(headerInterceptor(context))
+            .connectTimeout(1, TimeUnit.SECONDS)
+            .readTimeout(2, TimeUnit.SECONDS)
+            .build()
     }
 
     private fun logInterceptor(): Interceptor {
@@ -47,39 +71,11 @@ class LastFmModule {
         return Interceptor {
             val original = it.request()
             val request = original.newBuilder()
-                    .header("User-Agent", context.packageName)
-                    .method(original.method(), original.body())
-                    .build()
+                .header("User-Agent", context.packageName)
+                .method(original.method(), original.body())
+                .build()
             it.proceed(request)
         }
-    }
-
-    @Provides
-    @Singleton
-    internal fun provideRetrofit(client: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-                .baseUrl("http://ws.audioscrobbler.com/2.0/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .client(client)
-                .build()
-    }
-
-    @Provides
-    @Impl
-    internal fun provideLastFmRest(retrofit: Retrofit): LastFmService {
-        return retrofit.create(LastFmService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    @Proxy
-    internal fun provideLastFmProxy(proxy: LastFmProxy): LastFmService = proxy
-
-    @Provides
-    @Singleton
-    internal fun provideLastFmRepository(repository: LastFmRepository): LastFmGateway {
-        return repository
     }
 
 }

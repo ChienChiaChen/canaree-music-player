@@ -34,8 +34,6 @@ import dev.olog.presentation.base.theme.immersive.IImmersive
 import dev.olog.presentation.base.theme.immersive.Immersive
 import dev.olog.presentation.base.theme.player.theme.IPlayerTheme
 import dev.olog.presentation.base.theme.player.theme.PlayerTheme
-import java.text.Collator
-import java.util.*
 import javax.inject.Singleton
 
 @Module
@@ -77,14 +75,6 @@ class AppModule(private val app: App) {
     @Provides
     fun provideAlarmManager(): AlarmManager {
         return app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    }
-
-    @Provides
-    fun provideCollator(): Collator {
-        val instance = Collator.getInstance(Locale.UK)
-        instance.strength = Collator.SECONDARY
-//        instance.decomposition = Collator.CANONICAL_DECOMPOSITION
-        return instance
     }
 
     @Provides
