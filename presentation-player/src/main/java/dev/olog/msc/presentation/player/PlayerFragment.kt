@@ -48,22 +48,27 @@ import kotlin.math.abs
 
 class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by lazyFast { viewModelProvider<PlayerFragmentViewModel>(viewModelFactory) }
-    @Inject lateinit var presenter: PlayerFragmentPresenter
-    @Inject lateinit var navigator: Navigator
+    @Inject
+    lateinit var presenter: PlayerFragmentPresenter
+    @Inject
+    lateinit var navigator: Navigator
 
-    private lateinit var layoutManager : LinearLayoutManager
+    private lateinit var layoutManager: LinearLayoutManager
 
-    private lateinit var mediaProvider : MediaProvider
+    private lateinit var mediaProvider: MediaProvider
 
-    private var seekBarDisposable : Disposable? = null
+    private var seekBarDisposable: Disposable? = null
 
     private var lyricsDisposable: Disposable? = null
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
-        val adapter = PlayerFragmentAdapter(lifecycle, activity as MediaProvider,
-                navigator, viewModel, presenter)
+        val adapter = PlayerFragmentAdapter(
+            lifecycle, activity as MediaProvider,
+            navigator, viewModel, presenter
+        )
 
         layoutManager = LinearLayoutManager(context)
         view.list.adapter = adapter
@@ -77,7 +82,7 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         val statusBarAlpha = if (!isMarshmallow()) 1f else 0f
         view.statusBar?.alpha = statusBarAlpha
 
-        if (isPortrait() && context.isBigImage()){
+        if (isPortrait() && context.isBigImage()) {
             val set = ConstraintSet()
             set.clone(view as ConstraintLayout)
             set.connect(view.list.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
@@ -87,132 +92,136 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         mediaProvider = (activity as MediaProvider)
 
         mediaProvider.onQueueChanged()
-                .distinctUntilChanged()
-                .mapToList { it.toDisplayableItem() }
-                .map { queue ->
-                    if (!context.isMini()){
-                        val copy = queue.toMutableList()
-                        if (copy.size > PlayingQueueGateway.MINI_QUEUE_SIZE - 1){
-                            copy.add(viewModel.footerLoadMore)
-                        }
-                        copy.add(0, viewModel.playerControls())
-                        copy
-                    } else {
-                        listOf(viewModel.playerControls())
+            .distinctUntilChanged()
+            .mapToList { it.toDisplayableItem() }
+            .map { queue ->
+                if (!context.isMini()) {
+                    val copy = queue.toMutableList()
+                    if (copy.size > PlayingQueueGateway.MINI_QUEUE_SIZE - 1) {
+                        copy.add(viewModel.footerLoadMore)
                     }
+                    copy.add(0, viewModel.playerControls())
+                    copy
+                } else {
+                    listOf(viewModel.playerControls())
                 }
-                .asLiveData()
-                .subscribe(viewLifecycleOwner, viewModel::updateQueue)
+            }
+            .asLiveData()
+            .subscribe(viewLifecycleOwner, viewModel::updateQueue)
 
         viewModel.observeMiniQueue()
-                .subscribe(viewLifecycleOwner, adapter::updateDataSet)
+            .subscribe(viewLifecycleOwner, adapter::updateDataSet)
 
         mediaProvider.onStateChanged()
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) {
-                    val bookmark = it.extractBookmark()
-                    viewModel.updateProgress(bookmark)
-                    handleSeekBar(bookmark, it.isPlaying(), it.playbackSpeed)
-                }
+            .asLiveData()
+            .subscribe(viewLifecycleOwner) {
+                val bookmark = it.extractBookmark()
+                viewModel.updateProgress(bookmark)
+                handleSeekBar(bookmark, it.isPlaying(), it.playbackSpeed)
+            }
 
-        if (ImageViews.IMAGE_SHAPE == ImageShape.RECTANGLE){
+        if (ImageViews.IMAGE_SHAPE == ImageShape.RECTANGLE) {
             view.coverWrapper?.radius = 0f
         }
 
-        if (act.isLandscape && !context.isFullscreen() && !context.isMini()){
+        if (act.isLandscape && !context.isFullscreen() && !context.isMini()) {
 
             mediaProvider.onMetadataChanged()
-                    .asLiveData()
-                    .subscribe(viewLifecycleOwner) { bigCover?.loadImage(it) }
+                .asLiveData()
+                .subscribe(viewLifecycleOwner) { bigCover?.loadImage(it) }
 
             mediaProvider.onStateChanged()
-                    .asLiveData()
-                    .subscribe(viewLifecycleOwner) { state ->
-                        if (state.isPlaying() || state.isPaused()){
-                            if (context.isClean()){
-                                bigCover?.isActivated = state.isPlaying()
-                            } else {
-                                coverWrapper?.isActivated = state.isPlaying()
-                            }
-
+                .asLiveData()
+                .subscribe(viewLifecycleOwner) { state ->
+                    if (state.isPlaying() || state.isPaused()) {
+                        if (context.isClean()) {
+                            bigCover?.isActivated = state.isPlaying()
+                        } else {
+                            coverWrapper?.isActivated = state.isPlaying()
                         }
+
                     }
+                }
 
             mediaProvider.onRepeatModeChanged()
-                    .asLiveData()
-                    .subscribe(viewLifecycleOwner) { repeat?.cycle(it) }
+                .asLiveData()
+                .subscribe(viewLifecycleOwner) { repeat?.cycle(it) }
 
             mediaProvider.onShuffleModeChanged()
-                    .asLiveData()
-                    .subscribe(viewLifecycleOwner) { shuffle?.cycle(it)  }
+                .asLiveData()
+                .subscribe(viewLifecycleOwner) { shuffle?.cycle(it) }
 
             mediaProvider.onStateChanged()
-                    .map { it.state }
-                    .filter { state -> state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT ||
-                            state == PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS }
-                    .map { state -> state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT }
-                    .asLiveData()
-                    .subscribe(viewLifecycleOwner, this::animateSkipTo)
+                .map { it.state }
+                .filter { state ->
+                    state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT ||
+                            state == PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS
+                }
+                .map { state -> state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT }
+                .asLiveData()
+                .subscribe(viewLifecycleOwner, this::animateSkipTo)
 
             mediaProvider.onStateChanged()
-                    .map { it.state }
-                    .filter { it == PlaybackStateCompat.STATE_PLAYING ||
+                .map { it.state }
+//                .skip(1) TODO it seems working
+                .filter {
+                    it == PlaybackStateCompat.STATE_PLAYING ||
                             it == PlaybackStateCompat.STATE_PAUSED
-                    }.distinctUntilChanged()
-                    .asLiveData()
-                    .subscribe(viewLifecycleOwner) { state ->
-
-                        if (state == PlaybackStateCompat.STATE_PLAYING){
-                            playAnimation(true)
-                        } else {
-                            pauseAnimation(true)
-                        }
+                }.distinctUntilChanged()
+                .asLiveData()
+                .subscribe(viewLifecycleOwner) { state ->
+                    println("on new state $state")
+                    if (state == PlaybackStateCompat.STATE_PLAYING) {
+                        playAnimation(true)
+                    } else {
+                        pauseAnimation(true)
                     }
+                }
 
             view.findViewById<View>(R.id.next)?.apply {
                 RxView.clicks(this)
-                        .asLiveData()
-                        .subscribe(viewLifecycleOwner) { mediaProvider.skipToNext() }
+                    .asLiveData()
+                    .subscribe(viewLifecycleOwner) { mediaProvider.skipToNext() }
             }
             view.findViewById<View>(R.id.playPause)?.apply {
                 RxView.clicks(this)
-                        .asLiveData()
-                        .subscribe(viewLifecycleOwner) { mediaProvider.playPause() }
+                    .asLiveData()
+                    .subscribe(viewLifecycleOwner) { mediaProvider.playPause() }
             }
             view.findViewById<View>(R.id.previous)?.apply {
                 RxView.clicks(this)
-                        .asLiveData()
-                        .subscribe(viewLifecycleOwner) { mediaProvider.skipToPrevious() }
+                    .asLiveData()
+                    .subscribe(viewLifecycleOwner) { mediaProvider.skipToPrevious() }
             }
 
             presenter.observePlayerControlsVisibility((act as HasBilling).billing)
-                    .asLiveData()
-                    .subscribe(viewLifecycleOwner) {
-                        previous.toggleVisibility(it, true)
-                        playPause.toggleVisibility(it, true)
-                        next.toggleVisibility(it, true)
-                    }
+                .asLiveData()
+                .subscribe(viewLifecycleOwner) {
+                    previous.toggleVisibility(it, true)
+                    playPause.toggleVisibility(it, true)
+                    next.toggleVisibility(it, true)
+                }
 
             viewModel.skipToNextVisibility.asLiveData()
-                    .subscribe(viewLifecycleOwner) { next?.updateVisibility(it) }
+                .subscribe(viewLifecycleOwner) { next?.updateVisibility(it) }
 
             viewModel.skipToPreviousVisibility.asLiveData()
-                    .subscribe(viewLifecycleOwner) { previous?.updateVisibility(it) }
+                .subscribe(viewLifecycleOwner) { previous?.updateVisibility(it) }
 
             view.bigCover?.observeProcessorColors()
-                    ?.asLiveData()
-                    ?.subscribe(viewLifecycleOwner, viewModel::updateProcessorColors)
+                ?.asLiveData()
+                ?.subscribe(viewLifecycleOwner, viewModel::updateProcessorColors)
             view.bigCover?.observePaletteColors()
-                    ?.asLiveData()
-                    ?.subscribe(viewLifecycleOwner, viewModel::updatePaletteColors)
+                ?.asLiveData()
+                ?.subscribe(viewLifecycleOwner, viewModel::updatePaletteColors)
 
             viewModel.observePaletteColors()
-                    .map { it.accent }
-                    .asLiveData()
-                    .subscribe(viewLifecycleOwner) { accent ->
-                        shuffle.updateSelectedColor(accent)
-                        repeat.updateSelectedColor(accent)
-                    }
+                .map { it.accent }
+                .asLiveData()
+                .subscribe(viewLifecycleOwner) { accent ->
+                    shuffle.updateSelectedColor(accent)
+                    repeat.updateSelectedColor(accent)
+                }
         }
     }
 
@@ -234,11 +243,12 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         playPause.animationPause(getSlidingPanel().isExpanded() && animate)
     }
 
-    private fun handleSeekBar(bookmark: Int, isPlaying: Boolean, speed: Float){
+    private fun handleSeekBar(bookmark: Int, isPlaying: Boolean, speed: Float) {
         seekBarDisposable.unsubscribe()
 
-        if (isPlaying){
-            seekBarDisposable = Observable.interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS, Schedulers.computation())
+        if (isPlaying) {
+            seekBarDisposable =
+                Observable.interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS, Schedulers.computation())
                     .map { (it + 1) * PROGRESS_BAR_INTERVAL * speed + bookmark }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ viewModel.updateProgress(it.toInt()) }, Throwable::printStackTrace)
@@ -291,19 +301,23 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
     }
 
     override fun onPanelSlide(panel: View?, slideOffset: Float) {
-        if (!isMarshmallow() && slideOffset in .9f..1f){
+        if (!isMarshmallow() && slideOffset in .9f..1f) {
             val alpha = (1 - slideOffset) * 10
             statusBar?.alpha = MathUtils.clamp(abs(1 - alpha), 0f, 1f)
         }
     }
 
-    override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState, newState: SlidingUpPanelLayout.PanelState) {
-        if (newState == SlidingUpPanelLayout.PanelState.EXPANDED){
+    override fun onPanelStateChanged(
+        panel: View,
+        previousState: SlidingUpPanelLayout.PanelState,
+        newState: SlidingUpPanelLayout.PanelState
+    ) {
+        if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
             lyricsDisposable.unsubscribe()
             lyricsDisposable = Completable.timer(50, TimeUnit.MILLISECONDS, Schedulers.io())
-                    .andThen(viewModel.showLyricsTutorialIfNeverShown())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ lyrics?.let { Tutorial.lyrics(it) } }, {})
+                .andThen(viewModel.showLyricsTutorialIfNeverShown())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ lyrics?.let { Tutorial.lyrics(it) } }, {})
         } else {
             lyricsDisposable.unsubscribe()
         }
@@ -313,13 +327,13 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         val description = this.description
 
         return DisplayableItem(
-                R.layout.item_mini_queue,
-                MediaId.fromString(description.mediaId!!),
-                description.title!!.toString(),
-                TrackUtils.adjustArtist(description.subtitle!!.toString()),
-                description.mediaUri!!.toString(),
-                isPlayable = true,
-                trackNumber = "${this.queueId}"
+            R.layout.item_mini_queue,
+            MediaId.fromString(description.mediaId!!),
+            description.title!!.toString(),
+            TrackUtils.adjustArtist(description.subtitle!!.toString()),
+            description.mediaUri!!.toString(),
+            isPlayable = true,
+            trackNumber = "${this.queueId}"
         )
     }
 
