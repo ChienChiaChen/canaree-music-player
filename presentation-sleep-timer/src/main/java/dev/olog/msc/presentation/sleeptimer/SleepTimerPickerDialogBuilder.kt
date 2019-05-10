@@ -3,9 +3,8 @@ package dev.olog.msc.presentation.sleeptimer
 import android.content.Context
 import android.content.DialogInterface
 import androidx.annotation.ColorRes
-
+import dev.olog.msc.presentation.base.theme.dark.mode.isDark
 import dev.olog.msc.shared.ui.extensions.colorAccentId
-import dev.olog.presentation.base.theme.dark.mode.isDark
 
 class SleepTimerPickerDialogBuilder(
         context: Context,

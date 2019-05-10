@@ -8,7 +8,7 @@
         <import type="android.view.View"/>
         <variable
             name="item"
-            type="dev.olog.presentation.base.model.DisplayableItem"/>
+            type="dev.olog.msc.presentation.base.model.DisplayableItem"/>
         <variable name="isBlacklisted" type="boolean"/>
 
     </data>
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp">
 
-        <dev.olog.presentation.base.widgets.image.view.ShapeImageView
+        <dev.olog.msc.presentation.base.widgets.image.view.ShapeImageView
             android:id="@+id/cover"
             android:layout_width="0dp"
             android:layout_height="0dp"

@@ -5,7 +5,7 @@
 
     <data>
         <import type="android.view.View"/>
-        <variable name="item" type="dev.olog.presentation.base.model.DisplayableItem"/>
+        <variable name="item" type="dev.olog.msc.presentation.base.model.DisplayableItem"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         tools:ignore="RtlSymmetry">
 
-        <dev.olog.presentation.base.widgets.image.view.ParallaxImageView
+        <dev.olog.msc.presentation.base.widgets.image.view.ParallaxImageView
             android:id="@+id/cover"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"

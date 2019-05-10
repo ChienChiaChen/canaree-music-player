@@ -10,6 +10,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.presentation.base.DisplayableItemBindingAdapter
+import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
+import dev.olog.msc.presentation.base.extensions.*
+import dev.olog.msc.presentation.base.fragment.BaseFragment
+import dev.olog.msc.presentation.base.interfaces.CanChangeStatusBarColor
+import dev.olog.msc.presentation.base.theme.dark.mode.isDark
+import dev.olog.msc.presentation.base.widgets.image.view.ShapeImageView
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.deepCopy
@@ -18,13 +25,6 @@ import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.setVisible
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import dev.olog.presentation.base.DisplayableItemBindingAdapter
-import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
-import dev.olog.presentation.base.extensions.*
-import dev.olog.presentation.base.fragment.BaseFragment
-import dev.olog.presentation.base.interfaces.CanChangeStatusBarColor
-import dev.olog.presentation.base.theme.dark.mode.isDark
-import dev.olog.presentation.base.widgets.image.view.ShapeImageView
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import javax.inject.Inject

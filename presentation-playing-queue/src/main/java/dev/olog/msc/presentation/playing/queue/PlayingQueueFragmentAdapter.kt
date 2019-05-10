@@ -2,17 +2,17 @@ package dev.olog.msc.presentation.playing.queue
 
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
+import dev.olog.msc.presentation.base.adapter.AbsAdapter
+import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.msc.presentation.base.extensions.elevateSongOnTouch
+import dev.olog.msc.presentation.base.extensions.setOnClickListener
+import dev.olog.msc.presentation.base.extensions.setOnLongClickListener
+import dev.olog.msc.presentation.base.extensions.setOnMoveListener
+import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
 import dev.olog.msc.shared.ui.extensions.textColorPrimary
 import dev.olog.msc.shared.ui.extensions.textColorSecondary
-import dev.olog.presentation.base.adapter.AbsAdapter
-import dev.olog.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.presentation.base.extensions.elevateSongOnTouch
-import dev.olog.presentation.base.extensions.setOnClickListener
-import dev.olog.presentation.base.extensions.setOnLongClickListener
-import dev.olog.presentation.base.extensions.setOnMoveListener
-import dev.olog.presentation.base.interfaces.MediaProvider
 import kotlinx.android.synthetic.main.item_playing_queue.view.*
 
 class PlayingQueueFragmentAdapter (

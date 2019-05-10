@@ -3,12 +3,12 @@ package dev.olog.msc.app.base
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import dev.olog.msc.presentation.base.theme.dark.mode.IDarkMode
+import dev.olog.msc.presentation.base.theme.immersive.IImmersive
+import dev.olog.msc.presentation.base.theme.player.theme.IPlayerTheme
 import dev.olog.msc.shared.ui.theme.HasDarkMode
 import dev.olog.msc.shared.ui.theme.HasImmersive
 import dev.olog.msc.shared.ui.theme.HasPlayerTheme
-import dev.olog.presentation.base.theme.dark.mode.IDarkMode
-import dev.olog.presentation.base.theme.immersive.IImmersive
-import dev.olog.presentation.base.theme.player.theme.IPlayerTheme
 import javax.inject.Inject
 
 abstract class ThemedApp : BaseApp(),

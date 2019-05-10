@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import com.airbnb.lottie.LottieAnimationView
 import dev.olog.msc.core.entity.favorite.FavoriteEnum
-import dev.olog.presentation.base.theme.dark.mode.isDark
-import dev.olog.presentation.base.theme.dark.mode.isWhite
-import dev.olog.presentation.base.theme.player.theme.isClean
-import dev.olog.presentation.base.theme.player.theme.isFullscreen
+import dev.olog.msc.presentation.base.theme.dark.mode.isDark
+import dev.olog.msc.presentation.base.theme.dark.mode.isWhite
+import dev.olog.msc.presentation.base.theme.player.theme.isClean
+import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
 
 class LottieFavorite @JvmOverloads constructor(
         context: Context,

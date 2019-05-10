@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="item" type="dev.olog.presentation.base.model.DisplayableItem"/>
+        <variable name="item" type="dev.olog.msc.presentation.base.model.DisplayableItem"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +43,7 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp" />
 
-        <dev.olog.presentation.base.widgets.DottedSeparator
+        <dev.olog.msc.presentation.base.widgets.DottedSeparator
             app:layout_constraintTop_toBottomOf="@+id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

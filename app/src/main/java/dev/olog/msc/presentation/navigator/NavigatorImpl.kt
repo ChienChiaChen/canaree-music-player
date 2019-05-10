@@ -13,6 +13,9 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.presentation.base.extensions.collapse
+import dev.olog.msc.presentation.base.extensions.fragmentTransaction
+import dev.olog.msc.presentation.base.extensions.hideFragmentsIfExists
 import dev.olog.msc.presentation.categories.podcast.CategoriesPodcastFragment
 import dev.olog.msc.presentation.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.detail.DetailFragment
@@ -39,9 +42,6 @@ import dev.olog.msc.presentation.related.artists.RelatedArtistFragment
 import dev.olog.msc.presentation.search.SearchFragment
 import dev.olog.msc.presentation.splash.SplashActivity
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.presentation.base.extensions.collapse
-import dev.olog.presentation.base.extensions.fragmentTransaction
-import dev.olog.presentation.base.extensions.hideFragmentsIfExists
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 

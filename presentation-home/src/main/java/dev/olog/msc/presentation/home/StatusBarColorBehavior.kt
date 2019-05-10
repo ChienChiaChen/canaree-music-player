@@ -4,13 +4,13 @@ import android.view.View
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import dev.olog.msc.presentation.base.extensions.removeLightStatusBar
+import dev.olog.msc.presentation.base.extensions.setLightStatusBar
+import dev.olog.msc.presentation.base.interfaces.CanChangeStatusBarColor
+import dev.olog.msc.presentation.base.theme.player.theme.isBigImage
+import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.utils.isMarshmallow
-import dev.olog.presentation.base.extensions.removeLightStatusBar
-import dev.olog.presentation.base.extensions.setLightStatusBar
-import dev.olog.presentation.base.interfaces.CanChangeStatusBarColor
-import dev.olog.presentation.base.theme.player.theme.isBigImage
-import dev.olog.presentation.base.theme.player.theme.isFullscreen
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 

@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.DialogInterface
 import android.support.v4.media.session.MediaControllerCompat
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.presentation.base.dialogs.BaseDialog
+import dev.olog.msc.presentation.base.extensions.asHtml
+import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
-import dev.olog.presentation.base.dialogs.BaseDialog
-import dev.olog.presentation.base.extensions.asHtml
-import dev.olog.presentation.base.extensions.withArguments
 import io.reactivex.Completable
 import javax.inject.Inject
 

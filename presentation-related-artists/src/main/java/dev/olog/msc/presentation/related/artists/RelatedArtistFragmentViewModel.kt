@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.interactor.GetItemTitleUseCase
+import dev.olog.msc.presentation.base.extensions.asLiveData
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.related.artists.domain.GetRelatedArtistsUseCase
 import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.mapToList
 import dev.olog.msc.shared.extensions.safeCompare
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.presentation.base.extensions.asLiveData
-import dev.olog.presentation.base.model.DisplayableItem
 import javax.inject.Inject
 
 class RelatedArtistFragmentViewModel @Inject constructor(

@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import dev.olog.msc.presentation.about.R
 
 
-import dev.olog.presentation.base.extensions.act
-import dev.olog.presentation.base.extensions.asLiveData
-import dev.olog.presentation.base.extensions.subscribe
+import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.asLiveData
+import dev.olog.msc.presentation.base.extensions.subscribe
 import io.reactivex.Single
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.fragment_licenses.view.*

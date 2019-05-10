@@ -2,9 +2,9 @@ package dev.olog.msc.presentation.dialogs.playlist
 
 import android.content.Context
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.presentation.base.dialogs.BaseEditTextDialog
+import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
-import dev.olog.presentation.base.dialogs.BaseEditTextDialog
-import dev.olog.presentation.base.extensions.withArguments
 import io.reactivex.Completable
 import javax.inject.Inject
 

@@ -9,12 +9,12 @@ import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.dagger.qualifier.MediaIdCategoryKey
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.R
 import dev.olog.msc.presentation.detail.domain.siblings.GetPodcastAlbumSiblingsByAlbumUseCase
 import dev.olog.msc.presentation.detail.domain.siblings.GetPodcastAlbumSiblingsByArtistUseCase
 import dev.olog.msc.presentation.detail.domain.siblings.GetPodcastPlaylistsSiblingsUseCase
 import dev.olog.msc.shared.extensions.mapToList
-import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 
 @Module

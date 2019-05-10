@@ -3,7 +3,7 @@ package dev.olog.msc.presentation.tabs
 import android.content.res.Resources
 
 import dev.olog.msc.core.MediaId
-import dev.olog.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import javax.inject.Inject
 import javax.inject.Singleton
 

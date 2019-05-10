@@ -12,11 +12,11 @@ import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.navigator.IPopupNavigator
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.BuildConfig
 import dev.olog.msc.presentation.popup.R
-import dev.olog.presentation.base.interfaces.HasBilling
 import javax.inject.Inject
 
 private const val DEBUG_ID = -123

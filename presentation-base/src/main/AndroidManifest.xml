@@ -1,4 +1,4 @@
-<manifest package="dev.olog.presentation.base"
+<manifest package="dev.olog.msc.presentation.base"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

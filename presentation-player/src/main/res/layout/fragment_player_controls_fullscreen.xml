@@ -11,7 +11,7 @@
         tools:background="@android:color/darker_gray"
         android:id="@+id/playerRoot">
 
-        <dev.olog.presentation.base.widgets.image.view.PlayerImageView
+        <dev.olog.msc.presentation.base.widgets.image.view.PlayerImageView
             android:id="@+id/bigCover"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -39,7 +39,7 @@
             android:focusable="false"
             android:clipChildren="false">
 
-            <dev.olog.presentation.base.widgets.SwipeableView
+            <dev.olog.msc.presentation.base.widgets.SwipeableView
                 android:id="@+id/swipeableView"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

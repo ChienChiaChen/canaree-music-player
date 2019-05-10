@@ -12,12 +12,12 @@ import com.afollestad.materialdialogs.color.ColorCallback
 import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 import dev.olog.msc.core.PrefsKeys
+import dev.olog.msc.presentation.base.activity.ThemedActivity
+import dev.olog.msc.presentation.base.extensions.setLightStatusBar
+import dev.olog.msc.presentation.base.interfaces.HasBilling
+import dev.olog.msc.presentation.base.theme.dark.mode.*
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.ui.theme.HasImmersive
-import dev.olog.presentation.base.activity.ThemedActivity
-import dev.olog.presentation.base.extensions.setLightStatusBar
-import dev.olog.presentation.base.interfaces.HasBilling
-import dev.olog.presentation.base.theme.dark.mode.*
 import kotlinx.android.synthetic.main.activity_preferences.*
 import javax.inject.Inject
 

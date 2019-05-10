@@ -41,7 +41,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/half"/>
 
-        <dev.olog.presentation.base.widgets.InkPageIndicator
+        <dev.olog.msc.presentation.base.widgets.InkPageIndicator
             android:id="@+id/pageIndicator"
             app:layout_constraintStart_toEndOf="@+id/half"
             app:layout_constraintEnd_toEndOf="parent"

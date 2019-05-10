@@ -2,12 +2,11 @@ package dev.olog.msc.presentation.shortcuts.playlist.chooser
 
 import android.content.res.Resources
 import dev.olog.msc.R
-
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.interactor.all.GetAllPlaylistsUseCase
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.shared.extensions.mapToList
-import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 import javax.inject.Inject
 

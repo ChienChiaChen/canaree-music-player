@@ -8,8 +8,8 @@ import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.GlideApp
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.imageprovider.ImagesFolderUtils
+import dev.olog.msc.presentation.base.BaseBindingAdapter
 import dev.olog.msc.presentation.tabs.foldertree.model.AudioFileCover
-import dev.olog.presentation.base.BaseBindingAdapter
 
 object BindingAdapter {
     private const val OVERRIDE_SMALL = 150

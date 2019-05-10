@@ -6,10 +6,10 @@ import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.R
 import dev.olog.msc.presentation.about.licenses.LicensesFragment
 import dev.olog.msc.presentation.about.thanks.SpecialThanksFragment
+import dev.olog.msc.presentation.base.extensions.fragmentTransaction
+import dev.olog.msc.presentation.base.extensions.isIntentSafe
+import dev.olog.msc.presentation.base.openPlayStore
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.presentation.base.extensions.fragmentTransaction
-import dev.olog.presentation.base.extensions.isIntentSafe
-import dev.olog.presentation.base.openPlayStore
 import javax.inject.Inject
 
 private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms

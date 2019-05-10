@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.fragment.app.FragmentStatePagerAdapter
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
+import dev.olog.msc.presentation.base.extensions.asString
 import dev.olog.msc.presentation.tabs.TabFragment
-import dev.olog.presentation.base.extensions.asString
 
 class CategoriesPodcastFragmentViewPager (
         private val context: Context,

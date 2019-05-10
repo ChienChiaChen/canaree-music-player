@@ -6,13 +6,13 @@ import android.preference.PreferenceManager
 import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.presentation.about.AboutActivity
+import dev.olog.msc.presentation.base.ActivityCodes
+import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.debug.DebugConfigurationActivity
 import dev.olog.msc.presentation.equalizer.EqualizerFragment
 import dev.olog.msc.presentation.preferences.PreferencesActivity
 import dev.olog.msc.presentation.sleeptimer.SleepTimerPickerDialogBuilder
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.presentation.base.ActivityCodes
-import dev.olog.presentation.base.interfaces.HasBilling
 import javax.inject.Inject
 
 class MainPopupNavigator @Inject constructor(

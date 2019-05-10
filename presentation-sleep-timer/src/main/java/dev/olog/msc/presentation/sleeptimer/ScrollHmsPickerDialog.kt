@@ -13,8 +13,8 @@ import android.widget.Button
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
-import dev.olog.presentation.base.fragment.BaseDialogFragment
-import dev.olog.presentation.base.theme.dark.mode.isDark
+import dev.olog.msc.presentation.base.fragment.BaseDialogFragment
+import dev.olog.msc.presentation.base.theme.dark.mode.isDark
 
 open class ScrollHmsPickerDialog : BaseDialogFragment() {
     interface HmsPickHandler {

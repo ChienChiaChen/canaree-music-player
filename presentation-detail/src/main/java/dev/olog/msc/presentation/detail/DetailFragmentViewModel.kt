@@ -7,12 +7,12 @@ import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.interactor.sort.*
+import dev.olog.msc.presentation.base.extensions.asLiveData
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.domain.sort.GetDetailSortDataUseCase
 import dev.olog.msc.presentation.detail.domain.sort.GetDetailTabsVisibilityUseCase
 import dev.olog.msc.presentation.detail.sort.DetailSort
 import dev.olog.msc.shared.extensions.debounceFirst
-import dev.olog.presentation.base.extensions.asLiveData
-import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable

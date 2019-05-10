@@ -5,14 +5,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxbinding2.widget.RxTextView
-
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.edititem.*
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.C
-import dev.olog.presentation.base.extensions.*
 import kotlinx.android.synthetic.main.fragment_edit_artist.*
 import kotlinx.android.synthetic.main.fragment_edit_artist.view.*
 import javax.inject.Inject

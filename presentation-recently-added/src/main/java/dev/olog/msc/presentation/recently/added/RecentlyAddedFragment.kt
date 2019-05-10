@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
-
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
+import dev.olog.msc.presentation.base.extensions.subscribe
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
+import dev.olog.msc.presentation.base.extensions.withArguments
+import dev.olog.msc.presentation.base.fragment.BaseFragment
+import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
-import dev.olog.presentation.base.extensions.subscribe
-import dev.olog.presentation.base.extensions.viewModelProvider
-import dev.olog.presentation.base.extensions.withArguments
-import dev.olog.presentation.base.fragment.BaseFragment
-import dev.olog.presentation.base.interfaces.MediaProvider
 import kotlinx.android.synthetic.main.fragment_recently_added.*
 import kotlinx.android.synthetic.main.fragment_recently_added.view.*
 import javax.inject.Inject

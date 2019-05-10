@@ -8,13 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
+import dev.olog.msc.presentation.base.extensions.ctx
+import dev.olog.msc.presentation.base.extensions.withArguments
+import dev.olog.msc.presentation.base.fragment.BaseDialogFragment
 import dev.olog.msc.presentation.preferences.R
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.ThemedDialog
-import dev.olog.presentation.base.drag.TouchHelperAdapterCallback
-import dev.olog.presentation.base.extensions.ctx
-import dev.olog.presentation.base.extensions.withArguments
-import dev.olog.presentation.base.fragment.BaseDialogFragment
 import javax.inject.Inject
 
 class LibraryCategoriesFragment : BaseDialogFragment() {

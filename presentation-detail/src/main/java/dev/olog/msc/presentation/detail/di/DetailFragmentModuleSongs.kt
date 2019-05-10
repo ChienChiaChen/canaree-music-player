@@ -14,20 +14,20 @@ import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.gateway.PodcastPlaylistGateway
-import dev.olog.msc.presentation.detail.domain.GetPodcastRelatedArtistsUseCase
-import dev.olog.msc.presentation.detail.domain.GetRelatedArtistsUseCase
 import dev.olog.msc.core.interactor.added.GetRecentlyAddedUseCase
 import dev.olog.msc.core.interactor.played.GetMostPlayedSongsUseCase
 import dev.olog.msc.core.interactor.sort.GetSortOrderUseCase
 import dev.olog.msc.core.interactor.sort.GetSortedSongListByParamUseCase
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel
 import dev.olog.msc.presentation.detail.R
+import dev.olog.msc.presentation.detail.domain.GetPodcastRelatedArtistsUseCase
+import dev.olog.msc.presentation.detail.domain.GetRelatedArtistsUseCase
 import dev.olog.msc.presentation.detail.domain.GetTotalSongDurationUseCase
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.mapToList
 import dev.olog.msc.shared.ui.TimeUtils
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 
 @Module

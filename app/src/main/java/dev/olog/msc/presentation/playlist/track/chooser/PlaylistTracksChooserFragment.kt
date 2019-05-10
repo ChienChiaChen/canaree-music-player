@@ -13,6 +13,10 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.R
 import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.presentation.base.extensions.*
+import dev.olog.msc.presentation.base.fragment.BaseFragment
+import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
+import dev.olog.msc.presentation.base.utils.ImeUtils
 import dev.olog.msc.presentation.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.tabs.widgets.WaveSideBarView
 import dev.olog.msc.shared.extensions.lazyFast
@@ -22,10 +26,6 @@ import dev.olog.msc.shared.ui.ThemedDialog
 import dev.olog.msc.shared.ui.extensions.toggleSelected
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.presentation.base.extensions.*
-import dev.olog.presentation.base.fragment.BaseFragment
-import dev.olog.presentation.base.interfaces.DrawsOnTop
-import dev.olog.presentation.base.utils.ImeUtils
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

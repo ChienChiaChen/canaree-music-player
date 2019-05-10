@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.presentation.base.extensions.asLiveData
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.tabs.data.TabFragmentDataProvider
-import dev.olog.presentation.base.extensions.asLiveData
-import dev.olog.presentation.base.model.DisplayableItem
 import javax.inject.Inject
 
 class TabFragmentViewModel @Inject constructor(

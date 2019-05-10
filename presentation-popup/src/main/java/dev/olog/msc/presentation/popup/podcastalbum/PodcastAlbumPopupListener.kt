@@ -7,12 +7,12 @@ import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.toSong
 import dev.olog.msc.core.interactor.GetPlaylistsBlockingUseCase
+import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
 import dev.olog.msc.presentation.popup.R
 import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
-import dev.olog.presentation.base.interfaces.MediaProvider
 import javax.inject.Inject
 
 class PodcastAlbumPopupListener @Inject constructor(

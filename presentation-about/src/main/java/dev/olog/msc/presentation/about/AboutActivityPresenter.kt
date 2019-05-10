@@ -1,14 +1,13 @@
 package dev.olog.msc.presentation.about
 
+
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-
-
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.presentation.base.extensions.asLiveData
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.pro.IBilling
-import dev.olog.presentation.base.extensions.asLiveData
-import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.withLatestFrom
 

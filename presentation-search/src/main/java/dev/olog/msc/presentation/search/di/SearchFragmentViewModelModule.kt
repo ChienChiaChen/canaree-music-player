@@ -16,6 +16,8 @@ import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.core.entity.track.*
 import dev.olog.msc.core.interactor.all.*
+import dev.olog.msc.presentation.base.extensions.asLiveData
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.search.R
 import dev.olog.msc.presentation.search.SearchFragmentHeaders
 import dev.olog.msc.presentation.search.SearchFragmentType
@@ -23,8 +25,6 @@ import dev.olog.msc.presentation.search.domain.GetAllRecentSearchesUseCase
 import dev.olog.msc.shared.RecentSearchesTypes
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.mapToList
-import dev.olog.presentation.base.extensions.asLiveData
-import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables

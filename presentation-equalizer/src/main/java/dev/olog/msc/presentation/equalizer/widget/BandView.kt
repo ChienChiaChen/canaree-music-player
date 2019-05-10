@@ -10,7 +10,7 @@ import android.view.ViewTreeObserver
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.math.MathUtils
-
+import dev.olog.msc.presentation.base.extensions.vibrate
 import dev.olog.msc.presentation.equalizer.EqHelper
 import dev.olog.msc.presentation.equalizer.R
 import dev.olog.msc.presentation.equalizer.ResizeAnimation
@@ -20,7 +20,6 @@ import dev.olog.msc.shared.ui.extensions.colorAccent
 import dev.olog.msc.shared.ui.extensions.setPaddingBottom
 import dev.olog.msc.shared.ui.extensions.textColorPrimary
 import dev.olog.msc.shared.utils.clamp
-import dev.olog.presentation.base.extensions.vibrate
 
 class BandView (
         context: Context,

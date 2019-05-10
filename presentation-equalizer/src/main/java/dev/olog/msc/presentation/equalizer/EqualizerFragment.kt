@@ -5,11 +5,10 @@ import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import dev.olog.msc.core.equalizer.IEqualizer
-
+import dev.olog.msc.presentation.base.bottom.sheet.BaseBottomSheetFragment
+import dev.olog.msc.presentation.base.extensions.asLiveData
+import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.equalizer.widget.RadialKnob
-import dev.olog.presentation.base.bottom.sheet.BaseBottomSheetFragment
-import dev.olog.presentation.base.extensions.asLiveData
-import dev.olog.presentation.base.extensions.subscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_equalizer.*
 import kotlinx.android.synthetic.main.fragment_equalizer.view.*

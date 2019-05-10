@@ -9,10 +9,10 @@ import android.widget.EditText
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.interactor.scrobble.GetLastFmUserCredentials
 import dev.olog.msc.core.interactor.scrobble.UpdateLastFmUserCredentials
+import dev.olog.msc.presentation.base.extensions.ctx
+import dev.olog.msc.presentation.base.fragment.BaseDialogFragment
 import dev.olog.msc.presentation.preferences.R
 import dev.olog.msc.shared.ui.ThemedDialog
-import dev.olog.presentation.base.extensions.ctx
-import dev.olog.presentation.base.fragment.BaseDialogFragment
 import javax.inject.Inject
 
 class LastFmCredentialsFragment : BaseDialogFragment() {

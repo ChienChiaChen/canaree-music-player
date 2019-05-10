@@ -1,5 +1,6 @@
 package dev.olog.msc.presentation.about.thanks
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,12 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.presentation.about.R
-
-
+import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.asLiveData
+import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.presentation.base.extensions.act
-import dev.olog.presentation.base.extensions.asLiveData
-import dev.olog.presentation.base.extensions.subscribe
 import io.reactivex.Single
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.fragment_special_thanks.view.*

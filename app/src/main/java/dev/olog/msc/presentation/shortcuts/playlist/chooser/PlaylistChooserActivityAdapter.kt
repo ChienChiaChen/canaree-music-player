@@ -5,14 +5,13 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import dev.olog.msc.BR
 import dev.olog.msc.R
-
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
+import dev.olog.msc.presentation.base.adapter.AbsAdapter
+import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.msc.presentation.base.extensions.setOnClickListener
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.shared.ui.ThemedDialog
-import dev.olog.presentation.base.adapter.AbsAdapter
-import dev.olog.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.presentation.base.extensions.setOnClickListener
-import dev.olog.presentation.base.model.DisplayableItem
 import javax.inject.Inject
 
 class PlaylistChooserActivityAdapter @Inject constructor(

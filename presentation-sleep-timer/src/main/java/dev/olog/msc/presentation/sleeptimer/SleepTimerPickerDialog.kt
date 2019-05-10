@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.interactor.SleepTimerUseCase
+import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.TimeUtils
-import dev.olog.presentation.base.extensions.act
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

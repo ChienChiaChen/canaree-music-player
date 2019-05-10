@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="item" type="dev.olog.presentation.base.model.DisplayableItem"/>
+        <variable name="item" type="dev.olog.msc.presentation.base.model.DisplayableItem"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp">
 
-        <dev.olog.presentation.base.widgets.image.view.ShapeImageView
+        <dev.olog.msc.presentation.base.widgets.image.view.ShapeImageView
             android:id="@+id/cover"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -24,7 +24,7 @@
             app:imageAlbum="@{item}"
             tools:src="@drawable/placeholder_folder"/>
 
-        <dev.olog.presentation.base.widgets.image.view.QuickActionView
+        <dev.olog.msc.presentation.base.widgets.image.view.QuickActionView
             style="@style/QuickActionStyle"
             android:layout_width="@dimen/smallShuffleSize"
             android:layout_height="@dimen/smallShuffleSize"

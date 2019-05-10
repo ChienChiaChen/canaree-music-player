@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.player.mini
 
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
-import dev.olog.presentation.base.extensions.asLiveData
+import dev.olog.msc.presentation.base.extensions.asLiveData
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject

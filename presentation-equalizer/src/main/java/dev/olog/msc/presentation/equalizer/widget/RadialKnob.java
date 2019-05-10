@@ -46,9 +46,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
+import dev.olog.msc.presentation.base.theme.dark.mode.DarkModeExtensionKt;
 import dev.olog.msc.presentation.equalizer.R;
 import dev.olog.msc.shared.ui.extensions.ContextExtensionsKt;
-import dev.olog.presentation.base.theme.dark.mode.DarkModeExtensionKt;
 
 ;
 

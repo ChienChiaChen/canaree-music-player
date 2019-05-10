@@ -4,12 +4,12 @@ import android.content.res.ColorStateList
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
+import dev.olog.msc.presentation.base.adapter.AbsAdapter
+import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.msc.presentation.base.extensions.setOnClickListener
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.NavigatorAbout
 import dev.olog.msc.shared.ui.extensions.colorAccent
-import dev.olog.presentation.base.adapter.AbsAdapter
-import dev.olog.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.presentation.base.extensions.setOnClickListener
-import dev.olog.presentation.base.model.DisplayableItem
 import kotlinx.android.synthetic.main.item_about.view.*
 
 

@@ -25,15 +25,15 @@ import dev.olog.msc.floatingwindowservice.FloatingWindowService
 import dev.olog.msc.imageprovider.IImageProvider
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.offlinelyrics.domain.ILyricsFromMetadata
+import dev.olog.msc.presentation.base.theme.dark.mode.DarkMode
+import dev.olog.msc.presentation.base.theme.dark.mode.IDarkMode
+import dev.olog.msc.presentation.base.theme.immersive.IImmersive
+import dev.olog.msc.presentation.base.theme.immersive.Immersive
+import dev.olog.msc.presentation.base.theme.player.theme.IPlayerTheme
+import dev.olog.msc.presentation.base.theme.player.theme.PlayerTheme
 import dev.olog.msc.presentation.home.MainActivity
 import dev.olog.msc.presentation.shortcuts.ShortcutsActivity
 import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivity
-import dev.olog.presentation.base.theme.dark.mode.DarkMode
-import dev.olog.presentation.base.theme.dark.mode.IDarkMode
-import dev.olog.presentation.base.theme.immersive.IImmersive
-import dev.olog.presentation.base.theme.immersive.Immersive
-import dev.olog.presentation.base.theme.player.theme.IPlayerTheme
-import dev.olog.presentation.base.theme.player.theme.PlayerTheme
 import javax.inject.Singleton
 
 @Module

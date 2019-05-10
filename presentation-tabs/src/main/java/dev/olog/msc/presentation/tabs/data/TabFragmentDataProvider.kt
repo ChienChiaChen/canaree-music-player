@@ -11,6 +11,7 @@ import dev.olog.msc.core.interactor.played.GetLastPlayedAlbumsUseCase
 import dev.olog.msc.core.interactor.played.GetLastPlayedArtistsUseCase
 import dev.olog.msc.core.interactor.played.GetLastPlayedPodcastAlbumsUseCase
 import dev.olog.msc.core.interactor.played.GetLastPlayedPodcastArtistsUseCase
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.tabs.TabFragmentHeaders
 import dev.olog.msc.presentation.tabs.domain.GetAllAlbumsSortedUseCase
 import dev.olog.msc.presentation.tabs.domain.GetAllArtistsSortedUseCase
@@ -19,7 +20,6 @@ import dev.olog.msc.shared.extensions.doIf
 import dev.olog.msc.shared.extensions.mapToList
 import dev.olog.msc.shared.extensions.startWith
 import dev.olog.msc.shared.extensions.startWithIfNotEmpty
-import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import javax.inject.Inject

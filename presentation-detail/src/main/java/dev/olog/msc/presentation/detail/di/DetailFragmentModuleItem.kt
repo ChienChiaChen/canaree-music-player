@@ -4,17 +4,16 @@ import android.content.res.Resources
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
-
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.dagger.qualifier.MediaIdCategoryKey
 import dev.olog.msc.core.entity.track.*
 import dev.olog.msc.core.interactor.item.*
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.R
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.asFlowable
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Flowable
 
 @Module

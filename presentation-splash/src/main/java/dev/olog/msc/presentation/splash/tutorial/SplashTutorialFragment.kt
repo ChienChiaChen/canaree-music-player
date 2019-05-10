@@ -12,14 +12,13 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-
 import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.GlideApp
+import dev.olog.msc.presentation.base.extensions.ctx
+import dev.olog.msc.presentation.base.widgets.SwipeableView
 import dev.olog.msc.presentation.splash.R
 import dev.olog.msc.presentation.splash.widgets.StoppingViewPager
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.presentation.base.extensions.ctx
-import dev.olog.presentation.base.widgets.SwipeableView
 import io.reactivex.disposables.Disposable
 
 class SplashTutorialFragment : Fragment(), SwipeableView.SwipeListener {

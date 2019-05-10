@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.interactor.all.GetAllAlbumsUseCase
 import dev.olog.msc.core.interactor.all.GetAllArtistsUseCase
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.search.domain.ClearRecentSearchesUseCase
 import dev.olog.msc.presentation.search.domain.DeleteRecentSearchUseCase
 import dev.olog.msc.presentation.search.domain.InsertRecentSearchUseCase
-import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

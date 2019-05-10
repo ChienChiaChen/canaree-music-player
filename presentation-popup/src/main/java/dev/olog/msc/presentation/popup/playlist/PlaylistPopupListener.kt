@@ -6,13 +6,13 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.GetPlaylistsBlockingUseCase
+import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
 import dev.olog.msc.presentation.popup.R
 import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.presentation.base.interfaces.MediaProvider
 import javax.inject.Inject
 
 class PlaylistPopupListener @Inject constructor(

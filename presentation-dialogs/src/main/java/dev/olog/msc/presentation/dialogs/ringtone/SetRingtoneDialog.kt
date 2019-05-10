@@ -3,12 +3,12 @@ package dev.olog.msc.presentation.dialogs.ringtone
 import android.content.Context
 import android.content.DialogInterface
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.presentation.base.dialogs.BaseDialog
+import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.asHtml
+import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
 import dev.olog.msc.shared.TrackUtils
-import dev.olog.presentation.base.dialogs.BaseDialog
-import dev.olog.presentation.base.extensions.act
-import dev.olog.presentation.base.extensions.asHtml
-import dev.olog.presentation.base.extensions.withArguments
 import io.reactivex.Completable
 import javax.inject.Inject
 

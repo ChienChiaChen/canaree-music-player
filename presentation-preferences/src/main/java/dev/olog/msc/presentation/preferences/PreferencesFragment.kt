@@ -20,6 +20,10 @@ import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.imageprovider.GlideApp
 import dev.olog.msc.imageprovider.ImagesFolderUtils
+import dev.olog.msc.presentation.base.ImageViews
+import dev.olog.msc.presentation.base.extensions.*
+import dev.olog.msc.presentation.base.interfaces.HasBilling
+import dev.olog.msc.presentation.base.theme.dark.mode.isWhite
 import dev.olog.msc.presentation.preferences.blacklist.BlacklistFragment
 import dev.olog.msc.presentation.preferences.categories.LibraryCategoriesFragment
 import dev.olog.msc.presentation.preferences.credentials.LastFmCredentialsFragment
@@ -28,10 +32,6 @@ import dev.olog.msc.presentation.preferences.utils.forEach
 import dev.olog.msc.presentation.preferences.utils.isLowMemoryDevice
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.ThemedDialog
-import dev.olog.presentation.base.ImageViews
-import dev.olog.presentation.base.extensions.*
-import dev.olog.presentation.base.interfaces.HasBilling
-import dev.olog.presentation.base.theme.dark.mode.isWhite
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

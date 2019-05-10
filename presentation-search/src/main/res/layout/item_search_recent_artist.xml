@@ -6,7 +6,7 @@
 
     <data>
         <import type="android.view.View"/>
-        <variable name="item" type="dev.olog.presentation.base.model.DisplayableItem"/>
+        <variable name="item" type="dev.olog.msc.presentation.base.model.DisplayableItem"/>
     </data>
 
     <FrameLayout
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <dev.olog.presentation.base.widgets.image.view.CircularImageView
+            <dev.olog.msc.presentation.base.widgets.image.view.CircularImageView
                 android:id="@+id/cover"
                 android:layout_width="@dimen/item_song_cover_size"
                 android:layout_height="@dimen/item_song_cover_size"

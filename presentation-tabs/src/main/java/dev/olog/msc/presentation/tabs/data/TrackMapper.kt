@@ -5,10 +5,10 @@ package dev.olog.msc.presentation.tabs.data
 import android.content.res.Resources
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.*
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.tabs.R
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.presentation.base.model.DisplayableItem
 
 internal inline fun Folder.toTabDisplayableItem(resources: Resources): DisplayableItem {
     return DisplayableItem(

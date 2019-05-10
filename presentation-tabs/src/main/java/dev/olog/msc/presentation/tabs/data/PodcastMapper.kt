@@ -8,10 +8,10 @@ import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.tabs.R
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.presentation.base.model.DisplayableItem
 import java.util.concurrent.TimeUnit
 
 internal inline fun PodcastPlaylist.toTabDisplayableItem(resources: Resources): DisplayableItem {

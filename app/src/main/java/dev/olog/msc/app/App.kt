@@ -17,11 +17,11 @@ import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.imagecreation.IImageCreator
 import dev.olog.msc.musicservice.MusicService
+import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.updatePermissionValve
-import dev.olog.presentation.base.ImageViews
 import io.alterac.blurkit.BlurKit
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers

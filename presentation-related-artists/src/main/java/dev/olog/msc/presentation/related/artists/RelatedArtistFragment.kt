@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.subscribe
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
+import dev.olog.msc.presentation.base.extensions.withArguments
+import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.presentation.base.extensions.act
-import dev.olog.presentation.base.extensions.subscribe
-import dev.olog.presentation.base.extensions.viewModelProvider
-import dev.olog.presentation.base.extensions.withArguments
-import dev.olog.presentation.base.fragment.BaseFragment
 import kotlinx.android.synthetic.main.fragment_related_artist.*
 import kotlinx.android.synthetic.main.fragment_related_artist.view.*
 import javax.inject.Inject

@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
-        <dev.olog.presentation.base.widgets.InkPageIndicator
+        <dev.olog.msc.presentation.base.widgets.InkPageIndicator
             android:id="@+id/pageIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

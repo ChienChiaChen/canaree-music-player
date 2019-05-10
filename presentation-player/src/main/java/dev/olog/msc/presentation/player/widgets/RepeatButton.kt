@@ -9,15 +9,15 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import dev.olog.msc.presentation.base.theme.dark.mode.isDark
+import dev.olog.msc.presentation.base.theme.player.theme.isClean
+import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
 import dev.olog.msc.presentation.player.R
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.ui.extensions.colorAccent
 import dev.olog.msc.shared.ui.extensions.getAnimatedVectorDrawable
 import dev.olog.msc.shared.ui.extensions.textColorSecondary
 import dev.olog.msc.shared.ui.extensions.textColorTertiary
-import dev.olog.presentation.base.theme.dark.mode.isDark
-import dev.olog.presentation.base.theme.player.theme.isClean
-import dev.olog.presentation.base.theme.player.theme.isFullscreen
 
 class RepeatButton @JvmOverloads constructor(
         context: Context,

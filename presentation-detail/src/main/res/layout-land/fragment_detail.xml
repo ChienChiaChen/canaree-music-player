@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="?android:windowBackground">
 
-    <dev.olog.presentation.base.widgets.image.view.ShapeImageView
+    <dev.olog.msc.presentation.base.widgets.image.view.ShapeImageView
         android:id="@+id/cover"
         tools:src="@drawable/placeholder_folder"
         android:layout_width="0dp"
@@ -39,7 +39,7 @@
         android:layout_marginStart="8dp"/>
 
 
-    <dev.olog.presentation.base.widgets.RxFastScroller
+    <dev.olog.msc.presentation.base.widgets.RxFastScroller
         android:id="@+id/fastScroller"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -55,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <dev.olog.presentation.base.widgets.StatusBarView
+    <dev.olog.msc.presentation.base.widgets.StatusBarView
         android:id="@+id/statusBar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

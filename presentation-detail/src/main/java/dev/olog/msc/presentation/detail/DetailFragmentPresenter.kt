@@ -4,9 +4,9 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
+import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.domain.playlist.MoveItemInPlaylistUseCase
 import dev.olog.msc.presentation.detail.domain.playlist.RemoveFromPlaylistUseCase
-import dev.olog.presentation.base.model.DisplayableItem
 import io.reactivex.Completable
 import javax.inject.Inject
 

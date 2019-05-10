@@ -6,11 +6,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import dev.olog.msc.presentation.base.activity.BaseActivity
+import dev.olog.msc.presentation.base.extensions.simpleDialog
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.updatePermissionValve
-import dev.olog.presentation.base.activity.BaseActivity
-import dev.olog.presentation.base.extensions.simpleDialog
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : BaseActivity(), View.OnClickListener {

@@ -6,7 +6,7 @@
 
     <data>
         <import type="android.view.View"/>
-        <variable name="item" type="dev.olog.presentation.base.model.DisplayableItem"/>
+        <variable name="item" type="dev.olog.msc.presentation.base.model.DisplayableItem"/>
         <variable name="isChecked" type="boolean"/>
     </data>
 
@@ -33,7 +33,7 @@
                 android:clickable="false"
                 android:focusable="false"/>
 
-            <dev.olog.presentation.base.widgets.image.view.ShapeImageView
+            <dev.olog.msc.presentation.base.widgets.image.view.ShapeImageView
                 android:id="@+id/cover"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/selected"

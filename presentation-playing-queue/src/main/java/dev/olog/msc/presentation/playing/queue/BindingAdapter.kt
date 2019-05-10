@@ -5,8 +5,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.presentation.base.BaseBindingAdapter
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
-import dev.olog.presentation.base.BaseBindingAdapter
 
 object BindingAdapter {
 

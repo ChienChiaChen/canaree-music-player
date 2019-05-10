@@ -17,12 +17,12 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.Target
 import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.GlideApp
+import dev.olog.msc.presentation.base.utils.getMediaId
+import dev.olog.msc.presentation.base.widgets.image.view.PlayerImageView
+import dev.olog.msc.presentation.base.widgets.image.view.toPlayerImage
 import dev.olog.msc.presentation.player.R
 import dev.olog.msc.presentation.player.widgets.shadow.PlayerShadowImageView.Companion.DOWNSCALE_FACTOR
 import dev.olog.msc.shared.extensions.dpToPx
-import dev.olog.presentation.base.utils.getMediaId
-import dev.olog.presentation.base.widgets.image.view.PlayerImageView
-import dev.olog.presentation.base.widgets.image.view.toPlayerImage
 import kotlin.properties.Delegates
 
 class PlayerShadowImageView @JvmOverloads constructor(

@@ -3,8 +3,8 @@ package dev.olog.msc.presentation.detail.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import dev.olog.msc.presentation.base.widgets.image.view.ParallaxImageView
 import dev.olog.msc.presentation.detail.R
-import dev.olog.presentation.base.widgets.image.view.ParallaxImageView
 
 class ParallaxRecyclerView(
         context: Context,

@@ -180,7 +180,7 @@
             android:focusable="false"
             android:gravity="center" />
 
-        <dev.olog.presentation.base.widgets.DottedSeparator
+        <dev.olog.msc.presentation.base.widgets.DottedSeparator
             android:id="@+id/separator"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
