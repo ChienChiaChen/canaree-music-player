@@ -8,23 +8,23 @@ import android.util.TypedValue
 import android.widget.Toast
 import androidx.annotation.DimenRes
 
-val Context.isPortrait: Boolean
+inline val Context.isPortrait: Boolean
     get() = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
-val Context.isLandscape: Boolean
+inline val Context.isLandscape: Boolean
     get() = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
 //returns dip(dp) dimension value in pixels
-fun Context.dip(value: Int): Int = (value * resources.displayMetrics.density).toInt()
-fun Context.dip(value: Float): Int = (value * resources.displayMetrics.density).toInt()
-fun Context.dipf(value: Int): Float = (value * resources.displayMetrics.density)
+inline fun Context.dip(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+inline fun Context.dip(value: Float): Int = (value * resources.displayMetrics.density).toInt()
+inline fun Context.dipf(value: Int): Float = (value * resources.displayMetrics.density)
 
-fun Context.dimen(@DimenRes resource: Int): Int = resources.getDimensionPixelSize(resource)
+inline fun Context.dimen(@DimenRes resource: Int): Int = resources.getDimensionPixelSize(resource)
 
-fun Context.px2dip(px: Int): Float = px.toFloat() / resources.displayMetrics.density
-fun Context.px2sp(px: Int): Float = px.toFloat() / resources.displayMetrics.scaledDensity
+inline fun Context.px2dip(px: Int): Float = px.toFloat() / resources.displayMetrics.density
+inline fun Context.px2sp(px: Int): Float = px.toFloat() / resources.displayMetrics.scaledDensity
 
-fun Context.dpToPx(dp: Float): Int {
+inline fun Context.dpToPx(dp: Float): Int {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
 }
 

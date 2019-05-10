@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.msc.shared.extensions
 
 import android.util.LongSparseArray
@@ -16,7 +18,7 @@ fun <T> LongSparseArray<T>.toList(): List<T>{
     return list
 }
 
-fun <T> LongSparseArray<T>.toggle(key: Long, item: T){
+inline fun <T> LongSparseArray<T>.toggle(key: Long, item: T){
     val current = this.get(key)
     if (current == null){
         this.append(key, item)

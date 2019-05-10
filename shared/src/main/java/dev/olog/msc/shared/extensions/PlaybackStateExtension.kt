@@ -1,13 +1,15 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.msc.shared.extensions
 
 import android.os.SystemClock
 import android.support.v4.media.session.PlaybackStateCompat
 
-fun PlaybackStateCompat.isPlaying(): Boolean {
+inline fun PlaybackStateCompat.isPlaying(): Boolean {
     return state == PlaybackStateCompat.STATE_PLAYING
 }
 
-fun PlaybackStateCompat.isPaused(): Boolean {
+inline fun PlaybackStateCompat.isPaused(): Boolean {
     return state == PlaybackStateCompat.STATE_PAUSED
 }
 

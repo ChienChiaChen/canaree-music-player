@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.msc.shared.ui.extensions
 
 import android.graphics.Bitmap
@@ -21,9 +23,9 @@ fun Drawable.getBitmap(): Bitmap? {
     return null
 }
 
-val LayerDrawable.layers: List<Drawable>
+inline val LayerDrawable.layers: List<Drawable>
     get() = (0 until numberOfLayers).map { getDrawable(it) }
 
-fun Drawable.tint(@ColorInt color: Int){
+inline fun Drawable.tint(@ColorInt color: Int){
     DrawableCompat.setTint(this, color)
 }

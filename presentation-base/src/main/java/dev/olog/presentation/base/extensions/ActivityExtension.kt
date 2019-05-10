@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.presentation.base.extensions
 
 import android.annotation.SuppressLint
@@ -9,7 +11,7 @@ import androidx.fragment.app.FragmentTransaction
 import dev.olog.msc.shared.ui.ThemedDialog
 import dev.olog.msc.shared.utils.isP
 
-fun FragmentActivity.fragmentTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
+inline fun FragmentActivity.fragmentTransaction(crossinline func: FragmentTransaction.() -> FragmentTransaction) {
     supportFragmentManager
             .beginTransaction()
             .func()
@@ -33,14 +35,14 @@ fun FragmentActivity.getTopFragment(): Fragment? {
 }
 
 @SuppressLint("NewApi")
-fun View.hasNotch(): Boolean {
+inline fun View.hasNotch(): Boolean {
     if (isP()){
         return rootWindowInsets?.displayCutout != null
     }
     return false
 }
 
-fun FragmentActivity.simpleDialog(builder: AlertDialog.Builder.() -> AlertDialog.Builder){
+inline fun FragmentActivity.simpleDialog(crossinline builder: AlertDialog.Builder.() -> AlertDialog.Builder){
     ThemedDialog.builder(this)
             .builder()
             .show()

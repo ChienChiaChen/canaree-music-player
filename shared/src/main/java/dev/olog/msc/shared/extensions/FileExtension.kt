@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.msc.shared.extensions
 
 import android.os.Environment
@@ -5,7 +7,7 @@ import android.webkit.MimeTypeMap
 import java.io.File
 
 
-fun File.isStorageDir(): Boolean {
+inline fun File.isStorageDir(): Boolean {
     return this == Environment.getExternalStorageDirectory()
 }
 

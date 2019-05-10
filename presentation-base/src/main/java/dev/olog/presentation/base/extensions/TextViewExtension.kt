@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.presentation.base.extensions
 
 import android.text.Spannable
@@ -6,7 +8,7 @@ import androidx.annotation.WorkerThread
 import androidx.core.text.PrecomputedTextCompat
 import androidx.core.widget.TextViewCompat
 
-fun TextView.extractText(): String {
+inline fun TextView.extractText(): String {
     return this.text.toString()
 }
 

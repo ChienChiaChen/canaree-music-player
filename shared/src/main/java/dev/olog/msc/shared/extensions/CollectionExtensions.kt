@@ -11,7 +11,7 @@ fun <T> List<T>.swap(i: Int, j: Int): List<T> {
     return this
 }
 
-private fun <T> List<T>.isInBounds(index: Int): Boolean {
+private inline fun <T> List<T>.isInBounds(index: Int): Boolean {
     return index in 0..lastIndex
 }
 
@@ -42,14 +42,14 @@ inline fun <K, V> MutableMap<K, MutableList<V>>.deepCopy(): MutableMap<K, Mutabl
     return result
 }
 
-fun <T> MutableList<T>.doIf(predicate: Boolean, action: MutableList<T>.() -> Any): MutableList<T> {
+inline fun <T> MutableList<T>.doIf(predicate: Boolean, action: MutableList<T>.() -> Any): MutableList<T> {
     if (predicate){
         this.action()
     }
     return this
 }
 
-fun <T> MutableList<T>.removeFirst(predicate: (T) -> Boolean): Boolean {
+inline fun <T> MutableList<T>.removeFirst(predicate: (T) -> Boolean): Boolean {
     for (t in this) {
         if (predicate(t)) {
             this.remove(t)

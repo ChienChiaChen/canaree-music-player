@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.presentation.base.extensions
 
 import androidx.lifecycle.LifecycleOwner
@@ -7,7 +9,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 
-fun <T> LiveData<T>.subscribe(lifecycleOwner: LifecycleOwner, func: (T) -> Unit) {
+inline fun <T> LiveData<T>.subscribe(lifecycleOwner: LifecycleOwner, crossinline func: (T) -> Unit) {
     this.observe(lifecycleOwner, androidx.lifecycle.Observer {
         if (it != null){
             func(it)
@@ -15,11 +17,11 @@ fun <T> LiveData<T>.subscribe(lifecycleOwner: LifecycleOwner, func: (T) -> Unit)
     })
 }
 
-fun <T> Flowable<T>.asLiveData() : LiveData<T> {
+inline fun <T> Flowable<T>.asLiveData() : LiveData<T> {
     return LiveDataReactiveStreams.fromPublisher(this)
 }
 
-fun <T> Observable<T>.asLiveData(backpressureStrategy: BackpressureStrategy = BackpressureStrategy.LATEST)
+inline fun <T> Observable<T>.asLiveData(backpressureStrategy: BackpressureStrategy = BackpressureStrategy.LATEST)
         : LiveData<T> {
 
     return LiveDataReactiveStreams.fromPublisher(this.toFlowable(backpressureStrategy))

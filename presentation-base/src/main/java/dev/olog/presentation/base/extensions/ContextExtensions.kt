@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.presentation.base.extensions
 
 import android.annotation.SuppressLint
@@ -20,6 +22,6 @@ fun Context.vibrate(time: Long){
     }
 }
 
-fun Context.scrimColor(): Int {
+inline fun Context.scrimColor(): Int {
     return themeAttributeToColor(R.attr.scrimColor)
 }

@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.presentation.base.extensions
 
 import android.view.MotionEvent
@@ -71,11 +73,11 @@ fun <T: BaseModel> RecyclerView.ViewHolder.setOnLongClickListener(
     }
 }
 
-fun RecyclerView.ViewHolder.elevateAlbumOnTouch(){
+inline fun RecyclerView.ViewHolder.elevateAlbumOnTouch(){
     itemView.setOnTouchListener(ScaleMoreInOnTouch(itemView))
 }
 
-fun RecyclerView.ViewHolder.elevateSongOnTouch(){
+inline fun RecyclerView.ViewHolder.elevateSongOnTouch(){
     val viewToAnimate = itemView.findViewById<View>(R.id.root)?.let { it } ?: itemView
     itemView.setOnTouchListener(ScaleInOnTouch(viewToAnimate))
 }

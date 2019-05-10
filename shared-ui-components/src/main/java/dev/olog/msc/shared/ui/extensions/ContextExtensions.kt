@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.msc.shared.ui.extensions
 
 import android.content.Context
@@ -7,32 +9,32 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
-fun Context.getAnimatedVectorDrawable (@DrawableRes id: Int): AnimatedVectorDrawableCompat {
+inline fun Context.getAnimatedVectorDrawable (@DrawableRes id: Int): AnimatedVectorDrawableCompat {
     return AnimatedVectorDrawableCompat.create(this, id)!!
 }
 
 // Used to tint buttons
-fun Context.textColorTertiary(): Int {
+inline fun Context.textColorTertiary(): Int {
     return this.themeAttributeToColor(android.R.attr.textColorTertiary)
 }
 
-fun Context.colorAccent(): Int {
+inline fun Context.colorAccent(): Int {
     return themeAttributeToColor(android.R.attr.colorAccent)
 }
 
-fun Context.colorAccentId(): Int {
+inline fun Context.colorAccentId(): Int {
     return themeAttributeToResId(android.R.attr.colorAccent)
 }
 
-fun Context.textColorPrimary(): Int {
+inline fun Context.textColorPrimary(): Int {
     return themeAttributeToColor(android.R.attr.textColorPrimary)
 }
 
-fun Context.textColorSecondary(): Int {
+inline fun Context.textColorSecondary(): Int {
     return themeAttributeToColor(android.R.attr.textColorSecondary)
 }
 
-fun Context.windowBackground(): Int {
+inline fun Context.windowBackground(): Int {
     return themeAttributeToColor(android.R.attr.windowBackground)
 }
 
