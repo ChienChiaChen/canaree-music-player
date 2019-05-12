@@ -22,6 +22,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import java.io.File
 import javax.inject.Inject
 
@@ -58,13 +60,14 @@ class FolderTreeFragmentViewModel @Inject constructor(
     fun observeFileName(): LiveData<File> = currentFile
             .asLiveData()
 
-    fun observeChildrens(): LiveData<List<DisplayableFile>> = currentFile.subscribeOn(Schedulers.io())
+    fun observeChildrens(): LiveData<List<DisplayableFile>> = runBlocking{
+        currentFile.subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .flatMap { file ->
-                getAllFoldersUseCase.execute().mapToList { it.path }.map {  folderList ->
+                runBlocking { getAllFoldersUseCase.execute().asObservable() }.mapToList { it.path }.map {  folderList ->
                     val children = file.listFiles()
-                            ?.filter { current -> folderList.firstOrNull { it.contains( current.path ) } != null || !current.isDirectory }
-                            ?: listOf()
+                        ?.filter { current -> folderList.firstOrNull { it.contains( current.path ) } != null || !current.isDirectory }
+                        ?: listOf()
 
                     val (directories, files) = children.partition { it.isDirectory }
                     val sortedDirectory = filterFolders(directories)
@@ -81,6 +84,7 @@ class FolderTreeFragmentViewModel @Inject constructor(
             }
             .observeOn(AndroidSchedulers.mainThread())
             .asLiveData()
+    }
 
     private fun filterFolders(files: List<File>): List<DisplayableFile> {
         return files.asSequence()

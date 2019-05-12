@@ -7,6 +7,7 @@ import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import io.reactivex.Completable
 import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface AppPreferencesGateway : Sorting {
@@ -57,8 +58,8 @@ interface AppPreferencesGateway : Sorting {
     fun getDefaultMusicFolder(): File
     fun setDefaultMusicFolder(file: File)
 
-    fun observeLibraryNewVisibility(): Observable<Boolean>
-    fun observeLibraryRecentPlayedVisibility(): Observable<Boolean>
+    fun canShowLibraryNewVisibility(): Boolean
+    fun canShowLibraryRecentPlayedVisibility(): Boolean
 
     fun canShowPodcastCategory(): Boolean
     fun isAdaptiveColorEnabled(): Boolean
@@ -77,9 +78,9 @@ interface Sorting {
     fun getAllAlbumsSortOrder(): LibrarySortType
     fun getAllArtistsSortOrder(): LibrarySortType
 
-    fun observeAllTracksSortOrder(): Observable<LibrarySortType>
-    fun observeAllAlbumsSortOrder(): Observable<LibrarySortType>
-    fun observeAllArtistsSortOrder(): Observable<LibrarySortType>
+    fun observeAllTracksSortOrder(): Flow<LibrarySortType>
+    fun observeAllAlbumsSortOrder(): Flow<LibrarySortType>
+    fun observeAllArtistsSortOrder(): Flow<LibrarySortType>
 
     fun setAllTracksSortOrder(sortType: LibrarySortType)
     fun setAllAlbumsSortOrder(sortType: LibrarySortType)

@@ -11,12 +11,17 @@ import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.shared.collator
+import dev.olog.msc.shared.extensions.asFlowable
 import dev.olog.msc.shared.extensions.safeCompare
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactive.flow.asFlow
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class FavoriteRepository @Inject constructor(
@@ -41,19 +46,19 @@ internal class FavoriteRepository @Inject constructor(
         }
     }
 
-    override fun getAll(): Observable<List<Song>> {
+    override suspend fun getAll(): Flow<List<Song>> {
         return favoriteDao.getAllImpl()
                 .toObservable()
-                .switchMap { favorites -> songGateway.getAll().map { songList ->
+                .switchMap { favorites -> runBlocking { songGateway.getAll().asObservable() }.map { songList ->
                     favorites.mapNotNull { favoriteId -> songList.firstOrNull { it.id == favoriteId } }
                             .sortedWith(Comparator { o1, o2 -> collator.safeCompare(o1.title, o2.title) })
-                } }
+                } }.asFlowable().asFlow()
     }
 
-    override fun getAllPodcasts(): Observable<List<Podcast>> {
-        return favoriteDao.getAllPodcastsImpl()
+    override fun getAllPodcasts(): Observable<List<Podcast>> = runBlocking{
+        favoriteDao.getAllPodcastsImpl()
                 .toObservable()
-                .switchMap { favorites -> podcastGateway.getAll().map { podcastList ->
+                .switchMap { favorites -> runBlocking { podcastGateway.getAll() }.asObservable().map { podcastList ->
                     favorites.asSequence()
                             .mapNotNull { favoriteId -> podcastList.firstOrNull { it.id == favoriteId } }
                             .sortedWith(Comparator { o1, o2 -> collator.safeCompare(o1.title, o2.title) })

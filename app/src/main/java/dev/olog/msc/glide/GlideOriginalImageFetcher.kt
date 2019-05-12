@@ -4,12 +4,14 @@ import android.media.MediaMetadataRetriever
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.data.DataFetcher
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 import org.jaudiotagger.audio.mp3.MP3File
@@ -31,17 +33,17 @@ class GlideOriginalImageFetcher(
     override fun getDataClass(): Class<InputStream> = InputStream::class.java
     override fun getDataSource(): DataSource = DataSource.LOCAL
 
-    override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) {
+    override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) = runBlocking{
         val id = getId()
         if (id == -1L){
            callback.onLoadFailed(Exception("item not found"))
-            return
+            return@runBlocking
         }
 
         disposable = when {
-            mediaId.isLeaf && !mediaId.isPodcast -> songGateway.getByParam(id).map { it.path }
-            mediaId.isLeaf && mediaId.isPodcast -> podcastGateway.getByParam(id).map { it.path }
-            mediaId.isAlbum -> songGateway.getByAlbumId(id).map { it.path }
+            mediaId.isLeaf && !mediaId.isPodcast -> songGateway.getByParam(id).asObservable().map { it.path }
+            mediaId.isLeaf && mediaId.isPodcast -> podcastGateway.getByParam(id).asObservable().map { it.path }
+            mediaId.isAlbum -> songGateway.getByAlbumId(id).asObservable().map { it.path }
             mediaId.isPodcastAlbum -> podcastGateway.getByAlbumId(id).map { it.path }
             else -> Observable.error(IllegalArgumentException("not a valid media id=$mediaId"))
         }.firstOrError().subscribe({

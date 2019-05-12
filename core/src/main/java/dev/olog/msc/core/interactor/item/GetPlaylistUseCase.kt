@@ -1,21 +1,20 @@
 package dev.olog.msc.core.interactor.item
 
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.coroutines.IoDispatcher
+import dev.olog.msc.core.coroutines.ObservableFlowWithParam
 import dev.olog.msc.core.entity.track.Playlist
-import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.PlaylistGateway
-import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetPlaylistUseCase @Inject internal constructor(
-        schedulers: IoScheduler,
-        private val gateway: PlaylistGateway
+    schedulers: IoDispatcher,
+    private val gateway: PlaylistGateway
 
-) : ObservableUseCaseWithParam<Playlist, MediaId>(schedulers) {
+) : ObservableFlowWithParam<Playlist, MediaId>(schedulers) {
 
-    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Observable<Playlist> {
+    override suspend fun buildUseCaseObservable(mediaId: MediaId): Flow<Playlist> {
         return gateway.getByParam(mediaId.categoryId)
     }
 }

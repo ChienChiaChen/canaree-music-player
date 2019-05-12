@@ -43,6 +43,8 @@ dependencies {
 
     implementation librariesPersistency.rxPrefs
 
+    implementation librariesAndroidX.paging
+
     implementation librariesUi.glide
     implementation librariesUi.slidingPanel
     implementation librariesAndroidX.palette

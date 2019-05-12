@@ -2,8 +2,8 @@ package dev.olog.msc.core.gateway
 
 import dev.olog.msc.core.entity.track.Playlist
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 interface PlaylistGateway :
         BaseGateway<Playlist, Long>,
@@ -22,7 +22,7 @@ interface PlaylistGateway :
         fun isAutoPlaylist(id: Long) = autoPlaylists.contains(id)
     }
 
-    fun getAllAutoPlaylists() : Observable<List<Playlist>>
+    fun getAllAutoPlaylists() : List<Playlist>
 
     fun createPlaylist(playlistName: String): Single<Long>
 

@@ -1,12 +1,10 @@
 package dev.olog.msc.presentation.shortcuts.playlist.chooser
 
-import android.app.Activity
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.Lifecycle
+import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.BR
 import dev.olog.msc.R
 import dev.olog.msc.core.AppShortcuts
-import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
 import dev.olog.msc.presentation.base.adapter.AbsAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.base.extensions.setOnClickListener
@@ -15,11 +13,10 @@ import dev.olog.msc.shared.ui.ThemedDialog
 import javax.inject.Inject
 
 class PlaylistChooserActivityAdapter @Inject constructor(
-        private val activity: Activity,
-        @ActivityLifecycle lifecycle: Lifecycle,
+        private val activity: FragmentActivity,
         private var appShortcuts: AppShortcuts
 
-) : AbsAdapter<DisplayableItem>(lifecycle) {
+) : AbsAdapter<DisplayableItem>(activity.lifecycle) {
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
         viewHolder.setOnClickListener(controller) { item, _, _ ->
@@ -31,11 +28,11 @@ class PlaylistChooserActivityAdapter @Inject constructor(
         ThemedDialog.builder(activity)
                 .setTitle(R.string.playlist_chooser_dialog_title)
                 .setMessage(activity.getString(R.string.playlist_chooser_dialog_message, item.title))
-                .setPositiveButton(R.string.popup_positive_ok, { _, _ ->
+                .setPositiveButton(R.string.common_ok) { _, _ ->
                     appShortcuts.addDetailShortcut(item.mediaId, item.title, item.image)
                     activity.finish()
-                })
-                .setNegativeButton(R.string.popup_negative_no, null)
+                }
+            .setNegativeButton(R.string.common_no, null)
                 .show()
     }
 

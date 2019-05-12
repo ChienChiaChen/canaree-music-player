@@ -9,6 +9,8 @@ import dev.olog.msc.core.interactor.GetSongListByParamUseCase
 import dev.olog.msc.core.interactor.all.*
 import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Single
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class MediaItemGenerator @Inject constructor(
@@ -22,19 +24,19 @@ internal class MediaItemGenerator @Inject constructor(
 ) {
 
 
-    fun getCategoryChilds(category: MediaIdCategory): Single<List<MediaBrowserCompat.MediaItem>> {
-        return when (category){
-            MediaIdCategory.FOLDERS -> getAllFoldersUseCase.execute().firstOrError()
+    fun getCategoryChilds(category: MediaIdCategory): Single<List<MediaBrowserCompat.MediaItem>> = runBlocking{
+        when (category){
+            MediaIdCategory.FOLDERS -> getAllFoldersUseCase.execute().asObservable().firstOrError()
                     .mapToList { it.toMediaItem() }
-            MediaIdCategory.PLAYLISTS -> getAllPlaylistsUseCase.execute().firstOrError()
+            MediaIdCategory.PLAYLISTS -> getAllPlaylistsUseCase.execute().asObservable().firstOrError()
                     .mapToList { it.toMediaItem() }
-            MediaIdCategory.SONGS -> getAllSongsUseCase.execute().firstOrError()
+            MediaIdCategory.SONGS -> getAllSongsUseCase.execute().asObservable().firstOrError()
                     .mapToList { it.toMediaItem() }
-            MediaIdCategory.ALBUMS -> getAllAlbumsUseCase.execute().firstOrError()
+            MediaIdCategory.ALBUMS -> getAllAlbumsUseCase.execute().asObservable().firstOrError()
                     .mapToList { it.toMediaItem() }
-            MediaIdCategory.ARTISTS -> getAllArtistsUseCase.execute().firstOrError()
+            MediaIdCategory.ARTISTS -> getAllArtistsUseCase.execute().asObservable().firstOrError()
                     .mapToList { it.toMediaItem() }
-            MediaIdCategory.GENRES -> getAllGenresUseCase.execute().firstOrError()
+            MediaIdCategory.GENRES -> getAllGenresUseCase.execute().asObservable().firstOrError()
                     .mapToList { it.toMediaItem() }
             else -> Single.error(IllegalArgumentException("invalid category $category"))
         }

@@ -1,54 +1,76 @@
 package dev.olog.msc.data.repository.podcast
 
+import android.content.Context
 import android.provider.MediaStore
-import com.squareup.sqlbrite3.BriteContentResolver
-import com.squareup.sqlbrite3.SqlBrite
+import dev.olog.msc.core.coroutines.debounceFirst
+import dev.olog.msc.core.coroutines.withLatest
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.entity.ChunkedData
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.gateway.PodcastArtistGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.UsedImageGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.mapper.toArtist
+import dev.olog.msc.data.mapper.toPodcastArtist
+import dev.olog.msc.data.repository.queries.ArtistQueries
+import dev.olog.msc.data.repository.util.CommonQuery
+import dev.olog.msc.data.repository.util.ContentObserver
+import dev.olog.msc.data.repository.util.ContentResolverFlow
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.collator
-import dev.olog.msc.shared.extensions.debounceFirst
 import dev.olog.msc.shared.extensions.safeCompare
-import dev.olog.msc.shared.onlyWithStoragePermission
+import dev.olog.msc.shared.utils.clamp
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.Observables
-import java.text.Collator
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.reactive.flow.asFlow
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
-private val MEDIA_STORE_URI = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
-
 internal class PodcastArtistRepository @Inject constructor(
-        appDatabase: AppDatabase,
-        private val rxContentResolver: BriteContentResolver,
-        private val podcastGateway: PodcastGateway,
-        private val usedImageGateway: UsedImageGateway
+    @ApplicationContext private val context: Context,
+    appDatabase: AppDatabase,
+    private val podcastGateway: PodcastGateway,
+    private val usedImageGateway: UsedImageGateway,
+    private val prefsGateway: AppPreferencesGateway,
+    private val contentObserver: ContentObserver
 
 ) : PodcastArtistGateway {
 
+    private val artistQueries = ArtistQueries(prefsGateway, true)
+
     private val lastPlayedDao = appDatabase.lastPlayedPodcastArtistDao()
 
-    private fun queryAllData(): Observable<List<PodcastArtist>> {
-        return rxContentResolver.createQuery(
-                MEDIA_STORE_URI, arrayOf("count(*) as size"), null,
-                null, " size ASC LIMIT 1", true
-        ).onlyWithStoragePermission()
-                .debounceFirst()
-                .lift(SqlBrite.Query.mapToOne { 0 })
-                .switchMap { podcastGateway.getAll() }
-                .map { mapToArtists(it) }
-                .map { updateImages(it) }
-
+    private suspend fun queryAll(): Flow<List<PodcastArtist>> {
+        return flowOf()
     }
 
-    private fun updateImages(list: List<PodcastArtist>): List<PodcastArtist>{
+    private suspend fun querySingle(selection: String, args: Array<String>): Flow<PodcastArtist> {
+        return flow { }
+    }
+
+    private fun getAllSize(): Int {
+        return CommonQuery.sizeQuery(artistQueries.size(context, prefsGateway.getBlackList()))
+    }
+
+    override fun getChunk(): ChunkedData<PodcastArtist> {
+        return ChunkedData(
+            chunkOf = { chunkRequest ->
+                val cursor = artistQueries.all(context, prefsGateway.getBlackList(), chunkRequest)
+                CommonQuery.query(cursor, { it.toPodcastArtist() }, { updateImages(it) })
+            },
+            allDataSize = getAllSize(),
+            observeChanges = { contentObserver.createQuery(ArtistQueries.MEDIA_STORE_URI) }
+        )
+    }
+
+    private fun updateImages(list: List<PodcastArtist>): List<PodcastArtist> {
         val allForArtists = usedImageGateway.getAllForArtists()
-        if (allForArtists.isEmpty()){
+        if (allForArtists.isEmpty()) {
             return list
         }
         return list.map { artist ->
@@ -57,70 +79,70 @@ internal class PodcastArtistRepository @Inject constructor(
         }
     }
 
-    private fun mapToArtists(songList: List<Podcast>): List<PodcastArtist> {
-        return songList.asSequence()
-                .filter { it.artist != TrackUtils.UNKNOWN }
-                .distinctBy { it.artistId }
-                .map { song ->
-                    val albums = countAlbums(song.artistId, songList)
-                    val songs = countTracks(song.artistId, songList)
-                    mapSongToArtist(song, songs, albums)
-                }.sortedWith(Comparator { o1, o2 -> collator.safeCompare(o1.name, o2.name) })
-                .toList()
+    override suspend fun getAll(): Flow<List<PodcastArtist>> {
+        return queryAll()
     }
 
-    private fun mapSongToArtist(song: Podcast, songCount: Int, albumCount: Int): PodcastArtist {
-        return song.toArtist(songCount, albumCount)
-    }
-
-    private fun countAlbums(artistId: Long, songList: List<Podcast>): Int {
-        return songList.asSequence()
-                .distinctBy { it.albumId }
-                .filter { it.album != TrackUtils.UNKNOWN }
-                .count { it.artistId == artistId }
-    }
-
-    private fun countTracks(artistId: Long, songList: List<Podcast>): Int {
-        return songList.count { it.artistId == artistId }
-    }
-
-    private val cachedData = queryAllData()
-            .replay(1)
-            .refCount()
-
-    override fun getAll(): Observable<List<PodcastArtist>> {
-        return cachedData
-    }
-
-    override fun getAllNewRequest(): Observable<List<PodcastArtist>> {
-        return queryAllData()
-    }
-
-    override fun getByParam(param: Long): Observable<PodcastArtist> {
-        return cachedData.map { it.first { it.id == param } }
+    override suspend fun getByParam(param: Long): Flow<PodcastArtist> {
+        return querySingle("${MediaStore.Audio.Media.ARTIST_ID} = ?", arrayOf(param.toString()))
     }
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun observePodcastListByParam(artistId: Long): Observable<List<Podcast>> {
-        return podcastGateway.getAll()
-                .map { it.filter { it.artistId == artistId } }
+    override fun observePodcastListByParam(artistId: Long): Observable<List<Podcast>> = runBlocking {
+        podcastGateway.getAll().asObservable()
+            .map { it.filter { it.artistId == artistId } }
     }
 
-    override fun getLastPlayed(): Observable<List<PodcastArtist>> {
-        return Observables.combineLatest(
-                getAll(),
-                lastPlayedDao.getAll().toObservable(),
-                { all, lastPlayed ->
+    override fun getLastPlayedChunk(): ChunkedData<PodcastArtist> {
+        val maxAllowed = 10
+        return ChunkedData(
+            chunkOf = { chunkRequest ->
+                val lastPlayed = lastPlayedDao.getAll(maxAllowed)
+                val existingLastCursor =
+                    artistQueries.existingLastPlayed(context, prefsGateway.getBlackList(), lastPlayed.joinToString { "'${it.id}'" })
+                val existingLastPlayed = CommonQuery.query(existingLastCursor, { it.toPodcastArtist() }, { updateImages(it) })
+                lastPlayed.asSequence()
+                    .mapNotNull { last -> existingLastPlayed.firstOrNull { it.id == last.id } }
+                    .take(maxAllowed)
+                    .toList()
+            },
+            allDataSize = clamp(lastPlayedDao.getCount(), 0, maxAllowed),
+            observeChanges = {
+                lastPlayedDao.observeAll(1)
+                    .asFlow()
+                    .drop(1)
+                    .map { Unit }
+            }
+        )
+    }
 
-                    if (all.size < 5) {
-                        listOf() // too few album to show recents
-                    } else {
-                        lastPlayed.asSequence()
-                                .mapNotNull { last -> all.firstOrNull { it.id == last.id } }
-                                .take(5)
-                                .toList()
-                    }
-                })
+    override fun canShowLastPlayed(): Boolean {
+        return prefsGateway.canShowLibraryRecentPlayedVisibility() &&
+                getAllSize() >= 5 &&
+                lastPlayedDao.getCount() > 0
+    }
+
+    override fun getRecentlyAddedChunk(): ChunkedData<PodcastArtist> {
+        return ChunkedData(
+            chunkOf = { chunkRequest ->
+                val cursor = artistQueries.recentlyAdded(context, prefsGateway.getBlackList(), chunkRequest)
+                CommonQuery.query(cursor, { it.toPodcastArtist() }, { updateImages(it) })
+            },
+            allDataSize = CommonQuery.sizeQuery(
+                artistQueries.recentlyAdded(
+                    context,
+                    prefsGateway.getBlackList(),
+                    null
+                )
+            ),
+            observeChanges = { contentObserver.createQuery(ArtistQueries.MEDIA_STORE_URI) }
+        )
+    }
+
+    override fun canShowRecentlyAdded(): Boolean {
+        val cursor = artistQueries.recentlyAdded(context, prefsGateway.getBlackList(), null)
+        return prefsGateway.canShowLibraryNewVisibility() &&
+                CommonQuery.sizeQuery(cursor) > 0
     }
 
     override fun addLastPlayed(id: Long): Completable {

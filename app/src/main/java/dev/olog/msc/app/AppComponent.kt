@@ -11,7 +11,7 @@ import dev.olog.msc.data.di.PreferenceModule
 import dev.olog.msc.data.di.RepositoryHelperModule
 import dev.olog.msc.data.di.RepositoryModule
 import dev.olog.msc.floatingwindowservice.di.FloatingWindowServiceInjector
-import dev.olog.msc.imagecreation.domain.ImageCreationInjector
+import dev.olog.msc.imagecreation.ImageCreationInjector
 import dev.olog.msc.musicservice.di.EqualizerModule
 import dev.olog.msc.musicservice.di.MusicServiceInjector
 import dev.olog.msc.presentation.ViewModelModule
@@ -36,7 +36,7 @@ import dev.olog.msc.presentation.preferences.di.PreferencesActivityInjector
 import dev.olog.msc.presentation.recently.added.di.RecentlyAddedFragmentInjector
 import dev.olog.msc.presentation.related.artists.di.RelatedArtistFragmentInjector
 import dev.olog.msc.presentation.search.di.SearchFragmentInjector
-import dev.olog.msc.presentation.shortcuts.playlist.chooser.di.PlaylistChooserActivityInjector
+import dev.olog.msc.presentation.shortcuts.playlist.chooser.di.PlaylistChooserActivityModule
 import dev.olog.msc.presentation.sleeptimer.di.SleepTimerInjector
 import dev.olog.msc.presentation.tabs.foldertree.di.FolderTreeFragmentModule
 import javax.inject.Singleton
@@ -63,7 +63,7 @@ import javax.inject.Singleton
         MainActivityInjector::class,
         AboutActivityInjector::class,
         PreferencesActivityInjector::class,
-        PlaylistChooserActivityInjector::class,
+        PlaylistChooserActivityModule::class,
         ViewModelModule::class,
 
         FolderTreeFragmentModule::class,

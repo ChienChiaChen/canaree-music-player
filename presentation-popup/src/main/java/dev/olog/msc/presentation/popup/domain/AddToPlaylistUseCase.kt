@@ -11,6 +11,8 @@ import dev.olog.msc.core.interactor.item.GetPodcastUseCase
 import dev.olog.msc.core.interactor.item.GetSongUseCase
 import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Completable
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 class AddToPlaylistUseCase @Inject constructor(
@@ -23,22 +25,19 @@ class AddToPlaylistUseCase @Inject constructor(
 
 ) : CompletableUseCaseWithParam<Pair<Playlist, MediaId>>(scheduler) {
 
-    override fun buildUseCaseObservable(param: Pair<Playlist, MediaId>): Completable {
+    override fun buildUseCaseObservable(param: Pair<Playlist, MediaId>): Completable = runBlocking{
         val (playlist, mediaId) = param
 
         if (mediaId.isLeaf && mediaId.isPodcast){
-            return getPodcastUseCase.execute(mediaId)
+            getPodcastUseCase.execute(mediaId).asObservable()
                     .firstOrError()
                     .flatMapCompletable { podcastPlaylistGateway.addSongsToPlaylist(playlist.id, listOf(mediaId.resolveId)) }
-        }
-
-        if (mediaId.isLeaf) {
-            return getSongUseCase.execute(mediaId)
+        } else if  (mediaId.isLeaf) {
+            getSongUseCase.execute(mediaId).asObservable()
                     .firstOrError()
                     .flatMapCompletable { playlistGateway.addSongsToPlaylist(playlist.id, listOf(mediaId.resolveId)) }
-        }
-
-        return getSongListByParamUseCase.execute(mediaId)
+        } else {
+            getSongListByParamUseCase.execute(mediaId)
                 .firstOrError()
                 .mapToList { it.id }
                 .flatMapCompletable {
@@ -49,5 +48,6 @@ class AddToPlaylistUseCase @Inject constructor(
                     }
 
                 }
+        }
     }
 }

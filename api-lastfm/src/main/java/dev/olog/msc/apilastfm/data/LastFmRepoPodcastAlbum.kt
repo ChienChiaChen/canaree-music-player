@@ -14,6 +14,8 @@ import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmPodcastAlbumEntity
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asFlowable
 import javax.inject.Inject
 
 internal class LastFmRepoPodcastAlbum @Inject constructor(
@@ -29,10 +31,10 @@ internal class LastFmRepoPodcastAlbum @Inject constructor(
         return Single.fromCallable { dao.getPodcastAlbum(albumId) == null }
     }
 
-    fun get(albumId: Long): Single<Optional<LastFmPodcastAlbum?>> {
+    fun get(albumId: Long): Single<Optional<LastFmPodcastAlbum?>> = runBlocking{
         val cachedValue = getFromCache(albumId)
 
-        val fetch = albumGateway.getByParam(albumId)
+        val fetch = albumGateway.getByParam(albumId).asFlowable()
                 .firstOrError()
                 .flatMap {
                     if (it.hasSameNameAsFolder){
@@ -44,7 +46,7 @@ internal class LastFmRepoPodcastAlbum @Inject constructor(
                 .flatMap { fetch(it) }
                 .map { Optional.of(it) }
 
-        return cachedValue.onErrorResumeNext(fetch)
+        cachedValue.onErrorResumeNext(fetch)
                 .subscribeOn(Schedulers.io())
     }
 

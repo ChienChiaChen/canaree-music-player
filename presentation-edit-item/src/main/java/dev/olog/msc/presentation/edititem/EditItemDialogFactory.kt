@@ -18,6 +18,8 @@ import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.audio.exceptions.CannotReadException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
@@ -39,15 +41,15 @@ class EditItemDialogFactory @Inject constructor(
         toDialogDisposable.unsubscribe()
     }
 
-    fun toEditTrack(mediaId: MediaId, action: () -> Unit){
+    fun toEditTrack(mediaId: MediaId, action: () -> Unit) = runBlocking{
         toDialogDisposable.unsubscribe()
         toDialogDisposable = if (mediaId.isAnyPodcast){
-            getPodcastUseCase.execute(mediaId)
+            getPodcastUseCase.execute(mediaId).asObservable()
                     .observeOn(Schedulers.computation())
                     .firstOrError()
                     .map { checkPodcast(it) }
         } else {
-            getSongUseCase.execute(mediaId)
+            getSongUseCase.execute(mediaId).asObservable()
                     .observeOn(Schedulers.computation())
                     .firstOrError()
                     .map { checkSong(it) }

@@ -9,6 +9,8 @@ import dev.olog.msc.core.interactor.item.GetAlbumUseCase
 import dev.olog.msc.core.interactor.item.GetPodcastAlbumUseCase
 import dev.olog.msc.presentation.edititem.utils.get
 import io.reactivex.Single
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.FieldKey
 import java.io.File
@@ -32,8 +34,8 @@ class EditAlbumFragmentPresenter @Inject constructor(
         return observeAlbumInternal()
     }
 
-    private fun observeAlbumInternal(): Single<DisplayableAlbum>{
-        return getAlbumUseCase.execute(mediaId)
+    private fun observeAlbumInternal(): Single<DisplayableAlbum> = runBlocking{
+        getAlbumUseCase.execute(mediaId).asObservable()
                 .flatMap { original ->
                     getSongListByParamUseCase.execute(mediaId)
                             .map { original.toDisplayableAlbum(it[0].path)  }
@@ -42,8 +44,8 @@ class EditAlbumFragmentPresenter @Inject constructor(
                 .doOnSuccess { originalAlbum = it }
     }
 
-    private fun observePodcastAlbumInternal(): Single<DisplayableAlbum>{
-        return getPodcastAlbumUseCase.execute(mediaId)
+    private fun observePodcastAlbumInternal(): Single<DisplayableAlbum> = runBlocking{
+        getPodcastAlbumUseCase.execute(mediaId).asObservable()
                 .flatMap { original ->
                     getSongListByParamUseCase.execute(mediaId)
                             .map { original.toDisplayableAlbum(it[0].path)}

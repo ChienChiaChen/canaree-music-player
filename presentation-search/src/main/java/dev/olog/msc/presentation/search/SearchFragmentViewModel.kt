@@ -15,6 +15,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.addTo
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import me.xdrop.fuzzywuzzy.model.ExtractedResult
 import javax.inject.Inject
@@ -37,10 +39,10 @@ class SearchFragmentViewModel @Inject constructor(
         queryText.value = newQuery.trim()
     }
 
-    fun getBestMatch(query: String): Single<String> {
-        return Singles.zip(
-                getAllArtistsUseCase.execute().firstOrError(),
-                getAllAlbumsUseCase.execute().firstOrError()
+    fun getBestMatch(query: String): Single<String> = runBlocking{
+        Singles.zip(
+                getAllArtistsUseCase.execute().asObservable().firstOrError(),
+                getAllAlbumsUseCase.execute().asObservable().firstOrError()
         ) { artists, albums -> listOf(
                 artists.map { it.name },
                 albums.map { it.title }

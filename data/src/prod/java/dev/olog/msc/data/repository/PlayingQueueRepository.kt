@@ -10,6 +10,8 @@ import dev.olog.msc.data.db.AppDatabase
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class PlayingQueueRepository @Inject constructor(
@@ -21,22 +23,22 @@ internal class PlayingQueueRepository @Inject constructor(
 
     private val playingQueueDao = database.playingQueueDao()
 
-    override fun getAll(): Single<List<PlayingQueueSong>> {
-        return Single.concat(
+    override fun getAll(): Single<List<PlayingQueueSong>> = runBlocking{
+        Single.concat(
                 playingQueueDao.getAllAsSongs(
-                        songGateway.getAll().firstOrError(),
-                        podcastGateway.getAll().firstOrError()
+                        songGateway.getAll().asObservable().firstOrError(),
+                        podcastGateway.getAll().asObservable().firstOrError()
                 ).firstOrError(),
 
-                songGateway.getAll().firstOrError()
+                songGateway.getAll().asObservable().firstOrError()
                         .map { it.mapIndexed { index, song -> song.toPlayingQueueSong(index) } }
         ).filter { it.isNotEmpty() }.firstOrError()
     }
 
-    override fun observeAll(): Observable<List<PlayingQueueSong>> {
-        return playingQueueDao.getAllAsSongs(
-                songGateway.getAll().firstOrError(),
-                podcastGateway.getAll().firstOrError()
+    override fun observeAll(): Observable<List<PlayingQueueSong>> = runBlocking{
+        playingQueueDao.getAllAsSongs(
+                songGateway.getAll().asObservable().firstOrError(),
+                podcastGateway.getAll().asObservable().firstOrError()
         )
     }
 
@@ -44,10 +46,10 @@ internal class PlayingQueueRepository @Inject constructor(
         return playingQueueDao.insert(list)
     }
 
-    override fun observeMiniQueue(): Observable<List<PlayingQueueSong>> {
-        return playingQueueDao.observeMiniQueue(
-                songGateway.getAll().firstOrError(),
-                podcastGateway.getAll().firstOrError()
+    override fun observeMiniQueue(): Observable<List<PlayingQueueSong>> = runBlocking{
+        playingQueueDao.observeMiniQueue(
+                songGateway.getAll().asObservable().firstOrError(),
+                podcastGateway.getAll().asObservable().firstOrError()
         )
     }
 

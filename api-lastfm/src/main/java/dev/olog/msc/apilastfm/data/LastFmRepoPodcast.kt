@@ -17,6 +17,8 @@ import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class LastFmRepoPodcast @Inject constructor(
@@ -31,8 +33,8 @@ internal class LastFmRepoPodcast @Inject constructor(
         return Single.fromCallable { dao.getPodcast(podcastId) == null }
     }
 
-    fun getOriginalItem(podcastId: Long): Single<Podcast> {
-        return gateway.getByParam(podcastId).firstOrError()
+    fun getOriginalItem(podcastId: Long): Single<Podcast> = runBlocking{
+        gateway.getByParam(podcastId).asObservable().firstOrError()
     }
 
     fun get(podcastId: Long): Single<Optional<LastFmPodcast?>> {

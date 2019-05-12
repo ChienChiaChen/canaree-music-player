@@ -4,10 +4,11 @@ import dev.olog.msc.core.entity.track.Song
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 interface SongGateway : BaseGateway<Song, Long> {
 
-    fun getByAlbumId(albumId: Long): Observable<Song>
+    suspend fun getByAlbumId(albumId: Long): Flow<Song>
 
     fun getAllUnfiltered(): Observable<List<Song>>
 

@@ -6,6 +6,9 @@ import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import io.reactivex.Observable
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 class GetPlaylistSiblingsUseCase @Inject internal constructor(
@@ -15,14 +18,14 @@ class GetPlaylistSiblingsUseCase @Inject internal constructor(
 ) : ObservableUseCaseWithParam<List<Playlist>, MediaId>(schedulers) {
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Observable<List<Playlist>> {
+    override fun buildUseCaseObservable(mediaId: MediaId): Observable<List<Playlist>> = runBlocking{
         val playlistId = mediaId.categoryValue.toLong()
 
         val observable = if (PlaylistGateway.isAutoPlaylist(playlistId)){
-            gateway.getAllAutoPlaylists()
+            flowOf(gateway.getAllAutoPlaylists())
         } else gateway.getAll()
 
-        return observable.map { playlists ->
+        observable.asObservable().map { playlists ->
             playlists.asSequence()
                     .filter { it.id != playlistId } // remove itself
                     .filter { it.size > 0 } // remove empty list

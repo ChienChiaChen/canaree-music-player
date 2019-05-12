@@ -32,6 +32,9 @@ dependencies {
     kapt librariesCore.daggerAndroidProcessor
     implementation librariesCore.rxAndroid
     api librariesMusic.remoteExoPlayer
+
+    implementation librariesCore.coroutinesRx
+
 //    api project(librariesMusic.exoPlayer)
 //    implementation project(librariesMusic.exoPlayerFlac)
 //    implementation project(librariesMusic.exoPlayerOpus)

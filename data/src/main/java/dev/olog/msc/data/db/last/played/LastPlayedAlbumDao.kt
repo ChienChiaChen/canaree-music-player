@@ -13,9 +13,21 @@ internal abstract class LastPlayedAlbumDao {
     @Query("""
         SELECT * FROM last_played_albums
         ORDER BY dateAdded DESC
-        LIMIT 10
+        LIMIT :limit
     """)
-    internal abstract fun getAll(): Flowable<List<LastPlayedAlbumEntity>>
+    internal abstract fun getAll(limit: Int): List<LastPlayedAlbumEntity>
+
+    @Query("""
+        SELECT * FROM last_played_albums
+        ORDER BY dateAdded DESC
+        LIMIT :limit
+    """)
+    internal abstract fun observeAll(limit: Int): Flowable<List<LastPlayedAlbumEntity>>
+
+    @Query("""
+        SELECT count(*) FROM last_played_albums
+    """)
+    internal abstract fun getCount(): Int
 
     @Insert
     internal abstract fun insertImpl(entity: LastPlayedAlbumEntity)

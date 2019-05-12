@@ -14,11 +14,11 @@ import dev.olog.msc.presentation.tabs.TabFragmentViewModel
 abstract class TabFragmentModule {
 
     @ContributesAndroidInjector
-    abstract fun provideFragment(): TabFragment
+    internal abstract fun provideFragment(): TabFragment
 
     @Binds
     @IntoMap
     @ViewModelKey(TabFragmentViewModel::class)
-    abstract fun provideViewModel(viewModel: TabFragmentViewModel): ViewModel
+    internal abstract fun provideViewModel(viewModel: TabFragmentViewModel): ViewModel
 
 }

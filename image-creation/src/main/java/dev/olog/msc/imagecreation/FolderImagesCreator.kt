@@ -4,11 +4,13 @@ import android.content.Context
 import android.provider.MediaStore
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.imagecreation.domain.GetAllSongsNewRequestUseCase
+import dev.olog.msc.core.interactor.all.GetAllSongsUseCase
 import dev.olog.msc.imagecreation.impl.MergedImagesCreator
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Flowable
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import java.io.File
 import javax.inject.Inject
 
@@ -16,13 +18,13 @@ private val MEDIA_STORE_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
 internal class FolderImagesCreator @Inject constructor(
         @ApplicationContext private val ctx: Context,
-        private val getAllSongsUseCase: GetAllSongsNewRequestUseCase,
+        private val getAllSongsUseCase: GetAllSongsUseCase,
         private val imagesThreadPool: ImagesThreadPool
 
 ) {
 
     fun execute() : Flowable<*> {
-        return getAllSongsUseCase.execute()
+        return runBlocking { getAllSongsUseCase.execute().asObservable() }
                 .firstOrError()
                 .observeOn(imagesThreadPool.scheduler)
                 .map { it.groupBy { it.folderPath } }

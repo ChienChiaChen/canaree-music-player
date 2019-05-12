@@ -22,10 +22,14 @@ dependencies {
 
     implementation librariesAndroidX.coreKtx
 
+    implementation librariesCore.coroutinesRx
+
     // db
     implementation librariesPersistency.sqlBrite
     implementation librariesPersistency.room
     kapt librariesPersistency.roomProcessor
     implementation librariesPersistency.roomRx
     implementation librariesPersistency.rxPrefs
+
+    implementation librariesAndroidX.paging
 }

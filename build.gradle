@@ -67,7 +67,7 @@ ext {
     rx_preferences = '2.0.0'
     rx_kotlin = '2.3.0'
     rx_lint = '1.7.0'
-    lifecycle = '2.0.0'
+    lifecycle = '2.1.0-beta01'
     sliding_panel = '3.4.0'
     lottie = '3.0.0'
     glide = '4.9.0'
@@ -106,6 +106,8 @@ ext {
     firebase = '16.0.8'
     firebase_crashlytics = '2.9.9'
 
+    coroutines = '1.2.1'
+
     librariesCore = [
             kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
 //            dagger
@@ -118,13 +120,17 @@ ext {
             rxJava                : "io.reactivex.rxjava2:rxjava:$rx_java",
             rxKotlin              : "io.reactivex.rxjava2:rxkotlin:$rx_kotlin",
             rxLint                : "nl.littlerobots.rxlint:rxlint:$rx_lint",
-            rxBinding            : "com.jakewharton.rxbinding2:rxbinding:$rx_binding",
+            rxBinding             : "com.jakewharton.rxbinding2:rxbinding:$rx_binding",
             rxAndroid             : "io.reactivex.rxjava2:rxandroid:$rx_android",
 //            lifecycle
             lifecycleRuntime      : "androidx.lifecycle:lifecycle-runtime:$lifecycle",
             lifecycleExtensions   : "androidx.lifecycle:lifecycle-extensions:$lifecycle",
             lifecycleJava8        : "androidx.lifecycle:lifecycle-common-java8:$lifecycle",
             lifecycleRx           : "androidx.lifecycle:lifecycle-reactivestreams:$lifecycle",
+            lifecycleKtx          : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle",
+
+            coroutines            : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines",
+            coroutinesRx          : "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutines",
     ]
 
     librariesMusic = [
@@ -170,7 +176,9 @@ ext {
             material   : "com.google.android.material:material:$android_x_material",
             preference : "androidx.legacy:legacy-preference-v14:$android_x_preference",
             palette    : "androidx.palette:palette:$android_x_palette",
-            annotations: "androidx.annotation:annotation:$android_x_annotations"
+            annotations: "androidx.annotation:annotation:$android_x_annotations",
+
+            paging     : 'androidx.paging:paging-runtime:2.1.0',
     ]
 
     librariesUi = [

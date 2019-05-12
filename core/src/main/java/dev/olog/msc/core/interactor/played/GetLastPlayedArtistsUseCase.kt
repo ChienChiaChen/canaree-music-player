@@ -1,30 +1,31 @@
-package dev.olog.msc.core.interactor.played
-
-import dev.olog.msc.core.entity.track.Artist
-import dev.olog.msc.core.executors.ComputationScheduler
-import dev.olog.msc.core.gateway.ArtistGateway
-import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.core.interactor.base.ObservableUseCase
-import io.reactivex.Observable
-import io.reactivex.rxkotlin.Observables
-import javax.inject.Inject
-
-class GetLastPlayedArtistsUseCase @Inject constructor(
-        schedulers: ComputationScheduler,
-        private val artistGateway: ArtistGateway,
-        private val appPreferencesUseCase: AppPreferencesGateway
-
-): ObservableUseCase<List<Artist>>(schedulers) {
-
-    override fun buildUseCaseObservable(): Observable<List<Artist>> {
-        return Observables.combineLatest(
-                artistGateway.getLastPlayed(),
-                appPreferencesUseCase.observeLibraryRecentPlayedVisibility()) { artists, show ->
-            if (show){
-                artists
-            } else {
-                listOf()
-            }
-        }
-    }
-}
+//package dev.olog.msc.core.interactor.played
+//
+//import dev.olog.msc.core.coroutines.IoDispatcher
+//import dev.olog.msc.core.coroutines.ObservableFlow
+//import dev.olog.msc.core.entity.track.Artist
+//import dev.olog.msc.core.gateway.ArtistGateway
+//import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+//import io.reactivex.BackpressureStrategy
+//import kotlinx.coroutines.flow.Flow
+//import kotlinx.coroutines.reactive.flow.asFlow
+//import javax.inject.Inject
+//
+//class GetLastPlayedArtistsUseCase @Inject constructor(
+//    schedulers: IoDispatcher,
+//    private val artistGateway: ArtistGateway,
+//    private val appPreferencesUseCase: AppPreferencesGateway
+//
+//) : ObservableFlow<List<Artist>>(schedulers) {
+//
+//    override suspend fun buildUseCaseObservable(): Flow<List<Artist>> {
+//        return artistGateway.getLastPlayed()
+//            .combineLatest(appPreferencesUseCase.canShowLibraryRecentPlayedVisibility().toFlowable(BackpressureStrategy.LATEST).asFlow())
+//            { artists, show ->
+//                if (show) {
+//                    artists
+//                } else {
+//                    listOf()
+//                }
+//            }
+//    }
+//}

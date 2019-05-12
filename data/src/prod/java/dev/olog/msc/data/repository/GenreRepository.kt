@@ -17,21 +17,22 @@ import dev.olog.msc.data.entity.GenreMostPlayedEntity
 import dev.olog.msc.data.mapper.extractId
 import dev.olog.msc.data.mapper.toGenre
 import dev.olog.msc.data.repository.util.CommonQuery
+import dev.olog.msc.data.repository.util.ContentResolverFlow
+import dev.olog.msc.shared.emitOnlyWithStoragePermission
+import dev.olog.msc.core.coroutines.debounceFirst
+import dev.olog.msc.core.entity.ChunkRequest
+import dev.olog.msc.core.entity.ChunkedData
+import dev.olog.msc.data.repository.queries.GenreQueries
+import dev.olog.msc.data.repository.util.ContentObserver
 import dev.olog.msc.shared.extensions.debounceFirst
 import dev.olog.msc.shared.onlyWithStoragePermission
 import io.reactivex.Completable
 import io.reactivex.CompletableSource
 import io.reactivex.Observable
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
-
-private val MEDIA_STORE_URI = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI
-private val PROJECTION = arrayOf(
-        MediaStore.Audio.Genres._ID,
-        MediaStore.Audio.Genres.NAME
-)
-private val SELECTION: String? = null
-private val SELECTION_ARGS: Array<String>? = null
-private const val SORT_ORDER = "lower(${MediaStore.Audio.Genres.NAME})"
 
 private val SONG_PROJECTION = arrayOf(BaseColumns._ID)
 private val SONG_SELECTION = null
@@ -39,111 +40,119 @@ private val SONG_SELECTION_ARGS: Array<String>? = null
 private const val SONG_SORT_ORDER = "lower(${MediaStore.Audio.Genres.Members.TITLE})"
 
 internal class GenreRepository @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val rxContentResolver: BriteContentResolver,
-        private val songGateway: SongGateway,
-        private val appPrefsUseCase: AppPreferencesGateway,
-        appDatabase: AppDatabase
+    @ApplicationContext private val context: Context,
+    private val rxContentResolver: BriteContentResolver,
+    private val songGateway: SongGateway,
+    private val appPrefsUseCase: AppPreferencesGateway,
+    appDatabase: AppDatabase,
+    private val contentObserver: ContentObserver
 
 ) : GenreGateway {
 
+    private val genreQueries = GenreQueries()
+
     private val mostPlayedDao = appDatabase.genreMostPlayedDao()
 
-    private fun queryAllData(): Observable<List<Genre>> {
-        return rxContentResolver.createQuery(
-                MEDIA_STORE_URI, PROJECTION, SELECTION,
-                SELECTION_ARGS, SORT_ORDER, true
-        ).onlyWithStoragePermission()
-                .debounceFirst()
-                .lift(SqlBrite.Query.mapToList {
-                    val id = it.extractId()
-                    val uri = MediaStore.Audio.Genres.Members.getContentUri("external", id)
-                    val size = CommonQuery.getSize(context.contentResolver, uri)
-                    it.toGenre(context, size)
-                }).map { removeBlacklisted(it) }
-                .doOnError { it.printStackTrace() }
-                .onErrorReturnItem(listOf())
-
+    private suspend fun queryAll(): Flow<List<Genre>> {
+        return flowOf()
+//        return contentResolver.createQuery<Genre>(
+//            MEDIA_STORE_URI, PROJECTION, null,
+//            null, SORT_ORDER, true
+//        ).mapToList {
+//            val id = it.extractId()
+//            val uri = MediaStore.Audio.Genres.Members.getContentUri("external", id)
+//            val size = CommonQuery.getSize(context.contentResolver, uri)
+//            it.toGenre(context, 0)
+//        }.emitOnlyWithStoragePermission()
+//            .adjust()
+//            .distinctUntilChanged()
     }
 
-    private val cachedData = queryAllData()
-            .replay(1)
-            .refCount()
-
-    private fun removeBlacklisted(list: MutableList<Genre>): List<Genre>{
-        val songsIds = CommonQuery.getAllSongsIdNotBlackListd(context.contentResolver, appPrefsUseCase)
-        for (genre in list.toList()) {
-            val newSize = calculateNewGenreSize(genre.id, songsIds)
-            if (newSize == 0){
-                list.remove(genre)
-            } else {
-                list[list.indexOf(genre)] = genre.copy(size = newSize)
-            }
-
-        }
-        return list
+    private suspend fun querySingle(selection: String, args: Array<String>): Flow<Genre> {
+        return flow {  }
+//        return contentResolver.createQuery<Genre>(
+//            MEDIA_STORE_URI, PROJECTION, selection,
+//            args, SORT_ORDER, true
+//        ).mapToList {
+//            val id = it.extractId()
+//            val uri = MediaStore.Audio.Genres.Members.getContentUri("external", id)
+//            val size = CommonQuery.getSize(context.contentResolver, uri)
+//            it.toGenre(context, 0)
+//        }.emitOnlyWithStoragePermission()
+//            .adjust()
+//            .map { it.first() }
+//            .distinctUntilChanged()
     }
 
-    private fun calculateNewGenreSize(id: Long, songIds: List<Long>): Int {
-        val uri = MediaStore.Audio.Genres.Members.getContentUri("external", id)
-        val cursor = context.contentResolver.query(uri, arrayOf(MediaStore.Audio.Genres.Members.AUDIO_ID), null, null, null)
-        val list = mutableListOf<Long>()
-
-        cursor?.use {
-            while (it.moveToNext()){
-                list.add(it.getLong(0))
-            }
-        }
-
-        list.retainAll(songIds)
-
-        return list.size
+    override fun getChunk(): ChunkedData<Genre> {
+        return ChunkedData(
+            chunkOf = { chunkRequest -> makeChunkOf(chunkRequest) },
+            allDataSize = CommonQuery.sizeQuery(genreQueries.size(context)),
+            observeChanges = { contentObserver.createQuery(GenreQueries.MEDIA_STORE_URI) }
+        )
     }
 
-    override fun getAll(): Observable<List<Genre>> = cachedData
-
-    override fun getAllNewRequest(): Observable<List<Genre>> {
-        return queryAllData()
+    private fun makeChunkOf(chunkRequest: ChunkRequest): List<Genre> {
+        return CommonQuery.query(
+            cursor = genreQueries.all(context, chunkRequest),
+            mapper = { it.toGenre(context, 0) },
+            afterQuery = { genreList ->
+                val blackList = appPrefsUseCase.getBlackList()
+                genreList.map { genre ->
+                    // get the size for every playlist
+                    val sizeQueryCursor = genreQueries.genreSize(context, genre.id, blackList)
+                    val sizeQuery = CommonQuery.sizeQuery(sizeQueryCursor)
+                    genre.copy(size = sizeQuery)
+                }
+            })
     }
 
-    override fun getByParam(param: Long): Observable<Genre> {
-        return cachedData.map { list -> list.first { it.id == param } }
+    override suspend fun getAll(): Flow<List<Genre>> {
+        return queryAll()
+    }
+
+    override suspend fun getByParam(param: Long): Flow<Genre> {
+        return querySingle("${MediaStore.Audio.Genres._ID} = ?", arrayOf(param.toString()))
     }
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun observeSongListByParam(genreId: Long): Observable<List<Song>> {
+    override fun observeSongListByParam(genreId: Long): Observable<List<Song>> = runBlocking{
         val uri = MediaStore.Audio.Genres.Members.getContentUri("external", genreId)
 
-        return rxContentResolver.createQuery(
-                uri,SONG_PROJECTION,
-                SONG_SELECTION,
-                SONG_SELECTION_ARGS,
-                SONG_SORT_ORDER,
-                false
+        rxContentResolver.createQuery(
+            uri, SONG_PROJECTION,
+            SONG_SELECTION,
+            SONG_SELECTION_ARGS,
+            SONG_SORT_ORDER,
+            false
         ).onlyWithStoragePermission()
-                .debounceFirst()
-                .lift(SqlBrite.Query.mapToList { it.extractId() })
-                .switchMapSingle { ids -> songGateway.getAll().firstOrError().map { songs ->
-                    ids.asSequence()
+            .debounceFirst()
+            .lift(SqlBrite.Query.mapToList { it.extractId() })
+            .switchMapSingle { ids ->
+                runBlocking {
+                    songGateway.getAll().asObservable().firstOrError().map { songs ->
+                        ids.asSequence()
                             .mapNotNull { id -> songs.firstOrNull { it.id == id } }
                             .toList()
-                }}.distinctUntilChanged()
+                    }
+                }
+            }.distinctUntilChanged()
     }
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun getMostPlayed(mediaId: MediaId): Observable<List<Song>> {
+    override fun getMostPlayed(mediaId: MediaId): Observable<List<Song>> = runBlocking{
         val genreId = mediaId.categoryValue.toLong()
-        return mostPlayedDao.getAll(genreId, songGateway.getAll())
+        mostPlayedDao.getAll(genreId, songGateway.getAll().asObservable())
     }
 
-    override fun insertMostPlayed(mediaId: MediaId): Completable {
+    override fun insertMostPlayed(mediaId: MediaId): Completable = runBlocking{
         val songId = mediaId.leaf!!
         val genreId = mediaId.categoryValue.toLong()
-        return songGateway.getByParam(songId)
-                .firstOrError()
-                .flatMapCompletable { song ->
-                    CompletableSource { mostPlayedDao.insertOne(GenreMostPlayedEntity(0, song.id, genreId)) }
-                }
+        songGateway.getByParam(songId).asObservable()
+            .firstOrError()
+            .flatMapCompletable { song ->
+                CompletableSource { mostPlayedDao.insertOne(GenreMostPlayedEntity(0, song.id, genreId)) }
+            }
     }
 
 }

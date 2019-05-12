@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TabFragmentHeaders @Inject constructor(
+internal class TabFragmentHeaders @Inject constructor(
         resources: Resources
 ) {
 
@@ -29,23 +29,23 @@ class TabFragmentHeaders @Inject constructor(
             DisplayableItem(R.layout.item_tab_header, MediaId.headerId("all artists"), resources.getString(R.string.tab_all_artists))
     )
 
-    val recentAlbumHeaders = listOf(
+    val lastPlayedAlbumHeaders = listOf(
             DisplayableItem(R.layout.item_tab_header, MediaId.headerId("recent albums"), resources.getString(R.string.tab_recent_played)),
             DisplayableItem(R.layout.item_tab_last_played_album_horizontal_list, MediaId.headerId("horiz list album"), "")
     )
 
-    val recentArtistHeaders = listOf(
+    val lastPlayedArtistHeaders = listOf(
             DisplayableItem(R.layout.item_tab_header, MediaId.headerId("recent artists"), resources.getString(R.string.tab_recent_played)),
             DisplayableItem(R.layout.item_tab_last_played_artist_horizontal_list, MediaId.headerId("horiz list artist"), "")
     )
 
-    val newAlbumsHeaders = listOf(
+    val recentlyAddedAlbumsHeaders = listOf(
             DisplayableItem(R.layout.item_tab_header, MediaId.headerId("new albums"),
                     resources.getStringArray(R.array.tab_new_items)[0]),
             DisplayableItem(R.layout.item_tab_new_album_horizontal_list, MediaId.headerId("horiz list new albums"), "")
     )
 
-    val newArtistsHeaders = listOf(
+    val recentlyAddedArtistsHeaders = listOf(
             DisplayableItem(R.layout.item_tab_header, MediaId.headerId("new artists"),
                     resources.getStringArray(R.array.tab_new_items)[1]),
             DisplayableItem(R.layout.item_tab_new_artist_horizontal_list, MediaId.headerId("horiz list new artists"), "")

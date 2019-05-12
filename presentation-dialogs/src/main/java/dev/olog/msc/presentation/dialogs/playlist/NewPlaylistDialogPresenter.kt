@@ -11,6 +11,8 @@ import dev.olog.msc.core.interactor.item.GetSongUseCase
 import dev.olog.msc.core.interactor.queue.GetPlayingQueueUseCase
 import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Completable
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 class NewPlaylistDialogPresenter @Inject constructor(
@@ -38,12 +40,12 @@ class NewPlaylistDialogPresenter @Inject constructor(
         }
 
         return if (mediaId.isLeaf && mediaId.isPodcast) {
-            getPodcastUseCase.execute(mediaId).firstOrError().map { listOf(it.id) }
+            runBlocking { getPodcastUseCase.execute(mediaId).asObservable() }.firstOrError().map { listOf(it.id) }
                     .flatMapCompletable {
                         insertCustomTrackListToPlaylist.execute(InsertCustomTrackListRequest(playlistTitle, it, playlistType))
                     }
         } else if (mediaId.isLeaf) {
-            getSongUseCase.execute(mediaId).firstOrError().map { listOf(it.id) }
+            runBlocking { getSongUseCase.execute(mediaId).asObservable().firstOrError() }.map { listOf(it.id) }
                     .flatMapCompletable {
                         insertCustomTrackListToPlaylist.execute(InsertCustomTrackListRequest(playlistTitle, it, playlistType))
                     }

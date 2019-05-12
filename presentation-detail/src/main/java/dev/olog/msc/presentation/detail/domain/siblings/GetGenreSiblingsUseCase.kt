@@ -6,6 +6,8 @@ import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.GenreGateway
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import io.reactivex.Observable
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 class GetGenreSiblingsUseCase @Inject constructor(
@@ -15,9 +17,9 @@ class GetGenreSiblingsUseCase @Inject constructor(
 ) : ObservableUseCaseWithParam<List<Genre>, MediaId>(schedulers) {
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId) : Observable<List<Genre>> {
+    override fun buildUseCaseObservable(mediaId: MediaId) : Observable<List<Genre>> = runBlocking{
         val genreId = mediaId.categoryValue.toLong()
 
-        return gateway.getAll().map { it.filter { it.id != genreId } }
+        gateway.getAll().asObservable().map { it.filter { it.id != genreId } }
     }
 }

@@ -448,16 +448,12 @@ internal class AppPreferencesImpl @Inject constructor(
         }
     }
 
-    override fun observeLibraryNewVisibility(): Observable<Boolean> {
-        return rxPreferences.getBoolean(context.getString(prefsKeys.showNewAlbumsArtists()), true)
-                .asObservable()
-                .observeOn(Schedulers.io())
+    override fun canShowLibraryNewVisibility(): Boolean {
+        return preferences.getBoolean(context.getString(prefsKeys.showNewAlbumsArtists()), true)
     }
 
-    override fun observeLibraryRecentPlayedVisibility(): Observable<Boolean> {
-        return rxPreferences.getBoolean(context.getString(prefsKeys.showRecentAlbumsArtists()), true)
-                .asObservable()
-                .observeOn(Schedulers.io())
+    override fun canShowLibraryRecentPlayedVisibility(): Boolean {
+        return preferences.getBoolean(context.getString(prefsKeys.showRecentAlbumsArtists()), true)
     }
 
     override fun canShowPodcastCategory(): Boolean {

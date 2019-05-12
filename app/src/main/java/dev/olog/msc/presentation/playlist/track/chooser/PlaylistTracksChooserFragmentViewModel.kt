@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.coroutines.mapToList
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.interactor.InsertCustomTrackListRequest
 import dev.olog.msc.core.interactor.InsertCustomTrackListToPlaylist
@@ -24,6 +25,9 @@ import dev.olog.msc.shared.extensions.toggle
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 class PlaylistTracksChooserFragmentViewModel @Inject constructor(
@@ -61,10 +65,11 @@ class PlaylistTracksChooserFragmentViewModel @Inject constructor(
     }
 
     private fun getPlaylistTypeTracks(): Observable<List<PlaylistTrack>> = when (playlistType) {
-        PlaylistType.PODCAST -> getAllPodcastsUseCase.execute().mapToList { it.toPlaylistTrack() }
-        PlaylistType.TRACK -> getAllSongsUseCase.execute().mapToList { it.toPlaylistTrack() }
+        PlaylistType.PODCAST -> runBlocking { getAllPodcastsUseCase.execute() }.mapToList { it.toPlaylistTrack() }
+        PlaylistType.TRACK -> runBlocking { getAllSongsUseCase.execute() }.mapToList { it.toPlaylistTrack() }
         PlaylistType.AUTO -> throw IllegalArgumentException("type auto not valid")
     }.map { list -> list.sortedBy { it.title.toLowerCase() } }
+        .asObservable()
 
     fun toggleItem(mediaId: MediaId){
         val id = mediaId.resolveId

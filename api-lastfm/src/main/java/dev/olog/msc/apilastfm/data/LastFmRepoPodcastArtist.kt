@@ -15,6 +15,8 @@ import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmPodcastArtistEntity
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class LastFmRepoPodcastArtist @Inject constructor(
@@ -31,15 +33,15 @@ internal class LastFmRepoPodcastArtist @Inject constructor(
                 .subscribeOn(Schedulers.io())
     }
 
-    fun get(artistId: Long): Single<Optional<LastFmPodcastArtist?>> {
+    fun get(artistId: Long): Single<Optional<LastFmPodcastArtist?>> = runBlocking{
         val cachedValue = getFromCache(artistId)
 
-        val fetch = artistGateway.getByParam(artistId)
+        val fetch = artistGateway.getByParam(artistId).asObservable()
                 .firstOrError()
                 .flatMap { fetch(it) }
                 .map { Optional.of(it) }
 
-        return cachedValue.onErrorResumeNext(fetch)
+        cachedValue.onErrorResumeNext(fetch)
                 .subscribeOn(Schedulers.io())
     }
 

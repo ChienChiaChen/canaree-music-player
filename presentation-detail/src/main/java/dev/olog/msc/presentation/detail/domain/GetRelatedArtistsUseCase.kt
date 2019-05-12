@@ -11,6 +11,8 @@ import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.safeCompare
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toFlowable
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 class GetRelatedArtistsUseCase @Inject constructor(
@@ -21,17 +23,18 @@ class GetRelatedArtistsUseCase @Inject constructor(
 ) : ObservableUseCaseWithParam<List<Artist>, MediaId>(executors) {
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Observable<List<Artist>> {
+    override fun buildUseCaseObservable(mediaId: MediaId): Observable<List<Artist>> = runBlocking{
         if (mediaId.isFolder || mediaId.isPlaylist || mediaId.isGenre){
-            return getSongListByParamUseCase.execute(mediaId)
+            getSongListByParamUseCase.execute(mediaId)
                     .switchMapSingle { songList -> songList.toFlowable()
                             .filter { it.artist != TrackUtils.UNKNOWN }
                             .distinct { it.artistId }
                             .map { MediaId.artistId(it.artistId) }
-                            .flatMapSingle { getArtistUseCase.execute(it).firstOrError().subscribeOn(executors.worker) }
+                            .flatMapSingle { runBlocking { getArtistUseCase.execute(it).asObservable().firstOrError() }.subscribeOn(executors.worker) }
                             .toSortedList { o1, o2 -> collator.safeCompare(o1.name, o2.name) }
                     }
+        } else {
+            Observable.just(emptyList())
         }
-        return Observable.just(emptyList())
     }
 }

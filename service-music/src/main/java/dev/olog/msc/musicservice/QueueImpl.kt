@@ -22,6 +22,8 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import org.jetbrains.annotations.Contract
 import java.util.*
 import javax.inject.Inject
@@ -310,10 +312,10 @@ internal class QueueImpl @Inject constructor(
                 .flattenAsObservable { it }
                 .flatMapMaybe {
                     if (isPodcast) {
-                        getPodcastUseCase.execute(MediaId.podcastId(it)).firstElement()
+                        runBlocking { getPodcastUseCase.execute(MediaId.podcastId(it)).asObservable() }.firstElement()
                                 .map { podcast -> podcast.toMediaEntity(maxProgressive++, MediaId.songId(podcast.id)) }
                     } else {
-                        getSongUseCase.execute(MediaId.songId(it)).firstElement()
+                        runBlocking { getSongUseCase.execute(MediaId.songId(it)).asObservable() }.firstElement()
                                 .map { song -> song.toMediaEntity(maxProgressive++, MediaId.songId(song.id)) }
                     }
 
@@ -338,9 +340,9 @@ internal class QueueImpl @Inject constructor(
                 .flattenAsObservable { it }
                 .flatMapMaybe {
                     if (isPodcast) {
-                        getPodcastUseCase.execute(MediaId.podcastId(it)).firstElement()
+                        runBlocking { getPodcastUseCase.execute(MediaId.podcastId(it)).asObservable() }.firstElement()
                     } else {
-                        getSongUseCase.execute(MediaId.songId(it)).firstElement()
+                        runBlocking { getSongUseCase.execute(MediaId.songId(it)).asObservable() }.firstElement()
                     }
 
                 }

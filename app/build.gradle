@@ -166,6 +166,10 @@ dependencies {
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
     implementation librariesCore.lifecycleRx
+    implementation librariesCore.lifecycleKtx
+
+    implementation librariesCore.coroutines
+    implementation librariesCore.coroutinesRx
 
     // support
     implementation librariesAndroidX.core
@@ -181,6 +185,9 @@ dependencies {
     implementation librariesAndroidX.preference
     implementation librariesAndroidX.palette
     implementation librariesUi.constraintLayout
+
+    // paging
+    implementation librariesAndroidX.paging
 
     // dagger
     implementation librariesCore.dagger

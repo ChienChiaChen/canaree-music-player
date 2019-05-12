@@ -14,6 +14,8 @@ import dev.olog.msc.presentation.edititem.DisplayableSong
 import dev.olog.msc.presentation.edititem.utils.get
 import dev.olog.msc.shared.TrackUtils
 import io.reactivex.Single
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.FieldKey
 import java.io.File
@@ -53,8 +55,8 @@ class EditTrackFragmentPresenter @Inject constructor(
                 }
     }
 
-    private fun observePodcastInternal(): Single<DisplayableSong> {
-        return getPodcastUseCase.execute(mediaId)
+    private fun observePodcastInternal(): Single<DisplayableSong> = runBlocking{
+        getPodcastUseCase.execute(mediaId).asObservable()
                 .firstOrError()
                 .map { it.copy(
                         artist = if (it.artist == TrackUtils.UNKNOWN) "" else it.artist,

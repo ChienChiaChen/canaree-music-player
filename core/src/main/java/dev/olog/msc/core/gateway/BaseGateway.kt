@@ -1,15 +1,16 @@
 package dev.olog.msc.core.gateway
 
-import io.reactivex.Observable
+import dev.olog.msc.core.entity.ChunkedData
+import kotlinx.coroutines.flow.Flow
 
 
 interface BaseGateway<T, in Params> {
 
-    fun getAll(): Observable<List<T>>
+    fun getChunk(): ChunkedData<T>
 
-    fun getAllNewRequest() : Observable<List<T>>
+    suspend fun getAll(): Flow<List<T>>
 
-    fun getByParam(param: Params): Observable<T>
+    suspend fun getByParam(param: Params): Flow<T>
 
 }
 

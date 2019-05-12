@@ -1,21 +1,20 @@
 package dev.olog.msc.core.interactor.item
 
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.coroutines.IoDispatcher
+import dev.olog.msc.core.coroutines.ObservableFlowWithParam
 import dev.olog.msc.core.entity.track.Genre
-import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.GenreGateway
-import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetGenreUseCase @Inject internal constructor(
-        schedulers: IoScheduler,
-        private val gateway: GenreGateway
+    schedulers: IoDispatcher,
+    private val gateway: GenreGateway
 
-) : ObservableUseCaseWithParam<Genre, MediaId>(schedulers) {
+) : ObservableFlowWithParam<Genre, MediaId>(schedulers) {
 
-    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Observable<Genre> {
+    override suspend fun buildUseCaseObservable(mediaId: MediaId): Flow<Genre> {
         return gateway.getByParam(mediaId.categoryId)
     }
 }

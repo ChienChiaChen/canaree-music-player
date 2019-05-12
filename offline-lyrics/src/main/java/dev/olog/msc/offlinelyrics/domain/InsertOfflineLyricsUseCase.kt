@@ -8,6 +8,8 @@ import dev.olog.msc.core.gateway.OfflineLyricsGateway
 import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.core.interactor.item.GetSongUseCase
 import io.reactivex.Completable
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import java.io.File
 import javax.inject.Inject
 
@@ -20,8 +22,8 @@ class InsertOfflineLyricsUseCase @Inject constructor(
 ) : CompletableUseCaseWithParam<OfflineLyrics>(executors) {
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(offlineLyrics: OfflineLyrics): Completable {
-        return getSongUseCase.execute(MediaId.songId(offlineLyrics.trackId))
+    override fun buildUseCaseObservable(offlineLyrics: OfflineLyrics): Completable = runBlocking{
+        getSongUseCase.execute(MediaId.songId(offlineLyrics.trackId)).asObservable()
                 .firstOrError()
                 .flatMapCompletable { saveLyricsOnMetadata(it, offlineLyrics.lyrics) }
                 .andThen(gateway.saveLyrics(offlineLyrics))

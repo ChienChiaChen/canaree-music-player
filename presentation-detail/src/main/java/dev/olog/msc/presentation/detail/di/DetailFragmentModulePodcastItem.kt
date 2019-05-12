@@ -19,6 +19,9 @@ import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.asFlowable
 import dev.olog.msc.shared.utils.TextUtils
 import io.reactivex.Flowable
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asFlowable
+import kotlinx.coroutines.rx2.asObservable
 
 @Module
 class DetailFragmentModulePodcastItem {
@@ -29,9 +32,9 @@ class DetailFragmentModulePodcastItem {
     internal fun providePlaylistItem(
             resources: Resources,
             mediaId: MediaId,
-            useCase: GetPodcastPlaylistUseCase) : Flowable<List<DisplayableItem>> {
+            useCase: GetPodcastPlaylistUseCase) : Flowable<List<DisplayableItem>> = runBlocking{
 
-        return useCase.execute(mediaId)
+        useCase.execute(mediaId).asObservable()
                 .map { it.toHeaderItem(resources) }
                 .asFlowable()
     }
@@ -41,9 +44,9 @@ class DetailFragmentModulePodcastItem {
     @MediaIdCategoryKey(MediaIdCategory.PODCASTS_ALBUMS)
     internal fun provideAlbumItem(
             mediaId: MediaId,
-            useCase: GetPodcastAlbumUseCase) : Flowable<List<DisplayableItem>> {
+            useCase: GetPodcastAlbumUseCase) : Flowable<List<DisplayableItem>> = runBlocking{
 
-        return useCase.execute(mediaId)
+        useCase.execute(mediaId).asObservable()
                 .map { it.toHeaderItem() }
                 .asFlowable()
     }
@@ -54,9 +57,9 @@ class DetailFragmentModulePodcastItem {
     internal fun provideArtistItem(
             resources: Resources,
             mediaId: MediaId,
-            useCase: GetPodcastArtistUseCase) : Flowable<List<DisplayableItem>> {
+            useCase: GetPodcastArtistUseCase) : Flowable<List<DisplayableItem>> = runBlocking{
 
-        return useCase.execute(mediaId)
+        useCase.execute(mediaId).asObservable()
                 .map { it.toHeaderItem(resources) }
                 .asFlowable()
     }

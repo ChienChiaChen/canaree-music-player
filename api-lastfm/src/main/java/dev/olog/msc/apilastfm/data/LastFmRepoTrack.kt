@@ -16,6 +16,8 @@ import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class LastFmRepoTrack @Inject constructor(
@@ -31,8 +33,8 @@ internal class LastFmRepoTrack @Inject constructor(
         return Single.fromCallable { dao.getTrack(trackId) == null }
     }
 
-    fun getOriginalItem(trackId: Long): Single<Song> {
-        return songGateway.getByParam(trackId).firstOrError()
+    fun getOriginalItem(trackId: Long): Single<Song> = runBlocking{
+        songGateway.getByParam(trackId).asObservable().firstOrError()
     }
 
     fun get(trackId: Long): Single<Optional<LastFmTrack?>> {

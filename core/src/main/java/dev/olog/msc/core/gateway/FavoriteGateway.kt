@@ -8,10 +8,11 @@ import dev.olog.msc.core.entity.track.Song
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 interface FavoriteGateway {
 
-    fun getAll(): Observable<List<Song>>
+    suspend fun getAll(): Flow<List<Song>>
     fun getAllPodcasts(): Observable<List<Podcast>>
 
     fun addSingle(type: FavoriteType, songId: Long): Completable

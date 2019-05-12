@@ -2,10 +2,11 @@ package dev.olog.msc.presentation.tabs.adapters
 
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.adapter.AbsAdapter
+import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.msc.presentation.base.adapter.DiffCallback
 import dev.olog.msc.presentation.base.extensions.elevateAlbumOnTouch
 import dev.olog.msc.presentation.base.extensions.elevateSongOnTouch
 import dev.olog.msc.presentation.base.extensions.setOnClickListener
@@ -17,22 +18,21 @@ import dev.olog.msc.presentation.tabs.BR
 import dev.olog.msc.presentation.tabs.R
 import dev.olog.msc.presentation.tabs.TabFragmentViewModel
 
-class TabFragmentAdapter (
-        lifecycle: Lifecycle,
-        private val navigator: Navigator,
-        private val lastPlayedArtistsAdapter: TabFragmentLastPlayedArtistsAdapter?,
-        private val lastPlayedAlbumsAdapter: TabFragmentLastPlayedAlbumsAdapter?,
-        private val newAlbumsAdapter : TabFragmentNewAlbumsAdapter?,
-        private val newArtistsAdapter : TabFragmentNewArtistsAdapter?,
-        private val viewModel: TabFragmentViewModel
+internal class TabFragmentAdapter(
+    private val navigator: Navigator,
+    private val lastPlayedArtistsAdapter: TabFragmentLastPlayedArtistsAdapter?,
+    private val lastPlayedAlbumsAdapter: TabFragmentLastPlayedAlbumsAdapter?,
+    private val newAlbumsAdapter: TabFragmentNewAlbumsAdapter?,
+    private val newArtistsAdapter: TabFragmentNewArtistsAdapter?,
+    private val viewModel: TabFragmentViewModel,
+    private val mediaProvider: MediaProvider
 
-) : AbsAdapter<DisplayableItem>(lifecycle) {
+) : BasePagedAdapter<DisplayableItem>(DiffCallback) {
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
         when (viewType) {
             R.layout.item_tab_shuffle -> {
-                viewHolder.setOnClickListener(controller) { _, _, _ ->
-                    val mediaProvider = viewHolder.itemView.context as MediaProvider
+                viewHolder.setOnClickListener(this) { _, _, _ ->
                     mediaProvider.shuffle(MediaId.shuffleAllId())
                 }
             }
@@ -41,44 +41,43 @@ class TabFragmentAdapter (
             R.layout.item_tab_auto_playlist,
             R.layout.item_tab_song,
             R.layout.item_tab_podcast -> {
-                viewHolder.setOnClickListener(controller) { item, _, _ ->
-                    val mediaProvider = viewHolder.itemView.context as MediaProvider
-                    if (item.isPlayable && !item.mediaId.isPodcast){
+                viewHolder.setOnClickListener(this) { item, _, _ ->
+                    if (item.isPlayable && !item.mediaId.isPodcast) {
                         val sort = viewModel.getAllTracksSortOrder()
                         mediaProvider.playFromMediaId(item.mediaId, sort.type, sort.arranging)
-                    } else if (item.isPlayable){
+                    } else if (item.isPlayable) {
                         mediaProvider.playFromMediaId(item.mediaId)
                     } else {
                         val activity = viewHolder.itemView.context as FragmentActivity
                         navigator.toDetailFragment(activity, item.mediaId)
                     }
                 }
-                viewHolder.setOnLongClickListener(controller) { item, _, _ ->
+                viewHolder.setOnLongClickListener(this) { item, _, _ ->
                     navigator.toDialog(item.mediaId, viewHolder.itemView)
                 }
-//                viewHolder.setOnClickListener(R.id.more, controller) { item, _, view ->
+//                viewHolder.setOnClickListener(R.id.more, this) { item, _, view ->
 //                    navigator.toDialog(item.mediaId, view)
 //                }
             }
             R.layout.item_tab_last_played_album_horizontal_list -> {
-                val view = viewHolder.itemView as androidx.recyclerview.widget.RecyclerView
+                val view = viewHolder.itemView as RecyclerView
                 setupHorizontalList(view, lastPlayedAlbumsAdapter!!)
             }
             R.layout.item_tab_last_played_artist_horizontal_list -> {
-                val view = viewHolder.itemView as androidx.recyclerview.widget.RecyclerView
+                val view = viewHolder.itemView as RecyclerView
                 setupHorizontalList(view, lastPlayedArtistsAdapter!!)
             }
-            R.layout.item_tab_new_album_horizontal_list-> {
-                val view = viewHolder.itemView as androidx.recyclerview.widget.RecyclerView
+            R.layout.item_tab_new_album_horizontal_list -> {
+                val view = viewHolder.itemView as RecyclerView
                 setupHorizontalList(view, newAlbumsAdapter!!)
             }
-            R.layout.item_tab_new_artist_horizontal_list-> {
-                val view = viewHolder.itemView as androidx.recyclerview.widget.RecyclerView
+            R.layout.item_tab_new_artist_horizontal_list -> {
+                val view = viewHolder.itemView as RecyclerView
                 setupHorizontalList(view, newArtistsAdapter!!)
             }
         }
 
-        when (viewType){
+        when (viewType) {
             R.layout.item_tab_album,
             R.layout.item_tab_artist,
             R.layout.item_tab_auto_playlist -> viewHolder.elevateAlbumOnTouch()
@@ -87,8 +86,12 @@ class TabFragmentAdapter (
         }
     }
 
-    private fun setupHorizontalList(list: androidx.recyclerview.widget.RecyclerView, adapter: AbsAdapter<*>){
-        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(list.context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+    private fun setupHorizontalList(list: RecyclerView, adapter: BasePagedAdapter<*>) {
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            list.context,
+            androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
+            false
+        )
         list.layoutManager = layoutManager
         list.adapter = adapter
     }
@@ -97,10 +100,4 @@ class TabFragmentAdapter (
         binding.setVariable(BR.item, item)
     }
 
-//    override fun onViewRecycled(holder: DataBoundViewHolder) {
-//        holder.itemView.findViewById<View>(R.id.cover)?.let {
-//            GlideApp.with(holder.itemView).clear(it)
-//        }
-//        super.onViewRecycled(holder)
-//    }
 }

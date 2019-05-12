@@ -15,6 +15,8 @@ import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.asFlowable
 import dev.olog.msc.shared.utils.TextUtils
 import io.reactivex.Flowable
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 
 @Module
 class DetailFragmentModuleItem {
@@ -25,9 +27,9 @@ class DetailFragmentModuleItem {
     internal fun provideFolderItem(
             resources: Resources,
             mediaId: MediaId,
-            useCase: GetFolderUseCase) : Flowable<List<DisplayableItem>> {
+            useCase: GetFolderUseCase) : Flowable<List<DisplayableItem>> = runBlocking{
 
-        return useCase.execute(mediaId)
+        useCase.execute(mediaId).asObservable()
                 .map { it.toHeaderItem(resources) }
                 .asFlowable()
     }
@@ -38,9 +40,9 @@ class DetailFragmentModuleItem {
     internal fun providePlaylistItem(
             resources: Resources,
             mediaId: MediaId,
-            useCase: GetPlaylistUseCase) : Flowable<List<DisplayableItem>> {
+            useCase: GetPlaylistUseCase) : Flowable<List<DisplayableItem>> = runBlocking{
 
-        return useCase.execute(mediaId)
+        useCase.execute(mediaId).asObservable()
                 .map { it.toHeaderItem(resources) }
                 .asFlowable()
     }
@@ -50,9 +52,9 @@ class DetailFragmentModuleItem {
     @MediaIdCategoryKey(MediaIdCategory.ALBUMS)
     internal fun provideAlbumItem(
             mediaId: MediaId,
-            useCase: GetAlbumUseCase) : Flowable<List<DisplayableItem>> {
+            useCase: GetAlbumUseCase) : Flowable<List<DisplayableItem>> = runBlocking{
 
-        return useCase.execute(mediaId)
+        useCase.execute(mediaId).asObservable()
                 .map { it.toHeaderItem() }
                 .asFlowable()
     }
@@ -63,9 +65,9 @@ class DetailFragmentModuleItem {
     internal fun provideArtistItem(
             resources: Resources,
             mediaId: MediaId,
-            useCase: GetArtistUseCase) : Flowable<List<DisplayableItem>> {
+            useCase: GetArtistUseCase) : Flowable<List<DisplayableItem>> = runBlocking{
 
-        return useCase.execute(mediaId)
+        useCase.execute(mediaId).asObservable()
                 .map { it.toHeaderItem(resources) }
                 .asFlowable()
     }
@@ -76,9 +78,9 @@ class DetailFragmentModuleItem {
     internal fun provideGenreItem(
             resources: Resources,
             mediaId: MediaId,
-            useCase: GetGenreUseCase) : Flowable<List<DisplayableItem>> {
+            useCase: GetGenreUseCase) : Flowable<List<DisplayableItem>> = runBlocking{
 
-        return useCase.execute(mediaId)
+        useCase.execute(mediaId).asObservable()
                 .map { it.toHeaderItem(resources) }
                 .asFlowable()
     }

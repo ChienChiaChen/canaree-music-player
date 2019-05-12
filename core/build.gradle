@@ -6,6 +6,9 @@ dependencies {
     implementation librariesCore.rxKotlin
     implementation librariesCore.dagger
     implementation librariesUtils.optional
+
+    implementation librariesCore.coroutines
+    implementation librariesCore.coroutinesRx
 }
 
 sourceCompatibility = "8"

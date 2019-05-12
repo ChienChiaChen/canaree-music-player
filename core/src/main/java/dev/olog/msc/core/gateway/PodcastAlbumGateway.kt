@@ -4,10 +4,11 @@ import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import io.reactivex.Observable
 
 interface PodcastAlbumGateway :
-        BaseGateway<PodcastAlbum, Long>,
-        ChildsHasPodcasts<Long>,
-        HasLastPlayed<PodcastAlbum> {
+    BaseGateway<PodcastAlbum, Long>,
+    ChildsHasPodcasts<Long>,
+    HasLastPlayed<PodcastAlbum>,
+    HasRecentlyAdded<PodcastAlbum> {
 
-    fun observeByArtist(artistId: Long) : Observable<List<PodcastAlbum>>
+    fun observeByArtist(artistId: Long): Observable<List<PodcastAlbum>>
 
 }

@@ -29,6 +29,7 @@ dependencies {
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
+    implementation librariesCore.lifecycleKtx
 
     implementation librariesCore.rxAndroid
 
@@ -37,4 +38,7 @@ dependencies {
     kapt librariesCore.daggerAndroidProcessor
 
     implementation librariesUi.slidingPanel
+
+    implementation librariesAndroidX.paging
+
 }

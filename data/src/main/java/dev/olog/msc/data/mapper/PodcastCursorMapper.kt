@@ -5,6 +5,8 @@ import android.os.Environment
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.podcast.PodcastAlbum
+import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.data.utils.getInt
 import dev.olog.msc.data.utils.getLong
 import dev.olog.msc.data.utils.getString
@@ -89,4 +91,46 @@ private fun adjustAlbum(album: String?): String {
     } else {
         return album
     }
+}
+
+internal fun Cursor.toPodcastAlbum(): PodcastAlbum {
+    val artist = getString(MediaStore.Audio.Media.ARTIST)
+    var albumArtist = artist
+    val albumArtistIndex = this.getColumnIndex("album_artist")
+    if (albumArtistIndex != -1) {
+        this.getStringOrNull(albumArtistIndex)?.also {
+            albumArtist = it
+        }
+    }
+
+    return PodcastAlbum(
+        getLong(MediaStore.Audio.Media.ALBUM_ID),
+        getLong(MediaStore.Audio.Media.ARTIST_ID),
+        getString(MediaStore.Audio.Media.ALBUM),
+        artist,
+        albumArtist,
+        "",
+        getInt("songs"),
+        false // TODo
+    )
+}
+
+internal fun Cursor.toPodcastArtist(): PodcastArtist {
+    val artist = getString(MediaStore.Audio.Media.ARTIST)
+    var albumArtist = artist
+    val albumArtistIndex = this.getColumnIndex("album_artist")
+    if (albumArtistIndex != -1) {
+        this.getStringOrNull(albumArtistIndex)?.also {
+            albumArtist = it
+        }
+    }
+
+    return PodcastArtist(
+        getLong(MediaStore.Audio.Media.ARTIST_ID),
+        artist,
+        albumArtist,
+        getInt("songs"),
+        getInt("albums"),
+        ""
+    )
 }

@@ -1,20 +1,23 @@
 package dev.olog.msc.presentation.shortcuts.playlist.chooser.di
 
-import android.app.Activity
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
-import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivity
+import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
+import dev.olog.msc.presentation.base.ViewModelKey
+import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivityAdapter
+import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivityViewModel
 
 @Module
-class PlaylistChooserActivityModule(private val activity: PlaylistChooserActivity) {
+abstract class PlaylistChooserActivityModule {
 
-    @Provides
-    fun provideActivity(): Activity= activity
+    @ContributesAndroidInjector
+    abstract fun provideActivity(): PlaylistChooserActivityAdapter
 
-    @Provides
-    @ActivityLifecycle
-    fun provideLifecycle(): Lifecycle = activity.lifecycle
+    @Binds
+    @IntoMap
+    @ViewModelKey(PlaylistChooserActivityViewModel::class)
+    abstract fun provideViewModel(viewModel: PlaylistChooserActivityViewModel): ViewModel
 
 }

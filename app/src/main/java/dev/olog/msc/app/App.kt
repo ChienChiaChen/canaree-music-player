@@ -41,8 +41,6 @@ class App : ThemedApp() {
     @Inject
     lateinit var imagesCreator: IImageCreator
     @Suppress("unused")
-    @Inject
-    lateinit var keepDataAlive: KeepDataAlive
 
     @Inject
     lateinit var lastFmGateway: LastFmGateway

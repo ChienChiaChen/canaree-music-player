@@ -5,12 +5,14 @@ package dev.olog.msc.presentation.base.extensions
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 
 inline fun <T> LiveData<T>.subscribe(lifecycleOwner: LifecycleOwner, crossinline func: (T) -> Unit) {
-    this.observe(lifecycleOwner, androidx.lifecycle.Observer {
+    this.observe(lifecycleOwner, Observer {
         if (it != null){
             func(it)
         }
@@ -23,7 +25,7 @@ inline fun <T> Flowable<T>.asLiveData() : LiveData<T> {
 
 inline fun <T> Observable<T>.asLiveData(backpressureStrategy: BackpressureStrategy = BackpressureStrategy.LATEST)
         : LiveData<T> {
-
     return LiveDataReactiveStreams.fromPublisher(this.toFlowable(backpressureStrategy))
-
 }
+
+inline fun <T> liveDataOf(): MutableLiveData<T> = MutableLiveData()

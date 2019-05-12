@@ -24,6 +24,8 @@ internal fun Cursor.toSong(): Song {
     val artist = getStringOrNull(MediaStore.Audio.AudioColumns.ARTIST) ?: ""
     val album = getStringOrNull(MediaStore.Audio.AudioColumns.ALBUM) ?: ""
 
+//    TODO remove unused
+
     var albumArtist = artist
     val albumArtistIndex = this.getColumnIndex("album_artist")
     if (albumArtistIndex != -1) {

@@ -7,7 +7,7 @@ import dev.olog.msc.presentation.tabs.adapters.TabFragmentAdapter
 import dev.olog.msc.presentation.tabs.lookup.*
 import dev.olog.msc.shared.extensions.isPortrait
 
-object LayoutManagerFactory {
+internal object LayoutManagerFactory {
 
     private fun createSpanSize(context: Context, category: MediaIdCategory, adapter: TabFragmentAdapter): AbsSpanSizeLookup {
         val isPortrait = context.isPortrait

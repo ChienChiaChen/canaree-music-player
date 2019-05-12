@@ -7,6 +7,8 @@ import dev.olog.msc.core.gateway.AlbumGateway
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.interactor.item.GetAlbumUseCase
 import io.reactivex.Observable
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 
@@ -19,9 +21,9 @@ class GetAlbumSiblingsByAlbumUseCase @Inject constructor(
 
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Observable<List<Album>> {
+    override fun buildUseCaseObservable(mediaId: MediaId): Observable<List<Album>> = runBlocking{
         val albumId = mediaId.categoryValue.toLong()
-        return getAlbumUseCase.execute(mediaId)
+        getAlbumUseCase.execute(mediaId).asObservable()
                 .map { it.artistId }
                 .flatMap { artistId ->
                     albumGateway.observeByArtist(artistId)

@@ -7,9 +7,12 @@ import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.Sorting
+import dev.olog.msc.shared.extensions.asFlowable
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactive.flow.asFlow
 
 internal class AppSortingImpl (
         private val preferences: SharedPreferences,
@@ -120,28 +123,28 @@ internal class AppSortingImpl (
         return LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging])
     }
 
-    override fun observeAllTracksSortOrder(): Observable<LibrarySortType> {
+    override fun observeAllTracksSortOrder(): Flow<LibrarySortType> {
         return Observables.combineLatest(
                 rxPreferences.getInteger(ALL_SONGS_SORT_ORDER, SortType.TITLE.ordinal).asObservable(),
                 rxPreferences.getInteger(ALL_SONGS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal).asObservable(), //ascending default
                 { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
-        )
+        ).asFlowable().asFlow()
     }
 
-    override fun observeAllAlbumsSortOrder(): Observable<LibrarySortType> {
+    override fun observeAllAlbumsSortOrder(): Flow<LibrarySortType> {
         return Observables.combineLatest(
                 rxPreferences.getInteger(ALL_ALBUMS_SORT_ORDER, SortType.TITLE.ordinal).asObservable(),
                 rxPreferences.getInteger(ALL_ALBUMS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal).asObservable(), //ascending default
                 { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
-        )
+        ).asFlowable().asFlow()
     }
 
-    override fun observeAllArtistsSortOrder(): Observable<LibrarySortType> {
+    override fun observeAllArtistsSortOrder(): Flow<LibrarySortType> {
         return Observables.combineLatest(
                 rxPreferences.getInteger(ALL_ARTISTS_SORT_ORDER, SortType.ARTIST.ordinal).asObservable(),
                 rxPreferences.getInteger(ALL_ARTISTS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal).asObservable(), //ascending default
                 { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
-        )
+        ).asFlowable().asFlow()
     }
 
     override fun setAllTracksSortOrder(sortType: LibrarySortType) {

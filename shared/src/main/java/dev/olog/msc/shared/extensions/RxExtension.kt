@@ -50,10 +50,3 @@ inline fun <T> Flowable<T>.debounceFirst(timeout: Long = 200L, unit: TimeUnit = 
 inline fun <T> Single<T>.defer(): Single<T> {
     return Single.defer { this }
 }
-
-inline fun <T> Observable<T>.countTime(): Observable<T> {
-    var start = System.currentTimeMillis()
-    return this.doOnSubscribe {
-        start = System.currentTimeMillis()
-    }.doOnNext { println("done in ${System.currentTimeMillis() - start}") }
-}

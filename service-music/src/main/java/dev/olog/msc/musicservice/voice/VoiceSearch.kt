@@ -7,6 +7,8 @@ import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.musicservice.model.toMediaEntity
 import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.asObservable
 
 internal object VoiceSearch {
 
@@ -59,9 +61,9 @@ internal object VoiceSearch {
         }
     }
 
-    internal fun filterByGenre(genreGateway: GenreGateway, genre: String): Single<List<MediaEntity>> {
+    internal fun filterByGenre(genreGateway: GenreGateway, genre: String): Single<List<MediaEntity>> = runBlocking{
 
-        return genreGateway.getAll().map { it.first { it.name.equals(genre, true) } }
+        genreGateway.getAll().asObservable().map { it.first { it.name.equals(genre, true) } }
                 .firstOrError()
                 .flatMap {
                     val mediaId = MediaId.genreId(it.id)
