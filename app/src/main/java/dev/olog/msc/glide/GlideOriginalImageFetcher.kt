@@ -5,8 +5,8 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.data.DataFetcher
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.gateway.PodcastGateway
-import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.gateway.podcast.PodcastGateway
+import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -22,9 +22,9 @@ private val FALLBACKS = arrayOf("cover.jpg", "album.jpg", "folder.jpg", "cover.p
 
 
 class GlideOriginalImageFetcher(
-        private val mediaId: MediaId,
-        private val songGateway: SongGateway,
-        private val podcastGateway: PodcastGateway
+    private val mediaId: MediaId,
+    private val songGateway: SongGateway,
+    private val podcastGateway: PodcastGateway
 
 ) : DataFetcher<InputStream> {
 
@@ -40,9 +40,10 @@ class GlideOriginalImageFetcher(
             return@runBlocking
         }
 
+        // TODO
         disposable = when {
-            mediaId.isLeaf && !mediaId.isPodcast -> songGateway.getByParam(id).asObservable().map { it.path }
-            mediaId.isLeaf && mediaId.isPodcast -> podcastGateway.getByParam(id).asObservable().map { it.path }
+            mediaId.isLeaf && !mediaId.isPodcast -> Observable.just(songGateway.getByParam(id)).map { it.path }
+            mediaId.isLeaf && mediaId.isPodcast -> Observable.just(podcastGateway.getByParam(id)).map { it.path }
             mediaId.isAlbum -> songGateway.getByAlbumId(id).asObservable().map { it.path }
             mediaId.isPodcastAlbum -> podcastGateway.getByAlbumId(id).map { it.path }
             else -> Observable.error(IllegalArgumentException("not a valid media id=$mediaId"))

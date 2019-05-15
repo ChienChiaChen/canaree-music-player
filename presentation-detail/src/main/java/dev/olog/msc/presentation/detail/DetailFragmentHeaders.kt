@@ -34,7 +34,7 @@ class DetailFragmentHeaders @Inject constructor(
             DisplayableItem(R.layout.item_detail_recently_added_list, MediaId.headerId("recent horiz list"), "")
     )
 
-    fun albums() = listOf(
+    fun siblings() = listOf(
             albumHeader(),
             DisplayableItem(R.layout.item_detail_albums_list, MediaId.headerId("albums horiz list"), "")
     )

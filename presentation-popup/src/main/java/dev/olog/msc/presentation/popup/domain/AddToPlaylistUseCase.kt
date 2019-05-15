@@ -3,8 +3,8 @@ package dev.olog.msc.presentation.popup.domain
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.executors.IoScheduler
-import dev.olog.msc.core.gateway.PlaylistGateway
-import dev.olog.msc.core.gateway.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.interactor.GetSongListByParamUseCase
 import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.core.interactor.item.GetPodcastUseCase
@@ -16,12 +16,12 @@ import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 class AddToPlaylistUseCase @Inject constructor(
-        scheduler: IoScheduler,
-        private val playlistGateway: PlaylistGateway,
-        private val getSongUseCase: GetSongUseCase,
-        private val podcastPlaylistGateway: PodcastPlaylistGateway,
-        private val getPodcastUseCase: GetPodcastUseCase,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase
+    scheduler: IoScheduler,
+    private val playlistGateway: PlaylistGateway,
+    private val getSongUseCase: GetSongUseCase,
+    private val podcastPlaylistGateway: PodcastPlaylistGateway,
+    private val getPodcastUseCase: GetPodcastUseCase,
+    private val getSongListByParamUseCase: GetSongListByParamUseCase
 
 ) : CompletableUseCaseWithParam<Pair<Playlist, MediaId>>(scheduler) {
 

@@ -2,7 +2,7 @@ package dev.olog.msc.musicservice.voice
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.gateway.GenreGateway
+import dev.olog.msc.core.gateway.track.GenreGateway
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.musicservice.model.toMediaEntity
 import io.reactivex.Observable

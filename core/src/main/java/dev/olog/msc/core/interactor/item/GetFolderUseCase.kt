@@ -4,7 +4,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.coroutines.ObservableFlowWithParam
 import dev.olog.msc.core.entity.track.Folder
-import dev.olog.msc.core.gateway.FolderGateway
+import dev.olog.msc.core.gateway.track.FolderGateway
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -15,7 +15,6 @@ class GetFolderUseCase @Inject internal constructor(
 ) : ObservableFlowWithParam<Folder, MediaId>(schedulers) {
 
     override suspend fun buildUseCaseObservable(mediaId: MediaId): Flow<Folder> {
-        val folderPath = mediaId.categoryValue
-        return gateway.getByParam(folderPath)
+        return gateway.observeByParam(mediaId.categoryValue)
     }
 }

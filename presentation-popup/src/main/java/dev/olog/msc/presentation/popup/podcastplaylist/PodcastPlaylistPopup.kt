@@ -4,7 +4,7 @@ import android.view.View
 
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
-import dev.olog.msc.core.gateway.PlaylistGateway
+import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
 import dev.olog.msc.presentation.popup.R

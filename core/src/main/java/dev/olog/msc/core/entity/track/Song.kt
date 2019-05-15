@@ -1,7 +1,5 @@
 package dev.olog.msc.core.entity.track
 
-import java.io.File
-
 data class Song (
         val id: Long,
         val artistId: Long,
@@ -14,14 +12,13 @@ data class Song (
         val duration: Long,
         val dateAdded: Long,
         val path: String,
-        val folder: String,
         val discNumber: Int,
         val trackNumber: Int) {
+//
+//    val folderPath: String
+//        get() = path.substring(0, path.lastIndexOf(File.separator))
 
-    val folderPath: String
-        get() = path.substring(0, path.lastIndexOf(File.separator))
-
-    val hasAlbumNameAsFolder: Boolean
-        get() = album == folder
+//    val hasAlbumNameAsFolder: Boolean
+//        get() = album == folder
 
 }

@@ -10,13 +10,12 @@ import dev.olog.msc.apilastfm.mapper.toPodcastDomain
 import dev.olog.msc.apilastfm.mapper.toPodcastModel
 import dev.olog.msc.core.entity.LastFmPodcastArtist
 import dev.olog.msc.core.entity.podcast.PodcastArtist
-import dev.olog.msc.core.gateway.PodcastArtistGateway
+import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmPodcastArtistEntity
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class LastFmRepoPodcastArtist @Inject constructor(
@@ -36,8 +35,7 @@ internal class LastFmRepoPodcastArtist @Inject constructor(
     fun get(artistId: Long): Single<Optional<LastFmPodcastArtist?>> = runBlocking{
         val cachedValue = getFromCache(artistId)
 
-        val fetch = artistGateway.getByParam(artistId).asObservable()
-                .firstOrError()
+        val fetch = Single.just(artistGateway.getByParam(artistId))
                 .flatMap { fetch(it) }
                 .map { Optional.of(it) }
 

@@ -13,7 +13,7 @@ class IsFavoriteSongUseCase @Inject constructor(
 
 ) : SingleUseCaseWithParam<Boolean, IsFavoriteSongUseCase.Input>(schedulers) {
 
-    override fun buildUseCaseObservable(param: IsFavoriteSongUseCase.Input): Single<Boolean> {
+    override fun buildUseCaseObservable(param: Input): Single<Boolean> {
         return gateway.isFavorite(param.type, param.songId)
     }
 

@@ -4,7 +4,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.coroutines.ObservableFlowWithParam
 import dev.olog.msc.core.entity.track.Album
-import dev.olog.msc.core.gateway.AlbumGateway
+import dev.olog.msc.core.gateway.track.AlbumGateway
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -16,6 +16,6 @@ class GetAlbumUseCase @Inject internal constructor(
 
 
     override suspend fun buildUseCaseObservable(mediaId: MediaId): Flow<Album> {
-        return gateway.getByParam(mediaId.categoryId)
+        return gateway.observeByParam(mediaId.categoryId)
     }
 }

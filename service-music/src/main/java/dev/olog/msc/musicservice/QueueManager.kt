@@ -3,10 +3,11 @@ package dev.olog.msc.musicservice
 import android.net.Uri
 import android.os.Bundle
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.entity.ChunkRequest
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.core.gateway.GenreGateway
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
+import dev.olog.msc.core.gateway.track.GenreGateway
 import dev.olog.msc.core.interactor.GetSongByFileUseCase
 import dev.olog.msc.core.interactor.GetSongListByParamUseCase
 import dev.olog.msc.core.interactor.PodcastPositionUseCase
@@ -22,6 +23,7 @@ import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.safeCompare
 import dev.olog.msc.shared.extensions.swap
 import dev.olog.msc.shared.utils.clamp
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.functions.Function
 import java.util.*
@@ -30,17 +32,17 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 internal class QueueManager @Inject constructor(
-        private val queueImpl: QueueImpl,
-        private val getPlayingQueueUseCase: GetPlayingQueueUseCase,
-        private val musicPreferencesUseCase: MusicPreferencesGateway,
-        private val shuffleMode: ShuffleMode,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase,
-        private val getMostPlayedSongsUseCase: GetMostPlayedSongsUseCase,
-        private val getRecentlyAddedUseCase: GetRecentlyAddedUseCase,
-        private val getSongByFileUseCase: GetSongByFileUseCase,
-        private val genreGateway: GenreGateway,
-        private val enhancedShuffle: EnhancedShuffle,
-        private val podcastPosition: PodcastPositionUseCase
+    private val queueImpl: QueueImpl,
+    private val getPlayingQueueUseCase: GetPlayingQueueUseCase,
+    private val musicPreferencesUseCase: MusicPreferencesGateway,
+    private val shuffleMode: ShuffleMode,
+    private val getSongListByParamUseCase: GetSongListByParamUseCase,
+    private val getMostPlayedSongsUseCase: GetMostPlayedSongsUseCase,
+    private val getRecentlyAddedUseCase: GetRecentlyAddedUseCase,
+    private val getSongByFileUseCase: GetSongByFileUseCase,
+    private val genreGateway: GenreGateway,
+    private val enhancedShuffle: EnhancedShuffle,
+    private val podcastPosition: PodcastPositionUseCase
 
 ) : Queue {
 
@@ -156,7 +158,9 @@ internal class QueueManager @Inject constructor(
     override fun handlePlayMostPlayed(mediaId: MediaId): Single<PlayerMediaEntity> {
         val songId = mediaId.leaf!!
 
-        return getMostPlayedSongsUseCase.execute(mediaId)
+        // TODO
+        val chunk = getMostPlayedSongsUseCase.getChunk(mediaId).chunkOf(ChunkRequest(0, 100))
+        return Flowable.just(chunk)
                 .firstOrError()
                 .map { it.mapIndexed { index, song -> song.toMediaEntity(index, mediaId) } }
                 .map { shuffleIfNeeded(songId).apply(it) }

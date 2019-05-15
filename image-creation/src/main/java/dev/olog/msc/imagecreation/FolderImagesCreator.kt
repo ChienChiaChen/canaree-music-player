@@ -9,8 +9,6 @@ import dev.olog.msc.imagecreation.impl.MergedImagesCreator
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Flowable
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
 import java.io.File
 import javax.inject.Inject
 
@@ -24,23 +22,25 @@ internal class FolderImagesCreator @Inject constructor(
 ) {
 
     fun execute() : Flowable<*> {
-        return runBlocking { getAllSongsUseCase.execute().asObservable() }
-                .firstOrError()
-                .observeOn(imagesThreadPool.scheduler)
-                .map { it.groupBy { it.folderPath } }
-                .flattenAsFlowable { it.entries }
-                .parallel()
-                .runOn(imagesThreadPool.scheduler)
-                .map { entry -> try {
-                    makeImage(entry)
-                } catch (ex: Exception){ false }
-                }
-                .sequential()
-                .buffer(10)
-                .filter { it.reduce { acc, curr -> acc || curr } }
-                .doOnNext {
-                    ctx.contentResolver.notifyChange(MEDIA_STORE_URI, null)
-                }
+        // TODO
+        return Flowable.just(Any())
+//        return runBlocking { getAllSongsUseCase.execute().asObservable() }
+//                .firstOrError()
+//                .observeOn(imagesThreadPool.scheduler)
+//                .map { it.groupBy { it.folderPath } }
+//                .flattenAsFlowable { it.entries }
+//                .parallel()
+//                .runOn(imagesThreadPool.scheduler)
+//                .map { entry -> try {
+//                    makeImage(entry)
+//                } catch (ex: Exception){ false }
+//                }
+//                .sequential()
+//                .buffer(10)
+//                .filter { it.reduce { acc, curr -> acc || curr } }
+//                .doOnNext {
+//                    ctx.contentResolver.notifyChange(MEDIA_STORE_URI, null)
+//                }
     }
 
 

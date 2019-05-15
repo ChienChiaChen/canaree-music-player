@@ -108,17 +108,14 @@ internal class AppPreferencesImpl @Inject constructor(
         preferences.edit { putInt(BOTTOM_VIEW_LAST_PAGE, page) }
     }
 
-    override fun getVisibleTabs(): Observable<BooleanArray> {
-        return rxPreferences.getStringSet(context.getString(prefsKeys.visibleDetailSections()))
-                .asObservable()
-                .map {
-                    val prefsDefault = prefsKeys.defaultDetailSections()
-                    booleanArrayOf(
-                            it.contains(context.getString(prefsDefault[0])), // most played
-                            it.contains(context.getString(prefsDefault[1])), // recently added
-                            it.contains(context.getString(prefsDefault[2])) // related artists
-                    )
-                }
+    override fun getVisibleTabs(): BooleanArray {
+        val visibleSections = preferences.getStringSet(context.getString(prefsKeys.visibleDetailSections()), setOf())!!
+        val prefsDefault = prefsKeys.defaultDetailSections()
+        return booleanArrayOf(
+            visibleSections.contains(context.getString(prefsDefault[0])), // most played
+            visibleSections.contains(context.getString(prefsDefault[1])), // recently added
+            visibleSections.contains(context.getString(prefsDefault[2])) // related artists
+        )
     }
 
     override fun getLibraryCategories(): List<LibraryCategoryBehavior> {

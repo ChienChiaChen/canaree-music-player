@@ -37,7 +37,8 @@ android {
     flavorDimensions "version"
 
     productFlavors {
-        mock {
+        dev {
+            resConfigs "en", "xxhdpi"
             dimension "version"
         }
         prod {
@@ -53,6 +54,7 @@ android {
             multiDexEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [enableCrashReporting:"true"]
             debuggable false
 
             buildConfigField 'String', "AES_PASSWORD", aes_password
@@ -64,6 +66,7 @@ android {
             multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
+            manifestPlaceholders = [enableCrashReporting:"false"]
 //            debuggable false
 
             buildConfigField 'String', "AES_PASSWORD", aes_password

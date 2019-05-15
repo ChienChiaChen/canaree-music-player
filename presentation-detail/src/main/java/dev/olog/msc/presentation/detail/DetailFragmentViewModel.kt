@@ -2,19 +2,18 @@ package dev.olog.msc.presentation.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.interactor.sort.*
-import dev.olog.msc.presentation.base.extensions.asLiveData
 import dev.olog.msc.presentation.base.model.DisplayableItem
-import dev.olog.msc.presentation.detail.domain.sort.GetDetailSortDataUseCase
-import dev.olog.msc.presentation.detail.domain.sort.GetDetailTabsVisibilityUseCase
+import dev.olog.msc.presentation.detail.domain.GetDetailSortDataUseCase
+import dev.olog.msc.presentation.detail.paging.*
 import dev.olog.msc.presentation.detail.sort.DetailSort
 import dev.olog.msc.shared.extensions.debounceFirst
 import io.reactivex.Completable
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -24,37 +23,55 @@ import io.reactivex.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class DetailFragmentViewModel @Inject constructor(
-        val mediaId: MediaId,
-        item: Map<MediaIdCategory, @JvmSuppressWildcards Flowable<List<DisplayableItem>>>,
-        albums: Map<MediaIdCategory, @JvmSuppressWildcards Observable<List<DisplayableItem>>>,
-        data: Map<String, @JvmSuppressWildcards Observable<List<DisplayableItem>>>,
-        private val presenter: DetailFragmentPresenter,
-        private val setSortOrderUseCase: SetSortOrderUseCase,
-        private val observeSortOrderUseCase: GetSortOrderUseCase,
-        private val setSortArrangingUseCase: SetSortArrangingUseCase,
-        private val getSortArrangingUseCase: GetSortArrangingUseCase,
-        getVisibleTabsUseCase : GetDetailTabsVisibilityUseCase,
-        private val getDetailSortDataUseCase: GetDetailSortDataUseCase
+internal class DetailFragmentViewModel @Inject constructor(
+    val mediaId: MediaId,
+    detailDataSource: DetailDataSourceFactory,
+    siblingsDataSource: SiblingsDataSourceFactory,
+    mostPlayedDataSource: MostPlayedDataSourceFactory,
+    recentlyAddedDataSource: RecentlyAddedDataSourceFactory,
+    relatedArtistsSource: RelatedArtistsSourceFactory,
+    private val presenter: DetailFragmentPresenter,
+    private val setSortOrderUseCase: SetSortOrderUseCase,
+    private val observeSortOrderUseCase: GetSortOrderUseCase,
+    private val setSortArrangingUseCase: SetSortArrangingUseCase,
+    private val getSortArrangingUseCase: GetSortArrangingUseCase,
+    private val getDetailSortDataUseCase: GetDetailSortDataUseCase
 
 ) : ViewModel() {
 
     companion object {
-        const val RECENTLY_ADDED = "RECENTLY_ADDED"
-        const val MOST_PLAYED = "MOST_PLAYED"
-        const val RELATED_ARTISTS = "RELATED_ARTISTS"
-        const val SONGS = "SONGS"
-
         const val NESTED_SPAN_COUNT = 4
-        const val VISIBLE_RECENTLY_ADDED_PAGES = NESTED_SPAN_COUNT * 4
+        const val RECENTLY_ADDED_VISIBLE_PAGES = NESTED_SPAN_COUNT * 4
         const val RELATED_ARTISTS_TO_SEE = 10
     }
-
-    private val currentCategory = mediaId.category
 
     private val subscriptions = CompositeDisposable()
 
     private val filterPublisher = BehaviorSubject.createDefault("")
+
+    val data : LiveData<PagedList<DisplayableItem>>
+    val siblings: LiveData<PagedList<DisplayableItem>>
+    val mostPlayed: LiveData<PagedList<DisplayableItem>>
+    val recentlyAdded: LiveData<PagedList<DisplayableItem>>
+    val relatedArtists: LiveData<PagedList<DisplayableItem>>
+
+    init {
+        val config = PagedList.Config.Builder()
+            .setPageSize(20)
+            .setInitialLoadSizeHint(20)
+            .setEnablePlaceholders(true)
+            .build()
+        val miniConfig = PagedList.Config.Builder()
+            .setInitialLoadSizeHint(8)
+            .setPageSize(4)
+            .setEnablePlaceholders(true)
+            .build()
+        data = LivePagedListBuilder(detailDataSource, config).build()
+        siblings = LivePagedListBuilder(siblingsDataSource, config).build()
+        mostPlayed = LivePagedListBuilder(mostPlayedDataSource, miniConfig).build()
+        recentlyAdded = LivePagedListBuilder(recentlyAddedDataSource, miniConfig).build()
+        relatedArtists = LivePagedListBuilder(relatedArtistsSource, miniConfig).build()
+    }
 
     fun updateFilter(filter: String){
         if (filter.isEmpty() || filter.length >= 2){
@@ -62,25 +79,6 @@ class DetailFragmentViewModel @Inject constructor(
         }
     }
 
-    val itemLiveData: LiveData<List<DisplayableItem>> = item[currentCategory]!!
-            .debounceFirst()
-            .doOnError { it.printStackTrace() }
-            .onErrorReturnItem(listOf())
-            .asLiveData()
-
-    private val dataMap : Observable<MutableMap<DetailFragmentDataType, MutableList<DisplayableItem>>> =
-            Observables.combineLatest(
-                    item[currentCategory]!!.toObservable().debounceFirst().distinctUntilChanged(),
-                    data[MOST_PLAYED]!!.debounceFirst().distinctUntilChanged(),
-                    data[RECENTLY_ADDED]!!.debounceFirst().distinctUntilChanged(),
-                    albums[currentCategory]!!.debounceFirst().distinctUntilChanged(),
-                    data[RELATED_ARTISTS]!!.debounceFirst().distinctUntilChanged(),
-                    filterSongs(data[SONGS]!!),
-                    getVisibleTabsUseCase.execute()
-            ) { item, mostPlayed, recent, albums, artists, songs, visibility ->
-                presenter.createDataMap(item, mostPlayed, recent, albums, artists, songs, visibility)
-            }.doOnError { it.printStackTrace() }
-                    .onErrorReturnItem(mutableMapOf())
 
     private fun filterSongs(songObservable: Observable<List<DisplayableItem>>): Observable<List<DisplayableItem>>{
         return Observables.combineLatest(
@@ -100,27 +98,6 @@ class DetailFragmentViewModel @Inject constructor(
     override fun onCleared() {
         subscriptions.clear()
     }
-
-    fun observeData(): LiveData<MutableMap<DetailFragmentDataType, MutableList<DisplayableItem>>> =
-            dataMap.asLiveData()
-
-    val mostPlayedLiveData: LiveData<List<DisplayableItem>> = data[MOST_PLAYED]!!
-            .debounceFirst()
-            .asLiveData()
-
-    val relatedArtistsLiveData : LiveData<List<DisplayableItem>> = data[RELATED_ARTISTS]!!
-            .debounceFirst()
-            .map { it.take(RELATED_ARTISTS_TO_SEE) }
-            .asLiveData()
-
-    val albumsLiveData: LiveData<List<DisplayableItem>> = albums[currentCategory]!!
-            .debounceFirst()
-            .asLiveData()
-
-    val recentlyAddedLiveData: LiveData<List<DisplayableItem>> = data[RECENTLY_ADDED]!!
-            .debounceFirst()
-            .map { it.take(VISIBLE_RECENTLY_ADDED_PAGES) }
-            .asLiveData()
 
     fun detailSortDataUseCase(mediaId: MediaId, action: (DetailSort) -> Unit){
         getDetailSortDataUseCase.execute(mediaId)

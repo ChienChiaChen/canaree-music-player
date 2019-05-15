@@ -11,9 +11,9 @@ import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.LastFmGateway
-import dev.olog.msc.core.gateway.PodcastGateway
-import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.shared.ui.C
 import java.io.File
@@ -21,12 +21,12 @@ import java.io.InputStream
 import java.security.MessageDigest
 
 class GlideImageLoader(
-        private val context: Context,
-        private val lastFmGateway: LastFmGateway,
-        private val uriLoader: ModelLoader<Uri, InputStream>,
-        private val songGateway: SongGateway,
-        private val podcastGateway: PodcastGateway,
-        private val appPreferencesGateway: AppPreferencesGateway
+    private val context: Context,
+    private val lastFmGateway: LastFmGateway,
+    private val uriLoader: ModelLoader<Uri, InputStream>,
+    private val songGateway: SongGateway,
+    private val podcastGateway: PodcastGateway,
+    private val appPreferencesGateway: AppPreferencesGateway
 
 ) : ModelLoader<ImageModel, InputStream> {
 
@@ -34,10 +34,6 @@ class GlideImageLoader(
 
     override fun buildLoadData(model: ImageModel, width: Int, height: Int, options: Options): ModelLoader.LoadData<InputStream>? {
         val mediaId = model.mediaId
-
-        if (isAsset(model)){
-            return uriLoader.buildLoadData(Uri.parse(model.image), width, height, options)
-        }
 
         if (model.image == C.NO_IMAGE){
             return uriLoader.buildLoadData(Uri.EMPTY, width, height, options)
@@ -74,20 +70,16 @@ class GlideImageLoader(
         return uriLoader.buildLoadData(Uri.fromFile(File(model.image)), width, height, options)
     }
 
-    private fun isAsset(model: ImageModel): Boolean {
-        return URLUtil.isAssetUrl(model.image)
-    }
-
     private fun notAnImage(model: ImageModel): Boolean {
         return model.image.isBlank() || URLUtil.isNetworkUrl(model.image)
     }
 
     class Factory(
-            private val context: Context,
-            private val lastFmGateway: LastFmGateway,
-            private val songGateway: SongGateway,
-            private val podcastGateway: PodcastGateway,
-            private val preferencesGateway: AppPreferencesGateway
+        private val context: Context,
+        private val lastFmGateway: LastFmGateway,
+        private val songGateway: SongGateway,
+        private val podcastGateway: PodcastGateway,
+        private val preferencesGateway: AppPreferencesGateway
 
     ) : ModelLoaderFactory<ImageModel, InputStream> {
 

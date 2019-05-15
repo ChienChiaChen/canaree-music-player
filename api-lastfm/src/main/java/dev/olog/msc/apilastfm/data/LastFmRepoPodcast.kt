@@ -9,7 +9,7 @@ import dev.olog.msc.apilastfm.mapper.toDomainPodcast
 import dev.olog.msc.apilastfm.mapper.toModel
 import dev.olog.msc.core.entity.LastFmPodcast
 import dev.olog.msc.core.entity.podcast.Podcast
-import dev.olog.msc.core.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmPodcastEntity
 import dev.olog.msc.shared.TrackUtils
@@ -18,7 +18,6 @@ import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class LastFmRepoPodcast @Inject constructor(
@@ -34,7 +33,7 @@ internal class LastFmRepoPodcast @Inject constructor(
     }
 
     fun getOriginalItem(podcastId: Long): Single<Podcast> = runBlocking{
-        gateway.getByParam(podcastId).asObservable().firstOrError()
+        Single.just(gateway.getByParam(podcastId))
     }
 
     fun get(podcastId: Long): Single<Optional<LastFmPodcast?>> {

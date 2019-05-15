@@ -4,7 +4,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.coroutines.ObservableFlowWithParam
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.gateway.track.SongGateway
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -15,6 +15,6 @@ class GetSongUseCase @Inject internal constructor(
 ) : ObservableFlowWithParam<Song, MediaId>(schedulers) {
 
     override suspend fun buildUseCaseObservable(mediaId: MediaId): Flow<Song> {
-        return gateway.getByParam(mediaId.resolveId)
+        return gateway.observeByParam(mediaId.resolveId)
     }
 }

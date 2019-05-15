@@ -12,8 +12,8 @@ import dev.olog.msc.R
 import dev.olog.msc.app.base.ThemedApp
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.gateway.LastFmGateway
-import dev.olog.msc.core.gateway.PodcastGateway
-import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.gateway.podcast.PodcastGateway
+import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.imagecreation.IImageCreator
 import dev.olog.msc.musicservice.MusicService
@@ -26,7 +26,6 @@ import io.alterac.blurkit.BlurKit
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
-
 
 @SuppressLint("StaticFieldLeak")
 lateinit var app: Context

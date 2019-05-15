@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.adapter.DiffCallback
+import dev.olog.msc.presentation.base.adapter.DiffCallbackDisplayableItem
 import dev.olog.msc.presentation.base.extensions.elevateAlbumOnTouch
 import dev.olog.msc.presentation.base.extensions.elevateSongOnTouch
 import dev.olog.msc.presentation.base.extensions.setOnClickListener
@@ -27,7 +27,7 @@ internal class TabFragmentAdapter(
     private val viewModel: TabFragmentViewModel,
     private val mediaProvider: MediaProvider
 
-) : BasePagedAdapter<DisplayableItem>(DiffCallback) {
+) : BasePagedAdapter<DisplayableItem>(DiffCallbackDisplayableItem) {
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
         when (viewType) {
@@ -55,9 +55,6 @@ internal class TabFragmentAdapter(
                 viewHolder.setOnLongClickListener(this) { item, _, _ ->
                     navigator.toDialog(item.mediaId, viewHolder.itemView)
                 }
-//                viewHolder.setOnClickListener(R.id.more, this) { item, _, view ->
-//                    navigator.toDialog(item.mediaId, view)
-//                }
             }
             R.layout.item_tab_last_played_album_horizontal_list -> {
                 val view = viewHolder.itemView as RecyclerView

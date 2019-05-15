@@ -8,7 +8,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.support.DaggerFragment
-import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.shared.extensions.isPortrait
 import javax.inject.Inject

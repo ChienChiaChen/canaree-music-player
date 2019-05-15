@@ -14,14 +14,16 @@ import dev.olog.msc.presentation.tabs.paging.last.played.LastPlayedAlbumDataSour
 import dev.olog.msc.presentation.tabs.paging.last.played.LastPlayedArtistDataSourceFactory
 import dev.olog.msc.presentation.tabs.paging.last.played.LastPlayedPodcastAlbumDataSourceFactory
 import dev.olog.msc.presentation.tabs.paging.last.played.LastPlayedPodcastArtistDataSourceFactory
-import dev.olog.msc.presentation.tabs.paging.podcast.*
+import dev.olog.msc.presentation.tabs.paging.podcast.PodcastAlbumDataSourceFactory
+import dev.olog.msc.presentation.tabs.paging.podcast.PodcastArtistDataSourceFactory
+import dev.olog.msc.presentation.tabs.paging.podcast.PodcastDataSourceFactory
+import dev.olog.msc.presentation.tabs.paging.podcast.PodcastPlaylistDataSourceFactory
 import dev.olog.msc.presentation.tabs.paging.recently.added.RecentlyAddedAlbumDataSourceFactory
 import dev.olog.msc.presentation.tabs.paging.recently.added.RecentlyAddedArtistDataSourceFactory
 import dev.olog.msc.presentation.tabs.paging.recently.added.RecentlyAddedPodcastAlbumDataSourceFactory
 import dev.olog.msc.presentation.tabs.paging.recently.added.RecentlyAddedPodcastArtistDataSourceFactory
 import dev.olog.msc.presentation.tabs.paging.track.*
 import kotlinx.coroutines.cancel
-import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 internal class TabFragmentViewModel @Inject constructor(
@@ -53,8 +55,11 @@ internal class TabFragmentViewModel @Inject constructor(
 
     fun observeData(category: MediaIdCategory): LiveData<PagedList<DisplayableItem>> {
         return liveDataList.getOrPut(category) {
+            val isLongList = category == MediaIdCategory.SONGS || category == MediaIdCategory.PODCASTS
+            val pageSize = if (isLongList) 30 else 15
             val config = PagedList.Config.Builder()
-                .setPageSize(20)
+                .setPageSize(pageSize)
+                .setInitialLoadSizeHint(pageSize * 2)
                 .setEnablePlaceholders(true)
                 .build()
             LivePagedListBuilder(getFactory(category), config).build()

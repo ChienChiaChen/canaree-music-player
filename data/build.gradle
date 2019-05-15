@@ -1,20 +1,6 @@
 apply plugin: 'com.android.library'
 apply from: '../base_module.gradle'
 
-android {
-
-    flavorDimensions "version"
-
-    productFlavors {
-        mock {
-            dimension "version"
-        }
-        prod {
-            dimension "version"
-        }
-    }
-}
-
 dependencies {
     implementation project(':core')
     implementation project(':image-provider')
@@ -31,5 +17,5 @@ dependencies {
     implementation librariesPersistency.roomRx
     implementation librariesPersistency.rxPrefs
 
-    implementation librariesAndroidX.paging
+    implementation 'com.github.ologe:android-content-resolver-SQL:1.1'
 }

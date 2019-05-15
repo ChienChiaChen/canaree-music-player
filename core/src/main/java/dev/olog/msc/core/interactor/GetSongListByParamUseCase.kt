@@ -5,7 +5,11 @@ import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.podcast.toSong
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.executors.ComputationScheduler
-import dev.olog.msc.core.gateway.*
+import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
+import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
+import dev.olog.msc.core.gateway.podcast.PodcastGateway
+import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.track.*
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import io.reactivex.Observable
 import kotlinx.coroutines.flow.map

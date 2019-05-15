@@ -1,22 +1,36 @@
 package dev.olog.msc.presentation.detail.domain
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.executors.ComputationScheduler
-import dev.olog.msc.core.interactor.GetSongListByParamUseCase
-import dev.olog.msc.core.interactor.base.SingleUseCaseWithParam
-import io.reactivex.Single
+import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
+import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
+import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.track.*
 import javax.inject.Inject
 
 class GetTotalSongDurationUseCase @Inject constructor(
-        scheduler: ComputationScheduler,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase
+    private val folderGateway: FolderGateway,
+    private val playlistGateway: PlaylistGateway,
+    private val albumGateway: AlbumGateway,
+    private val artistGateway: ArtistGateway,
+    private val genreGateway: GenreGateway,
+    private val podcastPlaylistGateway: PodcastPlaylistGateway,
+    private val podcastAlbumGateway: PodcastAlbumGateway,
+    private val podcastArtistGateway: PodcastArtistGateway
 
-): SingleUseCaseWithParam<Int, MediaId>(scheduler) {
+) {
 
-    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Single<Int> {
-        return getSongListByParamUseCase.execute(mediaId)
-                .firstOrError()
-                .map { it.sumBy { it.duration.toInt() } }
+    fun execute(mediaId: MediaId):Int {
+        return when (mediaId.category) {
+            MediaIdCategory.FOLDERS -> folderGateway.getSongListByParamDuration(mediaId.categoryValue)
+            MediaIdCategory.PLAYLISTS -> playlistGateway.getSongListByParamDuration(mediaId.categoryValue.toLong())
+            MediaIdCategory.ALBUMS -> albumGateway.getSongListByParamDuration(mediaId.categoryValue.toLong())
+            MediaIdCategory.ARTISTS -> artistGateway.getSongListByParamDuration(mediaId.categoryValue.toLong())
+            MediaIdCategory.GENRES -> genreGateway.getSongListByParamDuration(mediaId.categoryValue.toLong())
+            MediaIdCategory.PODCASTS_PLAYLIST -> podcastPlaylistGateway.getPodcastListByParamDuration(mediaId.categoryValue.toLong())
+            MediaIdCategory.PODCASTS_ALBUMS -> podcastAlbumGateway.getPodcastListByParamDuration(mediaId.categoryValue.toLong())
+            MediaIdCategory.PODCASTS_ARTISTS -> podcastArtistGateway.getPodcastListByParamDuration(mediaId.categoryValue.toLong())
+            else -> throw AssertionError("invalid media id $mediaId")
+        }
     }
 }

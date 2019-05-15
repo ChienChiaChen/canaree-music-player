@@ -8,7 +8,7 @@ import dev.olog.msc.apilastfm.mapper.toDomain
 import dev.olog.msc.apilastfm.mapper.toModel
 import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmTrackEntity
 import dev.olog.msc.shared.TrackUtils
@@ -17,7 +17,6 @@ import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class LastFmRepoTrack @Inject constructor(
@@ -34,7 +33,7 @@ internal class LastFmRepoTrack @Inject constructor(
     }
 
     fun getOriginalItem(trackId: Long): Single<Song> = runBlocking{
-        songGateway.getByParam(trackId).asObservable().firstOrError()
+        Single.just(songGateway.getByParam(trackId))
     }
 
     fun get(trackId: Long): Single<Optional<LastFmTrack?>> {

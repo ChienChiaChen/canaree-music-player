@@ -4,14 +4,10 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import dev.olog.msc.core.entity.podcast.Podcast
-import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.data.entity.HistoryEntity
 import dev.olog.msc.data.entity.PodcastHistoryEntity
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Single
 
 @Dao
 internal abstract class HistoryDao {
@@ -19,17 +15,41 @@ internal abstract class HistoryDao {
 
     @Query("""
         SELECT * FROM song_history
-        ORDER BY dateAdded
-        DESC LIMIT 200
+        ORDER BY dateAdded DESC
+        LIMIT :limit
+        OFFSET :offset
     """)
-    internal abstract fun getAllImpl(): Flowable<List<HistoryEntity>>
+    internal abstract fun getAll(limit: Int, offset: Int): List<HistoryEntity>
 
     @Query("""
         SELECT * FROM podcast_song_history
-        ORDER BY dateAdded
-        DESC LIMIT 200
+        ORDER BY dateAdded DESC
+        LIMIT :limit
+        OFFSET :offset
     """)
-    internal abstract fun getAllPodcastsImpl(): Flowable<List<PodcastHistoryEntity>>
+    internal abstract fun getAllPodcasts(limit: Int, offset: Int): List<PodcastHistoryEntity>
+
+    @Query(
+        """
+        SELECT *
+        FROM song_history
+    """
+    )
+    internal abstract fun observeAll(): Flowable<List<HistoryEntity>>
+
+    @Query(
+        """
+        SELECT *
+        FROM podcast_song_history
+    """
+    )
+    internal abstract fun observeAllPodcast(): Flowable<List<PodcastHistoryEntity>>
+
+    @Query("""SELECT count(*) FROM song_history""")
+    internal abstract fun countAll(): Int
+
+    @Query("""SELECT count(*) FROM podcast_song_history""")
+    internal abstract fun countAllPodcast(): Int
 
     @Query("""DELETE FROM song_history""")
     internal abstract fun deleteAll()
@@ -48,32 +68,6 @@ internal abstract class HistoryDao {
         WHERE id = :podcastId
     """)
     internal abstract fun deleteSinglePodcast(podcastId: Long)
-
-    internal fun getAllAsSongs(songList: Single<List<Song>>): Observable<List<Song>> {
-        return getAllImpl().toObservable()
-                .flatMapSingle { ids -> songList.flatMap { songs ->
-                    val result : List<Song> = ids
-                            .asSequence()
-                            .mapNotNull { historyEntity ->
-                                val song = songs.firstOrNull { it.id == historyEntity.songId }
-                                song?.copy(trackNumber = historyEntity.id)
-                            }.toList()
-                    Single.just(result)
-                } }
-    }
-
-    internal fun getAllPodcasts(podcastList: Single<List<Podcast>>): Observable<List<Podcast>> {
-        return getAllPodcastsImpl().toObservable()
-                .flatMapSingle { ids -> podcastList.flatMap { songs ->
-                    val result : List<Podcast> = ids
-                            .asSequence()
-                            .mapNotNull { historyEntity ->
-                                val song = songs.firstOrNull { it.id == historyEntity.podcastId }
-                                song?.copy(trackNumber = historyEntity.id)
-                            }.toList()
-                    Single.just(result)
-                } }
-    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     internal abstract fun insertImpl(entity: HistoryEntity)

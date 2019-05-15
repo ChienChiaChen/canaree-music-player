@@ -17,7 +17,7 @@ interface AppPreferencesGateway : Sorting {
 
     fun isFirstAccess(): Boolean
 
-    fun getVisibleTabs(): Observable<BooleanArray>
+    fun getVisibleTabs(): BooleanArray
 
     fun getViewPagerLibraryLastPage(): Int
     fun setViewPagerLibraryLastPage(lastPage: Int)
@@ -86,11 +86,11 @@ interface Sorting {
     fun setAllAlbumsSortOrder(sortType: LibrarySortType)
     fun setAllArtistsSortOrder(sortType: LibrarySortType)
 
-    fun getFolderSortOrder() : Observable<SortType>
-    fun getPlaylistSortOrder() : Observable<SortType>
-    fun getAlbumSortOrder() : Observable<SortType>
-    fun getArtistSortOrder() : Observable<SortType>
-    fun getGenreSortOrder() : Observable<SortType>
+    fun getFolderSortOrder() : SortType
+    fun getPlaylistSortOrder() : SortType
+    fun getAlbumSortOrder() : SortType
+    fun getArtistSortOrder() : SortType
+    fun getGenreSortOrder() : SortType
 
     fun setFolderSortOrder(sortType: SortType) : Completable
     fun setPlaylistSortOrder(sortType: SortType) : Completable
@@ -98,6 +98,6 @@ interface Sorting {
     fun setArtistSortOrder(sortType: SortType) : Completable
     fun setGenreSortOrder(sortType: SortType) : Completable
 
-    fun getSortArranging(): Observable<SortArranging>
+    fun getSortArranging(): SortArranging
     fun toggleSortArranging(): Completable
 }

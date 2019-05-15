@@ -1,0 +1,51 @@
+package dev.olog.msc.core.gateway.podcast
+
+import dev.olog.msc.core.entity.podcast.PodcastPlaylist
+import dev.olog.msc.core.gateway.base.BaseGateway
+import dev.olog.msc.core.gateway.base.ChildsHasPodcasts
+import dev.olog.msc.core.gateway.base.HasSiblings
+import io.reactivex.Completable
+import io.reactivex.Single
+
+interface PodcastPlaylistGateway :
+    BaseGateway<PodcastPlaylist, Long>,
+    ChildsHasPodcasts<Long>,
+    HasSiblings<PodcastPlaylist> {
+
+    companion object {
+
+        const val PODCAST_LAST_ADDED_ID: Long = -6000
+        const val PODCAST_FAVORITE_LIST_ID: Long = -60012
+        const val PODCAST_HISTORY_LIST_ID: Long = -60018
+
+        private val podcastAutoPlaylists = listOf(
+            PODCAST_LAST_ADDED_ID,
+            PODCAST_FAVORITE_LIST_ID,
+            PODCAST_HISTORY_LIST_ID
+        )
+
+        fun isPodcastAutoPlaylist(id: Long) = podcastAutoPlaylists.contains(id)
+    }
+
+    fun getAllAutoPlaylists(): List<PodcastPlaylist>
+    fun getPlaylistsBlocking(): List<PodcastPlaylist>
+
+
+    fun createPlaylist(playlistName: String): Single<Long>
+
+    fun renamePlaylist(playlistId: Long, newTitle: String): Completable
+
+    fun deletePlaylist(playlistId: Long): Completable
+
+    fun clearPlaylist(playlistId: Long): Completable
+
+    fun addSongsToPlaylist(playlistId: Long, songIds: List<Long>): Completable
+
+
+    fun removeSongFromPlaylist(playlistId: Long, idInPlaylist: Long): Completable
+
+    fun removeDuplicated(playlistId: Long): Completable
+
+    fun insertPodcastToHistory(podcastId: Long): Completable
+
+}

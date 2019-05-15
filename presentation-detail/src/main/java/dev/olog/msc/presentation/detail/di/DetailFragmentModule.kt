@@ -1,16 +1,16 @@
 package dev.olog.msc.presentation.detail.di
 
 import androidx.lifecycle.ViewModel
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel
 
-@Module(includes = [DetailFragmentModule.Bindings::class] )
+@Module
 class DetailFragmentModule(private val fragment: DetailFragment) {
 
     @Provides
@@ -19,14 +19,20 @@ class DetailFragmentModule(private val fragment: DetailFragment) {
         return MediaId.fromString(mediaId)
     }
 
-    @Module
-    interface Bindings{
+    @Provides
+    @FragmentLifecycle
+    internal fun provideLifecycle() = fragment.lifecycle
 
-        @Binds
+    @Module
+    companion object {
+
+        @Provides
+        @JvmStatic
         @IntoMap
         @ViewModelKey(DetailFragmentViewModel::class)
-        fun provideViewModel(viewModel: DetailFragmentViewModel): ViewModel
-
+        internal fun provideViewModel(viewModel: DetailFragmentViewModel): ViewModel {
+            return viewModel
+        }
     }
 
 

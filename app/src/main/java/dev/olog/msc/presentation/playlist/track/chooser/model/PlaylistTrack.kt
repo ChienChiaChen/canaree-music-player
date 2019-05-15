@@ -7,7 +7,6 @@ import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.shared.TrackUtils
-import java.io.File
 
 data class PlaylistTrack (
         val id: Long,
@@ -21,15 +20,9 @@ data class PlaylistTrack (
         val duration: Long,
         val dateAdded: Long,
         val path: String,
-        val folder: String,
         val discNumber: Int,
         val trackNumber: Int,
-        val isPodcast: Boolean) {
-
-    val folderPath: String
-        get() = path.substring(0, path.lastIndexOf(File.separator))
-
-}
+        val isPodcast: Boolean)
 
 internal fun PlaylistTrack.toDisplayableItem(): DisplayableItem {
     return DisplayableItem(
@@ -55,7 +48,6 @@ internal fun Podcast.toPlaylistTrack(): PlaylistTrack {
             this.duration,
             this.dateAdded,
             this.path,
-            this.folder,
             this.discNumber,
             this.trackNumber,
             true
@@ -75,7 +67,6 @@ internal fun Song.toPlaylistTrack(): PlaylistTrack {
             this.duration,
             this.dateAdded,
             this.path,
-            this.folder,
             this.discNumber,
             this.trackNumber,
             false

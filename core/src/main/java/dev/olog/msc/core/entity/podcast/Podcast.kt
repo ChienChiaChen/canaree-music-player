@@ -1,7 +1,6 @@
 package dev.olog.msc.core.entity.podcast
 
 import dev.olog.msc.core.entity.track.Song
-import java.io.File
 
 data class Podcast (
         val id: Long,
@@ -15,17 +14,8 @@ data class Podcast (
         val duration: Long,
         val dateAdded: Long,
         val path: String,
-        val folder: String,
         val discNumber: Int,
-        val trackNumber: Int) {
-
-    val folderPath: String
-        get() = path.substring(0, path.lastIndexOf(File.separator))
-
-    val hasAlbumNameAsFolder: Boolean
-        get() = album == folder
-
-}
+        val trackNumber: Int)
 
 fun Podcast.toSong(): Song {
     return Song(
@@ -40,7 +30,6 @@ fun Podcast.toSong(): Song {
             this.duration,
             this.dateAdded,
             this.path,
-            this.folder,
             this.discNumber,
             this.trackNumber
     )

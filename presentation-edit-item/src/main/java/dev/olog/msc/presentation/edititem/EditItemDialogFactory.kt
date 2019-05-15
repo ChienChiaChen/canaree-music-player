@@ -1,12 +1,7 @@
 package dev.olog.msc.presentation.edititem
 
 import android.content.Context
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song

@@ -4,7 +4,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.coroutines.ObservableFlowWithParam
 import dev.olog.msc.core.entity.podcast.Podcast
-import dev.olog.msc.core.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -15,6 +15,6 @@ class GetPodcastUseCase @Inject internal constructor(
 ) : ObservableFlowWithParam<Podcast, MediaId>(schedulers) {
 
     override suspend fun buildUseCaseObservable(mediaId: MediaId): Flow<Podcast> {
-        return gateway.getByParam(mediaId.resolveId)
+        return gateway.observeByParam(mediaId.resolveId)
     }
 }

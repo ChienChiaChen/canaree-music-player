@@ -10,11 +10,49 @@ import io.reactivex.Flowable
 @Dao
 internal abstract class FavoriteDao {
 
-    @Query("SELECT songId FROM favorite_songs")
-    internal abstract fun getAllImpl(): Flowable<List<Long>>
+    @Query(
+        """
+        SELECT songId
+        FROM favorite_songs
+        ORDER BY songId
+        LIMIT :limit
+        OFFSET :offset
+    """
+    )
+    internal abstract fun getAll(limit: Int, offset: Int): List<Long>
 
-    @Query("SELECT podcastId FROM favorite_podcast_songs")
-    internal abstract fun getAllPodcastsImpl(): Flowable<List<Long>>
+    @Query(
+        """
+        SELECT podcastId
+        FROM favorite_podcast_songs
+        ORDER BY podcastId
+        LIMIT :limit
+        OFFSET :offset
+    """
+    )
+    internal abstract fun getAllPodcast(limit: Int, offset: Int): List<Long>
+
+    @Query(
+        """
+        SELECT songId
+        FROM favorite_songs
+    """
+    )
+    internal abstract fun observeAll(): Flowable<List<Long>>
+
+    @Query(
+        """
+        SELECT podcastId
+        FROM favorite_podcast_songs
+    """
+    )
+    internal abstract fun observeAllPodcast(): Flowable<List<Long>>
+
+    @Query("SELECT count(*) FROM favorite_songs")
+    abstract fun countAll(): Int
+
+    @Query("SELECT count(*) FROM favorite_podcast_songs")
+    abstract fun countAllPodcast(): Int
 
     @Query("DELETE FROM favorite_songs")
     internal abstract fun deleteAll()
@@ -62,7 +100,7 @@ internal abstract class FavoriteDao {
 
     internal open fun removeFromFavorite(type: FavoriteType, songId: List<Long>): Completable {
         return Completable.fromCallable {
-            if (type == FavoriteType.TRACK){
+            if (type == FavoriteType.TRACK) {
                 deleteGroupImpl(songId.map { FavoriteEntity(it) })
             } else {
                 deleteGroupPodcastImpl(songId.map { FavoritePodcastEntity(it) })

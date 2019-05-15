@@ -22,11 +22,51 @@ internal abstract class PodcastPlaylistDao {
         SELECT playlist.*, count(*) as size
         FROM podcast_playlist playlist JOIN podcast_playlist_tracks tracks
             ON playlist.id = tracks.playlistId
+        WHERE playlistId = :playlistId
+        GROUP BY playlistId
+    """)
+    internal abstract fun observeById(playlistId: Long): Flowable<PodcastPlaylistEntity>
+
+    @Query("""
+        SELECT playlist.*, count(*) as size
+        FROM podcast_playlist playlist JOIN podcast_playlist_tracks tracks
+            ON playlist.id = tracks.playlistId
         GROUP BY playlistId
         LIMIT :limit
         OFFSET :offset
     """)
     internal abstract fun getChunk(limit: Int, offset: Int): List<PodcastPlaylistEntity>
+
+    @Query("""
+        SELECT playlist.*, count(*) as size
+        FROM podcast_playlist playlist JOIN podcast_playlist_tracks tracks
+            ON playlist.id = tracks.playlistId
+        WHERE playlistId <> :playlistId
+        GROUP BY playlistId
+        LIMIT :limit
+        OFFSET :offset
+    """)
+    internal abstract fun getSiblingsChunk(playlistId: Long, limit: Int, offset: Int): List<PodcastPlaylistEntity>
+
+    @Query("""
+        SELECT playlist.*, count(*) as size
+        FROM podcast_playlist playlist JOIN podcast_playlist_tracks tracks
+            ON playlist.id = tracks.playlistId
+        WHERE playlistId <> :playlistId
+        GROUP BY playlistId
+    """)
+    internal abstract fun observeSibling(playlistId: Long): Flowable<List<PodcastPlaylistEntity>>
+
+    @Query("""
+        SELECT count(*) FROM (
+            SELECT playlist.*, count(*) as size
+            FROM podcast_playlist playlist JOIN podcast_playlist_tracks tracks
+                ON playlist.id = tracks.playlistId
+            WHERE playlistId <> :playlistId
+            GROUP BY playlistId
+        )
+    """)
+    internal abstract fun countSiblings(playlistId: Long): Int
 
     @Query("""
         SELECT count(*) FROM (
@@ -53,7 +93,7 @@ internal abstract class PodcastPlaylistDao {
         where playlist.id = :id
         GROUP BY playlistId
     """)
-    internal abstract fun getPlaylist(id: Long): Flowable<PodcastPlaylistEntity>
+    internal abstract fun getPlaylist(id: Long): PodcastPlaylistEntity
 
     @Query("""
         SELECT tracks.*
@@ -61,7 +101,26 @@ internal abstract class PodcastPlaylistDao {
             ON playlist.id = tracks.playlistId
         WHERE playlistId = :playlistId
     """)
-    internal abstract fun getPlaylistTracks(playlistId: Long): Flowable<List<PodcastPlaylistTrackEntity>>
+    internal abstract fun getPlaylistTracks(playlistId: Long): List<PodcastPlaylistTrackEntity>
+
+    @Query("""
+        SELECT tracks.*
+        FROM podcast_playlist playlist JOIN podcast_playlist_tracks tracks
+            ON playlist.id = tracks.playlistId
+        WHERE playlistId = :playlistId
+    """)
+    internal abstract fun observePlaylistTracks(playlistId: Long): Flowable<List<PodcastPlaylistTrackEntity>>
+
+    @Query("""
+        SELECT count(*)
+        FROM (
+            SELECT tracks.*
+            FROM podcast_playlist playlist JOIN podcast_playlist_tracks tracks
+                ON playlist.id = tracks.playlistId
+            WHERE playlistId = :playlistId
+        )
+    """)
+    internal abstract fun countPlaylistTracks(playlistId: Long): Int
 
     @Query("""
         SELECT max(idInPlaylist)

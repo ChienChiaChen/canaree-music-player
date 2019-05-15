@@ -19,7 +19,6 @@ internal data class MediaEntity(
         val duration: Long,
         val dateAdded: Long,
         val path: String,
-        val folder: String,
         val discNumber: Int,
         val trackNumber: Int,
         val isPodcast: Boolean
@@ -40,7 +39,6 @@ internal fun Song.toMediaEntity(progressive: Int, mediaId: MediaId) : MediaEntit
             this.duration,
             this.dateAdded,
             this.path,
-            this.folder,
             this.discNumber,
             this.trackNumber,
             mediaId.isAnyPodcast
@@ -62,7 +60,6 @@ internal fun Podcast.toMediaEntity(progressive: Int, mediaId: MediaId) : MediaEn
             this.duration,
             this.dateAdded,
             this.path,
-            this.folder,
             this.discNumber,
             this.trackNumber,
             mediaId.isAnyPodcast
@@ -84,7 +81,6 @@ internal fun PlayingQueueSong.toMediaEntity() : MediaEntity {
             this.duration,
             this.dateAdded,
             this.path,
-            this.folder,
             this.discNumber,
             this.trackNumber,
             this.isPodcast

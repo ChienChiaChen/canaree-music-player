@@ -8,13 +8,12 @@ import dev.olog.msc.apilastfm.mapper.toDomain
 import dev.olog.msc.apilastfm.mapper.toModel
 import dev.olog.msc.core.entity.LastFmAlbum
 import dev.olog.msc.core.entity.track.Album
-import dev.olog.msc.core.gateway.AlbumGateway
+import dev.olog.msc.core.gateway.track.AlbumGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmAlbumEntity
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asFlowable
 import javax.inject.Inject
 
 internal class LastFmRepoAlbum @Inject constructor(
@@ -33,8 +32,7 @@ internal class LastFmRepoAlbum @Inject constructor(
     fun get(albumId: Long): Single<Optional<LastFmAlbum?>> = runBlocking{
         val cachedValue = getFromCache(albumId)
 
-        val fetch = albumGateway.getByParam(albumId).asFlowable()
-                .firstOrError()
+        val fetch = Single.just(albumGateway.getByParam(albumId))
                 .flatMap {
                     if (it.hasSameNameAsFolder){
                         Single.error(Exception("image not downloadable"))

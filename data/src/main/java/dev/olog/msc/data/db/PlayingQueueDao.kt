@@ -145,7 +145,6 @@ abstract class PlayingQueueDao {
                 this.duration,
                 this.dateAdded,
                 this.path,
-                this.folder,
                 this.discNumber,
                 this.trackNumber,
                 false
@@ -169,7 +168,6 @@ abstract class PlayingQueueDao {
                 this.duration,
                 this.dateAdded,
                 this.path,
-                this.folder,
                 this.discNumber,
                 this.trackNumber,
                 true

@@ -3,12 +3,9 @@ package dev.olog.msc.data.db.most.played
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.data.entity.PlaylistMostPlayedEntity
 import dev.olog.msc.data.entity.SongMostTimesPlayedEntity
-import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Flowable
-import io.reactivex.Observable
 
 @Dao
 internal abstract class PlaylistMostPlayedDao {
@@ -20,24 +17,34 @@ internal abstract class PlaylistMostPlayedDao {
         GROUP BY songId
         HAVING count(*) >= 5
         ORDER BY timesPlayed DESC
-        LIMIT 10
+        LIMIT :limit
     """)
-    internal abstract fun query(playlistId: Long): Flowable<List<SongMostTimesPlayedEntity>>
+    internal abstract fun query(playlistId: Long, limit: Int): List<SongMostTimesPlayedEntity>
+
+    @Query("""
+        SELECT songId, count(*) as timesPlayed
+        FROM most_played_playlist
+        WHERE playlistId = :playlistId
+        GROUP BY songId
+        HAVING count(*) >= 5
+        ORDER BY timesPlayed DESC
+        LIMIT :limit
+    """)
+    internal abstract fun observe(playlistId: Long, limit: Int): Flowable<List<SongMostTimesPlayedEntity>>
+
+    @Query("""
+        SELECT count(*)
+        FROM (
+            SELECT songId, count(*) as timesPlayed
+            FROM most_played_playlist
+            WHERE playlistId = :playlistId
+            GROUP BY songId
+            HAVING count(*) >= 5
+        )
+    """)
+    internal abstract fun count(playlistId: Long): Int
 
     @Insert
     internal abstract fun insertOne(item: PlaylistMostPlayedEntity)
-
-    internal fun getAll(playlistId: Long, songList: Observable<List<Song>>): Observable<List<Song>> {
-        return this.query(playlistId)
-                .toObservable()
-                .switchMap { mostPlayedSongs -> songList.map { songList ->
-                    mostPlayedSongs.mapNotNull { mostPlayed ->
-                        val song = songList.firstOrNull { it.id == mostPlayed.songId }
-                        if (song != null) song to mostPlayed.timesPlayed
-                        else null
-                    }.sortedWith(compareByDescending { it.second })
-                }.mapToList { it.first }
-                }
-    }
 
 }

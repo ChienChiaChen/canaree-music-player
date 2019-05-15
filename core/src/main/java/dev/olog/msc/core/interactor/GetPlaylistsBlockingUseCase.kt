@@ -2,13 +2,13 @@ package dev.olog.msc.core.interactor
 
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.track.Playlist
-import dev.olog.msc.core.gateway.PlaylistGateway
-import dev.olog.msc.core.gateway.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.track.PlaylistGateway
 import javax.inject.Inject
 
 class GetPlaylistsBlockingUseCase @Inject internal constructor(
-        private val playlistGateway: PlaylistGateway,
-        private val podcastPlaylistgateway: PodcastPlaylistGateway
+    private val playlistGateway: PlaylistGateway,
+    private val podcastPlaylistgateway: PodcastPlaylistGateway
 
 )  {
 

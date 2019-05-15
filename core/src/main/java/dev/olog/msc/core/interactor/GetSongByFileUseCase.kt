@@ -2,7 +2,7 @@ package dev.olog.msc.core.interactor
 
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.executors.IoScheduler
-import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.core.interactor.base.SingleUseCaseWithParam
 import io.reactivex.Single
 import javax.inject.Inject

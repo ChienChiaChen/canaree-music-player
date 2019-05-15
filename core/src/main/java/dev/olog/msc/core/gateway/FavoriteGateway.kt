@@ -3,17 +3,21 @@ package dev.olog.msc.core.gateway
 import dev.olog.msc.core.entity.favorite.FavoriteEnum
 import dev.olog.msc.core.entity.favorite.FavoriteStateEntity
 import dev.olog.msc.core.entity.favorite.FavoriteType
-import dev.olog.msc.core.entity.podcast.Podcast
-import dev.olog.msc.core.entity.track.Song
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
-import kotlinx.coroutines.flow.Flow
 
 interface FavoriteGateway {
 
-    suspend fun getAll(): Flow<List<Song>>
-    fun getAllPodcasts(): Observable<List<Podcast>>
+    fun getAll(limit: Int, offset: Int): List<Long>
+    fun getAllPodcasts(limit: Int, offset: Int): List<Long>
+
+    fun observeAll(): Flowable<List<Long>>
+    fun observeAllPodcast(): Flowable<List<Long>>
+
+    fun countAll(): Int
+    fun countAllPodcast(): Int
 
     fun addSingle(type: FavoriteType, songId: Long): Completable
     fun addGroup(type: FavoriteType, songListId: List<Long>): Completable
