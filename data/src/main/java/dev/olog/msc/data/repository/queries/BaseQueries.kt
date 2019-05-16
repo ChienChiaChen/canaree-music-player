@@ -7,7 +7,6 @@ import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.shared.TrackUtils
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
@@ -53,7 +52,7 @@ abstract class BaseQueries(
     protected fun songListSortOrder(category: MediaIdCategory, default: String): String = runBlocking {
 
         val type = getSortType(category)
-        val arranging = prefsGateway.getSortArranging().single()
+        val arranging = prefsGateway.getSortArranging()
         var sort = when (type) {
             SortType.TITLE -> "lower($TITLE)"
             SortType.ARTIST -> "lower(${Columns.ARTIST})"
@@ -86,15 +85,15 @@ abstract class BaseQueries(
         return@runBlocking "$sort COLLATE UNICODE"
     }
 
-    private fun getSortType(category: MediaIdCategory): SortType = runBlocking {
-        when (category){
+    private fun getSortType(category: MediaIdCategory): SortType {
+        return when (category){
             MediaIdCategory.FOLDERS -> prefsGateway.getFolderSortOrder()
             MediaIdCategory.PLAYLISTS -> prefsGateway.getPlaylistSortOrder()
             MediaIdCategory.ALBUMS -> prefsGateway.getAlbumSortOrder()
             MediaIdCategory.ARTISTS -> prefsGateway.getArtistSortOrder()
             MediaIdCategory.GENRES -> prefsGateway.getGenreSortOrder()
             else -> throw IllegalArgumentException("invalid category $category")
-        }.single()
+        }
     }
 
 }

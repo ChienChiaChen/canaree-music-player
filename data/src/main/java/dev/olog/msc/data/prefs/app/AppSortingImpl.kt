@@ -38,39 +38,64 @@ internal class AppSortingImpl(
         private const val DETAIL_SORT_ARRANGING = "$TAG.DETAIL_SORT_ARRANGING"
     }
 
-    override fun getFolderSortOrder(): Flow<SortType> {
+    override fun observeFolderSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_FOLDER_ORDER, SortType.TITLE.ordinal)
             .asObservable()
             .map { ordinal -> SortType.values()[ordinal] }
             .asFlowable().asFlow()
     }
 
-    override fun getPlaylistSortOrder(): Flow<SortType> {
+    override fun observePlaylistSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_PLAYLIST_ORDER, SortType.CUSTOM.ordinal)
             .asObservable()
             .map { ordinal -> SortType.values()[ordinal] }
             .asFlowable().asFlow()
     }
 
-    override fun getAlbumSortOrder(): Flow<SortType> {
+    override fun observeAlbumSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_ALBUM_ORDER, SortType.TITLE.ordinal)
             .asObservable()
             .map { ordinal -> SortType.values()[ordinal] }
             .asFlowable().asFlow()
     }
 
-    override fun getArtistSortOrder(): Flow<SortType> {
+    override fun observeArtistSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_ARTIST_ORDER, SortType.TITLE.ordinal)
             .asObservable()
             .map { ordinal -> SortType.values()[ordinal] }
             .asFlowable().asFlow()
     }
 
-    override fun getGenreSortOrder(): Flow<SortType> {
+    override fun observeGenreSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_GENRE_ORDER, SortType.TITLE.ordinal)
             .asObservable()
             .map { ordinal -> SortType.values()[ordinal] }
             .asFlowable().asFlow()
+    }
+
+    override fun getFolderSortOrder(): SortType {
+        val ordinal = preferences.getInt(DETAIL_SORT_FOLDER_ORDER, SortType.TITLE.ordinal)
+        return SortType.values()[ordinal]
+    }
+
+    override fun getPlaylistSortOrder(): SortType {
+        val ordinal = preferences.getInt(DETAIL_SORT_PLAYLIST_ORDER, SortType.CUSTOM.ordinal)
+        return SortType.values()[ordinal]
+    }
+
+    override fun getAlbumSortOrder(): SortType {
+        val ordinal = preferences.getInt(DETAIL_SORT_ALBUM_ORDER, SortType.TITLE.ordinal)
+        return SortType.values()[ordinal]
+    }
+
+    override fun getArtistSortOrder(): SortType {
+        val ordinal = preferences.getInt(DETAIL_SORT_ARTIST_ORDER, SortType.TITLE.ordinal)
+        return SortType.values()[ordinal]
+    }
+
+    override fun getGenreSortOrder(): SortType {
+        val ordinal = preferences.getInt(DETAIL_SORT_GENRE_ORDER, SortType.TITLE.ordinal)
+        return SortType.values()[ordinal]
     }
 
     override suspend fun setFolderSortOrder(sortType: SortType) {
@@ -98,11 +123,16 @@ internal class AppSortingImpl(
         preferences.edit { putInt(DETAIL_SORT_GENRE_ORDER, sortType.ordinal) }
     }
 
-    override fun getSortArranging(): Flow<SortArranging> {
+    override fun observeSortArranging(): Flow<SortArranging> {
         return rxPreferences.getInteger(DETAIL_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
             .asObservable()
             .map { ordinal -> SortArranging.values()[ordinal] }
             .asFlowable().asFlow()
+    }
+
+    override fun getSortArranging(): SortArranging {
+        val ordinal = preferences.getInt(DETAIL_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
+        return SortArranging.values()[ordinal]
     }
 
     override suspend fun toggleSortArranging() {

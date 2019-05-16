@@ -86,11 +86,16 @@ interface Sorting {
     suspend fun setAllAlbumsSortOrder(sortType: LibrarySortType)
     suspend fun setAllArtistsSortOrder(sortType: LibrarySortType)
 
-    fun getFolderSortOrder() : Flow<SortType>
-    fun getPlaylistSortOrder() : Flow<SortType>
-    fun getAlbumSortOrder() : Flow<SortType>
-    fun getArtistSortOrder() : Flow<SortType>
-    fun getGenreSortOrder() : Flow<SortType>
+    fun observeFolderSortOrder() : Flow<SortType>
+    fun observePlaylistSortOrder() : Flow<SortType>
+    fun observeAlbumSortOrder() : Flow<SortType>
+    fun observeArtistSortOrder() : Flow<SortType>
+    fun observeGenreSortOrder() : Flow<SortType>
+    fun getFolderSortOrder() : SortType
+    fun getPlaylistSortOrder() : SortType
+    fun getAlbumSortOrder() : SortType
+    fun getArtistSortOrder() : SortType
+    fun getGenreSortOrder() : SortType
 
     suspend fun setFolderSortOrder(sortType: SortType)
     suspend fun setPlaylistSortOrder(sortType: SortType)
@@ -98,6 +103,7 @@ interface Sorting {
     suspend fun setArtistSortOrder(sortType: SortType)
     suspend fun setGenreSortOrder(sortType: SortType)
 
-    fun getSortArranging(): Flow<SortArranging>
+    fun observeSortArranging(): Flow<SortArranging>
+    fun getSortArranging(): SortArranging
     suspend fun toggleSortArranging()
 }
