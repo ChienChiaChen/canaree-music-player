@@ -69,11 +69,11 @@ class LibraryCategoriesFragmentAdapter (
         notifyItemMoved(from, to)
     }
 
-    override fun onSwipedLeft(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
+    override fun onSwipedLeft(viewHolder: RecyclerView.ViewHolder) {
         throw IllegalStateException("operation not supported")
     }
 
-    override fun onSwipedRight(position: Int) {
+    override fun onSwipedRight(viewHolder: RecyclerView.ViewHolder) {
         throw IllegalStateException("operation not supported")
     }
 

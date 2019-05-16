@@ -19,7 +19,7 @@ class GetDetailSortDataUseCase @Inject constructor(
 
     override suspend fun buildUseCaseObservable(param: MediaId): Flow<DetailSort> {
         return combineLatest(
-            prefsGateway.getSortArranging(),
+            prefsGateway.observeSortArranging(),
             getSortType(param)
         ) { arranging, sortType -> DetailSort(sortType, arranging) }
     }
@@ -27,14 +27,14 @@ class GetDetailSortDataUseCase @Inject constructor(
     private fun getSortType(mediaId: MediaId): Flow<SortType> {
         val category = mediaId.category
         return when (category) {
-            MediaIdCategory.FOLDERS -> prefsGateway.getFolderSortOrder()
+            MediaIdCategory.FOLDERS -> prefsGateway.observeFolderSortOrder()
             MediaIdCategory.PLAYLISTS,
-            MediaIdCategory.PODCASTS_PLAYLIST -> prefsGateway.getPlaylistSortOrder()
+            MediaIdCategory.PODCASTS_PLAYLIST -> prefsGateway.observePlaylistSortOrder()
             MediaIdCategory.ALBUMS,
-            MediaIdCategory.PODCASTS_ALBUMS -> prefsGateway.getAlbumSortOrder()
+            MediaIdCategory.PODCASTS_ALBUMS -> prefsGateway.observeAlbumSortOrder()
             MediaIdCategory.ARTISTS,
-            MediaIdCategory.PODCASTS_ARTISTS -> prefsGateway.getArtistSortOrder()
-            MediaIdCategory.GENRES -> prefsGateway.getGenreSortOrder()
+            MediaIdCategory.PODCASTS_ARTISTS -> prefsGateway.observeArtistSortOrder()
+            MediaIdCategory.GENRES -> prefsGateway.observeGenreSortOrder()
             else -> throw IllegalArgumentException("invalid media id $mediaId")
         }
     }

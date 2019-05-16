@@ -6,7 +6,7 @@ interface TouchableAdapter {
 
     fun onMoved(from: Int, to: Int)
     fun onSwipedLeft(viewHolder: RecyclerView.ViewHolder)
-    fun onSwipedRight(position: Int)
+    fun onSwipedRight(viewHolder: RecyclerView.ViewHolder)
     fun canInteractWithViewHolder(viewType: Int): Boolean?
     fun onClearView()
 

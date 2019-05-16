@@ -12,6 +12,8 @@ import dev.olog.msc.presentation.base.model.BaseModel
 abstract class BasePagedAdapter<Model : BaseModel>(diffCallback: DiffUtil.ItemCallback<Model>) :
     PagedListAdapter<Model, DataBoundViewHolder>(diffCallback) {
 
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBoundViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = DataBindingUtil.inflate<ViewDataBinding>(
@@ -59,5 +61,6 @@ abstract class BasePagedAdapter<Model : BaseModel>(diffCallback: DiffUtil.ItemCa
         super.onViewDetachedFromWindow(holder)
         holder.onDisappear()
     }
+
 
 }

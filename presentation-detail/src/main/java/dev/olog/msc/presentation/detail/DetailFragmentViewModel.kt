@@ -157,7 +157,9 @@ internal class DetailFragmentViewModel @Inject constructor(
 
     fun canShowSortByTutorial(onCanShow: () -> Unit) = viewModelScope.launch(Dispatchers.IO) {
         if (tutorialPreferenceUseCase.canShowSortByTutorial()){
-            onCanShow()
+            viewModelScope.launch(Dispatchers.Main) {
+                onCanShow()
+            }
         }
     }
 

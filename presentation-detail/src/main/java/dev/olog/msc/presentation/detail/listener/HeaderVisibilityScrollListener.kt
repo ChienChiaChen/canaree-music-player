@@ -1,10 +1,12 @@
 package dev.olog.msc.presentation.detail.listener
 
 import android.view.View
+import dev.olog.msc.presentation.base.extensions.ctx
 
 import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.detail.R
 import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 
@@ -13,10 +15,9 @@ class HeaderVisibilityScrollListener(
 
 ) : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
 
-    private val context = fragment.context!!
-    private val toolbarHeight by lazy {
+    private val toolbarHeight by lazyFast {
         val statusBarHeight = fragment.view!!.statusBar.height
-        statusBarHeight + context.dimen(R.dimen.toolbar)
+        statusBarHeight + fragment.ctx.dimen(R.dimen.toolbar)
     }
 
     override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {

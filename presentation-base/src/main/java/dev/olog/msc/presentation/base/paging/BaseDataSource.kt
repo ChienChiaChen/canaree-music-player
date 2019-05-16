@@ -32,7 +32,6 @@ abstract class BaseDataSource<PresentationModel> :
     @CallSuper
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<PresentationModel>) {
         if (canLoadData){
-            val start = System.currentTimeMillis()
             val mainDataSize = getMainDataSize()
 
             headers.addAll(getHeaders(mainDataSize))
@@ -43,7 +42,6 @@ abstract class BaseDataSource<PresentationModel> :
             result.addAll(headers)
             result.addAll(loadInternal(Page(params.requestedStartPosition, params.requestedLoadSize - headers.size)))
             tryAddFooter(result, params.requestedLoadSize)
-            val end = System.currentTimeMillis() - start
             callback.onResult(result, 0, mainDataSize + headers.size + footerSize)
         }
     }

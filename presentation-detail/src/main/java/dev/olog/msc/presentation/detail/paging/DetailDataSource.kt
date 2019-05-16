@@ -165,9 +165,7 @@ internal class DetailDataSource @Inject constructor(
 
     private fun generateHeader(): DisplayableItem {
         return when (mediaId.category) {
-            MediaIdCategory.FOLDERS -> folderGateway.getByParam(mediaId.categoryValue).getItem()!!.toHeaderItem(
-                resources
-            )
+            MediaIdCategory.FOLDERS -> folderGateway.getByParam(mediaId.categoryValue).getItem()!!.toHeaderItem(resources)
             MediaIdCategory.PLAYLISTS -> playlistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(
                 resources
             )

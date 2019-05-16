@@ -148,11 +148,12 @@ abstract class AbsAdapter<Model : BaseModel>(
         Relative position is calculated from first interactive item,
         because there are items that isn't
      */
-    override fun onSwipedRight(position: Int) {
+    override fun onSwipedRight(viewHolder: RecyclerView.ViewHolder) {
         controller.pauseObservingData()
         val positionPivot = indexOf { canInteractWithViewHolder(it.type)!! }
-        val relativePosition = position - positionPivot
+        val relativePosition = viewHolder.adapterPosition - positionPivot
 
+        val position = viewHolder.adapterPosition
         controller.remove(position)
         notifyItemRemoved(position)
         // swipe action must be defined
