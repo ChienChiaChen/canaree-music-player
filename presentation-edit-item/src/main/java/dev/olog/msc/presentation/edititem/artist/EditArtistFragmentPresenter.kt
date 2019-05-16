@@ -9,7 +9,6 @@ import dev.olog.msc.core.interactor.item.GetArtistUseCase
 import dev.olog.msc.core.interactor.item.GetPodcastArtistUseCase
 import io.reactivex.Single
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 class EditArtistFragmentPresenter @Inject constructor(
@@ -31,17 +30,19 @@ class EditArtistFragmentPresenter @Inject constructor(
     }
 
     private fun getArtistInternal(): Single<DisplayableArtist> = runBlocking{
-        getArtistUseCase.execute(mediaId).asObservable()
-                .firstOrError()
-                .map { it.toDisplayableArtist() }
-                .doOnSuccess { originalArtist = it }
+        TODO()
+//        getArtistUseCase.execute(mediaId).asObservable()
+//                .firstOrError()
+//                .map { it.toDisplayableArtist() }
+//                .doOnSuccess { originalArtist = it }
     }
 
     private fun getPodcastArtistInternal(): Single<DisplayableArtist> = runBlocking{
-        getPodcastArtistUseCase.execute(mediaId).asObservable()
-                .firstOrError()
-                .map { it.toDisplayableArtist() }
-                .doOnSuccess { originalArtist = it }
+        TODO()
+//        getPodcastArtistUseCase.execute(mediaId).asObservable()
+//                .firstOrError()
+//                .map { it.toDisplayableArtist() }
+//                .doOnSuccess { originalArtist = it }
     }
 
     fun getSongList(): Single<List<Song>> {

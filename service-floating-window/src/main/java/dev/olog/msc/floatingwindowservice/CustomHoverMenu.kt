@@ -23,7 +23,7 @@ internal class CustomHoverMenu @Inject constructor(
         @ServiceLifecycle lifecycle: Lifecycle,
         musicServiceBinder: MusicServiceBinder,
         private val musicPreferencesUseCase: MusicPreferencesGateway,
-        offlineLyricsContentPresenter: OfflineLyricsContentPresenter
+        private val offlineLyricsContentPresenter: OfflineLyricsContentPresenter
 
 ) : HoverMenu(), DefaultLifecycleObserver {
 
@@ -61,6 +61,7 @@ internal class CustomHoverMenu @Inject constructor(
 
     override fun onDestroy(owner: LifecycleOwner) {
         subscriptions.clear()
+        offlineLyricsContentPresenter.onDestroy()
     }
 
     private val lyricsSection = Section(

@@ -26,9 +26,8 @@ internal fun Cursor.toPodcast(): Podcast {
     val duration = getLong(MediaStore.Audio.AudioColumns.DURATION)
     val dateAdded = getLong(MediaStore.MediaColumns.DATE_ADDED)
 
-    val trackNumber = getInt(MediaStore.Audio.AudioColumns.TRACK)
-    val track = extractTrackNumber(trackNumber)
-    val disc = extractDiscNumber(trackNumber)
+    val track = getInt(Columns.N_TRACK)
+    val disc = getInt(Columns.N_DISC)
 
     return Podcast(
         id, artistId, albumId, title, artist, albumArtist, album,
@@ -52,9 +51,8 @@ internal fun Cursor.toUneditedPodcast(image: String): Podcast {
     val duration = getLong(MediaStore.Audio.AudioColumns.DURATION)
     val dateAdded = getLong(MediaStore.MediaColumns.DATE_ADDED)
 
-    val trackNumber = getInt(MediaStore.Audio.AudioColumns.TRACK)
-    val track = extractTrackNumber(trackNumber)
-    val disc = extractDiscNumber(trackNumber)
+    val track = getInt(Columns.N_TRACK)
+    val disc = getInt(Columns.N_DISC)
 
     return Podcast(
         id, artistId, albumId, title, artist, albumArtist, album,

@@ -1,34 +1,22 @@
 package dev.olog.msc.presentation.dialogs.delete.di
 
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
+import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
+import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.dialogs.delete.DeleteDialog
+import dev.olog.msc.presentation.dialogs.delete.DeleteDialogViewModel
 
 @Module
-class DeleteDialogModule(
-        private val fragment: DeleteDialog
-) {
+abstract class DeleteDialogModule {
 
-    @Provides
-    @FragmentLifecycle
-    fun provideLifecycle(): Lifecycle = fragment.lifecycle
+    @ContributesAndroidInjector
+    abstract fun provideFragment(): DeleteDialog
 
-    @Provides
-    fun provideMediaId(): MediaId {
-        val mediaId = fragment.arguments!!.getString(DeleteDialog.ARGUMENTS_MEDIA_ID)!!
-        return MediaId.fromString(mediaId)
-    }
-
-    @Provides
-    fun provideListSize(): Int {
-        return fragment.arguments!!.getInt(DeleteDialog.ARGUMENTS_LIST_SIZE)
-    }
-
-    @Provides
-    fun provideItemTitle(): String {
-        return fragment.arguments!!.getString(DeleteDialog.ARGUMENTS_ITEM_TITLE)!!
-    }
+    @Binds
+    @IntoMap
+    @ViewModelKey(DeleteDialogViewModel::class)
+    abstract fun provideViewModel(viewModel: DeleteDialogViewModel): ViewModel
 }

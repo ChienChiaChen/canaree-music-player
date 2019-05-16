@@ -3,7 +3,6 @@ package dev.olog.msc.core.gateway.track
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.gateway.base.*
-import io.reactivex.Completable
 import io.reactivex.Single
 
 interface PlaylistGateway :
@@ -29,7 +28,6 @@ interface PlaylistGateway :
     }
 
     fun getAllAutoPlaylists(): List<Playlist>
-    fun getPlaylistsBlocking(): List<Playlist>
 
 }
 
@@ -37,20 +35,20 @@ interface PlaylistGatewayHelper {
 
     fun createPlaylist(playlistName: String): Single<Long>
 
-    fun renamePlaylist(playlistId: Long, newTitle: String): Completable
+    fun renamePlaylist(playlistId: Long, newTitle: String)
 
-    fun deletePlaylist(playlistId: Long): Completable
+    fun deletePlaylist(playlistId: Long)
 
-    fun clearPlaylist(playlistId: Long): Completable
+    suspend fun clearPlaylist(playlistId: Long)
 
-    fun addSongsToPlaylist(playlistId: Long, songIds: List<Long>): Completable
+    fun addSongsToPlaylist(playlistId: Long, songIds: List<Long>)
 
-    fun insertSongToHistory(songId: Long): Completable
+    suspend fun insertSongToHistory(songId: Long)
 
     fun moveItem(playlistId: Long, from: Int, to: Int): Boolean
 
-    fun removeFromPlaylist(playlistId: Long, idInPlaylist: Long): Completable
+    suspend fun removeFromPlaylist(playlistId: Long, idInPlaylist: Long)
 
-    fun removeDuplicated(playlistId: Long): Completable
+    fun removeDuplicated(playlistId: Long)
 
 }

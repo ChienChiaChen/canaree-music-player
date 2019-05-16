@@ -5,7 +5,7 @@ import android.database.Cursor
 import android.provider.MediaStore.Audio.Media.*
 import dev.olog.contentresolversql.querySql
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.entity.ChunkRequest
+import dev.olog.msc.core.entity.Page
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 
 internal class FolderQueries(
@@ -14,7 +14,7 @@ internal class FolderQueries(
 ) : BaseQueries(prefsGateway, false) {
 
 
-    fun getAll(chunk: ChunkRequest?): Cursor {
+    fun getAll(chunk: Page?): Cursor {
         val query = """
             SELECT distinct $folderProjection as ${Columns.FOLDER}, count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
@@ -47,13 +47,13 @@ internal class FolderQueries(
         return contentResolver.querySql(query, arrayOf(folderPath))
     }
 
-    fun getSongList(folderPath: String, chunk: ChunkRequest?): Cursor {
+    fun getSongList(folderPath: String, chunk: Page?): Cursor {
         val query = """
             SELECT $_ID, $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
-                $albumArtistProjection
+                $albumArtistProjection,
                 $DURATION, $DATA, $YEAR,
                 $discNumberProjection as ${Columns.N_DISC},
                 $trackNumberProjection as ${Columns.N_TRACK},
@@ -76,13 +76,13 @@ internal class FolderQueries(
         return contentResolver.querySql(query, arrayOf(folderPath))
     }
 
-    fun getRecentlyAddedSongs(folderPath: String, chunk: ChunkRequest?): Cursor {
+    fun getRecentlyAddedSongs(folderPath: String, chunk: Page?): Cursor {
         val query = """
             SELECT $_ID, $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
-                $albumArtistProjection
+                $albumArtistProjection,
                 $DURATION, $DATA, $YEAR,
                 $discNumberProjection as ${Columns.N_DISC},
                 $trackNumberProjection as ${Columns.N_TRACK},
@@ -97,7 +97,7 @@ internal class FolderQueries(
         return contentResolver.querySql(query, arrayOf(folderPath))
     }
 
-    fun getSiblingsChunk(folderPath: String, chunk: ChunkRequest?): Cursor {
+    fun getSiblings(folderPath: String, chunk: Page?): Cursor {
         val query = """
             SELECT distinct $folderProjection as ${Columns.FOLDER}, count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
@@ -109,7 +109,7 @@ internal class FolderQueries(
         return contentResolver.querySql(query, arrayOf(folderPath))
     }
 
-    fun getRelatedArtists(folderPath: String, chunk: ChunkRequest?): Cursor {
+    fun getRelatedArtists(folderPath: String, chunk: Page?): Cursor {
         val query = """
             SELECT distinct $ARTIST_ID, $ARTIST, $albumArtistProjection,
                 count(*) as ${Columns.N_SONGS},
@@ -130,7 +130,7 @@ internal class FolderQueries(
                 $TITLE,
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
-                $albumArtistProjection
+                $albumArtistProjection,
                 $DURATION, $DATA, $YEAR,
                 $discNumberProjection as ${Columns.N_DISC},
                 $trackNumberProjection as ${Columns.N_TRACK},

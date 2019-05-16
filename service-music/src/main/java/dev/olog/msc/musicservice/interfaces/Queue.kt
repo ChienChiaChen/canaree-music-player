@@ -5,53 +5,44 @@ import android.os.Bundle
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.musicservice.model.PlayerMediaEntity
 import dev.olog.msc.musicservice.model.PositionInQueue
-import io.reactivex.Single
 
 internal interface Queue {
 
-    fun isReady() : Boolean
-
     fun getCurrentPositionInQueue(): PositionInQueue
 
-    fun prepare(): Single<PlayerMediaEntity>
+    suspend fun prepare(): PlayerMediaEntity
 
-    fun handleSkipToNext(trackEnded: Boolean): PlayerMediaEntity?
+    suspend fun handleSkipToNext(trackEnded: Boolean): PlayerMediaEntity?
+    suspend fun handleSkipToPrevious(playerBookmark: Long): PlayerMediaEntity?
+    suspend fun handleSkipToQueueItem(idInPlaylist: Long): PlayerMediaEntity
 
-    fun handleSkipToPrevious(playerBookmark: Long): PlayerMediaEntity?
+    suspend fun handlePlayFromMediaId(mediaId: MediaId, extras: Bundle?): PlayerMediaEntity
+    suspend fun handlePlayRecentlyPlayed(mediaId: MediaId): PlayerMediaEntity
+    suspend fun handlePlayMostPlayed(mediaId: MediaId): PlayerMediaEntity
 
-    fun handlePlayFromMediaId(mediaId: MediaId, extras: Bundle?): Single<PlayerMediaEntity>
+    suspend fun handlePlayShuffle(mediaId: MediaId): PlayerMediaEntity
 
-    fun handlePlayRecentlyPlayed(mediaId: MediaId): Single<PlayerMediaEntity>
+    suspend fun handlePlayFolderTree(mediaId: MediaId): PlayerMediaEntity
 
-    fun handlePlayMostPlayed(mediaId: MediaId): Single<PlayerMediaEntity>
+    suspend fun handlePlayFromGoogleSearch(query: String, extras: Bundle): PlayerMediaEntity?
 
-    fun handleSkipToQueueItem(idInPlaylist: Long): PlayerMediaEntity
+    suspend fun handlePlayFromUri(uri: Uri): PlayerMediaEntity?
 
-    fun handlePlayShuffle(mediaId: MediaId): Single<PlayerMediaEntity>
+    suspend fun getPlayingSong(): PlayerMediaEntity
 
-    fun handlePlayFolderTree(mediaId: MediaId): Single<PlayerMediaEntity>
+    suspend fun handleSwap(from: Int, to: Int, relative: Boolean)
 
-    fun handlePlayFromGoogleSearch(query: String, extras: Bundle): Single<PlayerMediaEntity>
+    suspend fun handleRemove(position: Int, relative: Boolean, callback: (Boolean) -> Unit)
 
-    fun handlePlayFromUri(uri: Uri): Single<PlayerMediaEntity>
+    suspend fun sort()
 
-    fun getPlayingSong(): PlayerMediaEntity
-
-    fun handleSwap(extras: Bundle)
-    fun handleSwapRelative(extras: Bundle)
-
-    fun handleRemove(extras: Bundle): Boolean
-    fun handleRemoveRelative(extras: Bundle): Boolean
-
-    fun sort()
-
-    fun shuffle()
+    suspend fun shuffle()
 
     fun onRepeatModeChanged()
 
-    fun playLater(songIds: List<Long>, isPodcast: Boolean) : PositionInQueue
+    suspend fun playLater(songIds: List<Long>, isPodcast: Boolean) : PositionInQueue
 
-    fun playNext(songIds: List<Long>, isPodcast: Boolean) : PositionInQueue
+    suspend fun playNext(songIds: List<Long>, isPodcast: Boolean) : PositionInQueue
 //    fun moveToPlayNext(idInPlaylist: Int) : PositionInQueue
 
     fun updatePodcastPosition(position: Long)

@@ -12,7 +12,6 @@ import dev.olog.msc.data.db.RecentSearchesDao
 import io.reactivex.Completable
 import io.reactivex.Observable
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class RecentSearchesRepository @Inject constructor(
@@ -34,17 +33,18 @@ internal class RecentSearchesRepository @Inject constructor(
     private val dao : RecentSearchesDao = appDatabase.recentSearchesDao()
 
     override fun getAll(): Observable<List<SearchResult>> = runBlocking{
-        dao.getAll(songGateway.getAll().asObservable().firstOrError(),
-                albumGateway.getAll().asObservable().firstOrError(),
-                artistGateway.getAll().asObservable().firstOrError(),
-                playlistGateway.getAll().asObservable().firstOrError(),
-                genreGateway.getAll().asObservable().firstOrError(),
-                folderGateway.getAll().asObservable().firstOrError(),
-                podcastGateway.getAll().asObservable().firstOrError(),
-                podcastPlaylistGateway.getAll().asObservable().firstOrError(),
-                podcastAlbumGateway.getAll().asObservable().firstOrError(),
-                podcastArtistGateway.getAll().asObservable().firstOrError()
-        )
+        TODO()
+//        dao.getAll(songGateway.getAll().asObservable().firstOrError(),
+//                albumGateway.getAll().asObservable().firstOrError(),
+//                artistGateway.getAll().asObservable().firstOrError(),
+//                playlistGateway.getAll().asObservable().firstOrError(),
+//                genreGateway.getAll().asObservable().firstOrError(),
+//                folderGateway.getAll().asObservable().firstOrError(),
+//                podcastGateway.getAll().asObservable().firstOrError(),
+//                podcastPlaylistGateway.getAll().asObservable().firstOrError(),
+//                podcastAlbumGateway.getAll().asObservable().firstOrError(),
+//                podcastArtistGateway.getAll().asObservable().firstOrError()
+//        )
     }
 
     override fun insertSong(songId: Long): Completable = dao.insertSong(songId)

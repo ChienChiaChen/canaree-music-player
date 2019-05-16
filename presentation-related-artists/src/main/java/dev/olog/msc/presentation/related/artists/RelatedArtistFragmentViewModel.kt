@@ -6,31 +6,29 @@ import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.interactor.GetItemTitleUseCase
-import dev.olog.msc.presentation.base.extensions.asLiveData
+import dev.olog.msc.core.interactor.GetRelatedArtistsUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
-import dev.olog.msc.presentation.related.artists.domain.GetRelatedArtistsUseCase
-import dev.olog.msc.shared.collator
-import dev.olog.msc.shared.extensions.mapToList
-import dev.olog.msc.shared.extensions.safeCompare
 import dev.olog.msc.shared.utils.TextUtils
 import javax.inject.Inject
 
 class RelatedArtistFragmentViewModel @Inject constructor(
         resources: Resources,
         mediaId: MediaId,
-        useCase: GetRelatedArtistsUseCase,
+        relatedArtistsUseCase: GetRelatedArtistsUseCase,
         getItemTitleUseCase: GetItemTitleUseCase
 
 ): ViewModel() {
 
     val itemOrdinal = mediaId.category.ordinal
 
-    val data: LiveData<List<DisplayableItem>> = useCase.execute(mediaId)
-            .mapToList { it.toRelatedArtist(resources) }
-            .map { it.sortedWith(Comparator { o1, o2 -> collator.safeCompare(o1.title, o2.title) }) }
-            .asLiveData()
+//    val data: LiveData<List<DisplayableItem>> = useCase.execute(mediaId)
+//            .mapToList { it.toRelatedArtist(resources) }
+//            .map { it.sortedWith(Comparator { o1, o2 -> collator.safeCompare(o1.title, o2.title) }) }
+//            .asLiveData()
+    val data: LiveData<List<DisplayableItem>> = TODO()
 
-    val itemTitle = getItemTitleUseCase.execute(mediaId).asLiveData()
+//    val itemTitle = getItemTitleUseCase.execute(mediaId).asLiveData()
+    val itemTitle: LiveData<String> = TODO()
 
     private fun Artist.toRelatedArtist(resources: Resources): DisplayableItem {
         val songs = resources.getQuantityString(R.plurals.common_plurals_song, this.songs, this.songs)

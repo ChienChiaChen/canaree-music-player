@@ -13,7 +13,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
-import dev.olog.msc.core.interactor.queue.UpdateMiniQueueUseCase
+import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.WidgetConstants
@@ -22,6 +22,7 @@ import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -30,7 +31,7 @@ internal class MediaSessionQueue @Inject constructor(
         @ServiceLifecycle lifecycle: Lifecycle,
         mediaSession: MediaSessionCompat,
         private val playerState: PlayerState,
-        private val updateMiniQueueUseCase: UpdateMiniQueueUseCase,
+        private val playingQueueGateway: PlayingQueueGateway,
         private val widgetClasses: WidgetClasses
 
 ) : DefaultLifecycleObserver {
@@ -39,17 +40,17 @@ internal class MediaSessionQueue @Inject constructor(
     private val immediatePublisher : PublishSubject<MediaSessionQueueModel<MediaEntity>> = PublishSubject.create()
     private var miniQueueDisposable : Disposable? = null
     private var immediateMiniQueueDisposable : Disposable? = null
-    private var updateMiniQueueDisposable: Disposable? = null
 
     init {
         lifecycle.addObserver(this)
+        // TODO
 
         miniQueueDisposable = publisher
                 .toSerialized()
                 .observeOn(Schedulers.computation())
                 .distinctUntilChanged()
                 .debounce(1, TimeUnit.SECONDS)
-                .doOnNext { persistMiniQueue(it.queue) }
+                .doOnNext { runBlocking { persistMiniQueue(it.queue) } }
                 .map { it.toQueueItem() }
                 .subscribe({ (id, queue) ->
                     mediaSession.setQueue(queue)
@@ -60,7 +61,7 @@ internal class MediaSessionQueue @Inject constructor(
                 .toSerialized()
                 .observeOn(Schedulers.computation())
                 .distinctUntilChanged()
-                .doOnNext { persistMiniQueue(it.queue) }
+            .doOnNext { runBlocking { persistMiniQueue(it.queue) } }
                 .map { it.toQueueItem() }
                 .subscribe({ (id, queue) ->
                     mediaSession.setQueue(queue)
@@ -76,16 +77,14 @@ internal class MediaSessionQueue @Inject constructor(
         immediatePublisher.onNext(list)
     }
 
-    private fun persistMiniQueue(tracks: List<MediaEntity>){
-        updateMiniQueueDisposable.unsubscribe()
-        updateMiniQueueDisposable = updateMiniQueueUseCase.execute(tracks.map { it.idInPlaylist to it.id })
-                .subscribe({ notifyWidgets() }, Throwable::printStackTrace)
+    private suspend fun persistMiniQueue(tracks: List<MediaEntity>){
+        playingQueueGateway.updateMiniQueue(tracks.map { it.idInPlaylist to it.id })
+        notifyWidgets()
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
         miniQueueDisposable.unsubscribe()
         immediateMiniQueueDisposable.unsubscribe()
-        updateMiniQueueDisposable.unsubscribe()
     }
 
     private fun notifyWidgets(){

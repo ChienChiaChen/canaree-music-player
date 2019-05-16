@@ -1,24 +1,23 @@
 package dev.olog.msc.core.gateway.track
 
+import dev.olog.msc.core.entity.ItemRequest
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.base.BaseGateway
-import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
-import kotlinx.coroutines.flow.Flow
 
 interface SongGateway : BaseGateway<Song, Long> {
 
-    suspend fun getByAlbumId(albumId: Long): Flow<Song>
+    suspend fun getByAlbumId(albumId: Long): ItemRequest<Song>
 
     fun getAllUnfiltered(): Observable<List<Song>>
 
-    fun deleteSingle(songId: Long): Completable
+    fun deleteSingle(songId: Long)
 
-    fun deleteGroup(songList: List<Song>): Completable
+    fun deleteGroup(songList: List<Song>)
 
     fun getUneditedByParam(songId: Long): Observable<Song>
 
-    fun getByUri(uri: String): Single<Song>
+    // handles song and podcast
+    suspend fun getByUri(uri: String): Song?
 
 }

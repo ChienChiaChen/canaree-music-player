@@ -1,24 +1,22 @@
 package dev.olog.msc.presentation.dialogs.playlist
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.executors.IoScheduler
+import dev.olog.msc.core.coroutines.CompletableFlowWithParam
+import dev.olog.msc.core.coroutines.ComputationDispatcher
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
-import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
-import io.reactivex.Completable
 import javax.inject.Inject
 
 class ClearPlaylistUseCase @Inject constructor(
-    scheduler: IoScheduler,
+    scheduler: ComputationDispatcher,
     private val playlistGateway: PlaylistGateway,
     private val podcastPlaylistGateway: PodcastPlaylistGateway
 
-) : CompletableUseCaseWithParam<MediaId>(scheduler) {
+) : CompletableFlowWithParam<MediaId>(scheduler) {
 
-    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Completable {
+    override suspend fun buildUseCaseObservable(mediaId: MediaId) {
         val playlistId = mediaId.resolveId
-        if (mediaId.isPodcastPlaylist){
+        if (mediaId.isPodcastPlaylist) {
             return podcastPlaylistGateway.clearPlaylist(playlistId)
         }
         return playlistGateway.clearPlaylist(playlistId)

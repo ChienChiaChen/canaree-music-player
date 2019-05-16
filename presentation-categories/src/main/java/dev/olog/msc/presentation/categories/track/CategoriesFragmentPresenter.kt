@@ -3,7 +3,6 @@ package dev.olog.msc.presentation.categories.track
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.shared.utils.clamp
-import io.reactivex.Completable
 import javax.inject.Inject
 
 class CategoriesFragmentPresenter @Inject constructor(
@@ -20,8 +19,8 @@ class CategoriesFragmentPresenter @Inject constructor(
         appPrefsUseCase.setViewPagerLibraryLastPage(page)
     }
 
-    fun showFloatingWindowTutorialIfNeverShown(): Completable{
-        return tutorialPreferenceUseCase.floatingWindowTutorial()
+    fun canShowFloatingWindowTutorial(): Boolean{
+        return tutorialPreferenceUseCase.canShowFloatingWindowTutorial()
     }
 
     fun getCategories() = appPrefsUseCase

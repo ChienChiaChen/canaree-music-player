@@ -52,6 +52,14 @@ class App : ThemedApp() {
     @Inject
     lateinit var sleepTimerUseCase: SleepTimerUseCase
 
+    override fun onCreate() {
+        TrackUtils.initialize(
+            getString(R.string.common_unknown_artist),
+            getString(R.string.common_unknown_album)
+        )
+        super.onCreate()
+    }
+
     override fun initializeApp() {
         initializeComponents()
         initializeConstants()
@@ -77,10 +85,6 @@ class App : ThemedApp() {
     }
 
     private fun initializeConstants() {
-        TrackUtils.initialize(
-            getString(R.string.common_unknown_artist),
-            getString(R.string.common_unknown_album)
-        )
         ImageViews.initialize(this)
         PreferenceManager.setDefaultValues(this, R.xml.prefs, false)
     }

@@ -1,13 +1,13 @@
 package dev.olog.msc.data.repository
 
 import android.content.Context
-import android.provider.MediaStore
-import androidx.core.math.MathUtils.clamp
+import android.provider.MediaStore.Audio.Media
+import android.provider.MediaStore.Audio.Playlists
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.ChunkRequest
-import dev.olog.msc.core.entity.ChunkedData
+import dev.olog.msc.core.entity.ItemRequest
+import dev.olog.msc.core.entity.PageRequest
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.entity.track.Song
@@ -16,16 +16,18 @@ import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGatewayHelper
+import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.data.entity.PlaylistMostPlayedEntity
+import dev.olog.msc.data.entity.custom.*
 import dev.olog.msc.data.mapper.toArtist
 import dev.olog.msc.data.mapper.toPlaylist
 import dev.olog.msc.data.mapper.toSong
 import dev.olog.msc.data.repository.queries.PlaylistQueries
 import dev.olog.msc.data.repository.queries.TrackQueries
-import dev.olog.msc.data.repository.util.*
-import io.reactivex.Completable
-import io.reactivex.Observable
-import kotlinx.coroutines.flow.*
+import dev.olog.msc.data.repository.util.ContentObserverFlow
+import dev.olog.msc.data.repository.util.queryCountRow
+import dev.olog.msc.data.repository.util.querySize
 import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
@@ -36,14 +38,14 @@ internal class PlaylistRepository @Inject constructor(
     helper: PlaylistRepositoryHelper,
     private val prefsGateway: AppPreferencesGateway,
     prefsKeys: PrefsKeys,
-    private val contentObserver: ContentObserver,
     private val usedImageGateway: UsedImageGateway,
-    private val contentResolverFlow: ContentResolverFlow
+    private val contentObserverFlow: ContentObserverFlow,
+    private val songGateway: SongGateway
 
 ) : PlaylistGateway, PlaylistGatewayHelper by helper {
 
     private val contentResolver = context.contentResolver
-    private val playlistQueries = PlaylistQueries(prefsGateway, contentResolver)
+    private val queries = PlaylistQueries(prefsGateway, contentResolver)
     private val trackQueries = TrackQueries(prefsGateway, false, contentResolver)
 
     private val resources = context.resources
@@ -53,62 +55,46 @@ internal class PlaylistRepository @Inject constructor(
 
     private val autoPlaylistTitles = resources.getStringArray(prefsKeys.autoPlaylist())
 
-    override suspend fun getAll(): Flow<List<Playlist>> = flowOf()
-
-    override fun observeSongListByParam(param: Long): Observable<List<Song>> {
-        return Observable.just(listOf())
-    }
-
     private fun createAutoPlaylist(id: Long, title: String): Playlist {
         return Playlist(id, title, 0, "")
     }
 
-    override fun getChunk(): ChunkedData<Playlist> {
-        return ChunkedData(
-            chunkOf = { chunkRequest -> makeChunkOf(chunkRequest) },
-            allDataSize = contentResolver.querySize(playlistQueries.countAll()),
-            observeChanges = { contentObserver.createQuery(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI) }
-        )
-    }
-
-    private fun makeChunkOf(chunkRequest: ChunkRequest): List<Playlist> {
-        return contentResolver.queryAll(
-            cursor = playlistQueries.getAll(chunkRequest),
-            mapper = { it.toPlaylist(context, 0) },
-            afterQuery = { playlistList ->
+    override fun getAll(): PageRequest<Playlist> {
+        return PageRequestImpl(
+            cursorFactory = { queries.getAll(it) },
+            cursorMapper = { it.toPlaylist(context) },
+            listMapper = { playlistList ->
                 playlistList.map { playlist ->
                     // get the size for every playlist
-                    val sizeQueryCursor = playlistQueries.countPlaylistSize(playlist.id)
+                    val sizeQueryCursor = queries.countPlaylistSize(playlist.id)
                     val sizeQuery = contentResolver.queryCountRow(sizeQueryCursor)
                     playlist.copy(size = sizeQuery)
                 }
-            })
+            },
+            contentResolver = contentResolver,
+            contentObserverFlow = contentObserverFlow,
+            mediaStoreUri = Playlists.EXTERNAL_CONTENT_URI
+        )
     }
 
-    override fun getByParam(param: Long): Playlist {
+    override fun getByParam(param: Long): ItemRequest<Playlist> {
         if (PlaylistGateway.isAutoPlaylist(param)) {
-            return getAllAutoPlaylists().first { it.id == param }
+            val item = getAllAutoPlaylists().first { it.id == param }
+            return ItemRequestImmutable(item)
         }
-        val cursor = playlistQueries.getById(param)
-        return contentResolver.queryAll(cursor, { it.toPlaylist(context, 0) }, { playlistList ->
-            playlistList.map { playlist ->
+        return ItemRequestImpl(
+            cursorFactory = { queries.getById(param) },
+            cursorMapper = { it.toPlaylist(context) },
+            itemMapper = { playlist ->
                 // get the size for every playlist
-                val sizeQueryCursor = playlistQueries.countPlaylistSize(playlist.id)
+                val sizeQueryCursor = queries.countPlaylistSize(playlist.id)
                 val sizeQuery = contentResolver.queryCountRow(sizeQueryCursor)
                 playlist.copy(size = sizeQuery)
-            }
-        }).first()
-    }
-
-    override suspend fun observeByParam(param: Long): Flow<Playlist> {
-        return contentResolverFlow.createQuery<Playlist>({ playlistQueries.getById(param) }, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-            .mapToOne { it.toPlaylist(context, 0) }
-            .map { playlist ->
-                val sizeQueryCursor = playlistQueries.countPlaylistSize(playlist.id)
-                val sizeQuery = contentResolver.queryCountRow(sizeQueryCursor)
-                playlist.copy(size = sizeQuery)
-            }
-            .distinctUntilChanged()
+            },
+            contentResolver = contentResolver,
+            contentObserverFlow = contentObserverFlow,
+            mediaStoreUri = Media.EXTERNAL_CONTENT_URI
+        )
     }
 
     override fun getAllAutoPlaylists(): List<Playlist> {
@@ -119,11 +105,79 @@ internal class PlaylistRepository @Inject constructor(
         )
     }
 
-    override fun getSongListByParamChunk(param: Long): ChunkedData<Song> {
-        return ChunkedData(
-            chunkOf = { chunkRequest -> makeSongListByParamChunk(param, chunkRequest) },
-            allDataSize = getSongListCountByParam(param),
-            observeChanges = observSongListByParam(param)
+    override fun getSongListByParam(param: Long): PageRequest<Song> {
+        if (param == PlaylistGateway.LAST_ADDED_ID){
+            return PageRequestImpl(
+                cursorFactory = { trackQueries.getByLastAdded(it) },
+                cursorMapper = { it.toSong() },
+                listMapper = {
+                    val result = SongRepository.adjustImages(context, it)
+                    SongRepository.updateImages(result, usedImageGateway)
+                },
+                contentResolver = contentResolver,
+                contentObserverFlow = contentObserverFlow,
+                mediaStoreUri = Media.EXTERNAL_CONTENT_URI
+            )
+        }
+        if (param == PlaylistGateway.FAVORITE_LIST_ID){
+            return PageRequestDao(
+                cursorFactory = { page ->
+                    // TODO sort by now is lost, repair
+                    val favoritesIds = favoriteGateway.getAll(page.limit, page.offset)
+                    trackQueries.getExisting(favoritesIds.joinToString { "'$it'" })
+                },
+                cursorMapper = { it.toSong() },
+                listMapper = { list, page ->
+                    val result = SongRepository.adjustImages(context, list)
+                    val existing = SongRepository.updateImages(result, usedImageGateway)
+                    val favoritesIds = favoriteGateway.getAll(page.limit, page.offset)
+                    favoritesIds.asSequence()
+                        .mapNotNull { fav -> existing.first { it.id == fav } }
+                        .toList()
+                },
+                contentResolver = contentResolver,
+                changeNotification = { favoriteGateway.observeAll().asFlow() },
+                overrideSize = favoriteGateway.countAll()
+            )
+        }
+        if (param == PlaylistGateway.HISTORY_LIST_ID){
+            return PageRequestDao(
+                cursorFactory = { page ->
+                    val historyIds = historyDao.getAll(page.limit, page.offset)
+                    trackQueries.getExisting(historyIds.joinToString { "'${it.songId}'" })
+                },
+                cursorMapper = { it.toSong() },
+                listMapper = { list, page ->
+                    val result = SongRepository.adjustImages(context, list)
+                    val existing = SongRepository.updateImages(result, usedImageGateway)
+                    val historyIds = historyDao.getAll(page.limit, page.offset)
+                    historyIds.asSequence()
+                        .mapNotNull { hist -> existing.first { it.id == hist.songId } to hist }
+                        .map {
+                            it.first.copy(
+                                trackNumber = it.second.id,
+                                dateAdded = it.second.dateAdded
+                            )
+                        } // TODO check behavior
+                        .sortedByDescending { it.dateAdded }
+                        .toList()
+                },
+                contentResolver = contentResolver,
+                changeNotification = { favoriteGateway.observeAll().asFlow() },
+                overrideSize = historyDao.countAll()
+            )
+        }
+
+        return PageRequestImpl(
+            cursorFactory = { queries.getSongList(param, it) },
+            cursorMapper = { it.toSong() },
+            listMapper = {
+                val result = SongRepository.adjustImages(context, it)
+                SongRepository.updateImages(result, usedImageGateway)
+            },
+            contentResolver = contentResolver,
+            contentObserverFlow = contentObserverFlow,
+            mediaStoreUri = Playlists.Members.getContentUri("external", param)
         )
     }
 
@@ -133,140 +187,44 @@ internal class PlaylistRepository @Inject constructor(
             PlaylistGateway.LAST_ADDED_ID -> 0
             PlaylistGateway.FAVORITE_LIST_ID -> 0
             PlaylistGateway.HISTORY_LIST_ID -> 0
-            else -> contentResolver.querySize(playlistQueries.getSongListDuration(param))
+            else -> contentResolver.querySize(queries.getSongListDuration(param))
         }
     }
 
-    private fun getSongListCountByParam(playlistId: Long): Int {
-        return when (playlistId) {
-            PlaylistGateway.LAST_ADDED_ID -> {
-                val cursor = trackQueries.countAll()
-                contentResolver.querySize(cursor)
-            }
-            PlaylistGateway.FAVORITE_LIST_ID -> favoriteGateway.countAll()
-            PlaylistGateway.HISTORY_LIST_ID -> historyDao.countAll()
-            else -> {
-                val cursor = playlistQueries.getSongList(playlistId, null)
-                contentResolver.queryCountRow(cursor)
-            }
-        }
-    }
-
-    private fun makeSongListByParamChunk(playlistId: Long, chunkRequest: ChunkRequest): List<Song> {
-        return when (playlistId) {
-            PlaylistGateway.LAST_ADDED_ID -> {
-                contentResolver.queryAll(trackQueries.getByLastAdded(chunkRequest), { it.toSong() },
-                    {
-                        val result = SongRepository.adjustImages(context, it)
-                        SongRepository.updateImages(result, usedImageGateway)
-                    })
-            }
-            PlaylistGateway.FAVORITE_LIST_ID -> {
-                // TODO sort by now is lost, repair
-                val favoritesIds = favoriteGateway.getAll(chunkRequest.limit, chunkRequest.offset)
-                val existing = contentResolver.queryAll(trackQueries.getExisting(favoritesIds.joinToString { "'$it'" }),
-                    { it.toSong() },
-                    {
-                        val result = SongRepository.adjustImages(context, it)
-                        SongRepository.updateImages(result, usedImageGateway)
-                    })
-                favoritesIds.asSequence()
-                    .mapNotNull { fav -> existing.first { it.id == fav } }
-                    .toList()
-            }
-            PlaylistGateway.HISTORY_LIST_ID -> {
-                val historyIds = historyDao.getAll(chunkRequest.limit, chunkRequest.offset)
-                val existing =
-                    contentResolver.queryAll(trackQueries.getExisting(historyIds.joinToString { "'${it.songId}'" }),
-                        { it.toSong() },
-                        {
-                            val result = SongRepository.adjustImages(context, it)
-                            SongRepository.updateImages(result, usedImageGateway)
-                        })
-                historyIds.asSequence()
-                    .mapNotNull { hist -> existing.first { it.id == hist.songId } to hist }
-                    .map {
-                        it.first.copy(
-                            trackNumber = it.second.id,
-                            dateAdded = it.second.dateAdded
-                        )
-                    } // TODO check behavior
-                    .sortedByDescending { it.dateAdded }
-                    .toList()
-            }
-            else -> {
-                val cursor = playlistQueries.getSongList(playlistId, chunkRequest)
-                contentResolver.queryAll(cursor, { it.toSong() }, {
-                    val result = SongRepository.adjustImages(context, it)
-                    SongRepository.updateImages(result, usedImageGateway)
-                })
-            }
-        }
-    }
-
-    private fun observSongListByParam(playlistId: Long): suspend () -> Flow<Unit> {
-        return suspend {
-            when (playlistId) {
-                PlaylistGateway.LAST_ADDED_ID -> contentObserver.createQuery(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-                PlaylistGateway.FAVORITE_LIST_ID -> favoriteGateway.observeAll().asFlow()
-                    .drop(1)
-                    .map { Unit }
-                PlaylistGateway.HISTORY_LIST_ID -> historyDao.observeAll().asFlow()
-                    .drop(1)
-                    .map { Unit }
-                else -> contentObserver.createQuery(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI)
-            }
-        }
-    }
-
-    private fun getSiblingsSize(mediaId: MediaId): Int {
-        val cursor = playlistQueries.getSiblingsChunk(mediaId.categoryId, null)
-        return contentResolver.queryCountRow(cursor)
-    }
-
-    override fun getSiblingsChunk(mediaId: MediaId): ChunkedData<Playlist> {
-        return ChunkedData(
-            chunkOf = { chunkRequest ->
-                val cursor = playlistQueries.getSiblingsChunk(mediaId.categoryId, chunkRequest)
-                contentResolver.queryAll(cursor, { it.toPlaylist(context, 0) }, { playlistList ->
-                    playlistList.map { playlist ->
-                        // get the size for every playlist
-                        val sizeQueryCursor = playlistQueries.countPlaylistSize(playlist.id)
-                        val sizeQuery = contentResolver.queryCountRow(sizeQueryCursor)
-                        playlist.copy(size = sizeQuery)
-                    }
-                })
+    override fun getSiblings(mediaId: MediaId): PageRequest<Playlist> {
+        return PageRequestImpl(
+            cursorFactory = { queries.getSiblings(mediaId.categoryId, it) },
+            cursorMapper = { it.toPlaylist(context) },
+            listMapper = { playlistList ->
+                playlistList.map { playlist ->
+                    // get the size for every playlist
+                    val sizeQueryCursor = queries.countPlaylistSize(playlist.id)
+                    val sizeQuery = contentResolver.queryCountRow(sizeQueryCursor)
+                    playlist.copy(size = sizeQuery)
+                }
             },
-            allDataSize = getSiblingsSize(mediaId),
-            observeChanges = { contentObserver.createQuery(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI) }
+            contentResolver = contentResolver,
+            contentObserverFlow = contentObserverFlow,
+            mediaStoreUri = Playlists.EXTERNAL_CONTENT_URI
         )
     }
 
     override fun canShowSiblings(mediaId: MediaId): Boolean {
-        return getSiblingsSize(mediaId) > 0
+        return getSiblings(mediaId).getCount() > 0
     }
 
-    override fun getRelatedArtistsSize(mediaId: MediaId): Int {
-        val cursor = playlistQueries.getRelatedArtists(mediaId.categoryId, null)
-        return contentResolver.queryCountRow(cursor)
-    }
-
-    override fun getRelatedArtistsChunk(mediaId: MediaId): ChunkedData<Artist> {
+    override fun getRelatedArtists(mediaId: MediaId): PageRequest<Artist> {
         if (PlaylistGateway.isAutoPlaylist(mediaId.categoryId)){
             // auto playlist has not related artists
-            return ChunkedData({ listOf<Artist>() }, 0, { flowOf() })
+            return PageRequestStub()
         }
-
-        return ChunkedData(
-            chunkOf = { chunkRequest ->
-                val cursor = playlistQueries.getRelatedArtists(mediaId.categoryId, chunkRequest)
-                contentResolver.queryAll(
-                    cursor,
-                    { it.toArtist() },
-                    { ArtistRepository.updateImages(it, usedImageGateway) })
-            },
-            allDataSize = getRelatedArtistsSize(mediaId),
-            observeChanges = { contentObserver.createQuery(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI) }
+        return PageRequestImpl(
+            cursorFactory = { queries.getRelatedArtists(mediaId.categoryId, it) },
+            cursorMapper = { it.toArtist() },
+            listMapper = { ArtistRepository.updateImages(it, usedImageGateway) },
+            contentResolver = contentResolver,
+            contentObserverFlow = contentObserverFlow,
+            mediaStoreUri = Media.EXTERNAL_CONTENT_URI
         )
     }
 
@@ -274,7 +232,8 @@ internal class PlaylistRepository @Inject constructor(
         if (PlaylistGateway.isAutoPlaylist(mediaId.categoryId)){
             return false
         }
-        return getRelatedArtistsSize(mediaId) > 0 && prefsGateway.getVisibleTabs()[2]
+        return getRelatedArtists(mediaId).getCount() > 0 &&
+                prefsGateway.getVisibleTabs()[2]
     }
 
 
@@ -289,59 +248,36 @@ internal class PlaylistRepository @Inject constructor(
         return getMostPlayedSize(mediaId) > 0 && prefsGateway.getVisibleTabs()[0]
     }
 
-    override fun getMostPlayedChunk(mediaId: MediaId): ChunkedData<Song> {
-        val maxAllowed = 10
+    override fun getMostPlayed(mediaId: MediaId): PageRequest<Song> {
         if (PlaylistGateway.isAutoPlaylist(mediaId.categoryId)) {
-            return ChunkedData(
-                chunkOf = { listOf<Song>() },
-                allDataSize = getMostPlayedSize(mediaId),
-                observeChanges = { flowOf() }
-            )
+            return PageRequestStub()
         }
-
-        return ChunkedData(
-            chunkOf = { chunkRequest ->
+        val maxAllowed = 10
+        return PageRequestDao(
+            cursorFactory = {
                 val mostPlayed = mostPlayedDao.query(mediaId.categoryId, maxAllowed)
-                val cursor = playlistQueries.getExisting(mostPlayed.joinToString { "'${it.songId}'" })
-                val existings = contentResolver.queryAll(cursor, { it.toSong() }, {
-                    val result = SongRepository.adjustImages(context, it)
-                    SongRepository.updateImages(result, usedImageGateway)
-                })
+                queries.getExisting(mostPlayed.joinToString { "'${it.songId}'" })
+            },
+            cursorMapper = { it.toSong() },
+            listMapper = { list, _ ->
+                val result = SongRepository.adjustImages(context, list)
+                val existing =SongRepository.updateImages(result, usedImageGateway)
+                val mostPlayed = mostPlayedDao.query(mediaId.categoryId, maxAllowed)
                 mostPlayed.asSequence()
-                    .mapNotNull { mostPlayed -> existings.firstOrNull { it.id == mostPlayed.songId } }
+                    .mapNotNull { mostPlayed -> existing.firstOrNull { it.id == mostPlayed.songId }  }
                     .take(maxAllowed)
                     .toList()
             },
-            allDataSize = clamp(mostPlayedDao.count(mediaId.categoryId), 0, maxAllowed),
-            observeChanges = {
-                mostPlayedDao.observe(mediaId.categoryId, maxAllowed)
-                    .asFlow()
-                    .drop(1)
-                    .map { Unit }
-            }
+            contentResolver = contentResolver,
+            changeNotification = { mostPlayedDao.observe(mediaId.categoryId, maxAllowed).asFlow() }
         )
     }
 
-    override fun getPlaylistsBlocking(): List<Playlist> {
-        val cursor = playlistQueries.getAll(null)
-        return contentResolver.queryAll(cursor, { it.toPlaylist(context, 0) }, { playlistList ->
-            playlistList.map { playlist ->
-                // get the size for every playlist
-                val sizeQueryCursor = playlistQueries.countPlaylistSize(playlist.id)
-                val sizeQuery = contentResolver.queryCountRow(sizeQueryCursor)
-                playlist.copy(size = sizeQuery)
-            }
-        })
-    }
-
-    override fun insertMostPlayed(mediaId: MediaId): Completable {
-        return Completable.complete()
-//        val songId = mediaId.leaf!!
-//        val playlistId = mediaId.categoryValue.toLong()
-//        songGateway.getByParam(songId).asFlowable()
-//            .firstOrError()
-//            .flatMapCompletable { song ->
-//                CompletableSource { mostPlayedDao.insertOne(PlaylistMostPlayedEntity(0, song.id, playlistId)) }
-//            }
+    override suspend fun insertMostPlayed(mediaId: MediaId) {
+        val songId = mediaId.leaf!!
+        val playlistId = mediaId.categoryValue.toLong()
+        songGateway.getByParam(songId).getItem()?.let { song ->
+            mostPlayedDao.insertOne(PlaylistMostPlayedEntity(0, song.id, playlistId))
+        }
     }
 }

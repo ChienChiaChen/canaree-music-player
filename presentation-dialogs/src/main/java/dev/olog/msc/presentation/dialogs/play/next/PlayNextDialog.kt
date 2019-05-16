@@ -3,11 +3,14 @@ package dev.olog.msc.presentation.dialogs.play.next
 import android.content.Context
 import android.content.DialogInterface
 import android.support.v4.media.session.MediaControllerCompat
+import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.dialogs.BaseDialog
 import dev.olog.msc.presentation.base.extensions.asHtml
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
+import dev.olog.msc.shared.extensions.lazyFast
 import io.reactivex.Completable
 import javax.inject.Inject
 
@@ -22,17 +25,21 @@ class PlayNextDialog : BaseDialog() {
         @JvmStatic
         fun newInstance(mediaId: MediaId, listSize: Int, itemTitle: String): PlayNextDialog {
             return PlayNextDialog().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString(),
-                    ARGUMENTS_LIST_SIZE to listSize,
-                    ARGUMENTS_ITEM_TITLE to itemTitle
+                ARGUMENTS_MEDIA_ID to mediaId.toString(),
+                ARGUMENTS_LIST_SIZE to listSize,
+                ARGUMENTS_ITEM_TITLE to itemTitle
             )
         }
     }
 
-    @Inject lateinit var mediaId: MediaId
-    @Inject @JvmField var listSize: Int = 0
-    @Inject lateinit var title: String
-    @Inject lateinit var presenter: PlayNextDialogPresenter
+    private val mediaId: MediaId by lazyFast {
+        MediaId.fromString(arguments!!.getString(ARGUMENTS_MEDIA_ID)!!)
+    }
+    private val listSize: Int by lazyFast { arguments!!.getInt(ARGUMENTS_LIST_SIZE) }
+    private val title: String by lazyFast { arguments!!.getString(ARGUMENTS_ITEM_TITLE) }
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+    private val viewModel by lazyFast { viewModelProvider<PlayNextDialogViewModel>(factory) }
 
     override fun title(context: Context): CharSequence {
         return context.getString(R.string.popup_play_next)
@@ -51,7 +58,7 @@ class PlayNextDialog : BaseDialog() {
     }
 
     override fun successMessage(context: Context): CharSequence {
-        return if (mediaId.isLeaf){
+        return if (mediaId.isLeaf) {
             context.getString(R.string.song_x_added_to_play_next, title)
         } else context.resources.getQuantityString(R.plurals.xx_songs_added_to_play_next, listSize, listSize)
     }
@@ -62,11 +69,12 @@ class PlayNextDialog : BaseDialog() {
 
     override fun positiveAction(dialogInterface: DialogInterface, which: Int): Completable {
         val mediaController = MediaControllerCompat.getMediaController(activity!!)
-        return presenter.execute(mediaController)
+//        return viewModel.execute(mediaId, mediaController)
+        return TODO()
     }
 
-    private fun createMessage() : String {
-        if (mediaId.isAll || mediaId.isLeaf){
+    private fun createMessage(): String {
+        if (mediaId.isAll || mediaId.isLeaf) {
             return getString(R.string.add_song_x_to_play_next, title)
         }
         return context!!.resources.getQuantityString(R.plurals.add_xx_songs_to_play_next, listSize, listSize)

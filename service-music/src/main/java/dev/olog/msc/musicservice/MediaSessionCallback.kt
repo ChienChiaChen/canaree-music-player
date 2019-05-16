@@ -1,6 +1,5 @@
 package dev.olog.msc.musicservice
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,116 +8,54 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.RatingCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.KeyEvent
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
-import dev.olog.msc.core.interactor.favorite.ToggleFavoriteUseCase
+import dev.olog.msc.musicservice.ActionManager.Action
 import dev.olog.msc.musicservice.interfaces.Player
-import dev.olog.msc.musicservice.interfaces.Queue
-import dev.olog.msc.musicservice.interfaces.SkipType
 import dev.olog.msc.shared.MusicConstants
-import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.addTo
 import javax.inject.Inject
 
 @PerService
 internal class MediaSessionCallback @Inject constructor(
-        @ApplicationContext private val context: Context,
-        @ServiceLifecycle lifecycle: Lifecycle,
-        private val queue: Queue,
-        private val player: Player,
-        private val repeatMode: RepeatMode,
-        private val shuffleMode: ShuffleMode,
-        private val mediaButton: MediaButton,
-        private val playerState: PlayerState,
-        private val toggleFavoriteUseCase: ToggleFavoriteUseCase
+    private val actionManager: ActionManager,
+    private val player: Player,
+    private val mediaButton: MediaButton
 
-) : MediaSessionCompat.Callback(), DefaultLifecycleObserver {
-
-    private val subscriptions = CompositeDisposable()
-    private var prepareDisposable: Disposable? = null
+) : MediaSessionCompat.Callback() {
 
     init {
-        lifecycle.addObserver(this)
+        actionManager.callback = player
         onPrepare()
     }
 
-    override fun onDestroy(owner: LifecycleOwner) {
-        subscriptions.clear()
-        prepareDisposable.unsubscribe()
-    }
-
     override fun onPrepare() {
-        prepareDisposable = queue.prepare()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(player::prepare, Throwable::printStackTrace)
+        actionManager.dispatchAction(Action.Prepare)
     }
 
     override fun onPlayFromMediaId(mediaIdAsString: String, extras: Bundle?) {
-        if (extras != null) {
+        if (extras != null){
             val mediaId = MediaId.fromString(mediaIdAsString)
-
-            when {
-                extras.isEmpty ||
-                        extras.getString(MusicConstants.ARGUMENT_SORT_TYPE) != null ||
-                        extras.getString(MusicConstants.ARGUMENT_SORT_ARRANGING) != null -> {
-                    queue.handlePlayFromMediaId(mediaId, extras)
-                }
-                extras.getBoolean(MusicConstants.BUNDLE_MOST_PLAYED, false) -> {
-                    queue.handlePlayMostPlayed(mediaId)
-                }
-                extras.getBoolean(MusicConstants.BUNDLE_RECENTLY_PLAYED, false) -> {
-                    queue.handlePlayRecentlyPlayed(mediaId)
-                }
-                else -> Single.error(Throwable("invalid case $extras"))
-            }.observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe { updatePodcastPosition() }
-                    .subscribe(player::play, Throwable::printStackTrace)
-                    .addTo(subscriptions)
+            actionManager.dispatchAction(Action.PlayFromMediaId(mediaId, extras))
         }
     }
 
-    @Suppress("MoveLambdaOutsideParentheses")
-    override fun onPlay() {
-        doWhenReady({
-            player.resume()
-        })
-    }
-
     override fun onPlayFromSearch(query: String, extras: Bundle) {
-        queue.handlePlayFromGoogleSearch(query, extras)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { updatePodcastPosition() }
-                .subscribe(player::play) {
-                    playerState.setEmptyQueue()
-                    it.printStackTrace()
-                }
-                .addTo(subscriptions)
+        updatePodcastPosition()
+        actionManager.dispatchAction(Action.PlayFromSearch(query, extras))
     }
 
     override fun onPlayFromUri(uri: Uri, extras: Bundle?) {
-        queue.handlePlayFromUri(uri)
-                .doOnSubscribe { updatePodcastPosition() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(player::play) {
-                    playerState.setEmptyQueue()
-                    it.printStackTrace()
-                }
-                .addTo(subscriptions)
+        updatePodcastPosition()
+        actionManager.dispatchAction(Action.PlayFromUri(uri))
+    }
+
+    override fun onPlay() {
+        actionManager.dispatchAction(Action.Resume)
     }
 
     override fun onPause() {
         updatePodcastPosition()
-        player.pause(true)
+        actionManager.dispatchAction(Action.Pause(true))
     }
 
     override fun onStop() {
@@ -129,15 +66,6 @@ internal class MediaSessionCallback @Inject constructor(
         onSkipToNext(false)
     }
 
-    override fun onSkipToPrevious() {
-        doWhenReady({
-            updatePodcastPosition()
-            queue.handleSkipToPrevious(player.getBookmark())?.let { metadata ->
-                player.playNext(metadata, SkipType.SKIP_PREVIOUS)
-            }
-        }, { context.toast(R.string.music_player_error) })
-    }
-
     private fun onTrackEnded() {
         onSkipToNext(true)
     }
@@ -146,57 +74,23 @@ internal class MediaSessionCallback @Inject constructor(
      * Try to skip to next song, if can't, restart current
      */
     private fun onSkipToNext(trackEnded: Boolean) {
-        doWhenReady({
-            updatePodcastPosition()
-            val metadata = queue.handleSkipToNext(trackEnded)
-            if (metadata != null) {
-                val skipType = if (trackEnded) SkipType.TRACK_ENDED else SkipType.SKIP_NEXT
-                player.playNext(metadata, skipType)
-            } else {
-                val currentSong = queue.getPlayingSong()
-                player.play(currentSong)
-                player.pause(true)
-                player.seekTo(0L)
-            }
-        }, { context.toast(R.string.music_player_error) })
+        updatePodcastPosition()
+        actionManager.dispatchAction(Action.SkipToNext(trackEnded))
     }
 
-    private fun doWhenReady(action: () -> Unit, error: (() -> Unit)? = null) {
-        prepareDisposable.unsubscribe()
-        if (queue.isReady()) {
-            try {
-                action()
-            } catch (ex: Exception) {
-                error?.invoke()
-            }
-        } else {
-            prepareDisposable = queue.prepare()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        try {
-                            player.prepare(it)
-                            action()
-                        } catch (ex: Exception) {
-                            error?.invoke()
-                        }
-                    }, Throwable::printStackTrace)
-                    .addTo(subscriptions)
-        }
+    override fun onSkipToPrevious() {
+        updatePodcastPosition()
+        actionManager.dispatchAction(Action.SkipToPrevious(player.getBookmark()))
     }
 
     override fun onSkipToQueueItem(id: Long) {
-        try {
-            updatePodcastPosition()
-            val mediaEntity = queue.handleSkipToQueueItem(id)
-            player.play(mediaEntity)
-        } catch (ex: Exception) {
-        }
-
+        updatePodcastPosition()
+        actionManager.dispatchAction(Action.SkipToQueueItem(id = id))
     }
 
     override fun onSeekTo(pos: Long) {
         updatePodcastPosition()
-        player.seekTo(pos)
+        actionManager.dispatchAction(Action.Seek(pos = pos))
     }
 
     override fun onSetRating(rating: RatingCompat?) {
@@ -204,58 +98,59 @@ internal class MediaSessionCallback @Inject constructor(
     }
 
     override fun onSetRating(rating: RatingCompat?, extras: Bundle?) {
-        toggleFavoriteUseCase.execute()
+        actionManager.dispatchAction(Action.SetRating)
     }
 
     @Suppress("MoveLambdaOutsideParentheses")
     override fun onCustomAction(action: String?, extras: Bundle?) {
-        if (action != null) {
-            when (action) {
-                MusicConstants.ACTION_SWAP -> queue.handleSwap(extras!!)
-                MusicConstants.ACTION_SWAP_RELATIVE -> queue.handleSwapRelative(extras!!)
-                MusicConstants.ACTION_REMOVE -> {
-                    if (queue.handleRemove(extras!!)) {
-                        onStop()
-                    }
-                }
-                MusicConstants.ACTION_REMOVE_RELATIVE -> {
-                    if (queue.handleRemoveRelative(extras!!)) {
-                        onStop()
-                    }
-                }
-                MusicConstants.ACTION_SHUFFLE -> {
-                    doWhenReady({
-                        updatePodcastPosition()
-                        val mediaIdAsString = extras!!.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)!!
-                        val mediaId = MediaId.fromString(mediaIdAsString)
-                        queue.handlePlayShuffle(mediaId)
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(player::play, Throwable::printStackTrace)
-                                .addTo(subscriptions)
-                    })
-                }
-                MusicConstants.ACTION_FORWARD_10_SECONDS -> player.forwardTenSeconds()
-                MusicConstants.ACTION_REPLAY_10_SECONDS -> player.replayTenSeconds()
-                MusicConstants.ACTION_FORWARD_30_SECONDS -> player.forwardThirtySeconds()
-                MusicConstants.ACTION_REPLAY_30_SECONDS -> player.replayThirtySeconds()
+        if (action == null){
+            return
+        }
+        when (action){
+            MusicConstants.ACTION_SWAP -> {
+                val from = extras!!.getInt(MusicConstants.ARGUMENT_SWAP_FROM, 0)
+                val to = extras!!.getInt(MusicConstants.ARGUMENT_SWAP_TO, 0)
+                actionManager.dispatchAction(Action.Swap(from, to, false))
+            }
+            MusicConstants.ACTION_SWAP_RELATIVE -> {
+                val from = extras!!.getInt(MusicConstants.ARGUMENT_SWAP_FROM, 0)
+                val to = extras!!.getInt(MusicConstants.ARGUMENT_SWAP_TO, 0)
+                actionManager.dispatchAction(Action.Swap(from, to, true))
+            }
+            MusicConstants.ACTION_REMOVE -> {
+                val position = extras!!.getInt(MusicConstants.ARGUMENT_REMOVE_POSITION)
+                actionManager.dispatchAction(Action.Remove(position, false, { if (it) { onStop() } }))
+            }
+            MusicConstants.ACTION_REMOVE_RELATIVE -> {
+                val position = extras!!.getInt(MusicConstants.ARGUMENT_REMOVE_POSITION)
+                actionManager.dispatchAction(Action.Remove(position, true, { if (it) { onStop() } }))
+            }
+            MusicConstants.ACTION_SHUFFLE -> {
+                updatePodcastPosition()
+                val mediaId = extras!!.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)!!
+                actionManager.dispatchAction(Action.PlayShuffle(MediaId.fromString(mediaId)))
+            }
+            MusicConstants.ACTION_FORWARD_10_SECONDS -> {
+                actionManager.dispatchAction(Action.ForwardBy(10))
+            }
+            MusicConstants.ACTION_REPLAY_10_SECONDS -> {
+                actionManager.dispatchAction(Action.ReplayBy(10))
+            }
+            MusicConstants.ACTION_FORWARD_30_SECONDS -> {
+                actionManager.dispatchAction(Action.ForwardBy(30))
+            }
+            MusicConstants.ACTION_REPLAY_30_SECONDS -> {
+                actionManager.dispatchAction(Action.ReplayBy(30))
             }
         }
     }
 
     override fun onSetRepeatMode(repeatMode: Int) {
-        this.repeatMode.update()
-        playerState.toggleSkipToActions(queue.getCurrentPositionInQueue())
-        queue.onRepeatModeChanged()
+        actionManager.dispatchAction(Action.RepeatChanged)
     }
 
     override fun onSetShuffleMode(unused: Int) {
-        val newShuffleMode = this.shuffleMode.update()
-        if (newShuffleMode) {
-            queue.shuffle()
-        } else {
-            queue.sort()
-        }
-        playerState.toggleSkipToActions(queue.getCurrentPositionInQueue())
+        actionManager.dispatchAction(Action.ShuffleChanged)
     }
 
     override fun onMediaButtonEvent(mediaButtonEvent: Intent): Boolean {
@@ -269,7 +164,7 @@ internal class MediaSessionCallback @Inject constructor(
                 KeyEvent.KEYCODE_MEDIA_NEXT -> onSkipToNext()
                 KeyEvent.KEYCODE_MEDIA_PREVIOUS -> onSkipToPrevious()
                 KeyEvent.KEYCODE_MEDIA_STOP -> player.stopService()
-                KeyEvent.KEYCODE_MEDIA_PAUSE -> player.pause(false)
+                KeyEvent.KEYCODE_MEDIA_PAUSE -> actionManager.dispatchAction(Action.Pause(false))
                 KeyEvent.KEYCODE_MEDIA_PLAY -> onPlay()
                 KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> onTrackEnded()
                 else -> mediaButton.onNextEvent(mediaButtonEvent)
@@ -284,33 +179,25 @@ internal class MediaSessionCallback @Inject constructor(
     Play later
      */
     override fun onAddQueueItem(description: MediaDescriptionCompat) {
-
-        val split = description.mediaId!!.split(",")
-        val position = queue.playLater(split.map { it.trim().toLong() },
-                description.extras!!.getBoolean(MusicConstants.IS_PODCAST))
-        playerState.toggleSkipToActions(position)
+//        val split = description.mediaId!!.split(",") TODO
+//        val position = queue.playLater(split.map { it.trim().toLong() },
+//                description.extras!!.getBoolean(MusicConstants.IS_PODCAST))
+//        playerState.toggleSkipToActions(position)
     }
 
     /**
     When [index] == [Int.MAX_VALUE] -> play next
-    When [index] == [Int.MAX_VALUE-1] -> move to play next
      */
     override fun onAddQueueItem(description: MediaDescriptionCompat, index: Int) {
-        when (index) {
-            Int.MAX_VALUE -> {
-                // play next
-                val split = description.mediaId!!.split(",")
-                val position = queue.playNext(split.map { it.trim().toLong() },
-                        description.extras!!.getBoolean(MusicConstants.IS_PODCAST))
-                playerState.toggleSkipToActions(position)
-            }
-//            Int.MAX_VALUE - 1 -> {
-//                // move to next
+//        when (index) { TODO
+//            Int.MAX_VALUE -> {
+////                 play next
 //                val split = description.mediaId!!.split(",")
-//                val position = queue.moveToPlayNext(split.map { it.trim().toInt() }.first())
+//                val position = queue.playNext(split.map { it.trim().toLong() },
+//                        description.extras!!.getBoolean(MusicConstants.IS_PODCAST))
 //                playerState.toggleSkipToActions(position)
 //            }
-        }
+//        }
     }
 
     /**
@@ -318,14 +205,14 @@ internal class MediaSessionCallback @Inject constructor(
      */
     fun handlePlayPause() {
         if (player.isPlaying()) {
-            player.pause(false)
+            player.onPause(false, true)
         } else {
             onPlay()
         }
     }
 
     private fun updatePodcastPosition() {
-        queue.updatePodcastPosition(player.getBookmark())
+//        queue.updatePodcastPosition(player.getBookmark()) TODO
     }
 
 }

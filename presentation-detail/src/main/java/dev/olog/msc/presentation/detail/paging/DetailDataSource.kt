@@ -8,7 +8,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.core.entity.ChunkRequest
+import dev.olog.msc.core.entity.Page
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.toSong
 import dev.olog.msc.core.entity.sort.SortType
@@ -37,6 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -66,9 +67,9 @@ internal class DetailDataSource @Inject constructor(
     private val chunked = songListByParamUseCase.execute(mediaId)
 
     init {
-        launch(Dispatchers.Main) { lifecycle.addObserver(this@DetailDataSource) }
         launch {
-            chunked.observeChanges()
+            withContext(Dispatchers.Main) { lifecycle.addObserver(this@DetailDataSource) }
+            chunked.observeNotification() // TODO check if has to observe sort
                 .take(1)
                 .collect {
                     invalidate()
@@ -85,14 +86,14 @@ internal class DetailDataSource @Inject constructor(
     }
 
     override fun getMainDataSize(): Int {
-        return chunked.allDataSize
+        return chunked.getCount()
     }
 
     override fun getHeaders(mainListSize: Int): List<DisplayableItem> {
         val headers = mutableListOf(generateHeader())
 
         // show sibllings at the top if current item is an artists
-        if (mediaId.isArtist && siblingsUseCase.canShow(mediaId)){
+        if (mediaId.isArtist && siblingsUseCase.canShow(mediaId)) {
             headers.addAll(displayableHeaders.siblings())
         }
         // most played
@@ -101,12 +102,16 @@ internal class DetailDataSource @Inject constructor(
         }
         // recently added
         if (recentlyAddedSongUseCase.canShow(mediaId)) {
-            val recentlyAddedSize = recentlyAddedSongUseCase.getSize(mediaId)
-            headers.addAll(this.displayableHeaders.recent(recentlyAddedSize,
-                recentlyAddedSize > RECENTLY_ADDED_VISIBLE_PAGES))
+            val recentlyAddedSize = recentlyAddedSongUseCase.get(mediaId).getCount()
+            headers.addAll(
+                this.displayableHeaders.recent(
+                    recentlyAddedSize,
+                    recentlyAddedSize > RECENTLY_ADDED_VISIBLE_PAGES
+                )
+            )
         }
 
-        if (mainListSize != 0){
+        if (mainListSize != 0) {
             headers.addAll(displayableHeaders.songs)
         } else {
             headers.add(displayableHeaders.no_songs)
@@ -119,23 +124,23 @@ internal class DetailDataSource @Inject constructor(
         val footers = mutableListOf<DisplayableItem>()
 
         val duration = songDurationUseCase.execute(mediaId)
-        if (duration > 0 && mainListSize > 0){
+        if (duration > 0 && mainListSize > 0) {
             footers.add(createDurationFooter())
         }
 
-        if (relatedArtistsUseCase.canShow(mediaId)){
-            val relatedArtistsSize = relatedArtistsUseCase.getSize(mediaId)
+        if (relatedArtistsUseCase.canShow(mediaId)) {
+            val relatedArtistsSize = relatedArtistsUseCase.get(mediaId).getCount()
             footers.addAll(displayableHeaders.relatedArtists(relatedArtistsSize > RELATED_ARTISTS_TO_SEE))
         }
 
-        if (!mediaId.isArtist && siblingsUseCase.canShow(mediaId)){
+        if (!mediaId.isArtist && siblingsUseCase.canShow(mediaId)) {
             footers.addAll(displayableHeaders.siblings())
         }
         return footers
     }
 
-    override fun loadInternal(chunkRequest: ChunkRequest): List<DisplayableItem> {
-        val data = chunked.chunkOf(chunkRequest)
+    override fun loadInternal(page: Page): List<DisplayableItem> {
+        val data = chunked.getPage(page)
         val result = mutableListOf<DisplayableItem>()
         for (datum in data) {
             if (datum is Song) {
@@ -149,26 +154,31 @@ internal class DetailDataSource @Inject constructor(
 
     private fun createDurationFooter(): DisplayableItem {
         val duration = songDurationUseCase.execute(mediaId)
-        val songListSize = chunked.allDataSize
+        val songListSize = chunked.getCount()
         var title = DisplayableItem.handleSongListSize(context.resources, songListSize)
         title += TextUtils.MIDDLE_DOT_SPACED + TimeUtils.formatMillis(context, duration)
 
         return DisplayableItem(
-            R.layout.item_detail_footer, MediaId.headerId("duration footer"), title)
+            R.layout.item_detail_footer, MediaId.headerId("duration footer"), title
+        )
     }
 
     private fun generateHeader(): DisplayableItem {
         return when (mediaId.category) {
-            MediaIdCategory.FOLDERS -> folderGateway.getByParam(mediaId.categoryValue).toHeaderItem(resources)
-            MediaIdCategory.PLAYLISTS -> playlistGateway.getByParam(mediaId.categoryId).toHeaderItem(resources)
-            MediaIdCategory.ALBUMS -> albumGateway.getByParam(mediaId.categoryId).toHeaderItem()
-            MediaIdCategory.ARTISTS -> artistGateway.getByParam(mediaId.categoryId).toHeaderItem(resources)
-            MediaIdCategory.GENRES -> genreGateway.getByParam(mediaId.categoryId).toHeaderItem(resources)
-            MediaIdCategory.PODCASTS_PLAYLIST -> podcastPlaylistGateway.getByParam(mediaId.categoryId).toHeaderItem(
+            MediaIdCategory.FOLDERS -> folderGateway.getByParam(mediaId.categoryValue).getItem()!!.toHeaderItem(
                 resources
             )
-            MediaIdCategory.PODCASTS_ALBUMS -> podcastAlbumGateway.getByParam(mediaId.categoryId).toHeaderItem()
-            MediaIdCategory.PODCASTS_ARTISTS -> podcastArtistGateway.getByParam(mediaId.categoryId).toHeaderItem(
+            MediaIdCategory.PLAYLISTS -> playlistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(
+                resources
+            )
+            MediaIdCategory.ALBUMS -> albumGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem()
+            MediaIdCategory.ARTISTS -> artistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(resources)
+            MediaIdCategory.GENRES -> genreGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(resources)
+            MediaIdCategory.PODCASTS_PLAYLIST -> podcastPlaylistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(
+                resources
+            )
+            MediaIdCategory.PODCASTS_ALBUMS -> podcastAlbumGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem()
+            MediaIdCategory.PODCASTS_ARTISTS -> podcastArtistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(
                 resources
             )
             else -> throw IllegalArgumentException("invalid category ${mediaId.category}")

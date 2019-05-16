@@ -18,10 +18,11 @@ class MainActivityPresenter @Inject constructor(
     private val liveData = MutableLiveData<Boolean>()
 
     init {
-        disposable = isRepositoryEmptyUseCase.execute()
-            .subscribe({
-                liveData.value = it
-            }, Throwable::printStackTrace)
+//        TODO
+//        disposable = isRepositoryEmptyUseCase.execute()
+//            .subscribe({
+//                liveData.value = it
+//            }, Throwable::printStackTrace)
     }
 
     fun observeIsRepositoryEmpty() : LiveData<Boolean> = liveData

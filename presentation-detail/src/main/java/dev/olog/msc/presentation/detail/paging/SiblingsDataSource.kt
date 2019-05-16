@@ -5,7 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.paging.DataSource
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.core.entity.ChunkRequest
+import dev.olog.msc.core.entity.Page
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.core.entity.track.Album
@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -34,10 +35,10 @@ internal class SiblingsDataSource @Inject constructor(
     private val chunked by lazy { siblingsUseCase.getChunk(mediaId) }
 
     init {
-        launch(Dispatchers.Main) { lifecycle.addObserver(this@SiblingsDataSource) }
         launch {
+            withContext(Dispatchers.Main) { lifecycle.addObserver(this@SiblingsDataSource) }
             if (canLoadData) {
-                chunked.observeChanges()
+                chunked.observeNotification()
                     .take(1)
                     .collect {
                         invalidate()
@@ -50,15 +51,15 @@ internal class SiblingsDataSource @Inject constructor(
         get() = siblingsUseCase.canShow(mediaId)
 
     override fun getMainDataSize(): Int {
-        return chunked.allDataSize
+        return chunked.getCount()
     }
 
     override fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun loadInternal(chunkRequest: ChunkRequest): List<DisplayableItem> {
-        return chunked.chunkOf(chunkRequest)
+    override fun loadInternal(page: Page): List<DisplayableItem> {
+        return chunked.getPage(page)
             .map { mapItems(it!!) }
     }
 

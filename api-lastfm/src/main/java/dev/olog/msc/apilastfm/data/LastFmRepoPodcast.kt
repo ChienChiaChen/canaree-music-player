@@ -33,7 +33,8 @@ internal class LastFmRepoPodcast @Inject constructor(
     }
 
     fun getOriginalItem(podcastId: Long): Single<Podcast> = runBlocking{
-        Single.just(gateway.getByParam(podcastId))
+        TODO()
+//        Single.just(gateway.getByParam(podcastId))
     }
 
     fun get(podcastId: Long): Single<Optional<LastFmPodcast?>> {

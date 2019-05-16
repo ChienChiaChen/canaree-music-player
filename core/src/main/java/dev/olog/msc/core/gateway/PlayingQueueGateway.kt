@@ -2,9 +2,8 @@ package dev.olog.msc.core.gateway
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlayingQueueSong
-import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 interface PlayingQueueGateway {
 
@@ -12,14 +11,13 @@ interface PlayingQueueGateway {
         const val MINI_QUEUE_SIZE = 50
     }
 
-    fun observeAll(): Observable<List<PlayingQueueSong>>
-
-    fun getAll(): Single<List<PlayingQueueSong>>
+    suspend fun observeAll(): Flow<List<PlayingQueueSong>>
+    suspend fun getAll(): List<PlayingQueueSong>
 
     // mediaId, trackId, idInPlaylist
-    fun update(list: List<Triple<MediaId, Long, Int>>): Completable
+    suspend fun update(list: List<Triple<MediaId, Long, Int>>)
 
     fun observeMiniQueue(): Observable<List<PlayingQueueSong>>
-    fun updateMiniQueue(tracksId: List<Pair<Int, Long>>)
+    suspend fun updateMiniQueue(tracksId: List<Pair<Int, Long>>)
 
 }

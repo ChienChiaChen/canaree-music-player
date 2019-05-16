@@ -1,13 +1,12 @@
 package dev.olog.msc.core.gateway.base
 
-import dev.olog.msc.core.entity.ChunkedData
-import io.reactivex.Completable
+import dev.olog.msc.core.entity.PageRequest
 
 interface HasLastPlayed<T> {
 
-    fun getLastPlayedChunk(): ChunkedData<T>
+    fun getLastPlayed(): PageRequest<T>
     fun canShowLastPlayed(): Boolean
 
-    fun addLastPlayed(id: Long): Completable
+    suspend fun addLastPlayed(id: Long)
 
 }

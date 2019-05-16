@@ -1,25 +1,23 @@
 package dev.olog.msc.musicservice.interfaces
 
+import dev.olog.msc.musicservice.ActionManager
 import dev.olog.msc.musicservice.model.PlayerMediaEntity
 
-internal interface Player : PlayerLifecycle {
+internal interface Player : PlayerLifecycle, ActionManager.Callback {
 
     fun isPlaying(): Boolean
     fun getBookmark(): Long
 
-    fun prepare(playerModel: PlayerMediaEntity)
-    fun playNext(playerModel: PlayerMediaEntity, skipType: SkipType)
-    fun play(playerModel: PlayerMediaEntity)
+    override fun onPrepare(playerModel: PlayerMediaEntity)
+    override fun onPlayNext(playerModel: PlayerMediaEntity, skipType: SkipType)
+    override fun onPlay(playerModel: PlayerMediaEntity)
 
-    fun resume()
-    fun pause(stopService: Boolean, releaseFocus: Boolean = true)
-    fun seekTo(millis: Long)
+    override fun onResume()
+    override fun onPause(stopService: Boolean, releaseFocus: Boolean)
+    override fun onSeek(millis: Long)
 
-    fun forwardTenSeconds()
-    fun replayTenSeconds()
-
-    fun forwardThirtySeconds()
-    fun replayThirtySeconds()
+    override fun onReplayBy(seconds: Int)
+    override fun onForwardBy(seconds: Int)
 
     fun stopService()
 

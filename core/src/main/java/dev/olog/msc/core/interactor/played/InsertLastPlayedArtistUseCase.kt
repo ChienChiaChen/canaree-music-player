@@ -1,23 +1,21 @@
 package dev.olog.msc.core.interactor.played
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.executors.IoScheduler
+import dev.olog.msc.core.coroutines.CompletableFlowWithParam
+import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
 import dev.olog.msc.core.gateway.track.ArtistGateway
-import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
-import io.reactivex.Completable
 import javax.inject.Inject
 
 class InsertLastPlayedArtistUseCase @Inject constructor(
-    schedulers: IoScheduler,
+    schedulers: IoDispatcher,
     private val artistGateway: ArtistGateway,
     private val podcastGateway: PodcastArtistGateway
 
-): CompletableUseCaseWithParam<MediaId>(schedulers) {
+) : CompletableFlowWithParam<MediaId>(schedulers) {
 
-    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Completable {
-        if (mediaId.isPodcastArtist){
+    override suspend fun buildUseCaseObservable(mediaId: MediaId) {
+        if (mediaId.isPodcastArtist) {
             return podcastGateway.addLastPlayed(mediaId.categoryValue.toLong())
         }
         return artistGateway.addLastPlayed(mediaId.categoryValue.toLong())

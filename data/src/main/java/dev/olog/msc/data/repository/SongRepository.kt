@@ -8,38 +8,35 @@ import android.os.Environment
 import android.provider.BaseColumns
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.util.Log
 import androidx.core.util.getOrDefault
-import dev.olog.msc.core.coroutines.merge
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.ChunkRequest
-import dev.olog.msc.core.entity.ChunkedData
+import dev.olog.msc.core.entity.ItemRequest
+import dev.olog.msc.core.entity.PageRequest
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.SongGateway
+import dev.olog.msc.data.entity.custom.ItemRequestImpl
+import dev.olog.msc.data.entity.custom.PageRequestImpl
 import dev.olog.msc.data.mapper.toSong
 import dev.olog.msc.data.repository.queries.TrackQueries
-import dev.olog.msc.data.repository.util.*
+import dev.olog.msc.data.repository.util.CommonQuery
+import dev.olog.msc.data.repository.util.ContentObserverFlow
+import dev.olog.msc.data.repository.util.queryAll
+import dev.olog.msc.data.repository.util.queryMaybe
 import dev.olog.msc.data.utils.getLong
 import dev.olog.msc.data.utils.getString
-import io.reactivex.Completable
-import io.reactivex.Flowable
+import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.io.File
 import javax.inject.Inject
 
 internal class SongRepository @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val prefsGateway: AppPreferencesGateway,
+    prefsGateway: AppPreferencesGateway,
     private val usedImageGateway: UsedImageGateway,
-    private val contentObserver: ContentObserver,
-    private val contentResolverFlow: ContentResolverFlow
+    private val contentObserverFlow: ContentObserverFlow
 
 ) : SongGateway {
 
@@ -67,60 +64,60 @@ internal class SongRepository @Inject constructor(
     }
 
     private val contentResolver = context.contentResolver
-    private val trackQueries = TrackQueries(prefsGateway, false, contentResolver)
+    private val queries = TrackQueries(prefsGateway, false, contentResolver)
 
-    private suspend fun queryAll(): Flow<List<Song>> {
-        return flowViaChannel { channel ->  // TODO remove
-            GlobalScope.launch {
-                channel.send(getChunk().chunkOf(ChunkRequest(0, 100)))
-            }
-        }
-    }
-    override suspend fun getAll(): Flow<List<Song>> = queryAll()
-
-    override fun getChunk(): ChunkedData<Song> {
-        return ChunkedData(
-            chunkOf = { chunkRequest ->
-                val cursor = trackQueries.getAll(chunkRequest)
-                contentResolver.queryAll(cursor, { it.toSong() }, {
-                    val result = adjustImages(context, it)
-                    updateImages(result, usedImageGateway)
-                })
+    override fun getAll(): PageRequest<Song> {
+        return PageRequestImpl(
+            cursorFactory = { queries.getAll(it) },
+            cursorMapper = { it.toSong() },
+            listMapper = {
+                val result = adjustImages(context, it)
+                updateImages(result, usedImageGateway)
             },
-            allDataSize = contentResolver.querySize(trackQueries.countAll()),
-            observeChanges = {
-                contentObserver.createQuery(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-                    .merge(prefsGateway.observeAllTracksSortOrder().drop(1)) // ignores emission on subscribe
-            }
+            contentResolver = contentResolver,
+            contentObserverFlow = contentObserverFlow,
+            mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         )
     }
 
-    override fun getByParam(param: Long): Song {
-        return contentResolver.querySingle(trackQueries.getById(param), { it.toSong() }, {
+    override fun getByParam(param: Long): ItemRequest<Song> {
+        return ItemRequestImpl(
+            { queries.getById(param) },
+            { it.toSong() },
+            {
+                val result = adjustImages(context, listOf(it))
+                updateImages(result, usedImageGateway).first()
+            },
+            contentResolver,
+            contentObserverFlow,
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        )
+    }
+
+    override suspend fun getByAlbumId(albumId: Long): ItemRequest<Song> {
+        return ItemRequestImpl(
+            cursorFactory = { queries.getByAlbumId(albumId) },
+            cursorMapper = { it.toSong() },
+            itemMapper = {
+                val result = adjustImages(context, listOf(it))
+                updateImages(result, usedImageGateway).first()
+            },
+            contentResolver = contentResolver,
+            contentObserverFlow = contentObserverFlow,
+            mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        )
+    }
+
+    /**
+     * Handles songs and podcast
+     */
+    override suspend fun getByUri(uri: String): Song? {
+        val trackId = getByUriInternal(Uri.parse(uri))?.toLong() ?: return null
+        val cursor = queries.getById(trackId, true)
+        return contentResolver.queryMaybe(cursor, { it.toSong() }, {
             val result = adjustImages(context, listOf(it))
             updateImages(result, usedImageGateway).first()
         })
-    }
-
-    override suspend fun observeByParam(param: Long): Flow<Song> {
-        return contentResolverFlow.createQuery<Song>({ trackQueries.getById(param) }, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-            .mapToList { it.toSong() }
-            .map {
-                val result = adjustImages(context, it)
-                updateImages(result, usedImageGateway).first()
-            }.distinctUntilChanged()
-    }
-
-    override suspend fun getByAlbumId(albumId: Long): Flow<Song> {
-//        return querySingle("${MediaStore.Audio.Media.ALBUM_ID} = ?", arrayOf(albumId.toString()))
-        return TODO()
-    }
-
-    @SuppressLint("Recycle")
-    override fun getByUri(uri: String): Single<Song> {
-        return Single.fromCallable { getByUriInternal(Uri.parse(uri)) }
-            .map { it.toLong() }
-            .flatMap { runBlocking { Single.just(getByParam(it)) } }
     }
 
     @SuppressLint("Recycle")
@@ -217,25 +214,49 @@ internal class SongRepository @Inject constructor(
 //            .onErrorReturnItem(listOf())
     }
 
-    override fun deleteSingle(songId: Long): Completable {
-        return Completable.complete()
-//        return Single.fromCallable {
-//            context.contentResolver.delete(TrackQueries.MEDIA_STORE_URI, "${BaseColumns._ID} = ?", arrayOf("$songId"))
-//        }
-//            .filter { it > 0 }
-//            .flatMapSingle { runBlocking { getByParam(songId).asFlowable().firstOrError() } }
-//            .map { File(it.path) }
-//            .filter { it.exists() }
-//            .map { it.delete() }
-//            .toSingle()
-//            .ignoreElement()
-
+    override fun deleteSingle(songId: Long) {
+        assertBackgroundThread()
+        // TODO check if works
+        assertBackgroundThread()
+        val song = getByParam(songId).getItem()
+        if (song == null) {
+            Log.w("SongRepo", "Song with id=$songId not found")
+            return
+        }
+        val deleted = contentResolver.delete(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            "${BaseColumns._ID} = ?",
+            arrayOf(songId.toString())
+        )
+        if (deleted > 0) {
+            val file = File(song.path)
+            if (file.exists()) {
+                file.delete()
+            }
+        }
     }
 
-    override fun deleteGroup(songList: List<Song>): Completable {
-        return Flowable.fromIterable(songList)
-            .map { it.id }
-            .flatMapCompletable { deleteSingle(it).subscribeOn(Schedulers.io()) }
+    override fun deleteGroup(songList: List<Song>) {
+        // TODO check if works
+        assertBackgroundThread()
+
+        val idsToDelete = songList.map { "'$it'" }
+
+        val deleted = contentResolver.delete(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            "${BaseColumns._ID} IN (${idsToDelete.joinToString()})"
+            , null
+        )
+        if (deleted > 0) {
+            val cursor = queries.getExisting(idsToDelete.joinToString())
+            val songs = contentResolver.queryAll(cursor, { it.toSong() }, null)
+            for (song in songs) {
+                val file = File(song.path)
+                if (file.exists()) {
+                    file.delete()
+                }
+            }
+        }
     }
 
 }

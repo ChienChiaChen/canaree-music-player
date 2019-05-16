@@ -2,7 +2,7 @@ package dev.olog.msc.core.interactor
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.entity.ChunkedData
+import dev.olog.msc.core.entity.PageRequest
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.gateway.track.FolderGateway
 import dev.olog.msc.core.gateway.track.GenreGateway
@@ -25,20 +25,11 @@ class GetRelatedArtistsUseCase @Inject constructor(
         }
     }
 
-    fun getChunk(mediaId: MediaId): ChunkedData<Artist> {
+    fun get(mediaId: MediaId): PageRequest<Artist> {
         return when (mediaId.category) {
-            MediaIdCategory.FOLDERS -> folderGateway.getRelatedArtistsChunk(mediaId)
-            MediaIdCategory.PLAYLISTS -> playlistGateway.getRelatedArtistsChunk(mediaId)
-            MediaIdCategory.GENRES -> genreGateway.getRelatedArtistsChunk(mediaId)
-            else -> throw IllegalArgumentException("invalid category ${mediaId.category}")
-        }
-    }
-
-    fun getSize(mediaId: MediaId): Int {
-        return when (mediaId.category) {
-            MediaIdCategory.FOLDERS -> folderGateway.getRelatedArtistsSize(mediaId)
-            MediaIdCategory.PLAYLISTS -> playlistGateway.getRelatedArtistsSize(mediaId)
-            MediaIdCategory.GENRES -> genreGateway.getRelatedArtistsSize(mediaId)
+            MediaIdCategory.FOLDERS -> folderGateway.getRelatedArtists(mediaId)
+            MediaIdCategory.PLAYLISTS -> playlistGateway.getRelatedArtists(mediaId)
+            MediaIdCategory.GENRES -> genreGateway.getRelatedArtists(mediaId)
             else -> throw IllegalArgumentException("invalid category ${mediaId.category}")
         }
     }

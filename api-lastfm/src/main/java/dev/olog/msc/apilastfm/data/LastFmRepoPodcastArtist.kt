@@ -34,13 +34,13 @@ internal class LastFmRepoPodcastArtist @Inject constructor(
 
     fun get(artistId: Long): Single<Optional<LastFmPodcastArtist?>> = runBlocking{
         val cachedValue = getFromCache(artistId)
-
-        val fetch = Single.just(artistGateway.getByParam(artistId))
-                .flatMap { fetch(it) }
-                .map { Optional.of(it) }
-
-        cachedValue.onErrorResumeNext(fetch)
-                .subscribeOn(Schedulers.io())
+        TODO()
+//        val fetch = Single.just(artistGateway.getByParam(artistId))
+//                .flatMap { fetch(it) }
+//                .map { Optional.of(it) }
+//
+//        cachedValue.onErrorResumeNext(fetch)
+//                .subscribeOn(Schedulers.io())
     }
 
     private fun getFromCache(artistId: Long): Single<Optional<LastFmPodcastArtist?>> {

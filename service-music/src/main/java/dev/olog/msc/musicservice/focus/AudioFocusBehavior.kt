@@ -20,7 +20,7 @@ private enum class FocusState {
 internal class AudioFocusBehavior @Inject constructor(
         private val player: Lazy<Player>,
         private val volume: IPlayerVolume,
-        private val audioManager: Lazy<AudioManager>
+        private val audioManager: AudioManager
 
 ) : AudioManager.OnAudioFocusChangeListener {
 
@@ -48,16 +48,16 @@ internal class AudioFocusBehavior @Inject constructor(
     internal fun abandonFocus(){
         currentFocus = FocusState.NONE
         if (isOreo()){
-            audioManager.get().abandonAudioFocusRequest(focusRequest)
+            audioManager.abandonAudioFocusRequest(focusRequest)
         } else {
             @Suppress("DEPRECATION")
-            audioManager.get().abandonAudioFocus(this)
+            audioManager.abandonAudioFocus(this)
         }
     }
 
     @Suppress("DEPRECATION")
     private fun requestFocusPreOreo() : Int{
-        return audioManager.get().requestAudioFocus(
+        return audioManager.requestAudioFocus(
                 this,
                 AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN)
@@ -66,7 +66,7 @@ internal class AudioFocusBehavior @Inject constructor(
 
     @TargetApi(Build.VERSION_CODES.O)
     private fun requestFocusForOreo(): Int {
-        return audioManager.get().requestAudioFocus(focusRequest)
+        return audioManager.requestAudioFocus(focusRequest)
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -91,22 +91,22 @@ internal class AudioFocusBehavior @Inject constructor(
                 AudioManager.AUDIOFOCUS_GAIN -> {
                     player.get().setVolume(this.volume.normal())
                     if (currentFocus == FocusState.PLAY_WHEN_READY || currentFocus == FocusState.DELAYED){
-                        player.get().resume()
+                        player.get().onResume()
                     }
                     currentFocus = FocusState.GAIN
                 }
                 AudioManager.AUDIOFOCUS_LOSS -> {
                     currentFocus = FocusState.NONE
-                    player.get().pause(false, releaseFocus = true)
+                    player.get().onPause(false, releaseFocus = true)
                 }
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                     if (player.get().isPlaying()){
                         currentFocus = FocusState.PLAY_WHEN_READY
                     }
-                    player.get().pause(false, currentFocus != FocusState.PLAY_WHEN_READY)
+                    player.get().onPause(false, releaseFocus = currentFocus != FocusState.PLAY_WHEN_READY)
                 }
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-                    player.get().setVolume(this.volume.ducked())
+                    player.get()  .setVolume(this.volume.ducked())
                 }
 
             }

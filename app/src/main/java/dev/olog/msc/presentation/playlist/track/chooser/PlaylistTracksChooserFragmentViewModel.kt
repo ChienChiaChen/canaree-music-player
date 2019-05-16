@@ -3,10 +3,7 @@ package dev.olog.msc.presentation.playlist.track.chooser
 import android.util.LongSparseArray
 import androidx.core.util.contains
 import androidx.core.util.isEmpty
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.coroutines.mapToList
 import dev.olog.msc.core.entity.PlaylistType
@@ -22,10 +19,11 @@ import dev.olog.msc.presentation.playlist.track.chooser.model.toPlaylistTrack
 import dev.olog.msc.shared.extensions.mapToList
 import dev.olog.msc.shared.extensions.toList
 import dev.olog.msc.shared.extensions.toggle
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
@@ -90,13 +88,17 @@ class PlaylistTracksChooserFragmentViewModel @Inject constructor(
 
     fun observeSelectedCount(): LiveData<Int> = selectionCountLiveData
 
-    fun savePlaylist(playlistTitle: String): Completable {
+    fun savePlaylist(playlistTitle: String) = viewModelScope.launch{
         if (selectedIds.isEmpty()){
-            return Completable.error(IllegalStateException("empty list"))
+            return@launch
         }
-        return insertCustomTrackListToPlaylist.execute(InsertCustomTrackListRequest(
+        insertCustomTrackListToPlaylist.execute(InsertCustomTrackListRequest(
                 playlistTitle, selectedIds.toList(), playlistType
         ))
+    }
+
+    override fun onCleared() {
+        viewModelScope.cancel()
     }
 
 }

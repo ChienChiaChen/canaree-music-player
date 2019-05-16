@@ -1,16 +1,12 @@
 package dev.olog.msc.data.repository
 
-import android.annotation.SuppressLint
 import dev.olog.msc.core.entity.favorite.FavoriteEnum
 import dev.olog.msc.core.entity.favorite.FavoriteStateEntity
 import dev.olog.msc.core.entity.favorite.FavoriteType
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.data.db.AppDatabase
-import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
@@ -58,86 +54,66 @@ internal class FavoriteRepository @Inject constructor(
         return favoriteDao.countAllPodcast()
     }
 
-    override fun addSingle(type: FavoriteType, songId: Long): Completable {
-        return favoriteDao.addToFavoriteSingle(type, songId)
-            .andThen {
-                val id = favoriteStatePublisher.value?.songId ?: return@andThen
-                if (songId == id) {
-                    updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.FAVORITE, type))
-                }
-                it.onComplete()
-            }
+    override suspend fun addSingle(type: FavoriteType, songId: Long) {
+        favoriteDao.addToFavoriteSingle(type, songId)
+        val id = favoriteStatePublisher.value?.songId ?: return
+        if (songId == id) {
+            updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.FAVORITE, type))
+        }
     }
 
-    override fun addGroup(type: FavoriteType, songListId: List<Long>): Completable {
-        return favoriteDao.addToFavorite(type, songListId)
-            .andThen {
-                val songId = favoriteStatePublisher.value?.songId ?: return@andThen
-                if (songListId.contains(songId)) {
-                    updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.FAVORITE, type))
-                }
-                it.onComplete()
-            }
+    override suspend fun addGroup(type: FavoriteType, songListId: List<Long>) {
+        favoriteDao.addToFavorite(type, songListId)
+        val songId = favoriteStatePublisher.value?.songId ?: return
+        if (songListId.contains(songId)) {
+            updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.FAVORITE, type))
+        }
     }
 
-    override fun deleteSingle(type: FavoriteType, songId: Long): Completable {
-        return favoriteDao.removeFromFavorite(type, listOf(songId))
-            .andThen {
-                val id = favoriteStatePublisher.value?.songId ?: return@andThen
-                if (songId == id) {
-                    updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.NOT_FAVORITE, type))
-                }
-                it.onComplete()
-            }
+    override suspend fun deleteSingle(type: FavoriteType, songId: Long) {
+        favoriteDao.removeFromFavorite(type, listOf(songId))
+        val id = favoriteStatePublisher.value?.songId ?: return
+        if (songId == id) {
+            updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.NOT_FAVORITE, type))
+        }
+
     }
 
-    override fun deleteGroup(type: FavoriteType, songListId: List<Long>): Completable {
-        return favoriteDao.removeFromFavorite(type, songListId)
-            .andThen {
-                val songId = favoriteStatePublisher.value?.songId ?: return@andThen
-                if (songListId.contains(songId)) {
-                    updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.NOT_FAVORITE, type))
-                }
-                it.onComplete()
-            }
+    override suspend fun deleteGroup(type: FavoriteType, songListId: List<Long>) {
+        favoriteDao.removeFromFavorite(type, songListId)
+
+        val songId = favoriteStatePublisher.value?.songId ?: return
+        if (songListId.contains(songId)) {
+            updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.NOT_FAVORITE, type))
+        }
     }
 
-    override fun deleteAll(type: FavoriteType): Completable {
-        return Completable.fromCallable { favoriteDao.deleteAll() }
-            .andThen {
-                val songId = favoriteStatePublisher.value?.songId ?: return@andThen
-                updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.NOT_FAVORITE, type))
-                it.onComplete()
-            }
+    override suspend fun deleteAll(type: FavoriteType) {
+        favoriteDao.deleteAll()
+        val songId = favoriteStatePublisher.value?.songId ?: return
+        updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.NOT_FAVORITE, type))
     }
 
-    override fun isFavorite(type: FavoriteType, songId: Long): Single<Boolean> {
-        return Single.fromCallable { favoriteDao.isFavorite(songId) != null }
+    override suspend fun isFavorite(type: FavoriteType, songId: Long): Boolean {
+        return favoriteDao.isFavorite(songId) != null
     }
 
-    // leaks for very small amount of time
-    @SuppressLint("RxLeakedSubscription")
-    override fun toggleFavorite() {
+    override suspend fun toggleFavorite() {
         val value = favoriteStatePublisher.value ?: return
         val id = value.songId
         val state = value.enum
         val type = value.favoriteType
 
-        var action: Completable? = null
-
         when (state) {
             FavoriteEnum.NOT_FAVORITE -> {
                 updateFavoriteState(type, FavoriteStateEntity(id, FavoriteEnum.ANIMATE_TO_FAVORITE, type))
-                action = favoriteDao.addToFavoriteSingle(type, id)
+                favoriteDao.addToFavoriteSingle(type, id)
             }
             FavoriteEnum.FAVORITE -> {
                 updateFavoriteState(type, FavoriteStateEntity(id, FavoriteEnum.ANIMATE_NOT_FAVORITE, type))
-                action = favoriteDao.removeFromFavorite(type, listOf(id))
             }
-            else -> Completable.complete()
+            FavoriteEnum.ANIMATE_NOT_FAVORITE, FavoriteEnum.ANIMATE_TO_FAVORITE -> {
+            }
         }
-
-        action?.subscribeOn(Schedulers.io())
-            ?.subscribe({}, Throwable::printStackTrace)
     }
 }

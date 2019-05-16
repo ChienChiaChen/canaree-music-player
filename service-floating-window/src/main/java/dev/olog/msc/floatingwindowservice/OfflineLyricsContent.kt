@@ -100,6 +100,7 @@ internal class OfflineLyricsContent(
     override fun onDestroy(owner: LifecycleOwner) {
         subscriptions.clear()
         updateDisposable.unsubscribe()
+        presenter.onDestroy()
     }
 
     private fun loadImage(metadata: MusicServiceMetadata, image: ImageModel){

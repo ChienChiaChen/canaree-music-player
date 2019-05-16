@@ -2,16 +2,15 @@ package dev.olog.msc.data.repository
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlayingQueueSong
+import dev.olog.msc.core.entity.getAll
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.data.db.AppDatabase
-import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 internal class PlayingQueueRepository @Inject constructor(
@@ -23,37 +22,32 @@ internal class PlayingQueueRepository @Inject constructor(
 
     private val playingQueueDao = database.playingQueueDao()
 
-    override fun getAll(): Single<List<PlayingQueueSong>> = runBlocking{
-        Single.concat(
-                playingQueueDao.getAllAsSongs(
-                        songGateway.getAll().asObservable().firstOrError(),
-                        podcastGateway.getAll().asObservable().firstOrError()
-                ).firstOrError(),
-
-                songGateway.getAll().asObservable().firstOrError()
-                        .map { it.mapIndexed { index, song -> song.toPlayingQueueSong(index) } }
-        ).filter { it.isNotEmpty() }.firstOrError()
+    override suspend fun getAll(): List<PlayingQueueSong> {
+        val allSongs = songGateway.getAll().getAll()
+        val playingQueue = playingQueueDao.getAllAsSongs(allSongs, podcastGateway.getAll().getAll())
+        if (playingQueue.isNotEmpty()){
+            return playingQueue
+        }
+        return allSongs.mapIndexed { index, song -> song.toPlayingQueueSong(index) }
     }
 
-    override fun observeAll(): Observable<List<PlayingQueueSong>> = runBlocking{
-        playingQueueDao.getAllAsSongs(
-                songGateway.getAll().asObservable().firstOrError(),
-                podcastGateway.getAll().asObservable().firstOrError()
-        )
+    override suspend fun update(list: List<Triple<MediaId, Long, Int>>) {
+        playingQueueDao.insert(list)
     }
 
-    override fun update(list: List<Triple<MediaId, Long, Int>>): Completable {
-        return playingQueueDao.insert(list)
+    override fun observeMiniQueue(): Observable<List<PlayingQueueSong>> {
+        return Observable.just(listOf()) // TODO
+//        return playingQueueDao.observeMiniQueue(
+//                songGateway.getAll().asObservable().firstOrError(),
+//                podcastGateway.getAll().asObservable().firstOrError()
+//        )
     }
 
-    override fun observeMiniQueue(): Observable<List<PlayingQueueSong>> = runBlocking{
-        playingQueueDao.observeMiniQueue(
-                songGateway.getAll().asObservable().firstOrError(),
-                podcastGateway.getAll().asObservable().firstOrError()
-        )
+    override suspend fun observeAll(): Flow<List<PlayingQueueSong>> {
+        return flowOf(getAll()) // TODO
     }
 
-    override fun updateMiniQueue(tracksId: List<Pair<Int, Long>>) {
+    override suspend fun updateMiniQueue(tracksId: List<Pair<Int, Long>>) {
         playingQueueDao.updateMiniQueue(tracksId)
     }
 

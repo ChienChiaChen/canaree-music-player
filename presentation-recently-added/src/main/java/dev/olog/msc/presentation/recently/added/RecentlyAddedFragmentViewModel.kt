@@ -25,7 +25,8 @@ class RecentlyAddedFragmentViewModel @Inject constructor(
             .mapToList { it.toRecentDetailDisplayableItem(mediaId) }
             .asLiveData()
 
-    val itemTitle = getItemTitleUseCase.execute(mediaId).asLiveData()
+//    val itemTitle = getItemTitleUseCase.execute(mediaId).asLiveData()
+    val itemTitle : LiveData<String> = TODO()
 
 }
 

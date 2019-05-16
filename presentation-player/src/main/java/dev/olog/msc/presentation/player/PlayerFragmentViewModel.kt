@@ -14,7 +14,6 @@ import dev.olog.msc.core.interactor.favorite.ObserveFavoriteAnimationUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.theme.player.theme.*
 import dev.olog.msc.shared.ui.imageview.adaptive.*
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -110,8 +109,8 @@ class PlayerFragmentViewModel @Inject constructor(
     val skipToPreviousVisibility = musicPrefsUseCase
         .observeSkipToPreviousVisibility()
 
-    fun showLyricsTutorialIfNeverShown(): Completable {
-        return tutorialPreferenceUseCase.lyricsTutorial()
+    fun showLyricsTutorialIfNeverShown(): Boolean {
+        return tutorialPreferenceUseCase.canShowLyricsTutorial()
     }
 
     fun getPlaybackSpeed(): Int {

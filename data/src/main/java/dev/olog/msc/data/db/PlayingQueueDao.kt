@@ -11,7 +11,9 @@ import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.data.entity.MiniQueueEntity
 import dev.olog.msc.data.entity.PlayingQueueEntity
-import io.reactivex.*
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.schedulers.Schedulers
 
@@ -22,10 +24,10 @@ abstract class PlayingQueueDao {
         SELECT * FROM playing_queue
         ORDER BY progressive
     """)
-    internal abstract fun getAllImpl(): Flowable<List<PlayingQueueEntity>>
+    internal abstract fun getAllImpl(): List<PlayingQueueEntity>
 
     @Query("DELETE FROM playing_queue")
-    internal abstract fun deleteAllImpl()
+    internal abstract suspend fun deleteAllImpl()
 
     @Query("""
         SELECT *
@@ -68,7 +70,7 @@ abstract class PlayingQueueDao {
     }
 
     @Transaction
-    open fun updateMiniQueue(list: List<Pair<Int, Long>>) {
+    open suspend fun updateMiniQueue(list: List<Pair<Int, Long>>) {
         deleteMiniQueueImpl()
         insertMiniQueueImpl(list.map { MiniQueueEntity(it.first, it.second, System.nanoTime()) })
     }
@@ -77,55 +79,54 @@ abstract class PlayingQueueDao {
     internal abstract fun insertAllImpl(list: List<PlayingQueueEntity>)
 
     @Query("DELETE FROM mini_queue")
-    internal abstract fun deleteMiniQueueImpl()
+    internal abstract suspend fun deleteMiniQueueImpl()
 
     @Insert
-    internal abstract fun insertMiniQueueImpl(list: List<MiniQueueEntity>)
+    internal abstract suspend fun insertMiniQueueImpl(list: List<MiniQueueEntity>)
 
-    fun getAllAsSongs(songList: Single<List<Song>>, podcastList: Single<List<Podcast>>)
-            : Observable<List<PlayingQueueSong>> {
+    suspend fun getAllAsSongs(songList: List<Song>, podcastList: List<Podcast>)
+            : List<PlayingQueueSong> {
 
-        return this.getAllImpl()
-                .toObservable()
-                .flatMapSingle { ids ->  Singles.zip(songList, podcastList) { songList, podcastList ->
+        // TODO use trackQueries.exists(..)
 
-                    val result = mutableListOf<PlayingQueueSong>()
-                    for (item in ids){
-                        var song : Any? = songList.firstOrNull { it.id == item.songId }
-                        if (song == null){
-                            song = podcastList.firstOrNull { it.id == item.songId }
-                        }
-                        if (song == null){
-                            continue
-                        }
+        val playingQueue = getAllImpl()
+        val result = mutableListOf<PlayingQueueSong>()
 
-                        val itemToAdd = if (song is Song){
-                            song.toPlayingQueueSong(item.idInPlaylist, item.category, item.categoryValue)
-                        } else if (song is Podcast){
-                            song.toPlayingQueueSong(item.idInPlaylist, item.category, item.categoryValue)
-                        } else {
-                            throw IllegalArgumentException("must be song or podcast, passed $song")
-                        }
-                        result.add(itemToAdd)
+        for (item in playingQueue) {
+            var song : Any? = songList.firstOrNull { it.id == item.songId }
+            if (song == null){
+                song = podcastList.firstOrNull { it.id == item.songId }
+            }
+            if (song == null){
+                continue
+            }
 
-                    }
-                    result.toList()
-
-                } }
+            val itemToAdd = if (song is Song){
+                song.toPlayingQueueSong(item.idInPlaylist, item.category, item.categoryValue)
+            } else if (song is Podcast){
+                song.toPlayingQueueSong(item.idInPlaylist, item.category, item.categoryValue)
+            } else {
+                throw IllegalArgumentException("must be song or podcast, passed $song")
+            }
+            result.add(itemToAdd)
+        }
+        return result
     }
 
-    fun insert(list: List<Triple<MediaId, Long, Int>>) : Completable {
+//    @Transaction TODO
+    suspend fun insert(list: List<Triple<MediaId, Long, Int>>) {
+        deleteAllImpl()
 
-        return Single.fromCallable { deleteAllImpl() }
-                .map { list.map {
-                    val (mediaId, songId, idInPlaylist) = it
-                    PlayingQueueEntity(
-                            songId = songId,
-                            category = mediaId.category.toString(),
-                            categoryValue = mediaId.categoryValue,
-                            idInPlaylist = idInPlaylist
-                    ) }
-                }.flatMapCompletable { queueList -> CompletableSource { insertAllImpl(queueList) } }
+        val toAdd = list.map {
+            val (mediaId, songId, idInPlaylist) = it
+            PlayingQueueEntity(
+                songId = songId,
+                category = mediaId.category.toString(),
+                categoryValue = mediaId.categoryValue,
+                idInPlaylist = idInPlaylist
+            )
+        }
+        insertAllImpl(toAdd)
     }
 
     private fun Song.toPlayingQueueSong(idInPlaylist: Int, category: String, categoryValue: String)

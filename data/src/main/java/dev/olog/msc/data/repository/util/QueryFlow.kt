@@ -15,34 +15,25 @@ internal class QueryFlow<T>(
 
     fun mapToList(mapper: (Cursor) -> T): Flow<List<T>> {
         return flow.map {
-            val cursor = it.run()
-            if (cursor != null){
-                val result = ArrayList<T>(cursor.count)
-                while (cursor.moveToNext()){
+            it.run().use { cursor ->
+                val result = ArrayList<T>(cursor?.count ?: 0)
+                while (cursor?.moveToNext() == true) {
                     result.add(mapper(cursor))
                 }
-                cursor.close()
                 result
-            } else {
-                throw IllegalAccessError("cursor can not be null")
             }
         }
     }
 
-    fun mapToOne(mapper: (Cursor) -> T): Flow<T> {
+    fun mapToOne(mapper: (Cursor) -> T?): Flow<T?> {
         return flow.map {
-            val cursor = it.run()
-            if (cursor != null){
-                if (cursor.moveToNext()){
-                    val item = mapper(cursor)
-                    cursor.close()
-                    item
-                } else{
-                    cursor.close()
-                    throw IllegalAccessError("cursor can not found")
+            it.run().use { cursor ->
+                if (cursor?.moveToFirst() == true) {
+                    mapper(cursor)
+                } else {
+                    null
                 }
-            } else {
-                throw IllegalAccessError("cursor can not be null")
+
             }
         }
     }

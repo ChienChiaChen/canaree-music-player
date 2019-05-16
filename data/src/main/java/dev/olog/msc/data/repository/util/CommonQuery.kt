@@ -58,6 +58,20 @@ internal inline fun <T> ContentResolver.querySingle(cursor: Cursor, mapper: (Cur
 }
 
 @Suppress("unused")
+internal inline fun <T> ContentResolver.queryMaybe(cursor: Cursor, mapper: (Cursor) -> T?, noinline afterQuery: ((T) -> T)?): T? {
+    var item: T?
+    cursor.moveToFirst()
+    item = mapper(cursor)
+    cursor.close()
+
+    if (item != null){
+        item = afterQuery?.invoke(item)
+    }
+
+    return item
+}
+
+@Suppress("unused")
 internal fun ContentResolver.querySize(cursor: Cursor): Int {
     var size = 0
     cursor.moveToFirst()

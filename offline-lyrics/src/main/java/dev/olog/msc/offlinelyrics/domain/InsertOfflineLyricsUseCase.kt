@@ -1,50 +1,49 @@
 package dev.olog.msc.offlinelyrics.domain
 
-import dev.olog.msc.core.MediaId
+import android.util.Log
+import dev.olog.msc.core.coroutines.CompletableFlowWithParam
+import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.entity.OfflineLyrics
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.OfflineLyricsGateway
-import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
-import dev.olog.msc.core.interactor.item.GetSongUseCase
-import io.reactivex.Completable
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
+import dev.olog.msc.core.gateway.track.SongGateway
 import java.io.File
 import javax.inject.Inject
 
 class InsertOfflineLyricsUseCase @Inject constructor(
-        executors: IoScheduler,
-        private val gateway: OfflineLyricsGateway,
-        private val getSongUseCase: GetSongUseCase,
-        private val lyricsFromMetadata: ILyricsFromMetadata
+    executors: IoDispatcher,
+    private val gateway: OfflineLyricsGateway,
+    private val songGateway: SongGateway,
+    private val lyricsFromMetadata: ILyricsFromMetadata
 
-) : CompletableUseCaseWithParam<OfflineLyrics>(executors) {
+) : CompletableFlowWithParam<OfflineLyrics>(executors) {
 
-    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(offlineLyrics: OfflineLyrics): Completable = runBlocking{
-        getSongUseCase.execute(MediaId.songId(offlineLyrics.trackId)).asObservable()
-                .firstOrError()
-                .flatMapCompletable { saveLyricsOnMetadata(it, offlineLyrics.lyrics) }
-                .andThen(gateway.saveLyrics(offlineLyrics))
-                .onErrorResumeNext { gateway.saveLyrics(offlineLyrics) }
-    }
-
-    private fun saveLyricsOnMetadata(song: Song, lyrics: String): Completable {
-        return Completable.create {
-            lyricsFromMetadata.setLyrics(song, lyrics)
-            updateFileIfAny(song.path, lyrics)
-
-            it.onComplete()
+    override suspend fun buildUseCaseObservable(offlineLyrics: OfflineLyrics) {
+        val song = songGateway.getByParam(offlineLyrics.trackId).getItem()
+        if (song == null) {
+            Log.w("InsertLyricsInteractor", "Track id=${offlineLyrics.trackId} not found")
+            return
         }
+        try {
+            saveLyricsOnMetadata(song, offlineLyrics.lyrics)
+        } catch (ex: Exception) {
+            Log.w("InsertLyricsInteractor", "Can't save lyrics on track metadata for=$song")
+        }
+
+        gateway.saveLyrics(offlineLyrics)
     }
 
-    private fun updateFileIfAny(path: String, lyrics: String){
+    private fun saveLyricsOnMetadata(song: Song, lyrics: String) {
+        lyricsFromMetadata.setLyrics(song, lyrics)
+        updateFileIfAny(song.path, lyrics)
+    }
+
+    private fun updateFileIfAny(path: String, lyrics: String) {
         val file = File(path)
         val fileName = file.nameWithoutExtension
         val lyricsFile = File(file.parentFile, "$fileName.lrc")
 
-        if (lyricsFile.exists()){
+        if (lyricsFile.exists()) {
             lyricsFile.printWriter().use { out ->
                 val lines = lyrics.split("\n")
                 lines.forEach {

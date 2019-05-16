@@ -19,7 +19,7 @@ internal class ShuffleMode @Inject constructor(
 
     fun isEnabled(): Boolean= getState() != SHUFFLE_MODE_NONE
 
-    fun setEnabled(enabled: Boolean){
+    suspend fun setEnabled(enabled: Boolean){
         val shuffleMode = if (enabled) SHUFFLE_MODE_ALL else SHUFFLE_MODE_NONE
         musicPreferencesUseCase.setShuffleMode(shuffleMode)
         mediaSession.setShuffleMode(shuffleMode)
@@ -30,7 +30,7 @@ internal class ShuffleMode @Inject constructor(
     /**
      * @return true if new shuffle state is enabled
      */
-    fun update(): Boolean {
+    suspend fun update(): Boolean {
         val shuffleMode = getState()
 
         val newState = if (shuffleMode == SHUFFLE_MODE_NONE) {

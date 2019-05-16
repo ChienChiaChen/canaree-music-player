@@ -1,22 +1,23 @@
 package dev.olog.msc.presentation.dialogs.duplicates.di
 
+import androidx.lifecycle.ViewModel
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import dev.olog.msc.core.MediaId
+import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
+import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.dialogs.duplicates.RemoveDuplicatesDialog
+import dev.olog.msc.presentation.dialogs.duplicates.RemoveDuplicatesDialogViewModel
 
 @Module
-class RemoveDuplicatesDialogModule(private val fragment: RemoveDuplicatesDialog) {
+abstract class RemoveDuplicatesDialogModule {
 
-    @Provides
-    fun provideMediaId(): MediaId {
-        val mediaId = fragment.arguments!!.getString(RemoveDuplicatesDialog.ARGUMENTS_MEDIA_ID)!!
-        return MediaId.fromString(mediaId)
-    }
+    @ContributesAndroidInjector
+    abstract fun provideFragment(): RemoveDuplicatesDialog
 
-    @Provides
-    fun provideTitle(): String {
-        return fragment.arguments!!.getString(RemoveDuplicatesDialog.ARGUMENTS_ITEM_TITLE)!!
-    }
+    @Binds
+    @IntoMap
+    @ViewModelKey(RemoveDuplicatesDialogViewModel::class)
+    abstract fun provideViewModel(viewModel: RemoveDuplicatesDialogViewModel): ViewModel
 
 }

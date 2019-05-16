@@ -15,7 +15,6 @@ import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import dev.olog.msc.shared.FileProvider
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
-import io.reactivex.android.schedulers.AndroidSchedulers
 
 abstract class AbsPopupListener(
         getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
@@ -38,13 +37,13 @@ abstract class AbsPopupListener(
 
     @SuppressLint("RxLeakedSubscription")
     protected fun onPlaylistSubItemClick(context: Context, itemId: Int, mediaId: MediaId, listSize: Int, title: String){
-        playlists.firstOrNull { it.id == itemId.toLong() }?.run {
-            addToPlaylistUseCase.execute(this to mediaId)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnComplete { createSuccessMessage(context, itemId.toLong(), mediaId, listSize, title) }
-                    .doOnError { createErrorMessage(context) }
-                    .subscribe({}, Throwable::printStackTrace)
-        }
+//        playlists.firstOrNull { it.id == itemId.toLong() }?.run {
+//            addToPlaylistUseCase.execute(this to mediaId)
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .doOnComplete { createSuccessMessage(context, itemId.toLong(), mediaId, listSize, title) }
+//                    .doOnError { createErrorMessage(context) }
+//                    .subscribe({}, Throwable::printStackTrace)
+//        }
     }
 
     private fun createSuccessMessage(context: Context, playlistId: Long, mediaId: MediaId, listSize: Int, title: String){

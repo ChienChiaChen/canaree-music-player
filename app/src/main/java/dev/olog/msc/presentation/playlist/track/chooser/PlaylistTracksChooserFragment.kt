@@ -160,7 +160,6 @@ class PlaylistTracksChooserFragment : BaseFragment(), DrawsOnTop {
                 editTextString.isBlank() -> showError(editTextLayout, R.string.popup_playlist_name_not_valid)
                 else -> {
                     viewModel.savePlaylist(editTextString)
-                            .subscribe({}, Throwable::printStackTrace)
                     dialog.dismiss()
                     act.onBackPressed()
                 }

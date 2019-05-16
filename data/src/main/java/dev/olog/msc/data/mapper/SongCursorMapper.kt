@@ -26,9 +26,8 @@ internal fun Cursor.toSong(): Song {
     val duration = getLong(MediaStore.Audio.AudioColumns.DURATION)
     val dateAdded = getLong(MediaStore.MediaColumns.DATE_ADDED)
 
-    val trackNumber = getInt(MediaStore.Audio.AudioColumns.TRACK)
-    val track = extractTrackNumber(trackNumber)
-    val disc = extractDiscNumber(trackNumber)
+    val track = getInt(Columns.N_TRACK)
+    val disc = getInt(Columns.N_DISC)
 
     return Song(
         id, artistId, albumId, title, artist, albumArtist, album,
@@ -52,28 +51,13 @@ internal fun Cursor.toUneditedSong(image: String): Song {
     val duration = getLong(MediaStore.Audio.AudioColumns.DURATION)
     val dateAdded = getLong(MediaStore.MediaColumns.DATE_ADDED)
 
-    val trackNumber = getInt(MediaStore.Audio.AudioColumns.TRACK)
-    val track = extractTrackNumber(trackNumber)
-    val disc = extractDiscNumber(trackNumber)
+    val track = getInt(Columns.N_TRACK)
+    val disc = getInt(Columns.N_DISC)
 
     return Song(
         id, artistId, albumId, title, artist, albumArtist, album,
         image, duration, dateAdded, path, disc, track
     )
-}
-
-internal fun extractTrackNumber(originalTrackNumber: Int): Int {
-    if (originalTrackNumber >= 1000) {
-        return originalTrackNumber % 1000
-    }
-    return originalTrackNumber
-}
-
-internal fun extractDiscNumber(originalTrackNumber: Int): Int {
-    if (originalTrackNumber >= 1000) {
-        return originalTrackNumber / 1000
-    }
-    return 0
 }
 
 //internal fun adjustAlbum(album: String, folder: String): String {

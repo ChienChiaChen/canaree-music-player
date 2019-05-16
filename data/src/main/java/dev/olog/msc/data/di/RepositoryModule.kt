@@ -79,4 +79,8 @@ abstract class RepositoryModule {
     @Singleton
     internal abstract fun provideUsedImageRepository(repository: UsedImageRepository): UsedImageGateway
 
+    @Binds
+    @Singleton
+    internal abstract fun provideSearchRepository(repository: SearchRepository): SearchGateway
+
 }

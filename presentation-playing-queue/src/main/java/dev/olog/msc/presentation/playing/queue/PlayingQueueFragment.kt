@@ -10,13 +10,11 @@ import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.ctx
-import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_playing_queue.*
 import kotlinx.android.synthetic.main.fragment_playing_queue.view.*
 import javax.inject.Inject
@@ -67,10 +65,10 @@ class PlayingQueueFragment : BaseFragment() {
         touchHelper.attachToRecyclerView(view.list)
         adapter.touchHelper = touchHelper
 
-        viewModel.data.subscribe(viewLifecycleOwner) {
-            adapter.updateDataSet(it)
-            view.emptyStateText.toggleVisibility(it.isEmpty(), true)
-        }
+//        viewModel.data.subscribe(viewLifecycleOwner) { // TODO
+//            adapter.updateDataSet(it)
+//            view.emptyStateText.toggleVisibility(it.isEmpty(), true)
+//        }
     }
 
     override fun onResume() {

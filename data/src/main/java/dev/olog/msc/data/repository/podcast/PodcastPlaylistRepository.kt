@@ -7,8 +7,9 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.coroutines.mapToList
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.ChunkRequest
-import dev.olog.msc.core.entity.ChunkedData
+import dev.olog.msc.core.entity.ItemRequest
+import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.PageRequest
 import dev.olog.msc.core.entity.favorite.FavoriteType
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
@@ -18,15 +19,15 @@ import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.PodcastPlaylistEntity
 import dev.olog.msc.data.entity.PodcastPlaylistTrackEntity
+import dev.olog.msc.data.entity.custom.ItemRequestDao
+import dev.olog.msc.data.entity.custom.ItemRequestImmutable
+import dev.olog.msc.data.entity.custom.PageRequestDao
+import dev.olog.msc.data.entity.custom.PageRequestImpl
 import dev.olog.msc.data.mapper.toPodcast
 import dev.olog.msc.data.repository.queries.TrackQueries
-import dev.olog.msc.data.repository.util.ContentObserver
-import dev.olog.msc.data.repository.util.queryAll
-import dev.olog.msc.data.repository.util.querySize
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import dev.olog.msc.data.repository.util.ContentObserverFlow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.flow.asFlow
@@ -39,7 +40,8 @@ internal class PodcastPlaylistRepository @Inject constructor(
     private val favoriteGateway: FavoriteGateway,
     prefsKeys: PrefsKeys,
     prefsGateway: AppPreferencesGateway,
-    private val contentObserver: ContentObserver
+    private val contentObserverFlow: ContentObserverFlow
+
 ) : PodcastPlaylistGateway {
 
     private val podcastPlaylistDao = appDatabase.podcastPlaylistDao()
@@ -57,11 +59,6 @@ internal class PodcastPlaylistRepository @Inject constructor(
         )
     }
 
-    override suspend fun getAll(): Flow<List<PodcastPlaylist>> {
-        return podcastPlaylistDao.observeAll().asFlow()
-            .mapToList { it.toDomain() }
-    }
-
     private val autoPlaylistTitles = resources.getStringArray(prefsKeys.autoPlaylist())
 
     private fun createAutoPlaylist(id: Long, title: String): PodcastPlaylist {
@@ -76,66 +73,158 @@ internal class PodcastPlaylistRepository @Inject constructor(
         )
     }
 
-    override fun getByParam(param: Long): PodcastPlaylist {
-        if (PodcastPlaylistGateway.isPodcastAutoPlaylist(param)) {
-            return getAllAutoPlaylists().first { it.id == param }
-        }
-        return podcastPlaylistDao.getPlaylist(param).toDomain()
-    }
+    override fun getAll(): PageRequest<PodcastPlaylist> {
+        return object : PageRequest<PodcastPlaylist> {
+            override fun getPage(page: Page): List<PodcastPlaylist> {
+                return podcastPlaylistDao.getChunk(page.limit, page.offset).map { it.toDomain() }
+            }
 
-    override suspend fun observeByParam(param: Long): Flow<PodcastPlaylist> {
-        return podcastPlaylistDao.observeById(param)
-            .asFlow()
-            .map { it.toDomain() }
-    }
+            override fun getCount(): Int {
+                return podcastPlaylistDao.getCount()
+            }
 
-    override fun getChunk(): ChunkedData<PodcastPlaylist> {
-        return ChunkedData(
-            chunkOf = { chunkRequest ->
-                podcastPlaylistDao.getChunk(chunkRequest.limit, chunkRequest.offset).map { it.toDomain() }
-            },
-            allDataSize = podcastPlaylistDao.getCount(),
-            observeChanges = {
-                podcastPlaylistDao.observeAll()
+            override suspend fun observePage(page: Page): Flow<List<PodcastPlaylist>> {
+                return podcastPlaylistDao.observeAll()
+                    .asFlow()
+                    .distinctUntilChanged()
+                    .mapToList { it.toDomain() }
+
+            }
+
+            override suspend fun observeNotification(): Flow<Unit> {
+                return podcastPlaylistDao.observeAll()
+                    .distinctUntilChanged()
                     .asFlow()
                     .drop(1)
                     .map { Unit }
+
             }
-        )
+        }
     }
 
-    override fun getPodcastListByParamChunk(param: Long): ChunkedData<Podcast> {
-        return ChunkedData(
-            chunkOf = { chunkRequest -> makePodcastListByParamChunk(param, chunkRequest) },
-            allDataSize = getPodcastListCountByParam(param),
-            observeChanges = observPodcastListByParam(param)
+    override fun getByParam(param: Long): ItemRequest<PodcastPlaylist> {
+        if (PodcastPlaylistGateway.isPodcastAutoPlaylist(param)) {
+            val item = getAllAutoPlaylists().first { it.id == param }
+            return ItemRequestImmutable(item)
+        }
+
+        return ItemRequestDao(
+            getItemByParam = { podcastPlaylistDao.getPlaylist(param).toDomain() },
+            observeItemByParam = { podcastPlaylistDao.observeById(param).asFlow().map { it.toDomain() } },
+            param = param
         )
     }
 
     override fun getPodcastListByParamDuration(param: Long): Int {
-        // TODO is needed?
-        return when (param) {
-            PodcastPlaylistGateway.PODCAST_LAST_ADDED_ID -> 0
-            PodcastPlaylistGateway.PODCAST_FAVORITE_LIST_ID -> 0
-            PodcastPlaylistGateway.PODCAST_HISTORY_LIST_ID -> 0
-            else -> 0
-        }
+        return 0
     }
 
-    override fun getSiblingsChunk(mediaId: MediaId): ChunkedData<PodcastPlaylist> {
-        return ChunkedData(
-            chunkOf = { chunkRequest ->
-                podcastPlaylistDao.getSiblingsChunk(mediaId.categoryId, chunkRequest.limit, chunkRequest.offset)
-                    .map { it.toDomain() }
+    override fun getPodcastListByParam(param: Long): PageRequest<Podcast> {
+        if (param == PodcastPlaylistGateway.PODCAST_LAST_ADDED_ID) {
+            return PageRequestImpl(
+                cursorFactory = { trackQueries.getByLastAdded(it) },
+                cursorMapper = { it.toPodcast() },
+                listMapper = {
+                    PodcastRepository.adjustImages(context, it)
+                },
+                contentResolver = contentResolver,
+                contentObserverFlow = contentObserverFlow,
+                mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+            )
+        }
+        if (param == PodcastPlaylistGateway.PODCAST_FAVORITE_LIST_ID) {
+            return PageRequestDao(
+                cursorFactory = { page ->
+                    // TODO sort by now is lost, repair
+                    val favoritesIds = favoriteGateway.getAllPodcasts(page?.limit ?: Int.MAX_VALUE, page?.offset ?: 0)
+                    trackQueries.getExisting(favoritesIds.joinToString { "'$it'" })
+                },
+                cursorMapper = { it.toPodcast() },
+                listMapper = { list, page ->
+                    val existing = PodcastRepository.adjustImages(context, list)
+                    val favoritesIds = favoriteGateway.getAll(page?.limit ?: Int.MAX_VALUE, page?.offset ?: 0)
+                    favoritesIds.asSequence()
+                        .mapNotNull { fav -> existing.first { it.id == fav } }
+                        .toList()
+                },
+                contentResolver = contentResolver,
+                changeNotification = { favoriteGateway.observeAll().asFlow() },
+                overrideSize = favoriteGateway.countAll()
+            )
+        }
+        if (param == PodcastPlaylistGateway.PODCAST_HISTORY_LIST_ID) {
+            return PageRequestDao(
+                cursorFactory = { page ->
+                    val historyIds = historyDao.getAllPodcasts(page?.limit ?: Int.MAX_VALUE, page?.offset ?: 0)
+                    trackQueries.getExisting(historyIds.joinToString { "'${it.podcastId}'" })
+                },
+                cursorMapper = { it.toPodcast() },
+                listMapper = { list, page ->
+                    val existing = PodcastRepository.adjustImages(context, list)
+                    val historyIds = historyDao.getAll(page?.limit ?: Int.MAX_VALUE, page?.offset ?: 0)
+                    historyIds.asSequence()
+                        .mapNotNull { hist -> existing.first { it.id == hist.songId } to hist }
+                        .map {
+                            it.first.copy(
+                                trackNumber = it.second.id,
+                                dateAdded = it.second.dateAdded
+                            )
+                        } // TODO check behavior
+                        .sortedByDescending { it.dateAdded }
+                        .toList()
+                },
+                contentResolver = contentResolver,
+                changeNotification = { favoriteGateway.observeAll().asFlow() },
+                overrideSize = historyDao.countAll()
+            )
+        }
+        return PageRequestDao(
+            cursorFactory = { page ->
+                val podcastIds = podcastPlaylistDao.getPlaylistTracks(param, page.offset, page.limit)
+                trackQueries.getExisting(podcastIds.joinToString { "'$it'" })
             },
-            allDataSize = podcastPlaylistDao.countSiblings(mediaId.categoryId),
-            observeChanges = {
-                podcastPlaylistDao.observeSibling(mediaId.categoryId)
+            cursorMapper = { it.toPodcast() },
+            listMapper = { list, page ->
+                val existing = PodcastRepository.adjustImages(context, list)
+                podcastPlaylistDao.getPlaylistTracks(param, page.offset, page.limit)
+                    .asSequence()
+                    .mapNotNull { podcast ->
+                        existing.first { it.id == podcast.podcastId }
+                            .copy(trackNumber = podcast.idInPlaylist.toInt())
+                    }
+                    .toList()
+            },
+            contentResolver = contentResolver,
+            changeNotification = { podcastPlaylistDao.observePlaylistTracks(param, 0, Int.MAX_VALUE).asFlow() },
+            overrideSize = podcastPlaylistDao.countPlaylistTracks(param)
+        )
+    }
+
+    override fun getSiblings(mediaId: MediaId): PageRequest<PodcastPlaylist> {
+        return object : PageRequest<PodcastPlaylist> {
+            override fun getPage(page: Page): List<PodcastPlaylist> {
+                return podcastPlaylistDao.getSiblings(mediaId.categoryId, page.limit, page.offset)
+                    .map { it.toDomain() }
+            }
+
+            override fun getCount(): Int {
+                return podcastPlaylistDao.countSiblings(mediaId.categoryId)
+            }
+
+            override suspend fun observePage(page: Page): Flow<List<PodcastPlaylist>> {
+                return podcastPlaylistDao.observeSibling(mediaId.categoryId)
+                    .asFlow()
+                    .distinctUntilChanged()
+                    .mapToList { it.toDomain() }
+            }
+
+            override suspend fun observeNotification(): Flow<Unit> {
+                return podcastPlaylistDao.observeSibling(mediaId.categoryId)
                     .asFlow()
                     .drop(1)
                     .map { Unit }
             }
-        )
+        }
     }
 
     override fun canShowSiblings(mediaId: MediaId): Boolean {
@@ -143,156 +232,72 @@ internal class PodcastPlaylistRepository @Inject constructor(
                 podcastPlaylistDao.countSiblings(mediaId.categoryId) > 0
     }
 
-    private fun makePodcastListByParamChunk(playlistId: Long, chunkRequest: ChunkRequest): List<Podcast>{
-        return when (playlistId) {
-            PodcastPlaylistGateway.PODCAST_LAST_ADDED_ID -> {
-                contentResolver.queryAll(trackQueries.getByLastAdded(chunkRequest), { it.toPodcast() },
-                    { PodcastRepository.adjustImages(context, it) })
-            }
-            PodcastPlaylistGateway.PODCAST_FAVORITE_LIST_ID -> {
-                // TODO sort by now is lost, repair
-                val favoritesIds = favoriteGateway.getAllPodcasts(chunkRequest.limit, chunkRequest.offset)
-                val existing = contentResolver.queryAll(trackQueries.getExisting(favoritesIds.joinToString { "'$it'" }),
-                    { it.toPodcast() }, { PodcastRepository.adjustImages(context, it) })
-                favoritesIds.asSequence()
-                    .mapNotNull { fav -> existing.first { it.id == fav } }
-                    .toList()
-            }
-            PodcastPlaylistGateway.PODCAST_HISTORY_LIST_ID -> {
-                val historyIds = historyDao.getAllPodcasts(chunkRequest.limit, chunkRequest.offset)
-                val existing =
-                    contentResolver.queryAll(trackQueries.getExisting(historyIds.joinToString { "'${it.podcastId}'" }),
-                        { it.toPodcast() }, { PodcastRepository.adjustImages(context, it) })
-                historyIds.asSequence()
-                    .mapNotNull { hist -> existing.first { it.id == hist.podcastId } to hist }
-                    .map {
-                        it.first.copy(
-                            trackNumber = it.second.id,
-                            dateAdded = it.second.dateAdded
-                        )
-                    } // TODO check behavior
-                    .sortedByDescending { it.dateAdded }
-                    .toList()
-            }
-            else -> {
-                val podcastIds = podcastPlaylistDao.getPlaylistTracks(playlistId)
-                val existing = contentResolver.queryAll(trackQueries.getExisting(podcastIds.joinToString { "'$it'" }),
-                    { it.toPodcast() }, { PodcastRepository.adjustImages(context, it) })
-                podcastIds.asSequence()
-                    .mapNotNull { podcast ->
-                        existing.first { it.id == podcast.podcastId }
-                        .copy(trackNumber = podcast.idInPlaylist.toInt())
-                    }
-                    .toList()
-            }
-        }
-    }
-
-    private fun getPodcastListCountByParam(playlistId: Long): Int {
-        return when (playlistId) {
-            PodcastPlaylistGateway.PODCAST_LAST_ADDED_ID -> {
-                val cursor = trackQueries.countAll()
-                contentResolver.querySize(cursor)
-            }
-            PodcastPlaylistGateway.PODCAST_FAVORITE_LIST_ID -> favoriteGateway.countAll()
-            PodcastPlaylistGateway.PODCAST_HISTORY_LIST_ID -> historyDao.countAll()
-            else -> podcastPlaylistDao.getCount()
-        }
-    }
-
-    private fun observPodcastListByParam(playlistId: Long): suspend () -> Flow<Unit> {
-        return suspend {
-            when (playlistId) {
-                PodcastPlaylistGateway.PODCAST_LAST_ADDED_ID -> contentObserver.createQuery(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-                PodcastPlaylistGateway.PODCAST_FAVORITE_LIST_ID -> favoriteGateway.observeAllPodcast().asFlow()
-                    .drop(1)
-                    .map { Unit }
-                PodcastPlaylistGateway.PODCAST_HISTORY_LIST_ID -> historyDao.observeAllPodcast().asFlow()
-                    .drop(1)
-                    .map { Unit }
-                else -> podcastPlaylistDao.observePlaylistTracks(playlistId)
-                    .asFlow()
-                    .drop(1)
-                    .map { Unit }
-            }
-        }
-    }
-
-    override fun observePodcastListByParam(param: Long): Observable<List<Podcast>> {
-        return Observable.just(emptyList())
-    }
-
     override fun getPlaylistsBlocking(): List<PodcastPlaylist> {
-        return podcastPlaylistDao.getAllPlaylistsBlocking()
-            .map { it.toDomain() }
+        return podcastPlaylistDao.getAllPlaylistsBlocking().map { it.toDomain() }
     }
 
-    override fun deletePlaylist(playlistId: Long): Completable {
-        return Completable.fromCallable { podcastPlaylistDao.deletePlaylist(playlistId) }
+    override suspend fun deletePlaylist(playlistId: Long) {
+        podcastPlaylistDao.deletePlaylist(playlistId)
     }
 
-    override fun addSongsToPlaylist(playlistId: Long, songIds: List<Long>): Completable {
-        return Completable.fromCallable {
-            var maxIdInPlaylist = podcastPlaylistDao.getPlaylistMaxId(playlistId).toLong()
-            val tracks = songIds.map {
-                PodcastPlaylistTrackEntity(
-                    playlistId = playlistId, idInPlaylist = ++maxIdInPlaylist,
-                    podcastId = it
-                )
-            }
-            podcastPlaylistDao.insertTracks(tracks)
-        }
-    }
-
-    override fun createPlaylist(playlistName: String): Single<Long> {
-        return Single.fromCallable {
-            podcastPlaylistDao.createPlaylist(
-                PodcastPlaylistEntity(name = playlistName, size = 0)
+    override suspend fun addSongsToPlaylist(playlistId: Long, songIds: List<Long>) {
+        var maxIdInPlaylist = podcastPlaylistDao.getPlaylistMaxId(playlistId).toLong()
+        val tracks = songIds.map {
+            PodcastPlaylistTrackEntity(
+                playlistId = playlistId, idInPlaylist = ++maxIdInPlaylist,
+                podcastId = it
             )
         }
+        podcastPlaylistDao.insertTracks(tracks)
     }
 
-    override fun clearPlaylist(playlistId: Long): Completable {
-        if (PodcastPlaylistGateway.isPodcastAutoPlaylist(playlistId)) {
-            when (playlistId) {
-                PodcastPlaylistGateway.PODCAST_FAVORITE_LIST_ID -> return favoriteGateway.deleteAll(FavoriteType.PODCAST)
-                PodcastPlaylistGateway.PODCAST_HISTORY_LIST_ID -> return Completable.fromCallable { historyDao.deleteAllPodcasts() }
+    override suspend fun createPlaylist(playlistName: String): Long {
+        return podcastPlaylistDao.createPlaylist(PodcastPlaylistEntity(name = playlistName, size = 0))
+    }
+
+    override suspend fun clearPlaylist(playlistId: Long) {
+        when (playlistId) {
+            PodcastPlaylistGateway.PODCAST_FAVORITE_LIST_ID -> {
+                favoriteGateway.deleteAll(FavoriteType.PODCAST)
+            }
+            PodcastPlaylistGateway.PODCAST_HISTORY_LIST_ID -> {
+                historyDao.deleteAllPodcasts()
+            }
+            else -> {
+                podcastPlaylistDao.clearPlaylist(playlistId)
             }
         }
-        return Completable.fromCallable { podcastPlaylistDao.clearPlaylist(playlistId) }
     }
 
-    override fun removeSongFromPlaylist(playlistId: Long, idInPlaylist: Long): Completable {
+    override suspend fun removeSongFromPlaylist(playlistId: Long, idInPlaylist: Long) {
         if (PodcastPlaylistGateway.isPodcastAutoPlaylist(playlistId)) {
             return removeFromAutoPlaylist(playlistId, idInPlaylist)
+        } else {
+            podcastPlaylistDao.deleteTrack(playlistId, idInPlaylist)
         }
-        return Completable.fromCallable { podcastPlaylistDao.deleteTrack(playlistId, idInPlaylist) }
+
     }
 
-    private fun removeFromAutoPlaylist(playlistId: Long, songId: Long): Completable {
-        return when (playlistId) {
+    private suspend fun removeFromAutoPlaylist(playlistId: Long, songId: Long) {
+        when (playlistId) {
             PodcastPlaylistGateway.PODCAST_FAVORITE_LIST_ID -> favoriteGateway.deleteSingle(
                 FavoriteType.PODCAST,
                 songId
             )
-            PodcastPlaylistGateway.PODCAST_HISTORY_LIST_ID -> Completable.fromCallable {
-                historyDao.deleteSinglePodcast(
-                    songId
-                )
-            }
+            PodcastPlaylistGateway.PODCAST_HISTORY_LIST_ID -> historyDao.deleteSinglePodcast(songId)
             else -> throw IllegalArgumentException("invalid auto playlist id: $playlistId")
         }
     }
 
-    override fun renamePlaylist(playlistId: Long, newTitle: String): Completable {
-        return Completable.fromCallable { podcastPlaylistDao.renamePlaylist(playlistId, newTitle) }
+    override suspend fun renamePlaylist(playlistId: Long, newTitle: String) {
+        podcastPlaylistDao.renamePlaylist(playlistId, newTitle)
     }
 
-    override fun removeDuplicated(playlistId: Long): Completable {
-        return Completable.fromCallable { podcastPlaylistDao.removeDuplicated(playlistId) }
+    override suspend fun removeDuplicated(playlistId: Long) {
+        podcastPlaylistDao.removeDuplicated(playlistId)
     }
 
-    override fun insertPodcastToHistory(podcastId: Long): Completable {
+    override suspend fun insertPodcastToHistory(podcastId: Long) {
         return historyDao.insertPodcasts(podcastId)
     }
 }

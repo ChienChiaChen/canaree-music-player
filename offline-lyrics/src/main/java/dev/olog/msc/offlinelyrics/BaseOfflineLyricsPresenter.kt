@@ -8,46 +8,50 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
+import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.entity.OfflineLyrics
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.offlinelyrics.domain.InsertOfflineLyricsUseCase
 import dev.olog.msc.offlinelyrics.domain.ObserveOfflineLyricsUseCase
 import dev.olog.msc.shared.extensions.dpToPx
-import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.utils.clamp
 import dev.olog.msc.shared.utils.indexOfClosest
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.*
+import kotlinx.coroutines.rx2.asObservable
 import java.util.concurrent.TimeUnit
 
 abstract class BaseOfflineLyricsPresenter constructor(
-        private val appPreferencesUseCase: AppPreferencesGateway,
-        private val observeUseCase: ObserveOfflineLyricsUseCase,
-        private val insertUseCase: InsertOfflineLyricsUseCase
+    private val appPreferencesUseCase: AppPreferencesGateway,
+    private val observeUseCase: ObserveOfflineLyricsUseCase,
+    private val insertUseCase: InsertOfflineLyricsUseCase
 
-) {
+) : CoroutineScope by CustomScope(Dispatchers.Default) {
 
-    private var lyricsDisposable: Disposable? = null
     protected val currentTrackIdPublisher = BehaviorSubject.create<Long>()
 
     private var originalLyrics: String = ""
 
-    fun updateCurrentTrackId(trackId: Long){
+    fun updateCurrentTrackId(trackId: Long) {
         currentTrackIdPublisher.onNext(trackId)
     }
 
     fun observeLyrics(): Observable<String> {
         return Observables.combineLatest(
-                currentTrackIdPublisher.switchMap { id ->
-                    observeUseCase.execute(id)
-                }, Observable.interval(1, TimeUnit.SECONDS, Schedulers.io()).startWith(0)
-                ) { lyrics, _ ->
-                    this.originalLyrics = lyrics
-                    lyrics
-                }
+            currentTrackIdPublisher.switchMap { id ->
+                runBlocking { observeUseCase.execute(id) }.asObservable()
+            }, Observable.interval(1, TimeUnit.SECONDS, Schedulers.io()).startWith(0)
+        ) { lyrics, _ ->
+            this.originalLyrics = lyrics
+            lyrics
+        }
+    }
+
+    fun onDestroy() {
+        cancel()
     }
 
     fun getOriginalLyrics() = originalLyrics
@@ -61,36 +65,41 @@ abstract class BaseOfflineLyricsPresenter constructor(
     private fun transformLyricsInternal(context: Context, bookmark: Int, lyrics: String): Spannable {
         val lines = lyrics.split("\n")
 
-        if (searchForSyncedLyrics(lines).take(10).count() == 0){
+        if (searchForSyncedLyrics(lines).take(10).count() == 0) {
             val spannable = SpannableString(lyrics)
-            spannable.setSpan(ForegroundColorSpan(Color.WHITE), 0, spannable.length,  Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-            spannable.setSpan(AbsoluteSizeSpan(context.dpToPx(16f)), 0, spannable.length,  Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+            spannable.setSpan(ForegroundColorSpan(Color.WHITE), 0, spannable.length, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+            spannable.setSpan(
+                AbsoluteSizeSpan(context.dpToPx(16f)),
+                0,
+                spannable.length,
+                Spanned.SPAN_INCLUSIVE_INCLUSIVE
+            )
             return spannable
         }
 
         try {
             val notEmptyLines = lines
-                    .asSequence()
-                    .map { line ->
-                        val index = line.indexOfFirst { it == '[' }
-                        if (index == -1){
-                            ""
-                        } else {
-                            line.substring(index)
-                        }
+                .asSequence()
+                .map { line ->
+                    val index = line.indexOfFirst { it == '[' }
+                    if (index == -1) {
+                        ""
+                    } else {
+                        line.substring(index)
                     }
-                    .filter { it.length > 10 }
-                    .filter { it[10] != '\r' }
-                    .filter { it[0] == '[' && it[9] == ']' }
-                    .filter { it[1].isDigit() && it[2].isDigit() && it[4].isDigit() && it[5].isDigit() }
-                    .toList()
+                }
+                .filter { it.length > 10 }
+                .filter { it[10] != '\r' }
+                .filter { it[0] == '[' && it[9] == ']' }
+                .filter { it[1].isDigit() && it[2].isDigit() && it[4].isDigit() && it[5].isDigit() }
+                .toList()
 
 
             val timeList = mutableListOf<Int>()
 
             for (line in notEmptyLines) {
                 val indexOfBracket = line.indexOfFirst { it == '[' }
-                if (indexOfBracket == -1){
+                if (indexOfBracket == -1) {
                     continue
                 }
                 val m1 = line[indexOfBracket + 1].toString().toInt() * 10
@@ -105,45 +114,70 @@ abstract class BaseOfflineLyricsPresenter constructor(
             val closest = indexOfClosest(bookmark, timeList)
 
             val result = SpannableStringBuilder()
-            for (index in 0..notEmptyLines.lastIndex){
+            for (index in 0..notEmptyLines.lastIndex) {
                 val line = notEmptyLines[index].substring(10)
-                if (index == closest){
+                if (index == closest) {
                     result.append(line)
-                    result.setSpan(ForegroundColorSpan(Color.WHITE), result.length - line.length, result.length,  Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-                    result.setSpan(AbsoluteSizeSpan(context.dpToPx(30f)), result.length - line.length, result.length,  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    result.setSpan(
+                        ForegroundColorSpan(Color.WHITE),
+                        result.length - line.length,
+                        result.length,
+                        Spanned.SPAN_INCLUSIVE_INCLUSIVE
+                    )
+                    result.setSpan(
+                        AbsoluteSizeSpan(context.dpToPx(30f)),
+                        result.length - line.length,
+                        result.length,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 } else {
                     result.append(line)
-                    result.setSpan(ForegroundColorSpan(0xFF_757575.toInt()), result.length - line.length, result.length,  Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-                    result.setSpan(AbsoluteSizeSpan(context.dpToPx(16f)), result.length - line.length, result.length,  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    result.setSpan(
+                        ForegroundColorSpan(0xFF_757575.toInt()),
+                        result.length - line.length,
+                        result.length,
+                        Spanned.SPAN_INCLUSIVE_INCLUSIVE
+                    )
+                    result.setSpan(
+                        AbsoluteSizeSpan(context.dpToPx(16f)),
+                        result.length - line.length,
+                        result.length,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
                 result.appendln()
             }
 
             return result
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             val spannable = SpannableString(lyrics)
-            spannable.setSpan(ForegroundColorSpan(Color.WHITE), 0, spannable.length,  Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-            spannable.setSpan(AbsoluteSizeSpan(context.dpToPx(16f)), 0, spannable.length,  Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+            spannable.setSpan(ForegroundColorSpan(Color.WHITE), 0, spannable.length, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+            spannable.setSpan(
+                AbsoluteSizeSpan(context.dpToPx(16f)),
+                0,
+                spannable.length,
+                Spanned.SPAN_INCLUSIVE_INCLUSIVE
+            )
             return spannable
         }
     }
 
     private fun searchForSyncedLyrics(lines: List<String>): Sequence<String> {
         return lines.asSequence()
-                .map { line ->
-                    val index = line.indexOfFirst { it == '[' }
-                    if (index == -1){
-                        ""
-                    } else {
-                        line.substring(index)
-                    }
+            .map { line ->
+                val index = line.indexOfFirst { it == '[' }
+                if (index == -1) {
+                    ""
+                } else {
+                    line.substring(index)
                 }
-                .filter { it.length > 10 }
-                .filter { it[10] != '\r' }
-                .filter { it[1].isDigit() && it[2].isDigit() && it[4].isDigit() && it[5].isDigit() }
+            }
+            .filter { it.length > 10 }
+            .filter { it[10] != '\r' }
+            .filter { it[1].isDigit() && it[2].isDigit() && it[4].isDigit() && it[5].isDigit() }
     }
 
-    fun updateSyncAdjustement(value: Long){
+    fun updateSyncAdjustement(value: Long) {
         appPreferencesUseCase.setSyncAdjustment(value)
     }
 
@@ -151,10 +185,8 @@ abstract class BaseOfflineLyricsPresenter constructor(
         return "${appPreferencesUseCase.getSyncAdjustment()}"
     }
 
-    fun updateLyrics(lyrics: String){
-        lyricsDisposable.unsubscribe()
-        lyricsDisposable = insertUseCase.execute(OfflineLyrics(currentTrackIdPublisher.value ?: -1, lyrics))
-                .subscribe({}, Throwable::printStackTrace)
+    fun updateLyrics(lyrics: String) = launch {
+        insertUseCase.execute(OfflineLyrics(currentTrackIdPublisher.value ?: -1, lyrics))
     }
 
 }

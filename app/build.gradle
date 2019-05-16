@@ -96,13 +96,6 @@ android {
         disable 'MissingTranslation'
     }
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-        main.assets.srcDirs = ['src/main/assets']
-        debug.assets.srcDirs = ['src/debug/assets']
-        debug.res.srcDirs = ['src/debug/res']
-    }
-
     kapt {
         javacOptions {
             option("-Xmaxerrs", 500)
@@ -220,7 +213,6 @@ dependencies {
     implementation librariesUi.blurkit
 
 //    db
-    implementation librariesPersistency.sqlBrite
     implementation librariesPersistency.room
     implementation librariesPersistency.rxPrefs
 

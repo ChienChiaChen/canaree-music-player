@@ -10,11 +10,8 @@ import dev.olog.msc.core.interactor.item.GetPodcastUseCase
 import dev.olog.msc.core.interactor.item.GetSongUseCase
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.audio.exceptions.CannotReadException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
@@ -37,43 +34,43 @@ class EditItemDialogFactory @Inject constructor(
     }
 
     fun toEditTrack(mediaId: MediaId, action: () -> Unit) = runBlocking{
-        toDialogDisposable.unsubscribe()
-        toDialogDisposable = if (mediaId.isAnyPodcast){
-            getPodcastUseCase.execute(mediaId).asObservable()
-                    .observeOn(Schedulers.computation())
-                    .firstOrError()
-                    .map { checkPodcast(it) }
-        } else {
-            getSongUseCase.execute(mediaId).asObservable()
-                    .observeOn(Schedulers.computation())
-                    .firstOrError()
-                    .map { checkSong(it) }
-        }.observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ action() }, { showError(it) })
+//        toDialogDisposable.unsubscribe() TODO
+//        toDialogDisposable = if (mediaId.isAnyPodcast){
+//            getPodcastUseCase.execute(mediaId).asObservable()
+//                    .observeOn(Schedulers.computation())
+//                    .firstOrError()
+//                    .map { checkPodcast(it) }
+//        } else {
+//            getSongUseCase.execute(mediaId).asObservable()
+//                    .observeOn(Schedulers.computation())
+//                    .firstOrError()
+//                    .map { checkSong(it) }
+//        }.observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ action() }, { showError(it) })
     }
 
     fun toEditAlbum(mediaId: MediaId, action: () -> Unit){
-        toDialogDisposable.unsubscribe()
-        toDialogDisposable = getSongListByParamUseCase.execute(mediaId)
-                .observeOn(Schedulers.computation())
-                .firstOrError()
-                .flattenAsObservable { it }
-                .map { checkSong(it) }
-                .toList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ action() }, { showError(it) })
+//        toDialogDisposable.unsubscribe()
+//        toDialogDisposable = getSongListByParamUseCase.execute(mediaId)
+//                .observeOn(Schedulers.computation())
+//                .firstOrError()
+//                .flattenAsObservable { it }
+//                .map { checkSong(it) }
+//                .toList()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ action() }, { showError(it) })
     }
 
     fun toEditArtist(mediaId: MediaId, action: () -> Unit){
-        toDialogDisposable.unsubscribe()
-        toDialogDisposable = getSongListByParamUseCase.execute(mediaId)
-                .observeOn(Schedulers.computation())
-                .firstOrError()
-                .flattenAsObservable { it }
-                .map { checkSong(it) }
-                .toList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ action() }, { showError(it) })
+//        toDialogDisposable.unsubscribe()
+//        toDialogDisposable = getSongListByParamUseCase.execute(mediaId)
+//                .observeOn(Schedulers.computation())
+//                .firstOrError()
+//                .flattenAsObservable { it }
+//                .map { checkSong(it) }
+//                .toList()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ action() }, { showError(it) })
     }
 
     private fun checkSong(song: Song){

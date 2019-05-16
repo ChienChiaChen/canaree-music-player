@@ -1,10 +1,13 @@
 package dev.olog.msc.presentation.dialogs.rename
 
 import android.content.Context
+import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.dialogs.BaseEditTextDialog
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
+import dev.olog.msc.shared.extensions.lazyFast
 import io.reactivex.Completable
 import javax.inject.Inject
 
@@ -17,15 +20,19 @@ class RenameDialog : BaseEditTextDialog() {
 
         fun newInstance(mediaId: MediaId, itemTitle: String): RenameDialog {
             return RenameDialog().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString(),
-                    ARGUMENTS_ITEM_TITLE to itemTitle
+                ARGUMENTS_MEDIA_ID to mediaId.toString(),
+                ARGUMENTS_ITEM_TITLE to itemTitle
             )
         }
     }
 
-    @Inject lateinit var presenter: RenameDialogPresenter
-    @Inject lateinit var mediaId: MediaId
-    @Inject lateinit var title: String
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+    private val viewModel by lazyFast { viewModelProvider<RenameDialogViewModel>(factory) }
+    private val mediaId: MediaId by lazyFast {
+        MediaId.fromString(arguments!!.getString(ARGUMENTS_MEDIA_ID)!!)
+    }
+    private val title: String by lazyFast { arguments!!.getString(ARGUMENTS_ITEM_TITLE) }
 
     override fun title(): Int = R.string.popup_rename
 
@@ -52,12 +59,17 @@ class RenameDialog : BaseEditTextDialog() {
     }
 
     override fun positiveAction(currentValue: String): Completable {
-        return presenter.execute(currentValue)
+//        return viewModel.execute(mediaId, currentValue)
+        return TODO()
     }
 
     override fun successMessage(context: Context, currentValue: String): CharSequence {
         return when {
-            mediaId.isPlaylist || mediaId.isPodcastPlaylist -> context.getString(R.string.playlist_x_renamed_to_y, title, currentValue)
+            mediaId.isPlaylist || mediaId.isPodcastPlaylist -> context.getString(
+                R.string.playlist_x_renamed_to_y,
+                title,
+                currentValue
+            )
             else -> throw IllegalStateException("not a playlist, $mediaId")
         }
     }
@@ -66,7 +78,7 @@ class RenameDialog : BaseEditTextDialog() {
         return context.getString(R.string.popup_error_message)
     }
 
-    override fun isStringValid(string: String): Boolean = presenter.checkData(string)
+    override fun isStringValid(string: String): Boolean = viewModel.checkData(string)
 
     override fun initialTextFieldValue(): String {
         return arguments!!.getString(ARGUMENTS_ITEM_TITLE)

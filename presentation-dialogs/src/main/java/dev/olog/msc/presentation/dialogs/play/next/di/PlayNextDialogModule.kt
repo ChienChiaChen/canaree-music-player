@@ -1,33 +1,23 @@
 package dev.olog.msc.presentation.dialogs.play.next.di
 
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
+import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
+import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.dialogs.play.next.PlayNextDialog
+import dev.olog.msc.presentation.dialogs.play.next.PlayNextDialogViewModel
 
 @Module
-class PlayNextDialogModule(
-        private val fragment: PlayNextDialog
-) {
+abstract class PlayNextDialogModule {
 
-    @Provides
-    @FragmentLifecycle
-    fun provideLifecycle(): Lifecycle = fragment.lifecycle
+    @ContributesAndroidInjector
+    abstract fun provideFragment(): PlayNextDialog
 
-    @Provides
-    fun provideMediaId(): MediaId {
-        val mediaId = fragment.arguments!!.getString(PlayNextDialog.ARGUMENTS_MEDIA_ID)
-        return MediaId.fromString(mediaId)
-    }
-
-    @Provides
-    fun provideListSize(): Int {
-        return fragment.arguments!!.getInt(PlayNextDialog.ARGUMENTS_LIST_SIZE)
-    }
-
-    @Provides
-    fun provideTitle(): String = fragment.arguments!!.getString(PlayNextDialog.ARGUMENTS_ITEM_TITLE)
+    @Binds
+    @IntoMap
+    @ViewModelKey(PlayNextDialogViewModel::class)
+    abstract fun provideViewModel(viewModel: PlayNextDialogViewModel): ViewModel
 
 }

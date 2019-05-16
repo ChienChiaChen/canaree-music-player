@@ -1,24 +1,25 @@
 package dev.olog.msc.presentation.home.domain
 
-import dev.olog.msc.core.executors.ComputationScheduler
-import dev.olog.msc.core.interactor.base.ObservableUseCase
+import dev.olog.msc.core.coroutines.ComputationDispatcher
+import dev.olog.msc.core.coroutines.ObservableFlow
+import dev.olog.msc.core.coroutines.debounceFirst
 import dev.olog.msc.core.interactor.queue.ObservePlayingQueueUseCase
-import dev.olog.msc.shared.extensions.debounceFirst
-import io.reactivex.Observable
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class IsRepositoryEmptyUseCase @Inject constructor(
-        scheduler: ComputationScheduler,
-        private val playingQueueUseCase: ObservePlayingQueueUseCase
+    scheduler: ComputationDispatcher,
+    private val playingQueueUseCase: ObservePlayingQueueUseCase
 
-): ObservableUseCase<Boolean>(scheduler) {
+) : ObservableFlow<Boolean>(scheduler) {
 
 
-    override fun buildUseCaseObservable(): Observable<Boolean> {
+    override suspend fun buildUseCaseObservable(): Flow<Boolean> {
         return playingQueueUseCase.execute()
-                .debounceFirst(250, TimeUnit.MILLISECONDS)
-                .map { it.isEmpty() }
-                .distinctUntilChanged()
+            .debounceFirst(250)
+            .map { it.isEmpty() }
+            .distinctUntilChanged()
     }
 }

@@ -1,33 +1,34 @@
 package dev.olog.msc.core.interactor
 
+import dev.olog.msc.core.coroutines.CompletableFlowWithParam
+import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.entity.PlaylistType
-import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
-import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
-import io.reactivex.Completable
 import javax.inject.Inject
 
 class InsertCustomTrackListToPlaylist @Inject constructor(
-    scheduler: IoScheduler,
+    scheduler: IoDispatcher,
     private val playlistGateway: PlaylistGateway,
     private val podcastPlaylistGateway: PodcastPlaylistGateway
 
-): CompletableUseCaseWithParam<InsertCustomTrackListRequest>(scheduler) {
+) : CompletableFlowWithParam<InsertCustomTrackListRequest>(scheduler) {
 
-    override fun buildUseCaseObservable(param: InsertCustomTrackListRequest): Completable {
-        if (param.type == PlaylistType.PODCAST){
-            return podcastPlaylistGateway.createPlaylist(param.playlistTitle)
-                    .flatMapCompletable { podcastPlaylistGateway.addSongsToPlaylist(it, param.tracksId) }
+    override suspend fun buildUseCaseObservable(param: InsertCustomTrackListRequest) {
+        if (param.type == PlaylistType.PODCAST) {
+            val playlisyId = podcastPlaylistGateway.createPlaylist(param.playlistTitle)
+            podcastPlaylistGateway.addSongsToPlaylist(playlisyId, param.tracksId)
+        } else {
+            val playlisyId = podcastPlaylistGateway.createPlaylist(param.playlistTitle)
+            playlistGateway.addSongsToPlaylist(playlisyId, param.tracksId)
         }
 
-        return playlistGateway.createPlaylist(param.playlistTitle)
-                .flatMapCompletable { playlistGateway.addSongsToPlaylist(it, param.tracksId) }
+
     }
 }
 
 data class InsertCustomTrackListRequest(
-        val playlistTitle: String,
-        val tracksId: List<Long>,
-        val type: PlaylistType
+    val playlistTitle: String,
+    val tracksId: List<Long>,
+    val type: PlaylistType
 )

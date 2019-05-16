@@ -13,7 +13,6 @@ import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmPodcastAlbumEntity
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -32,20 +31,20 @@ internal class LastFmRepoPodcastAlbum @Inject constructor(
 
     fun get(albumId: Long): Single<Optional<LastFmPodcastAlbum?>> = runBlocking{
         val cachedValue = getFromCache(albumId)
-
-        val fetch = Single.just(albumGateway.getByParam(albumId))
-                .flatMap {
-                    if (it.hasSameNameAsFolder){
-                        Single.error(Exception("image not downloadable"))
-                    } else {
-                        Single.just(it)
-                    }
-                }
-                .flatMap { fetch(it) }
-                .map { Optional.of(it) }
-
-        cachedValue.onErrorResumeNext(fetch)
-                .subscribeOn(Schedulers.io())
+        TODO()
+//        val fetch = Single.just(albumGateway.getByParam(albumId))
+//                .flatMap {
+//                    if (it.hasSameNameAsFolder){
+//                        Single.error(Exception("image not downloadable"))
+//                    } else {
+//                        Single.just(it)
+//                    }
+//                }
+//                .flatMap { fetch(it) }
+//                .map { Optional.of(it) }
+//
+//        cachedValue.onErrorResumeNext(fetch)
+//                .subscribeOn(Schedulers.io())
     }
 
     private fun getFromCache(albumId: Long): Single<Optional<LastFmPodcastAlbum?>> {

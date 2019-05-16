@@ -1,11 +1,11 @@
 package dev.olog.msc.core.gateway.base
 
-import dev.olog.msc.core.entity.ChunkedData
+import dev.olog.msc.core.entity.PageRequest
 
 
 interface HasRecentlyAdded<T>{
 
-    fun getRecentlyAddedChunk(): ChunkedData<T>
+    fun getRecentlyAdded(): PageRequest<T>
     fun canShowRecentlyAdded(): Boolean
 
 }

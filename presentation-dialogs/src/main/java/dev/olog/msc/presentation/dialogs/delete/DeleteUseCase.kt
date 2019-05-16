@@ -1,27 +1,24 @@
 package dev.olog.msc.presentation.dialogs.delete
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.executors.IoScheduler
+import dev.olog.msc.core.coroutines.CompletableFlowWithParam
+import dev.olog.msc.core.coroutines.ComputationDispatcher
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.gateway.track.SongGateway
-import dev.olog.msc.core.interactor.GetSongListByParamUseCase
-import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
-import io.reactivex.Completable
 import javax.inject.Inject
 
 class DeleteUseCase @Inject constructor(
-    scheduler: IoScheduler,
+    scheduler: ComputationDispatcher,
     private val playlistGateway: PlaylistGateway,
     private val podcastGateway: PodcastGateway,
-    private val songGateway: SongGateway,
-    private val getSongListByParamUseCase: GetSongListByParamUseCase
+    private val songGateway: SongGateway
 
-) : CompletableUseCaseWithParam<MediaId>(scheduler) {
+) : CompletableFlowWithParam<MediaId>(scheduler) {
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Completable {
-        if (mediaId.isLeaf && mediaId.isPodcast){
+    override suspend fun buildUseCaseObservable(mediaId: MediaId) {
+        if (mediaId.isLeaf && mediaId.isPodcast) {
             return podcastGateway.deleteSingle(mediaId.resolveId)
         }
 
@@ -32,8 +29,9 @@ class DeleteUseCase @Inject constructor(
         return when {
             mediaId.isPodcastPlaylist -> playlistGateway.deletePlaylist(mediaId.categoryValue.toLong())
             mediaId.isPlaylist -> playlistGateway.deletePlaylist(mediaId.categoryValue.toLong())
-            else -> getSongListByParamUseCase.execute(mediaId)
-                    .flatMapCompletable { songGateway.deleteGroup(it) }
+            else -> TODO("")
+//            else -> getSongListByParamUseCase.execute(mediaId)
+//                .flatMapCompletable { songGateway.deleteGroup(it) }
         }
     }
 }

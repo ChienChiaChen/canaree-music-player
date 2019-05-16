@@ -1,7 +1,6 @@
 package dev.olog.msc.musicservice
 
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
@@ -23,11 +22,11 @@ internal class RepeatMode @Inject constructor(
 
     fun isRepeatNone(): Boolean = getState() == REPEAT_MODE_NONE
 
-    fun isRepeatOne(): Boolean = getState() == PlaybackStateCompat.REPEAT_MODE_ONE
+    fun isRepeatOne(): Boolean = getState() == REPEAT_MODE_ONE
 
     fun isRepeatAll(): Boolean = getState() == REPEAT_MODE_ALL
 
-    fun update() {
+    suspend fun update() {
         val repeatMode = getState()
 
         val newState = when (repeatMode){

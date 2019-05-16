@@ -7,7 +7,7 @@ import android.provider.MediaStore.Audio.Genres.*
 import android.provider.MediaStore.Audio.Genres.Members.*
 import dev.olog.contentresolversql.querySql
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.entity.ChunkRequest
+import dev.olog.msc.core.entity.Page
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 
 internal class GenreQueries(
@@ -15,7 +15,7 @@ internal class GenreQueries(
     private val contentResolver: ContentResolver
 ) : BaseQueries(prefsGateway, false) {
 
-    fun getAll(chunk: ChunkRequest?): Cursor {
+    fun getAll(chunk: Page?): Cursor {
         val query = """
             SELECT ${MediaStore.Audio.Genres._ID}, $NAME
             FROM $EXTERNAL_CONTENT_URI
@@ -55,13 +55,13 @@ internal class GenreQueries(
         return contentResolver.querySql(query, arrayOf(genreId.toString()))
     }
 
-    fun getSongList(genreId: Long, chunk: ChunkRequest?): Cursor{
+    fun getSongList(genreId: Long, chunk: Page?): Cursor{
         val query = """
             SELECT ${Members._ID}, $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
-                $albumArtistProjection
+                $albumArtistProjection,
                 $DURATION, $DATA, $YEAR,
                 $discNumberProjection as ${Columns.N_DISC},
                 $trackNumberProjection as ${Columns.N_TRACK},
@@ -83,13 +83,13 @@ internal class GenreQueries(
         return contentResolver.querySql(query)
     }
 
-    fun getRecentlyAddedSongs(genreId: Long, chunk: ChunkRequest?): Cursor {
+    fun getRecentlyAddedSongs(genreId: Long, chunk: Page?): Cursor {
         val query = """
             SELECT ${Members._ID}, $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
-                $albumArtistProjection
+                $albumArtistProjection,
                 $DURATION, $DATA, $YEAR,
                 $discNumberProjection as ${Columns.N_DISC},
                 $trackNumberProjection as ${Columns.N_TRACK},
@@ -102,7 +102,7 @@ internal class GenreQueries(
         return contentResolver.querySql(query)
     }
 
-    fun getSiblingsChunk(genreId: Long, chunk: ChunkRequest?): Cursor {
+    fun getSiblings(genreId: Long, chunk: Page?): Cursor {
         val query = """
             SELECT ${MediaStore.Audio.Genres._ID}, $NAME
             FROM $EXTERNAL_CONTENT_URI
@@ -113,7 +113,7 @@ internal class GenreQueries(
         return contentResolver.querySql(query, arrayOf(genreId.toString()))
     }
 
-    fun getRelatedArtists(genreId: Long, chunk: ChunkRequest?): Cursor {
+    fun getRelatedArtists(genreId: Long, chunk: Page?): Cursor {
         val query = """
             SELECT distinct $ARTIST_ID, $ARTIST, $albumArtistProjection,
                 count(*) as ${Columns.N_SONGS},
@@ -133,7 +133,7 @@ internal class GenreQueries(
                 $TITLE,
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
-                $albumArtistProjection
+                $albumArtistProjection,
                 $DURATION, $DATA, $YEAR,
                 $discNumberProjection as ${Columns.N_DISC},
                 $trackNumberProjection as ${Columns.N_TRACK},

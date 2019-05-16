@@ -33,7 +33,6 @@ import dev.olog.msc.shared.extensions.*
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.ui.theme.ImageShape
 import dev.olog.msc.shared.utils.isMarshmallow
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -313,11 +312,9 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         newState: SlidingUpPanelLayout.PanelState
     ) {
         if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
-            lyricsDisposable.unsubscribe()
-            lyricsDisposable = Completable.timer(50, TimeUnit.MILLISECONDS, Schedulers.io())
-                .andThen(viewModel.showLyricsTutorialIfNeverShown())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ lyrics?.let { Tutorial.lyrics(it) } }, {})
+            if (viewModel.showLyricsTutorialIfNeverShown()){
+                lyrics?.let { Tutorial.lyrics(it) }
+            }
         } else {
             lyricsDisposable.unsubscribe()
         }

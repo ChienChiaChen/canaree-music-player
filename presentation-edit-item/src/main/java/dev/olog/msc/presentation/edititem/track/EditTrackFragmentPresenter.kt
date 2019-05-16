@@ -15,7 +15,6 @@ import dev.olog.msc.presentation.edititem.utils.get
 import dev.olog.msc.shared.TrackUtils
 import io.reactivex.Single
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.FieldKey
 import java.io.File
@@ -56,19 +55,20 @@ class EditTrackFragmentPresenter @Inject constructor(
     }
 
     private fun observePodcastInternal(): Single<DisplayableSong> = runBlocking{
-        getPodcastUseCase.execute(mediaId).asObservable()
-                .firstOrError()
-                .map { it.copy(
-                        artist = if (it.artist == TrackUtils.UNKNOWN) "" else it.artist,
-                        album = if (it.album == TrackUtils.UNKNOWN) "" else it.album
-                ) }
-                .map { it.toDisplayableSong() }
-                .doOnSuccess {
-                    val usedImage = usedImageGateway.getForTrack(it.id)
-                            ?: usedImageGateway.getForAlbum(it.albumId)
-                            ?: it.image
-                    originalSong = it.copy(image = usedImage)
-                }
+        TODO()
+//        getPodcastUseCase.execute(mediaId).asObservable()
+//                .firstOrError()
+//                .map { it.copy(
+//                        artist = if (it.artist == TrackUtils.UNKNOWN) "" else it.artist,
+//                        album = if (it.album == TrackUtils.UNKNOWN) "" else it.album
+//                ) }
+//                .map { it.toDisplayableSong() }
+//                .doOnSuccess {
+//                    val usedImage = usedImageGateway.getForTrack(it.id)
+//                            ?: usedImageGateway.getForAlbum(it.albumId)
+//                            ?: it.image
+//                    originalSong = it.copy(image = usedImage)
+//                }
     }
 
     fun fetchData(): Single<Optional<LastFmTrack?>> {

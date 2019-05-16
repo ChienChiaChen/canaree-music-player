@@ -5,7 +5,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.paging.PositionalDataSource
 import dev.olog.msc.core.coroutines.CustomScope
-import dev.olog.msc.core.entity.ChunkRequest
+import dev.olog.msc.core.entity.Page
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlin.math.abs
@@ -32,6 +32,7 @@ abstract class BaseDataSource<PresentationModel> :
     @CallSuper
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<PresentationModel>) {
         if (canLoadData){
+            val start = System.currentTimeMillis()
             val mainDataSize = getMainDataSize()
 
             headers.addAll(getHeaders(mainDataSize))
@@ -40,8 +41,9 @@ abstract class BaseDataSource<PresentationModel> :
 
             val result = mutableListOf<PresentationModel>()
             result.addAll(headers)
-            result.addAll(loadInternal(ChunkRequest(params.requestedStartPosition, params.requestedLoadSize - headers.size)))
+            result.addAll(loadInternal(Page(params.requestedStartPosition, params.requestedLoadSize - headers.size)))
             tryAddFooter(result, params.requestedLoadSize)
+            val end = System.currentTimeMillis() - start
             callback.onResult(result, 0, mainDataSize + headers.size + footerSize)
         }
     }
@@ -50,7 +52,7 @@ abstract class BaseDataSource<PresentationModel> :
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<PresentationModel>) {
         if (canLoadData){
             val result = mutableListOf<PresentationModel>()
-            result.addAll(loadInternal(ChunkRequest(params.startPosition - headers.size, params.loadSize)))
+            result.addAll(loadInternal(Page(params.startPosition - headers.size, params.loadSize)))
             tryAddFooter(result, params.loadSize)
 
             callback.onResult(result)
@@ -65,7 +67,7 @@ abstract class BaseDataSource<PresentationModel> :
         }
     }
 
-    protected abstract fun loadInternal(chunkRequest: ChunkRequest): List<PresentationModel>
+    protected abstract fun loadInternal(page: Page): List<PresentationModel>
 
     protected open val canLoadData = true
 

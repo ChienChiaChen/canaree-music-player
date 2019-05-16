@@ -3,44 +3,53 @@ package dev.olog.msc.data.db.last.played
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import dev.olog.msc.data.entity.LastPlayedPodcastAlbumEntity
-import io.reactivex.Completable
 import io.reactivex.Flowable
 
 @Dao
 internal abstract class LastPlayedPodcastAlbumDao {
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM last_played_podcast_albums
         ORDER BY dateAdded DESC
         LIMIT :limit
-    """)
+    """
+    )
     internal abstract fun getAll(limit: Int): List<LastPlayedPodcastAlbumEntity>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM last_played_podcast_albums
         ORDER BY dateAdded DESC
         LIMIT :limit
-    """)
+    """
+    )
     internal abstract fun observeAll(limit: Int): Flowable<List<LastPlayedPodcastAlbumEntity>>
 
-    @Query("""
+    @Query(
+        """
         SELECT count(*) FROM last_played_podcast_albums
-    """)
+    """
+    )
     internal abstract fun getCount(): Int
 
     @Insert
-    internal abstract fun insertImpl(entity: LastPlayedPodcastAlbumEntity)
+    internal abstract suspend fun insertImpl(entity: LastPlayedPodcastAlbumEntity)
 
-    @Query("""
+    @Query(
+        """
         DELETE FROM last_played_podcast_albums
         WHERE id = :albumId
-    """)
-    internal abstract fun deleteImpl(albumId: Long)
+    """
+    )
+    internal abstract suspend fun deleteImpl(albumId: Long)
 
-    internal fun insertOne(id: Long) : Completable {
-        return Completable.fromCallable{ deleteImpl(id) }
-                .andThen { insertImpl(LastPlayedPodcastAlbumEntity(id)) }
+    @Transaction
+    internal open suspend fun insertOne(id: Long) {
+        deleteImpl(id)
+        insertImpl(LastPlayedPodcastAlbumEntity(id))
     }
 
 }

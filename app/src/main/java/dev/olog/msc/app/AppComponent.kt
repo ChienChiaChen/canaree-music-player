@@ -17,14 +17,13 @@ import dev.olog.msc.musicservice.di.MusicServiceInjector
 import dev.olog.msc.presentation.ViewModelModule
 import dev.olog.msc.presentation.about.di.AboutActivityInjector
 import dev.olog.msc.presentation.detail.di.DetailFragmentInjector
-import dev.olog.msc.presentation.dialogs.delete.di.DeleteDialogInjector
-import dev.olog.msc.presentation.dialogs.duplicates.di.RemoveDuplicatesDialogInjector
-import dev.olog.msc.presentation.dialogs.favorite.di.AddFavoriteDialogInjector
-import dev.olog.msc.presentation.dialogs.play.later.di.PlayLaterDialogInjector
-import dev.olog.msc.presentation.dialogs.play.next.di.PlayNextDialogInjector
-import dev.olog.msc.presentation.dialogs.playlist.di.ClearPlaylistDialogInjector
-import dev.olog.msc.presentation.dialogs.playlist.di.NewPlaylistDialogInjector
-import dev.olog.msc.presentation.dialogs.rename.di.RenameDialogInjector
+import dev.olog.msc.presentation.dialogs.delete.di.DeleteDialogModule
+import dev.olog.msc.presentation.dialogs.duplicates.di.RemoveDuplicatesDialogModule
+import dev.olog.msc.presentation.dialogs.favorite.di.AddFavoriteDialogModule
+import dev.olog.msc.presentation.dialogs.play.later.di.PlayLaterDialogModule
+import dev.olog.msc.presentation.dialogs.playlist.di.ClearPlaylistDialogModule
+import dev.olog.msc.presentation.dialogs.playlist.di.NewPlaylistDialogModule
+import dev.olog.msc.presentation.dialogs.rename.di.RenameDialogModule
 import dev.olog.msc.presentation.dialogs.ringtone.di.SetRingtoneDialogInjector
 import dev.olog.msc.presentation.edititem.di.EditItemInjector
 import dev.olog.msc.presentation.equalizer.di.EqualizerInjector
@@ -41,7 +40,8 @@ import dev.olog.msc.presentation.sleeptimer.di.SleepTimerInjector
 import dev.olog.msc.presentation.tabs.foldertree.di.FolderTreeFragmentModule
 import javax.inject.Singleton
 
-@Component(modules = arrayOf(
+@Component(
+    modules = arrayOf(
         AppModule::class,
         SchedulersModule::class,
         AppShortcutsModule::class,
@@ -76,15 +76,15 @@ import javax.inject.Singleton
 
         RecentlyAddedFragmentInjector::class,
         RelatedArtistFragmentInjector::class,
-        AddFavoriteDialogInjector::class,
-        PlayNextDialogInjector::class,
-        PlayLaterDialogInjector::class,
+        AddFavoriteDialogModule::class,
+        PlayLaterDialogModule::class,
+        PlayLaterDialogModule::class,
         SetRingtoneDialogInjector::class,
-        RenameDialogInjector::class,
-        ClearPlaylistDialogInjector::class,
-        DeleteDialogInjector::class,
-        NewPlaylistDialogInjector::class,
-        RemoveDuplicatesDialogInjector::class,
+        RenameDialogModule::class,
+        ClearPlaylistDialogModule::class,
+        DeleteDialogModule::class,
+        NewPlaylistDialogModule::class,
+        RemoveDuplicatesDialogModule::class,
 
         ImageCreationInjector::class,
 
@@ -94,9 +94,10 @@ import javax.inject.Singleton
 
 //        // floating info service
         FloatingWindowServiceInjector::class
-))
+    )
+)
 @Singleton
-interface AppComponent: AndroidInjector<App> {
+interface AppComponent : AndroidInjector<App> {
 
     @Component.Builder
     abstract class Builder : AndroidInjector.Builder<App>() {

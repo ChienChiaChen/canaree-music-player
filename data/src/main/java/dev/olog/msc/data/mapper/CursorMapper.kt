@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package dev.olog.msc.data.mapper
 
 import android.content.Context
@@ -14,30 +12,30 @@ import dev.olog.msc.data.utils.getString
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import java.io.File
 
-internal inline fun Cursor.toGenre(context: Context, genreSize: Int) : Genre {
+internal fun Cursor.toGenre(context: Context): Genre {
     val id = this.getLong(BaseColumns._ID)
     val name = this.getString(MediaStore.Audio.GenresColumns.NAME).capitalize()
     return Genre(
-            id,
-            name,
-            genreSize,
-            ImagesFolderUtils.forGenre(context, id)
+        id,
+        name,
+        0, // wil be updated layer
+        ImagesFolderUtils.forGenre(context, id)
     )
 }
 
-internal inline fun Cursor.toPlaylist(context: Context, playlistSize: Int) : Playlist {
+internal fun Cursor.toPlaylist(context: Context): Playlist {
     val id = getLong(BaseColumns._ID)
     val name = getString(MediaStore.Audio.PlaylistsColumns.NAME).capitalize()
 
     return Playlist(
-            id,
-            name,
-            playlistSize,
-            ImagesFolderUtils.forPlaylist(context, id)
+        id,
+        name,
+        0, // wil be updated layer
+        ImagesFolderUtils.forPlaylist(context, id)
     )
 }
 
-internal inline fun Cursor.toFolder(context: Context): Folder {
+internal fun Cursor.toFolder(context: Context): Folder {
     val dirPath = getString(Columns.FOLDER)
     val folderImage = ImagesFolderUtils.forFolder(context, dirPath)
     val dirName = dirPath.substring(dirPath.lastIndexOf(File.separator) + 1)
@@ -50,7 +48,7 @@ internal inline fun Cursor.toFolder(context: Context): Folder {
     )
 }
 
-internal inline fun Cursor.toAlbum(): Album {
+internal fun Cursor.toAlbum(): Album {
     return Album(
         getLong(MediaStore.Audio.Media.ALBUM_ID),
         getLong(MediaStore.Audio.Media.ARTIST_ID),
@@ -63,7 +61,8 @@ internal inline fun Cursor.toAlbum(): Album {
     )
 }
 
-internal inline fun Cursor.toArtist(): Artist { return Artist(
+internal fun Cursor.toArtist(): Artist {
+    return Artist(
         getLong(MediaStore.Audio.Media.ARTIST_ID),
         getString(Columns.ARTIST),
         getString(Columns.ALBUM_ARTIST),

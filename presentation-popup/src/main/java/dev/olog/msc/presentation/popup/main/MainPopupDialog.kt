@@ -131,63 +131,66 @@ class MainPopupDialog @Inject constructor(
     }
 
     private fun handleAllSongsSorting(menuItem: MenuItem, sort: LibrarySortType){
-        var model = sort
-
-        model = if (menuItem.itemId == R.id.arranging){
-            val isAscending = !menuItem.isChecked
-            val newArranging = if (isAscending) SortArranging.ASCENDING else SortArranging.DESCENDING
-            model.copy(arranging = newArranging)
-        } else {
-            val newSortType = when (menuItem.itemId){
-                R.id.by_title -> SortType.TITLE
-                R.id.by_artist -> SortType.ARTIST
-                R.id.by_album -> SortType.ALBUM
-                R.id.by_duration -> SortType.DURATION
-                R.id.by_date -> SortType.RECENTLY_ADDED
-                else -> null
-            } ?: return
-            model.copy(type = newSortType)
-        }
-
-        gateway.setAllTracksSortOrder(model)
+        TODO()
+//        var model = sort
+//
+//        model = if (menuItem.itemId == R.id.arranging){
+//            val isAscending = !menuItem.isChecked
+//            val newArranging = if (isAscending) SortArranging.ASCENDING else SortArranging.DESCENDING
+//            model.copy(arranging = newArranging)
+//        } else {
+//            val newSortType = when (menuItem.itemId){
+//                R.id.by_title -> SortType.TITLE
+//                R.id.by_artist -> SortType.ARTIST
+//                R.id.by_album -> SortType.ALBUM
+//                R.id.by_duration -> SortType.DURATION
+//                R.id.by_date -> SortType.RECENTLY_ADDED
+//                else -> null
+//            } ?: return
+//            model.copy(type = newSortType)
+//        }
+//
+//        gateway.setAllTracksSortOrder(model)
     }
 
     private fun handleAllAlbumsSorting(menuItem: MenuItem, sort: LibrarySortType){
-        var model = sort
-
-        model = if (menuItem.itemId == R.id.arranging){
-            val isAscending = !menuItem.isChecked
-            val newArranging = if (isAscending) SortArranging.ASCENDING else SortArranging.DESCENDING
-            model.copy(arranging = newArranging)
-        } else {
-            val newSortType = when (menuItem.itemId){
-                R.id.by_title -> SortType.TITLE
-                R.id.by_artist -> SortType.ARTIST
-                else -> null
-            } ?: return
-            model.copy(type = newSortType)
-        }
-
-        gateway.setAllAlbumsSortOrder(model)
+        TODO()
+//        var model = sort
+//
+//        model = if (menuItem.itemId == R.id.arranging){
+//            val isAscending = !menuItem.isChecked
+//            val newArranging = if (isAscending) SortArranging.ASCENDING else SortArranging.DESCENDING
+//            model.copy(arranging = newArranging)
+//        } else {
+//            val newSortType = when (menuItem.itemId){
+//                R.id.by_title -> SortType.TITLE
+//                R.id.by_artist -> SortType.ARTIST
+//                else -> null
+//            } ?: return
+//            model.copy(type = newSortType)
+//        }
+//
+//        gateway.setAllAlbumsSortOrder(model)
     }
 
     private fun handleAllArtistsSorting(menuItem: MenuItem, sort: LibrarySortType){
-        var model = sort
-
-        model = if (menuItem.itemId == R.id.arranging){
-            val isAscending = !menuItem.isChecked
-            val newArranging = if (isAscending) SortArranging.ASCENDING else SortArranging.DESCENDING
-            model.copy(arranging = newArranging)
-        } else {
-            val newSortType = when (menuItem.itemId){
-                R.id.by_artist -> SortType.ARTIST
-                R.id.by_album_artist -> SortType.ALBUM_ARTIST
-                else -> null
-            } ?: return
-            model.copy(type = newSortType)
-        }
-
-        gateway.setAllArtistsSortOrder(model)
+        TODO()
+//        var model = sort
+//
+//        model = if (menuItem.itemId == R.id.arranging){
+//            val isAscending = !menuItem.isChecked
+//            val newArranging = if (isAscending) SortArranging.ASCENDING else SortArranging.DESCENDING
+//            model.copy(arranging = newArranging)
+//        } else {
+//            val newSortType = when (menuItem.itemId){
+//                R.id.by_artist -> SortType.ARTIST
+//                R.id.by_album_artist -> SortType.ALBUM_ARTIST
+//                else -> null
+//            } ?: return
+//            model.copy(type = newSortType)
+//        }
+//
+//        gateway.setAllArtistsSortOrder(model)
     }
 
 }

@@ -2,7 +2,7 @@ package dev.olog.msc.core.interactor.played
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.entity.ChunkedData
+import dev.olog.msc.core.entity.PageRequest
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.track.FolderGateway
 import dev.olog.msc.core.gateway.track.GenreGateway
@@ -25,11 +25,11 @@ class GetMostPlayedSongsUseCase @Inject constructor(
         }
     }
 
-    fun getChunk(mediaId: MediaId): ChunkedData<Song> {
+    fun get(mediaId: MediaId): PageRequest<Song> {
         return when (mediaId.category) {
-            MediaIdCategory.GENRES -> genreGateway.getMostPlayedChunk(mediaId)
-            MediaIdCategory.PLAYLISTS -> playlistGateway.getMostPlayedChunk(mediaId)
-            MediaIdCategory.FOLDERS -> folderGateway.getMostPlayedChunk(mediaId)
+            MediaIdCategory.GENRES -> genreGateway.getMostPlayed(mediaId)
+            MediaIdCategory.PLAYLISTS -> playlistGateway.getMostPlayed(mediaId)
+            MediaIdCategory.FOLDERS -> folderGateway.getMostPlayed(mediaId)
             else -> throw IllegalArgumentException("invalid category ${mediaId.category}")
         }
     }

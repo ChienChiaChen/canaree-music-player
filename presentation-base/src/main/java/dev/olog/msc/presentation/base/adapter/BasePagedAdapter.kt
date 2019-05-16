@@ -2,6 +2,7 @@ package dev.olog.msc.presentation.base.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.paging.PagedListAdapter
@@ -46,4 +47,17 @@ abstract class BasePagedAdapter<Model : BaseModel>(diffCallback: DiffUtil.ItemCa
     }
 
     protected abstract fun bind(binding: ViewDataBinding, item: Model, position: Int)
+
+    @CallSuper
+    override fun onViewAttachedToWindow(holder: DataBoundViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.onAppear()
+    }
+
+    @CallSuper
+    override fun onViewDetachedFromWindow(holder: DataBoundViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.onDisappear()
+    }
+
 }

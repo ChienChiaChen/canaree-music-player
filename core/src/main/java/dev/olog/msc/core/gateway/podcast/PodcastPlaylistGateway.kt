@@ -4,8 +4,6 @@ import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.core.gateway.base.BaseGateway
 import dev.olog.msc.core.gateway.base.ChildsHasPodcasts
 import dev.olog.msc.core.gateway.base.HasSiblings
-import io.reactivex.Completable
-import io.reactivex.Single
 
 interface PodcastPlaylistGateway :
     BaseGateway<PodcastPlaylist, Long>,
@@ -30,22 +28,20 @@ interface PodcastPlaylistGateway :
     fun getAllAutoPlaylists(): List<PodcastPlaylist>
     fun getPlaylistsBlocking(): List<PodcastPlaylist>
 
+    suspend fun createPlaylist(playlistName: String): Long
 
-    fun createPlaylist(playlistName: String): Single<Long>
+    suspend fun renamePlaylist(playlistId: Long, newTitle: String)
 
-    fun renamePlaylist(playlistId: Long, newTitle: String): Completable
+    suspend fun deletePlaylist(playlistId: Long)
 
-    fun deletePlaylist(playlistId: Long): Completable
+    suspend fun clearPlaylist(playlistId: Long)
 
-    fun clearPlaylist(playlistId: Long): Completable
+    suspend fun addSongsToPlaylist(playlistId: Long, songIds: List<Long>)
 
-    fun addSongsToPlaylist(playlistId: Long, songIds: List<Long>): Completable
+    suspend fun removeSongFromPlaylist(playlistId: Long, idInPlaylist: Long)
 
+    suspend fun removeDuplicated(playlistId: Long)
 
-    fun removeSongFromPlaylist(playlistId: Long, idInPlaylist: Long): Completable
-
-    fun removeDuplicated(playlistId: Long): Completable
-
-    fun insertPodcastToHistory(podcastId: Long): Completable
+    suspend fun insertPodcastToHistory(podcastId: Long)
 
 }

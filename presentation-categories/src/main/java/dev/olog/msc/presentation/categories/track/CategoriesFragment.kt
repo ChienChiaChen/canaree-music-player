@@ -14,12 +14,9 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_library_categories.*
 import kotlinx.android.synthetic.main.fragment_library_categories.view.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CategoriesFragment : BaseFragment() {
@@ -71,10 +68,9 @@ class CategoriesFragment : BaseFragment() {
         }
         floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
 
-        floatingWindowTutorialDisposable = presenter.showFloatingWindowTutorialIfNeverShown()
-                .delay(2, TimeUnit.SECONDS, Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ Tutorial.floatingWindow(floatingWindow) }, {})
+        if (presenter.canShowFloatingWindowTutorial()) {
+            Tutorial.floatingWindow(floatingWindow)
+        }
     }
 
     override fun onPause() {

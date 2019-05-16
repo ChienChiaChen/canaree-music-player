@@ -33,7 +33,8 @@ internal class LastFmRepoTrack @Inject constructor(
     }
 
     fun getOriginalItem(trackId: Long): Single<Song> = runBlocking{
-        Single.just(songGateway.getByParam(trackId))
+        TODO()
+//        Single.just(songGateway.getByParam(trackId))
     }
 
     fun get(trackId: Long): Single<Optional<LastFmTrack?>> {

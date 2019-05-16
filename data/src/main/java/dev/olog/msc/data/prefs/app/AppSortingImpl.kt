@@ -8,15 +8,14 @@ import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.Sorting
 import dev.olog.msc.shared.extensions.asFlowable
-import io.reactivex.Completable
-import io.reactivex.Observable
+import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.rxkotlin.Observables
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.flow.asFlow
 
-internal class AppSortingImpl (
-        private val preferences: SharedPreferences,
-        private val rxPreferences: RxSharedPreferences
+internal class AppSortingImpl(
+    private val preferences: SharedPreferences,
+    private val rxPreferences: RxSharedPreferences
 
 ) : Sorting {
 
@@ -39,70 +38,83 @@ internal class AppSortingImpl (
         private const val DETAIL_SORT_ARRANGING = "$TAG.DETAIL_SORT_ARRANGING"
     }
 
-    override fun getFolderSortOrder(): Observable<SortType> {
+    override fun getFolderSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_FOLDER_ORDER, SortType.TITLE.ordinal)
-                .asObservable()
-                .map { ordinal -> SortType.values()[ordinal] }
+            .asObservable()
+            .map { ordinal -> SortType.values()[ordinal] }
+            .asFlowable().asFlow()
     }
 
-    override fun getPlaylistSortOrder(): Observable<SortType> {
+    override fun getPlaylistSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_PLAYLIST_ORDER, SortType.CUSTOM.ordinal)
-                .asObservable()
-                .map { ordinal -> SortType.values()[ordinal] }
+            .asObservable()
+            .map { ordinal -> SortType.values()[ordinal] }
+            .asFlowable().asFlow()
     }
 
-    override fun getAlbumSortOrder(): Observable<SortType> {
+    override fun getAlbumSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_ALBUM_ORDER, SortType.TITLE.ordinal)
-                .asObservable()
-                .map { ordinal -> SortType.values()[ordinal] }
+            .asObservable()
+            .map { ordinal -> SortType.values()[ordinal] }
+            .asFlowable().asFlow()
     }
 
-    override fun getArtistSortOrder(): Observable<SortType> {
+    override fun getArtistSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_ARTIST_ORDER, SortType.TITLE.ordinal)
-                .asObservable()
-                .map { ordinal -> SortType.values()[ordinal] }
+            .asObservable()
+            .map { ordinal -> SortType.values()[ordinal] }
+            .asFlowable().asFlow()
     }
 
-    override fun getGenreSortOrder(): Observable<SortType> {
+    override fun getGenreSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_GENRE_ORDER, SortType.TITLE.ordinal)
-                .asObservable()
-                .map { ordinal -> SortType.values()[ordinal] }
+            .asObservable()
+            .map { ordinal -> SortType.values()[ordinal] }
+            .asFlowable().asFlow()
     }
 
-    override fun setFolderSortOrder(sortType: SortType) : Completable{
-        return Completable.fromCallable { preferences.edit { putInt(DETAIL_SORT_FOLDER_ORDER, sortType.ordinal) } }
+    override suspend fun setFolderSortOrder(sortType: SortType) {
+        assertBackgroundThread()
+        preferences.edit { putInt(DETAIL_SORT_FOLDER_ORDER, sortType.ordinal) }
     }
 
-    override fun setPlaylistSortOrder(sortType: SortType) : Completable{
-        return Completable.fromCallable { preferences.edit { putInt(DETAIL_SORT_PLAYLIST_ORDER, sortType.ordinal) } }
+    override suspend fun setPlaylistSortOrder(sortType: SortType) {
+        assertBackgroundThread()
+        preferences.edit { putInt(DETAIL_SORT_PLAYLIST_ORDER, sortType.ordinal) }
     }
 
-    override fun setAlbumSortOrder(sortType: SortType) : Completable{
-        return Completable.fromCallable { preferences.edit { putInt(DETAIL_SORT_ALBUM_ORDER, sortType.ordinal) } }
+    override suspend fun setAlbumSortOrder(sortType: SortType) {
+        assertBackgroundThread()
+        preferences.edit { putInt(DETAIL_SORT_ALBUM_ORDER, sortType.ordinal) }
     }
 
-    override fun setArtistSortOrder(sortType: SortType) : Completable{
-        return Completable.fromCallable { preferences.edit { putInt(DETAIL_SORT_ARTIST_ORDER, sortType.ordinal) } }
+    override suspend fun setArtistSortOrder(sortType: SortType) {
+        assertBackgroundThread()
+        preferences.edit { putInt(DETAIL_SORT_ARTIST_ORDER, sortType.ordinal) }
     }
 
-    override fun setGenreSortOrder(sortType: SortType) : Completable{
-        return Completable.fromCallable { preferences.edit { putInt(DETAIL_SORT_GENRE_ORDER, sortType.ordinal) } }
+    override suspend fun setGenreSortOrder(sortType: SortType) {
+        assertBackgroundThread()
+        preferences.edit { putInt(DETAIL_SORT_GENRE_ORDER, sortType.ordinal) }
     }
 
-    override fun getSortArranging(): Observable<SortArranging> {
+    override fun getSortArranging(): Flow<SortArranging> {
         return rxPreferences.getInteger(DETAIL_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
-                .asObservable()
-                .map { ordinal -> SortArranging.values()[ordinal] }
+            .asObservable()
+            .map { ordinal -> SortArranging.values()[ordinal] }
+            .asFlowable().asFlow()
     }
 
-    override fun toggleSortArranging() : Completable{
-        val oldArranging = SortArranging.values()[preferences.getInt(DETAIL_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)]
+    override suspend fun toggleSortArranging() {
+        assertBackgroundThread()
+        val oldArranging =
+            SortArranging.values()[preferences.getInt(DETAIL_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)]
 
-        val newArranging = if (oldArranging == SortArranging.ASCENDING){
+        val newArranging = if (oldArranging == SortArranging.ASCENDING) {
             SortArranging.DESCENDING
         } else SortArranging.ASCENDING
 
-        return Completable.fromCallable { preferences.edit { putInt(DETAIL_SORT_ARRANGING, newArranging.ordinal) } }
+        preferences.edit { putInt(DETAIL_SORT_ARRANGING, newArranging.ordinal) }
     }
 
     override fun getAllTracksSortOrder(): LibrarySortType {
@@ -124,44 +136,65 @@ internal class AppSortingImpl (
     }
 
     override fun observeAllTracksSortOrder(): Flow<LibrarySortType> {
-        return Observables.combineLatest(
+        return Observables.run {
+            combineLatest(
                 rxPreferences.getInteger(ALL_SONGS_SORT_ORDER, SortType.TITLE.ordinal).asObservable(),
-                rxPreferences.getInteger(ALL_SONGS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal).asObservable(), //ascending default
-                { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
-        ).asFlowable().asFlow()
+                rxPreferences.getInteger(
+                    ALL_SONGS_SORT_ARRANGING,
+                    SortArranging.ASCENDING.ordinal
+                ).asObservable() //ascending default
+            ) { sort, arranging ->
+                LibrarySortType(
+                    SortType.values()[sort],
+                    SortArranging.values()[arranging]
+                )
+            }.asFlowable().asFlow()
+        }
     }
 
     override fun observeAllAlbumsSortOrder(): Flow<LibrarySortType> {
         return Observables.combineLatest(
-                rxPreferences.getInteger(ALL_ALBUMS_SORT_ORDER, SortType.TITLE.ordinal).asObservable(),
-                rxPreferences.getInteger(ALL_ALBUMS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal).asObservable(), //ascending default
-                { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
-        ).asFlowable().asFlow()
+            rxPreferences.getInteger(ALL_ALBUMS_SORT_ORDER, SortType.TITLE.ordinal).asObservable(),
+            rxPreferences.getInteger(
+                ALL_ALBUMS_SORT_ARRANGING,
+                SortArranging.ASCENDING.ordinal
+            ).asObservable() //ascending default
+        ) { sort, arranging ->
+            LibrarySortType(
+                SortType.values()[sort],
+                SortArranging.values()[arranging])
+        }.asFlowable().asFlow()
     }
 
     override fun observeAllArtistsSortOrder(): Flow<LibrarySortType> {
         return Observables.combineLatest(
-                rxPreferences.getInteger(ALL_ARTISTS_SORT_ORDER, SortType.ARTIST.ordinal).asObservable(),
-                rxPreferences.getInteger(ALL_ARTISTS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal).asObservable(), //ascending default
-                { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
-        ).asFlowable().asFlow()
+            rxPreferences.getInteger(ALL_ARTISTS_SORT_ORDER, SortType.ARTIST.ordinal).asObservable(),
+            rxPreferences.getInteger(
+                ALL_ARTISTS_SORT_ARRANGING,
+                SortArranging.ASCENDING.ordinal
+            ).asObservable() //ascending default
+        ) { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
+            .asFlowable().asFlow()
     }
 
-    override fun setAllTracksSortOrder(sortType: LibrarySortType) {
+    override suspend fun setAllTracksSortOrder(sortType: LibrarySortType) {
+        assertBackgroundThread()
         preferences.edit {
             putInt(ALL_SONGS_SORT_ORDER, sortType.type.ordinal)
             putInt(ALL_SONGS_SORT_ARRANGING, sortType.arranging.ordinal)
         }
     }
 
-    override fun setAllAlbumsSortOrder(sortType: LibrarySortType) {
+    override suspend fun setAllAlbumsSortOrder(sortType: LibrarySortType) {
+        assertBackgroundThread()
         preferences.edit {
             putInt(ALL_ALBUMS_SORT_ORDER, sortType.type.ordinal)
             putInt(ALL_ALBUMS_SORT_ARRANGING, sortType.arranging.ordinal)
         }
     }
 
-    override fun setAllArtistsSortOrder(sortType: LibrarySortType) {
+    override suspend fun setAllArtistsSortOrder(sortType: LibrarySortType) {
+        assertBackgroundThread()
         preferences.edit {
             putInt(ALL_ARTISTS_SORT_ORDER, sortType.type.ordinal)
             putInt(ALL_ARTISTS_SORT_ARRANGING, sortType.arranging.ordinal)

@@ -11,8 +11,8 @@ dependencies {
     implementation librariesCore.coroutinesRx
 
     // db
-    implementation librariesPersistency.sqlBrite
     implementation librariesPersistency.room
+    implementation librariesPersistency.roomKtx
     kapt librariesPersistency.roomProcessor
     implementation librariesPersistency.roomRx
     implementation librariesPersistency.rxPrefs

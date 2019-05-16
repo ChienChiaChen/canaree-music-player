@@ -58,8 +58,9 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
         postponeEnterTransition()
         view.image.post { startPostponedEnterTransition() }
 
-        tutorialDisposable = presenter.showAddLyricsIfNeverShown()
-                .subscribe({ Tutorial.addLyrics(view.search, view.edit, view.sync) }, {})
+        if (presenter.canShowLyricsTutorial()){
+            Tutorial.addLyrics(view.search, view.edit, view.sync)
+        }
 
         mediaProvider.onMetadataChanged()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -149,6 +150,11 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
         tutorialDisposable.unsubscribe()
         updateDisposable.unsubscribe()
         blurLayout.pauseBlur()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
     }
 
     private fun searchLyrics(){

@@ -2,11 +2,13 @@ package dev.olog.msc.data.repository.queries
 
 import android.provider.MediaStore.Audio.Media.*
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.entity.ChunkRequest
+import dev.olog.msc.core.entity.Page
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.shared.TrackUtils
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
 
@@ -19,7 +21,7 @@ abstract class BaseQueries(
         private val RECENTLY_ADDED_TIME = TimeUnit.SECONDS.convert(14, TimeUnit.DAYS)
     }
 
-    protected fun tryGetChunk(chunk: ChunkRequest?): String {
+    protected fun tryGetChunk(chunk: Page?): String {
         return """
             ${if (chunk == null) "" else "LIMIT ${chunk.limit}"}
             ${if (chunk == null) "" else "OFFSET ${chunk.offset}"}
@@ -28,7 +30,7 @@ abstract class BaseQueries(
 
     protected val artistProjection = "CASE WHEN $ARTIST = '<unknown>' THEN '${TrackUtils.UNKNOWN_ARTIST}' ELSE $ARTIST END"
     protected val albumProjection = "CASE WHEN $ALBUM = '<unknown>' THEN '${TrackUtils.UNKNOWN_ALBUM}' ELSE $ALBUM END"
-    protected val albumArtistProjection = "NULLIF(album_artist, ${Columns.ARTIST}) as ${Columns.ALBUM_ARTIST}"
+    protected val albumArtistProjection = "IFNULL(album_artist, $artistProjection) as ${Columns.ALBUM_ARTIST}"
     protected val discNumberProjection = "CASE WHEN $TRACK >= 1000 THEN substr($TRACK, 1, 1) ELSE 0 END"
     protected val trackNumberProjection = "CASE WHEN $TRACK >= 1000 THEN $TRACK % 1000 ELSE $TRACK END"
 
@@ -48,10 +50,10 @@ abstract class BaseQueries(
         return "$folderProjection NOT IN (${blackListed.joinToString()})"
     }
 
-    protected fun songListSortOrder(category: MediaIdCategory, default: String): String {
+    protected fun songListSortOrder(category: MediaIdCategory, default: String): String = runBlocking {
 
         val type = getSortType(category)
-        val arranging = prefsGateway.getSortArranging()
+        val arranging = prefsGateway.getSortArranging().single()
         var sort = when (type) {
             SortType.TITLE -> "lower($TITLE)"
             SortType.ARTIST -> "lower(${Columns.ARTIST})"
@@ -65,7 +67,7 @@ abstract class BaseQueries(
         }
 
         if (type == SortType.CUSTOM){
-            return sort
+            return@runBlocking sort
         }
 
         if (arranging == SortArranging.ASCENDING && type == SortType.RECENTLY_ADDED){
@@ -81,18 +83,18 @@ abstract class BaseQueries(
             }
 
         }
-        return "$sort COLLATE UNICODE"
+        return@runBlocking "$sort COLLATE UNICODE"
     }
 
-    private fun getSortType(category: MediaIdCategory): SortType {
-        return when (category){
+    private fun getSortType(category: MediaIdCategory): SortType = runBlocking {
+        when (category){
             MediaIdCategory.FOLDERS -> prefsGateway.getFolderSortOrder()
             MediaIdCategory.PLAYLISTS -> prefsGateway.getPlaylistSortOrder()
             MediaIdCategory.ALBUMS -> prefsGateway.getAlbumSortOrder()
             MediaIdCategory.ARTISTS -> prefsGateway.getArtistSortOrder()
             MediaIdCategory.GENRES -> prefsGateway.getGenreSortOrder()
             else -> throw IllegalArgumentException("invalid category $category")
-        }
+        }.single()
     }
 
 }

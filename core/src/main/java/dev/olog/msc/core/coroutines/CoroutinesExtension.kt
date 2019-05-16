@@ -1,5 +1,8 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package dev.olog.msc.core.coroutines
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -10,4 +13,5 @@ inline fun <T, R> Flow<List<T>>.mapToList(crossinline mapper: (T) -> R): Flow<Li
     return this.map { it.map { mapper(it) } }
 }
 
-inline fun CustomScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+@Suppress("FunctionName")
+fun CustomScope(dispatcher: CoroutineDispatcher = Dispatchers.Main): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)

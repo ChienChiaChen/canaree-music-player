@@ -51,11 +51,11 @@ class RecentlyAddedFragment : BaseFragment() {
 
         viewModel.data.subscribe(viewLifecycleOwner, adapter::updateDataSet)
 
-        viewModel.itemTitle.subscribe(viewLifecycleOwner) { itemTitle ->
-            val headersArray = resources.getStringArray(R.array.recently_added_header)
-            val header = String.format(headersArray[viewModel.itemOrdinal], itemTitle)
-            this.header.text = header
-        }
+//        viewModel.itemTitle.subscribe(viewLifecycleOwner) { itemTitle ->
+//            val headersArray = resources.getStringArray(R.array.recently_added_header)
+//            val header = String.format(headersArray[viewModel.itemOrdinal], itemTitle)
+//            this.header.text = header
+//        }
     }
 
     override fun onResume() {

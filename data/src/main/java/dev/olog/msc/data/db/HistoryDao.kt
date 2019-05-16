@@ -1,32 +1,32 @@
 package dev.olog.msc.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import dev.olog.msc.data.entity.HistoryEntity
 import dev.olog.msc.data.entity.PodcastHistoryEntity
-import io.reactivex.Completable
 import io.reactivex.Flowable
 
 @Dao
 internal abstract class HistoryDao {
 
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM song_history
         ORDER BY dateAdded DESC
         LIMIT :limit
         OFFSET :offset
-    """)
+    """
+    )
     internal abstract fun getAll(limit: Int, offset: Int): List<HistoryEntity>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM podcast_song_history
         ORDER BY dateAdded DESC
         LIMIT :limit
         OFFSET :offset
-    """)
+    """
+    )
     internal abstract fun getAllPodcasts(limit: Int, offset: Int): List<PodcastHistoryEntity>
 
     @Query(
@@ -52,35 +52,41 @@ internal abstract class HistoryDao {
     internal abstract fun countAllPodcast(): Int
 
     @Query("""DELETE FROM song_history""")
-    internal abstract fun deleteAll()
+    internal abstract suspend fun deleteAll()
 
     @Query("""DELETE FROM podcast_song_history""")
-    internal abstract fun deleteAllPodcasts()
+    internal abstract suspend fun deleteAllPodcasts()
 
-    @Query("""
+    @Query(
+        """
         DELETE FROM song_history
         WHERE id = :songId
-    """)
-    internal abstract fun deleteSingle(songId: Long)
+    """
+    )
+    internal abstract suspend fun deleteSingle(songId: Long)
 
-    @Query("""
+    @Query(
+        """
         DELETE FROM podcast_song_history
         WHERE id = :podcastId
-    """)
-    internal abstract fun deleteSinglePodcast(podcastId: Long)
+    """
+    )
+    internal abstract suspend fun deleteSinglePodcast(podcastId: Long)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    internal abstract fun insertImpl(entity: HistoryEntity)
+    internal abstract suspend fun insertImpl(entity: HistoryEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    internal abstract fun insertPodcastImpl(entity: PodcastHistoryEntity)
+    internal abstract suspend fun insertPodcastImpl(entity: PodcastHistoryEntity)
 
-    internal fun insert(id: Long): Completable {
-        return Completable.fromCallable{ insertImpl(HistoryEntity(songId = id)) }
+    @Transaction
+    internal open suspend fun insert(id: Long) {
+        insertImpl(HistoryEntity(songId = id))
     }
 
-    internal fun insertPodcasts(id: Long): Completable {
-        return Completable.fromCallable{ insertPodcastImpl(PodcastHistoryEntity(podcastId = id)) }
+    @Transaction
+    internal open suspend fun insertPodcasts(id: Long) {
+        insertPodcastImpl(PodcastHistoryEntity(podcastId = id))
     }
 
 }

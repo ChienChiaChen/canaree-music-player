@@ -2,15 +2,18 @@ package dev.olog.msc.presentation.dialogs.duplicates
 
 import android.content.Context
 import android.content.DialogInterface
+import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.dialogs.BaseDialog
 import dev.olog.msc.presentation.base.extensions.asHtml
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
+import dev.olog.msc.shared.extensions.lazyFast
 import io.reactivex.Completable
 import javax.inject.Inject
 
-class RemoveDuplicatesDialog: BaseDialog() {
+class RemoveDuplicatesDialog : BaseDialog() {
 
     companion object {
         const val TAG = "RemoveDuplicatesDialog"
@@ -20,14 +23,16 @@ class RemoveDuplicatesDialog: BaseDialog() {
         @JvmStatic
         fun newInstance(mediaId: MediaId, itemTitle: String): RemoveDuplicatesDialog {
             return RemoveDuplicatesDialog().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString(),
-                    ARGUMENTS_ITEM_TITLE to itemTitle
+                ARGUMENTS_MEDIA_ID to mediaId.toString(),
+                ARGUMENTS_ITEM_TITLE to itemTitle
             )
         }
     }
 
-    @Inject lateinit var title: String
-    @Inject lateinit var presenter: RemoveDuplicatesDialogPresenter
+    private val title: String by lazyFast { arguments!!.getString(ARGUMENTS_ITEM_TITLE) }
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+    private val viewModel by lazyFast { viewModelProvider<RemoveDuplicatesDialogViewModel>(factory) }
 
     override fun title(context: Context): CharSequence {
         return context.getString(R.string.remove_duplicates_title)
@@ -54,10 +59,12 @@ class RemoveDuplicatesDialog: BaseDialog() {
     }
 
     override fun positiveAction(dialogInterface: DialogInterface, which: Int): Completable {
-        return presenter.execute()
+//        val mediaId = MediaId.fromString(arguments!!.getString(ARGUMENTS_MEDIA_ID)!!)
+//        return presenter.execute(mediaId)
+        return TODO()
     }
 
-    private fun createMessage() : String {
+    private fun createMessage(): String {
         return context!!.getString(R.string.remove_duplicates_message, title)
     }
 

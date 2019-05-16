@@ -3,66 +3,64 @@ package dev.olog.msc.musicservice
 import android.net.Uri
 import android.os.Bundle
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.entity.ChunkRequest
+import dev.olog.msc.core.entity.getAll
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.podcast.toSong
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
+import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.gateway.PlayingQueueGateway
+import dev.olog.msc.core.gateway.SearchGateway
+import dev.olog.msc.core.gateway.SearchGateway.By
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
-import dev.olog.msc.core.gateway.track.GenreGateway
 import dev.olog.msc.core.interactor.GetSongByFileUseCase
-import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.core.interactor.PodcastPositionUseCase
-import dev.olog.msc.core.interactor.added.GetRecentlyAddedUseCase
 import dev.olog.msc.core.interactor.played.GetMostPlayedSongsUseCase
-import dev.olog.msc.core.interactor.queue.GetPlayingQueueUseCase
+import dev.olog.msc.core.interactor.played.GetRecentlyAddedSongsUseCase
 import dev.olog.msc.musicservice.interfaces.Queue
 import dev.olog.msc.musicservice.model.*
-import dev.olog.msc.musicservice.voice.VoiceSearch
 import dev.olog.msc.musicservice.voice.VoiceSearchParams
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.safeCompare
 import dev.olog.msc.shared.extensions.swap
 import dev.olog.msc.shared.utils.clamp
-import io.reactivex.Flowable
-import io.reactivex.Single
 import io.reactivex.functions.Function
+import kotlinx.coroutines.coroutineScope
 import java.util.*
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 internal class QueueManager @Inject constructor(
     private val queueImpl: QueueImpl,
-    private val getPlayingQueueUseCase: GetPlayingQueueUseCase,
+    private val queueGateway: PlayingQueueGateway,
     private val musicPreferencesUseCase: MusicPreferencesGateway,
+    private val searchGateway: SearchGateway,
     private val shuffleMode: ShuffleMode,
-    private val getSongListByParamUseCase: GetSongListByParamUseCase,
-    private val getMostPlayedSongsUseCase: GetMostPlayedSongsUseCase,
-    private val getRecentlyAddedUseCase: GetRecentlyAddedUseCase,
+    private val songListUseCase: GetSongListChunkByParamUseCase,
+    private val recentlyAddedUseCase: GetRecentlyAddedSongsUseCase,
+    private val mostPlayedSongsUseCase: GetMostPlayedSongsUseCase,
+
     private val getSongByFileUseCase: GetSongByFileUseCase,
-    private val genreGateway: GenreGateway,
     private val enhancedShuffle: EnhancedShuffle,
     private val podcastPosition: PodcastPositionUseCase
 
 ) : Queue {
 
-    private val isReady = AtomicBoolean(false)
+    override suspend fun prepare(): PlayerMediaEntity = coroutineScope {
+        val playingQueue = queueGateway.getAll().map { it.toMediaEntity() }
+        queueImpl.updatePlayingQueueAndPersist(playingQueue) // TODO why i'm saving at startup? try to remove
+        val (queue, index) = lastSessionSong.apply(playingQueue) // TODO change
+        queueImpl.updateCurrentSongPosition(queue, index) // TODO why i'm saving at startup?
 
-    override fun isReady(): Boolean = isReady.get()
-
-    override fun prepare(): Single<PlayerMediaEntity> {
-        return getPlayingQueueUseCase.execute()
-                .map { list -> list.map { it.toMediaEntity() } }
-                .doOnSuccess(queueImpl::updatePlayingQueueAndPersist)
-                .map { lastSessionSong.apply(it) }
-                .doOnSuccess { (list, position) -> queueImpl.updateCurrentSongPosition(list, position) }
-                .map { (list, position) -> list[position].toPlayerMediaEntity(
-                        queueImpl.computePositionInQueue(list, position), getLastSessionBookmark(list[position])) }
-                .doOnSuccess { isReady.compareAndSet(false, true) }
+        val positionInQueue = queueImpl.computePositionInQueue(queue, index)
+        val mediaItem = queue[index]
+        val bookMark = getLastSessionBookmark(mediaItem)
+        mediaItem.toPlayerMediaEntity(positionInQueue, bookMark)
     }
 
     private fun getLastSessionBookmark(mediaEntity: MediaEntity): Long {
-        if (mediaEntity.isPodcast){
+        if (mediaEntity.isPodcast) {
             val bookmark = podcastPosition.get(mediaEntity.id, mediaEntity.duration)
             return clamp(bookmark, 0L, mediaEntity.duration)
         } else {
@@ -72,7 +70,7 @@ internal class QueueManager @Inject constructor(
     }
 
     private fun getPodcastBookmarkOrDefault(mediaEntity: MediaEntity?, default: Long = 0L): Long {
-        if (mediaEntity?.isPodcast == true){
+        if (mediaEntity?.isPodcast == true) {
             val bookmark = podcastPosition.get(mediaEntity.id, mediaEntity.duration)
             return clamp(bookmark, 0L, mediaEntity.duration)
         } else {
@@ -80,47 +78,50 @@ internal class QueueManager @Inject constructor(
         }
     }
 
-    override fun handleSkipToQueueItem(idInPlaylist: Long): PlayerMediaEntity {
+    override suspend fun handleSkipToQueueItem(idInPlaylist: Long): PlayerMediaEntity {
         val mediaEntity = queueImpl.getSongById(idInPlaylist)
         val bookmark = getPodcastBookmarkOrDefault(mediaEntity)
         return mediaEntity.toPlayerMediaEntity(queueImpl.currentPositionInQueue(), bookmark)
     }
 
-    override fun handleSkipToNext(trackEnded: Boolean): PlayerMediaEntity? {
+    override suspend fun handleSkipToNext(trackEnded: Boolean): PlayerMediaEntity? {
         val mediaEntity = queueImpl.getNextSong(trackEnded)
         val bookmark = getPodcastBookmarkOrDefault(mediaEntity)
         return mediaEntity?.toPlayerMediaEntity(queueImpl.currentPositionInQueue(), bookmark)
     }
 
-    override fun getPlayingSong(): PlayerMediaEntity {
+    override suspend fun getPlayingSong(): PlayerMediaEntity {
         val mediaEntity = queueImpl.getCurrentSong()!!
         val bookmark = getPodcastBookmarkOrDefault(mediaEntity)
         return mediaEntity.toPlayerMediaEntity(queueImpl.currentPositionInQueue(), bookmark)
     }
 
-    override fun handleSkipToPrevious(playerBookmark: Long): PlayerMediaEntity? {
+    override suspend fun handleSkipToPrevious(playerBookmark: Long): PlayerMediaEntity? {
         val mediaEntity = queueImpl.getPreviousSong(playerBookmark)
         val bookmark = getPodcastBookmarkOrDefault(mediaEntity)
         return mediaEntity?.toPlayerMediaEntity(queueImpl.currentPositionInQueue(), bookmark)
     }
 
-    override fun handlePlayFromMediaId(mediaId: MediaId, extras: Bundle?): Single<PlayerMediaEntity> {
+    override suspend fun handlePlayFromMediaId(mediaId: MediaId, extras: Bundle?): PlayerMediaEntity {
         val songId = mediaId.leaf ?: -1L
 
-        return getSongListByParamUseCase.execute(mediaId)
-                .firstOrError()
-                .map { it.mapIndexed { index, song -> song.toMediaEntity(index, mediaId) } }
-                .map { sortOnDemand(it, extras) }
-                .map { shuffleIfNeeded(songId).apply(it) }
-                .doOnSuccess(queueImpl::updatePlayingQueueAndPersist)
-                .map { getCurrentSongOnPlayFromId(songId).apply(it) }
-                .doOnSuccess { (list , position) -> queueImpl.updateCurrentSongPosition(list, position) }
-                .map { (list, position) ->
-                    val bookmark = getPodcastBookmarkOrDefault(list[position])
-                    list[position].toPlayerMediaEntity(queueImpl.computePositionInQueue(list, position), bookmark) }
+        var songList = songListUseCase.execute(mediaId).getAll()
+            .map{ any: Any? -> if (any is Podcast){ any.toSong() } else { any as Song } }
+            .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
+
+        songList = sortOnDemand(songList, extras)
+        songList = shuffleIfNeeded(songId).apply(songList)
+        queueImpl.updatePlayingQueueAndPersist(songList)
+        val (list, position) = getCurrentSongOnPlayFromId(songId).apply(songList)
+
+        queueImpl.updateCurrentSongPosition(list, position)
+
+        val bookmark = getPodcastBookmarkOrDefault(list[position])
+        val positionInQueue = queueImpl.computePositionInQueue(list, position)
+        return list[position].toPlayerMediaEntity(positionInQueue, bookmark)
     }
 
-    override fun handlePlayFolderTree(mediaId: MediaId): Single<PlayerMediaEntity> {
+    override suspend fun handlePlayFolderTree(mediaId: MediaId): PlayerMediaEntity {
         return handlePlayFromMediaId(mediaId, null)
     }
 
@@ -129,133 +130,132 @@ internal class QueueManager @Inject constructor(
             extras!!
             val sortOrder = SortType.valueOf(extras.getString(MusicConstants.ARGUMENT_SORT_TYPE)!!)
             val arranging = SortArranging.valueOf(extras.getString(MusicConstants.ARGUMENT_SORT_ARRANGING)!!)
-            return if (arranging == SortArranging.ASCENDING){
+            return if (arranging == SortArranging.ASCENDING) {
                 list.sortedWith(getAscendingComparator(sortOrder))
             } else {
                 list.sortedWith(getDescendingComparator(sortOrder))
             }
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             list
         }
 
     }
 
-    override fun handlePlayRecentlyPlayed(mediaId: MediaId): Single<PlayerMediaEntity> {
+    override suspend fun handlePlayRecentlyPlayed(mediaId: MediaId): PlayerMediaEntity {
         val songId = mediaId.leaf!!
 
-        return getRecentlyAddedUseCase.execute(mediaId)
-                .firstOrError()
-                .map { it.mapIndexed { index, song-> song.toMediaEntity(index, mediaId) } }
-                .map { shuffleIfNeeded(songId).apply(it) }
-                .doOnSuccess(queueImpl::updatePlayingQueueAndPersist)
-                .map { getCurrentSongOnPlayFromId(songId).apply(it) }
-                .doOnSuccess { (list , position) -> queueImpl.updateCurrentSongPosition(list, position) }
-                .map { (list, position) ->
-                    val bookmark = getPodcastBookmarkOrDefault(list[position])
-                    list[position].toPlayerMediaEntity(queueImpl.computePositionInQueue(list, position), bookmark) }
+        var songList = recentlyAddedUseCase.get(mediaId).getAll()
+            .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
+
+        songList = shuffleIfNeeded(songId).apply(songList)
+        queueImpl.updatePlayingQueueAndPersist(songList)
+        val (list, position) = getCurrentSongOnPlayFromId(songId).apply(songList)
+        queueImpl.updateCurrentSongPosition(list, position)
+
+        val bookmark = getPodcastBookmarkOrDefault(list[position])
+        val positionInQueue = queueImpl.computePositionInQueue(list, position)
+        return list[position].toPlayerMediaEntity(positionInQueue, bookmark)
     }
 
-    override fun handlePlayMostPlayed(mediaId: MediaId): Single<PlayerMediaEntity> {
+    override suspend fun handlePlayMostPlayed(mediaId: MediaId): PlayerMediaEntity {
         val songId = mediaId.leaf!!
 
-        // TODO
-        val chunk = getMostPlayedSongsUseCase.getChunk(mediaId).chunkOf(ChunkRequest(0, 100))
-        return Flowable.just(chunk)
-                .firstOrError()
-                .map { it.mapIndexed { index, song -> song.toMediaEntity(index, mediaId) } }
-                .map { shuffleIfNeeded(songId).apply(it) }
-                .doOnSuccess(queueImpl::updatePlayingQueueAndPersist)
-                .map { getCurrentSongOnPlayFromId(songId).apply(it) }
-                .doOnSuccess { (list , position) -> queueImpl.updateCurrentSongPosition(list, position) }
-                .map { (list, position) ->
-                    val bookmark = getPodcastBookmarkOrDefault(list[position])
-                    list[position].toPlayerMediaEntity(queueImpl.computePositionInQueue(list, position), bookmark) }
+        var songList = mostPlayedSongsUseCase.get(mediaId).getAll()
+            .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
+
+        songList = shuffleIfNeeded(songId).apply(songList)
+        queueImpl.updatePlayingQueueAndPersist(songList)
+        val (list, position) = getCurrentSongOnPlayFromId(songId).apply(songList)
+        queueImpl.updateCurrentSongPosition(list, position)
+
+        val bookmark = getPodcastBookmarkOrDefault(list[position])
+        val positionInQueue = queueImpl.computePositionInQueue(list, position)
+        return list[position].toPlayerMediaEntity(positionInQueue, bookmark)
     }
 
-    override fun handlePlayShuffle(mediaId: MediaId): Single<PlayerMediaEntity> {
-        return getSongListByParamUseCase.execute(mediaId)
-                .firstOrError()
-                .map {
-                    shuffleMode.setEnabled(true)
-                    it
-                }
-                .map { it.mapIndexed { index, song -> song.toMediaEntity(index, mediaId) } }
-                .map { enhancedShuffle.shuffle(it.toMutableList()) }
-                .doOnSuccess(queueImpl::updatePlayingQueueAndPersist)
-                .map { Pair(it, 0) }
-                .doOnSuccess { (list, position) -> queueImpl.updateCurrentSongPosition(list,position) }
-                .map { (list, position) ->
-                    val bookmark = getPodcastBookmarkOrDefault(list[position])
-                    list[position].toPlayerMediaEntity(queueImpl.computePositionInQueue(list, position), bookmark) }
+    override suspend fun handlePlayShuffle(mediaId: MediaId): PlayerMediaEntity {
+        shuffleMode.setEnabled(true)
+        var songList = songListUseCase.execute(mediaId).getAll()
+            .map{ any: Any? -> if (any is Podcast){ any.toSong() } else { any as Song } }
+            .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
+
+        songList = enhancedShuffle.shuffle(songList.toMutableList())
+        queueImpl.updatePlayingQueueAndPersist(songList)
+        queueImpl.updateCurrentSongPosition(songList, 0)
+
+        val item = songList[0]
+        val bookmark = getPodcastBookmarkOrDefault(item)
+        val positionInQueue = queueImpl.computePositionInQueue(songList, 0)
+        return item.toPlayerMediaEntity(positionInQueue, bookmark)
     }
 
-    override fun handlePlayFromUri(uri: Uri): Single<PlayerMediaEntity> {
-        return getSongByFileUseCase.execute(uri.toString())
-                .delay(500, TimeUnit.MILLISECONDS)
-                .map { it.toMediaEntity(0, MediaId.songId(it.id)) }
-                .map { listOf(it) }
-                .doOnSuccess(queueImpl::updatePlayingQueueAndPersist)
-                .doOnSuccess { list -> queueImpl.updateCurrentSongPosition(list, 0) }
-                .map { list ->
-                    val bookmark = getPodcastBookmarkOrDefault(list[0])
-                    list[0].toPlayerMediaEntity(PositionInQueue.BOTH, bookmark)
-                }
+    override suspend fun handlePlayFromUri(uri: Uri): PlayerMediaEntity? {
+        val song = getSongByFileUseCase.execute(uri.toString()) ?: return null
+        val mediaEntity = song.toMediaEntity(0, MediaId.songId(song.id))
+        val songList = listOf(mediaEntity)
+        queueImpl.updatePlayingQueueAndPersist(songList)
+        queueImpl.updateCurrentSongPosition(songList, 0)
+
+        val item = songList[0]
+        val bookmark = getPodcastBookmarkOrDefault(mediaEntity)
+        val positionInQueue = queueImpl.computePositionInQueue(songList, 0)
+        return item.toPlayerMediaEntity(positionInQueue, bookmark)
     }
 
-    override fun handlePlayFromGoogleSearch(query: String, extras: Bundle): Single<PlayerMediaEntity> {
-//        Log.d("VoiceSearch", "Creating playing queue for musics from search: $query, params=$extras")
+    override suspend fun handlePlayFromGoogleSearch(query: String, extras: Bundle): PlayerMediaEntity? {
 
         val params = VoiceSearchParams(query, extras)
 
-        val mediaId = MediaId.songId(-1)
-
         val songList = when {
-            params.isUnstructured -> VoiceSearch.search(getSongListByParamUseCase.execute(mediaId), query)
-            params.isAlbumFocus -> VoiceSearch.filterByAlbum(getSongListByParamUseCase.execute(mediaId), params.album)
-            params.isArtistFocus -> VoiceSearch.filterByArtist(getSongListByParamUseCase.execute(mediaId), params.artist)
-            params.isSongFocus -> VoiceSearch.filterByTitle(getSongListByParamUseCase.execute(mediaId), params.song)
-            params.isGenreFocus -> VoiceSearch.filterByGenre(genreGateway, params.genre)
-            else -> VoiceSearch.noFilter(getSongListByParamUseCase.execute(mediaId).map { it.shuffled() })
+            params.isAny -> searchGateway.searchTracksBy(query, By.ANY).getAll()
+            params.isUnstructured -> searchGateway.searchTracksBy(query, By.TITLE, By.ARTIST, By.ALBUM).getAll()
+            params.isAlbumFocus -> searchGateway.searchTracksBy(params.album, By.ALBUM).getAll()
+            params.isArtistFocus -> searchGateway.searchTracksBy(params.artist, By.ARTIST).getAll()
+            params.isSongFocus -> searchGateway.searchTracksBy(params.song, By.ARTIST).getAll()
+            params.isGenreFocus -> searchGateway.searchTrackInGenre(params.genre)?.shuffled()
+            else -> null
+        }?.mapIndexed { index, song -> song.toMediaEntity(index, MediaId.songId(-1)) } ?: return null
+
+        if (songList.isEmpty()){
+            return null
         }
+        queueImpl.updatePlayingQueueAndPersist(songList)
+        queueImpl.updateCurrentSongPosition(songList, 0)
 
-        return songList
-                .doOnSuccess(queueImpl::updatePlayingQueueAndPersist)
-                .map { Pair(it, 0) }
-                .doOnSuccess { (list, position) -> queueImpl.updateCurrentSongPosition(list,position) }
-                .map { (list, position) ->
-                    val bookmark = getPodcastBookmarkOrDefault(list[position])
-                    list[position].toPlayerMediaEntity(queueImpl.computePositionInQueue(list, position), bookmark) }
-                .doOnSuccess { shuffleMode.setEnabled(false) }
+        shuffleMode.setEnabled(false)
+
+        val item = songList[0]
+        val bookmark = getPodcastBookmarkOrDefault(item)
+        val positionInQueue = queueImpl.computePositionInQueue(songList, 0)
+        return item.toPlayerMediaEntity(positionInQueue, bookmark)
 
     }
 
-    override fun handleSwap(extras: Bundle) {
-        val from = extras.getInt(MusicConstants.ARGUMENT_SWAP_FROM, 0)
-        val to = extras.getInt(MusicConstants.ARGUMENT_SWAP_TO, 0)
-        queueImpl.handleSwap(from, to)
+    override suspend fun handleSwap(from: Int, to: Int, relative: Boolean) {
+        if (relative) {
+            queueImpl.handleSwapRelative(from, to)
+        } else {
+            queueImpl.handleSwap(from, to)
+        }
     }
 
-    override fun handleSwapRelative(extras: Bundle) {
-        val from = extras.getInt(MusicConstants.ARGUMENT_SWAP_FROM, 0)
-        val to = extras.getInt(MusicConstants.ARGUMENT_SWAP_TO, 0)
-        queueImpl.handleSwapRelative(from, to)
+    override suspend fun handleRemove(position: Int, relative: Boolean, callback: (Boolean) -> Unit) {
+        if (relative) {
+            if (queueImpl.handleRemoveRelative(position)) {
+                callback(true)
+            }
+        } else {
+            if (queueImpl.handleRemove(position)) {
+                callback(true)
+            }
+        }
     }
 
-    override fun handleRemove(extras: Bundle): Boolean {
-        val position = extras.getInt(MusicConstants.ARGUMENT_REMOVE_POSITION)
-        return queueImpl.handleRemove(position)
-    }
-
-    override fun handleRemoveRelative(extras: Bundle): Boolean {
-        val position = extras.getInt(MusicConstants.ARGUMENT_REMOVE_POSITION)
-        return queueImpl.handleRemoveRelative(position)
-    }
-
-    override fun sort() {
+    override suspend fun sort() {
         queueImpl.sort()
     }
 
-    override fun shuffle() {
+    override suspend fun shuffle() {
         queueImpl.shuffle()
     }
 
@@ -265,22 +265,23 @@ internal class QueueManager @Inject constructor(
         Pair(list, currentPosition)
     }
 
-    private fun getCurrentSongOnPlayFromId(songId: Long) = Function<List<MediaEntity>, Pair<List<MediaEntity>, Int>> { list ->
-        if (shuffleMode.isEnabled() || songId == -1L){
-            Pair(list, 0)
-        } else {
-            val position = clamp(list.indexOfFirst { it.id == songId }, 0, list.lastIndex)
-            Pair(list, position)
+    private fun getCurrentSongOnPlayFromId(songId: Long) =
+        Function<List<MediaEntity>, Pair<List<MediaEntity>, Int>> { list ->
+            if (shuffleMode.isEnabled() || songId == -1L) {
+                Pair(list, 0)
+            } else {
+                val position = clamp(list.indexOfFirst { it.id == songId }, 0, list.lastIndex)
+                Pair(list, position)
+            }
         }
-    }
 
     private fun shuffleIfNeeded(songId: Long) = Function<List<MediaEntity>, List<MediaEntity>> { l ->
         var list = l.toList()
-        if (shuffleMode.isEnabled()){
+        if (shuffleMode.isEnabled()) {
             val item = list.firstOrNull { it.id == songId } ?: l
             list = enhancedShuffle.shuffle(list.toMutableList())
             val songPosition = list.indexOf(item)
-            if (songPosition != 0 && songPosition != -1){
+            if (songPosition != 0 && songPosition != -1) {
                 list.swap(0, songPosition)
             }
         }
@@ -295,20 +296,20 @@ internal class QueueManager @Inject constructor(
         queueImpl.onRepeatModeChanged()
     }
 
-    override fun playLater(songIds: List<Long>, isPodcast: Boolean): PositionInQueue {
+    override suspend fun playLater(songIds: List<Long>, isPodcast: Boolean): PositionInQueue {
         val currentPositionInQueue = getCurrentPositionInQueue()
         queueImpl.playLater(songIds, isPodcast)
-        return when (currentPositionInQueue){
+        return when (currentPositionInQueue) {
             PositionInQueue.BOTH -> PositionInQueue.FIRST
             PositionInQueue.LAST -> PositionInQueue.IN_MIDDLE
             else -> currentPositionInQueue
         }
     }
 
-    override fun playNext(songIds: List<Long>, isPodcast: Boolean): PositionInQueue {
+    override suspend fun playNext(songIds: List<Long>, isPodcast: Boolean): PositionInQueue {
         val currentPositionInQueue = getCurrentPositionInQueue()
         queueImpl.playNext(songIds, isPodcast)
-        return when (currentPositionInQueue){
+        return when (currentPositionInQueue) {
             PositionInQueue.BOTH -> PositionInQueue.FIRST
             PositionInQueue.LAST -> PositionInQueue.IN_MIDDLE
             else -> currentPositionInQueue
@@ -326,14 +327,14 @@ internal class QueueManager @Inject constructor(
 
     override fun updatePodcastPosition(position: Long) {
         val mediaEntity = queueImpl.getCurrentSong()
-        if (mediaEntity?.isPodcast == true){
+        if (mediaEntity?.isPodcast == true) {
             podcastPosition.set(mediaEntity.id, position)
         }
     }
 }
 
 private fun getAscendingComparator(sortType: SortType): Comparator<MediaEntity> {
-    return when (sortType){
+    return when (sortType) {
         SortType.TITLE -> Comparator { o1, o2 -> collator.safeCompare(o1.title, o2.title) }
         SortType.ARTIST -> Comparator { o1, o2 -> collator.safeCompare(o1.artist, o2.artist) }
         SortType.ALBUM_ARTIST -> Comparator { o1, o2 -> collator.safeCompare(o1.albumArtist, o2.albumArtist) }
@@ -346,7 +347,7 @@ private fun getAscendingComparator(sortType: SortType): Comparator<MediaEntity> 
 }
 
 private fun getDescendingComparator(sortType: SortType): Comparator<MediaEntity> {
-    return when (sortType){
+    return when (sortType) {
         SortType.TITLE -> Comparator { o1, o2 -> collator.safeCompare(o2.title, o1.title) }
         SortType.ARTIST -> Comparator { o1, o2 -> collator.safeCompare(o2.artist, o1.artist) }
         SortType.ALBUM_ARTIST -> Comparator { o1, o2 -> collator.safeCompare(o2.albumArtist, o1.albumArtist) }

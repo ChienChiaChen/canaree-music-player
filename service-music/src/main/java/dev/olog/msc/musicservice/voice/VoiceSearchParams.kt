@@ -92,11 +92,6 @@ internal class VoiceSearchParams(
                     else -> isUnstructured = true
                 }
             }
-
-            song = song.toLowerCase()
-            artist = artist.toLowerCase()
-            album = album.toLowerCase()
-            genre = genre.toLowerCase()
         }
 
     }

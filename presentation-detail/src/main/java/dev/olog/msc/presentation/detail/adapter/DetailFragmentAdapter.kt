@@ -1,10 +1,8 @@
 package dev.olog.msc.presentation.detail.adapter
 
 import androidx.databinding.ViewDataBinding
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.rxbinding2.view.RxView
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
@@ -12,23 +10,22 @@ import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.base.adapter.DiffCallbackDisplayableItem
+import dev.olog.msc.presentation.base.adapter.SetupNestedList
 import dev.olog.msc.presentation.base.extensions.elevateSongOnTouch
+import dev.olog.msc.presentation.base.extensions.setOnClickListener
+import dev.olog.msc.presentation.base.extensions.setOnLongClickListener
+import dev.olog.msc.presentation.base.extensions.subscribe
+import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.model.DisplayableItem
-import dev.olog.msc.presentation.detail.BR
-import dev.olog.msc.presentation.detail.DetailFragmentViewModel
-import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.NESTED_SPAN_COUNT
-import dev.olog.msc.presentation.detail.R
-import dev.olog.msc.presentation.detail.Tutorial
+import dev.olog.msc.presentation.detail.*
+import dev.olog.msc.presentation.detail.sort.DetailSortDialog
 import dev.olog.msc.presentation.navigator.Navigator
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.item_detail_header_all_song.view.*
 
 internal class DetailFragmentAdapter (
     private val mediaId: MediaId,
-    private val recentlyAddedAdapter: DetailRecentlyAddedAdapter,
-    private val mostPlayedAdapter: DetailMostPlayedAdapter,
-    private val relatedArtistsAdapter: DetailRelatedArtistsAdapter,
-    private val albumsAdapter: DetailAlbumsAdapter,
+    private val mediaProvider: MediaProvider,
+    private val setupNestedList: SetupNestedList,
     private val navigator: Navigator,
     private val viewModel: DetailFragmentViewModel
 
@@ -37,72 +34,79 @@ internal class DetailFragmentAdapter (
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int){
         when (viewType) {
 
-            R.layout.item_detail_most_played_list -> {
-                val list = viewHolder.itemView as RecyclerView
-                setupHorizontalListAsGrid(list, mostPlayedAdapter)
-            }
-            R.layout.item_detail_recently_added_list -> {
-                val list = viewHolder.itemView as RecyclerView
-                setupHorizontalListAsGrid(list, recentlyAddedAdapter)
-            }
-            R.layout.item_detail_related_artists_list -> {
-                val list = viewHolder.itemView as RecyclerView
-                setupHorizontalListAsList(list, relatedArtistsAdapter)
-            }
+            R.layout.item_detail_most_played_list,
+            R.layout.item_detail_recently_added_list,
+            R.layout.item_detail_related_artists_list,
             R.layout.item_detail_albums_list -> {
-                val list = viewHolder.itemView as RecyclerView
-                setupHorizontalListAsList(list, albumsAdapter)
+                setupNestedList.setupNestedList(viewType, viewHolder.itemView as RecyclerView)
             }
             R.layout.item_detail_song,
             R.layout.item_detail_song_with_track,
             R.layout.item_detail_song_with_drag_handle,
             R.layout.item_detail_song_with_track_and_image -> {
-//                viewHolder.setOnClickListener(controller) { item, _, _ ->
-//                    val mediaProvider = viewHolder.itemView.context as MediaProvider
-//                    viewModel.detailSortDataUseCase(item.mediaId) {
-//                        mediaProvider.playFromMediaId(item.mediaId, it.sortType, it.sortArranging)
-//                    }
-//                }
-//                viewHolder.setOnLongClickListener(controller) { item, _, _ ->
-//                    navigator.toDialog(item.mediaId, viewHolder.itemView)
-//                }
-//                viewHolder.setOnClickListener(R.id.more, controller) { item, _, view ->
-//                    navigator.toDialog(item.mediaId, view)
-//                }
+                viewHolder.setOnClickListener(this) { item, _, _ ->
+                    viewModel.getDetailSort {
+                        mediaProvider.playFromMediaId(item.mediaId, it.sortType, it.sortArranging)
+                    }
+                }
+                viewHolder.setOnLongClickListener(this) { item, _, _ ->
+                    navigator.toDialog(item.mediaId, viewHolder.itemView)
+                }
+                viewHolder.setOnClickListener(R.id.more, this) { item, _, view ->
+                    navigator.toDialog(item.mediaId, view)
+                }
 //                viewHolder.setOnMoveListener(controller, touchHelper)
             }
             R.layout.item_detail_shuffle -> {
-//                viewHolder.setOnClickListener(controller) { _, _, _ ->
-//                    val mediaProvider = viewHolder.itemView.context as MediaProvider
-//                    mediaProvider.shuffle(mediaId)
-//                }
+                viewHolder.setOnClickListener(this) { _, _, _ ->
+                    mediaProvider.shuffle(mediaId)
+                }
             }
 
             R.layout.item_detail_header_recently_added -> {
-//                viewHolder.setOnClickListener(R.id.seeMore, controller) { _, _, _ ->
-//                    val activity = viewHolder.itemView.context as FragmentActivity
-//                    navigator.toRecentlyAdded(activity, mediaId)
-//                }
+                viewHolder.setOnClickListener(R.id.seeMore, this) { _, _, _ ->
+                    val activity = viewHolder.itemView.context as FragmentActivity
+                    navigator.toRecentlyAdded(activity, mediaId)
+                }
             }
             R.layout.item_detail_header -> {
-
-//                viewHolder.setOnClickListener(R.id.seeMore, controller) { item, _, _ ->
-//                    val activity = viewHolder.itemView.context as FragmentActivity
-//                    when (item.mediaId) {
-//                        DetailFragmentHeaders.RELATED_ARTISTS_SEE_ALL -> navigator.toRelatedArtists(activity, mediaId)
-//                    }
-//                }
+                viewHolder.setOnClickListener(R.id.seeMore, this) { item, _, _ ->
+                    val activity = viewHolder.itemView.context as FragmentActivity
+                    when (item.mediaId) {
+                        DetailFragmentHeaders.RELATED_ARTISTS_SEE_ALL -> navigator.toRelatedArtists(activity, mediaId)
+                    }
+                }
             }
 
             R.layout.item_detail_header_all_song -> {
-//                viewHolder.setOnClickListener(R.id.sort, controller) { _, _, view ->
-//                    viewModel.observeSortOrder {
-//                        DetailSortDialog().show(view.context, view, mediaId, it, viewModel::updateSortOrder)
-//                    }
-//                }
-//                viewHolder.setOnClickListener(R.id.sortImage, controller) { _, _, _ ->
-//                    viewModel.toggleSortArranging()
-//                }
+                val sortText = viewHolder.itemView.sort
+                val sortImage = viewHolder.itemView.sortImage
+
+                viewModel.observeSorting()
+                    .subscribe(viewHolder) { (sort, arranging) ->
+                        if (sort == SortType.CUSTOM){
+                            sortImage.setImageResource(R.drawable.vd_remove)
+                        } else {
+                            if (arranging == SortArranging.ASCENDING){
+                                sortImage.setImageResource(R.drawable.vd_arrow_down)
+                            } else {
+                                sortImage.setImageResource(R.drawable.vd_arrow_up)
+                            }
+                        }
+                    }
+
+                viewModel.canShowSortByTutorial { Tutorial.sortBy(sortText, sortImage) }
+
+                viewHolder.setOnClickListener(R.id.sort, this) { _, _, view ->
+                    viewModel.getDetailSort { detailSort ->
+                        DetailSortDialog().show(view.context, view, mediaId, detailSort.sortType) {
+                            viewModel.updateSortOrder(it)
+                        }
+                    }
+                }
+                viewHolder.setOnClickListener(R.id.sortImage, this) { _, _, _ ->
+                    viewModel.toggleSortArranging()
+                }
             }
         }
 
@@ -110,82 +114,6 @@ internal class DetailFragmentAdapter (
             R.layout.item_detail_song,
             R.layout.item_detail_song_with_track,
             R.layout.item_detail_song_with_drag_handle -> viewHolder.elevateSongOnTouch()
-        }
-    }
-
-    private fun setupHorizontalListAsGrid(list: RecyclerView, adapter: BasePagedAdapter<*>){
-        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(list.context,
-                NESTED_SPAN_COUNT, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
-        list.layoutManager = layoutManager
-        list.adapter = adapter
-        val snapHelper = LinearSnapHelper()
-        snapHelper.attachToRecyclerView(list)
-    }
-
-    private fun setupHorizontalListAsList(list: RecyclerView, adapter: BasePagedAdapter<*>){
-        val layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.HORIZONTAL, false)
-        list.layoutManager = layoutManager
-        list.adapter = adapter
-    }
-
-//    override fun onViewDetachedFromWindow(holder: DataBoundViewHolder) {
-//        when (holder.itemViewType){
-//            R.layout.item_detail_most_played_list -> {
-//                mostPlayedAdapter.setAfterDataChanged(null)
-//            }
-//            R.layout.item_detail_recently_added_list -> {
-//                recentlyAddedAdapter.setAfterDataChanged(null)
-//            }
-//        }
-//    }
-
-    override fun onViewAttachedToWindow(holder: DataBoundViewHolder) {
-        when (holder.itemViewType) {
-//            R.layout.item_detail_most_played_list -> {
-//                val list = holder.itemView as RecyclerView
-//                val layoutManager = list.layoutManager as androidx.recyclerview.widget.GridLayoutManager
-//                mostPlayedAdapter.setAfterDataChanged({
-//                    updateNestedSpanCount(layoutManager, it.size)
-//                }, false)
-//            }
-//            R.layout.item_detail_recently_added_list -> {
-//                val list = holder.itemView as RecyclerView
-//                val layoutManager = list.layoutManager as androidx.recyclerview.widget.GridLayoutManager
-//                recentlyAddedAdapter.setAfterDataChanged({
-//                    updateNestedSpanCount(layoutManager, it.size)
-//                }, false)
-//            }
-            R.layout.item_detail_header_all_song -> {
-                val sortText = holder.itemView.sort
-                val sortImage = holder.itemView.sortImage
-
-                viewModel.observeSorting()
-                        .takeUntil(RxView.detaches(holder.itemView))
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ (sort, arranging) ->
-                            if (sort == SortType.CUSTOM){
-                                sortImage.setImageResource(R.drawable.vd_remove)
-                            } else {
-                                if (arranging == SortArranging.ASCENDING){
-                                    sortImage.setImageResource(R.drawable.vd_arrow_down)
-                                } else {
-                                    sortImage.setImageResource(R.drawable.vd_arrow_up)
-                                }
-                            }
-
-                        }, Throwable::printStackTrace)
-
-                viewModel.showSortByTutorialIfNeverShown()
-                        .subscribe({ Tutorial.sortBy(sortText, sortImage) }, {})
-            }
-        }
-    }
-
-    private fun updateNestedSpanCount(layoutManager: androidx.recyclerview.widget.GridLayoutManager, size: Int){
-        layoutManager.spanCount = when {
-            size == 0 -> 1
-            size < NESTED_SPAN_COUNT -> size
-            else -> NESTED_SPAN_COUNT
         }
     }
 

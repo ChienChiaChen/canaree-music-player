@@ -7,6 +7,7 @@ import androidx.lifecycle.LifecycleOwner
 import dagger.Lazy
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
+import dev.olog.msc.musicservice.ActionManager
 import dev.olog.msc.musicservice.Noisy
 import dev.olog.msc.musicservice.PlayerState
 import dev.olog.msc.musicservice.focus.AudioFocusBehavior
@@ -29,9 +30,7 @@ internal class PlayerImpl @Inject constructor(
         private val player: CustomExoPlayer<PlayerMediaEntity>,
         musicPrefsUseCase: MusicPreferencesGateway
 
-) : Player,
-        DefaultLifecycleObserver,
-        PlayerLifecycle {
+) : Player, DefaultLifecycleObserver, PlayerLifecycle, ActionManager.Callback {
 
     private val listeners = mutableListOf<PlayerLifecycle.Listener>()
 
@@ -55,7 +54,7 @@ internal class PlayerImpl @Inject constructor(
         releaseFocus()
     }
 
-    override fun prepare(playerModel: PlayerMediaEntity) {
+    override fun onPrepare(playerModel: PlayerMediaEntity) {
         val entity = playerModel.mediaEntity
         player.prepare(playerModel, playerModel.bookmark)
 
@@ -67,7 +66,7 @@ internal class PlayerImpl @Inject constructor(
         listeners.forEach { it.onPrepare(entity) }
     }
 
-    override fun playNext(playerModel: PlayerMediaEntity, skipType: SkipType) {
+    override fun onPlayNext(playerModel: PlayerMediaEntity, skipType: SkipType) {
         when (skipType){
             SkipType.SKIP_PREVIOUS -> playerState.skipTo(false)
             SkipType.SKIP_NEXT,
@@ -78,7 +77,7 @@ internal class PlayerImpl @Inject constructor(
         playInternal(playerModel, skipType)
     }
 
-    override fun play(playerModel: PlayerMediaEntity) {
+    override fun onPlay(playerModel: PlayerMediaEntity) {
         playInternal(playerModel, SkipType.NONE)
     }
 
@@ -103,7 +102,7 @@ internal class PlayerImpl @Inject constructor(
         serviceLifecycle.start()
     }
 
-    override fun resume() {
+    override fun onResume() {
         if (!requestFocus()) return
 
         player.resume()
@@ -116,7 +115,7 @@ internal class PlayerImpl @Inject constructor(
         noisy.get().register()
     }
 
-    override fun pause(stopService: Boolean, releaseFocus: Boolean) {
+    override fun onPause(stopService: Boolean, releaseFocus: Boolean) {
         player.pause()
         val playbackState = playerState.update(PlaybackStateCompat.STATE_PAUSED, getBookmark(), currentSpeed)
         listeners.forEach {
@@ -128,12 +127,13 @@ internal class PlayerImpl @Inject constructor(
             releaseFocus()
         }
 
+
         if (stopService) {
             serviceLifecycle.stop()
         }
     }
 
-    override fun seekTo(millis: Long) {
+    override fun onSeek(millis: Long) {
         player.seekTo(millis)
         val state = if (isPlaying()) PlaybackStateCompat.STATE_PLAYING else PlaybackStateCompat.STATE_PAUSED
         val playbackState = playerState.update(state, millis, currentSpeed)
@@ -149,24 +149,14 @@ internal class PlayerImpl @Inject constructor(
         }
     }
 
-    override fun forwardTenSeconds() {
-        val newBookmark = player.getBookmark() + TimeUnit.SECONDS.toMillis(10)
-        seekTo(clamp(newBookmark, 0, player.getDuration()))
+    override fun onForwardBy(seconds: Int) {
+        val newBookmark = player.getBookmark() + TimeUnit.SECONDS.toMillis(seconds.toLong())
+        onSeek(clamp(newBookmark, 0, player.getDuration()))
     }
 
-    override fun replayTenSeconds() {
-        val newBookmark = player.getBookmark() - TimeUnit.SECONDS.toMillis(10)
-        seekTo(clamp(newBookmark, 0, player.getDuration()))
-    }
-
-    override fun forwardThirtySeconds() {
-        val newBookmark = player.getBookmark() + TimeUnit.SECONDS.toMillis(30)
-        seekTo(clamp(newBookmark, 0, player.getDuration()))
-    }
-
-    override fun replayThirtySeconds() {
-        val newBookmark = player.getBookmark() - TimeUnit.SECONDS.toMillis(30)
-        seekTo(clamp(newBookmark, 0, player.getDuration()))
+    override fun onReplayBy(seconds: Int) {
+        val newBookmark = player.getBookmark() - TimeUnit.SECONDS.toMillis(seconds.toLong())
+        onSeek(clamp(newBookmark, 0, player.getDuration()))
     }
 
     override fun isPlaying(): Boolean = player.isPlaying()

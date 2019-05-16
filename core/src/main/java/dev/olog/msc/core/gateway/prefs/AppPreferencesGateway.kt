@@ -82,22 +82,22 @@ interface Sorting {
     fun observeAllAlbumsSortOrder(): Flow<LibrarySortType>
     fun observeAllArtistsSortOrder(): Flow<LibrarySortType>
 
-    fun setAllTracksSortOrder(sortType: LibrarySortType)
-    fun setAllAlbumsSortOrder(sortType: LibrarySortType)
-    fun setAllArtistsSortOrder(sortType: LibrarySortType)
+    suspend fun setAllTracksSortOrder(sortType: LibrarySortType)
+    suspend fun setAllAlbumsSortOrder(sortType: LibrarySortType)
+    suspend fun setAllArtistsSortOrder(sortType: LibrarySortType)
 
-    fun getFolderSortOrder() : SortType
-    fun getPlaylistSortOrder() : SortType
-    fun getAlbumSortOrder() : SortType
-    fun getArtistSortOrder() : SortType
-    fun getGenreSortOrder() : SortType
+    fun getFolderSortOrder() : Flow<SortType>
+    fun getPlaylistSortOrder() : Flow<SortType>
+    fun getAlbumSortOrder() : Flow<SortType>
+    fun getArtistSortOrder() : Flow<SortType>
+    fun getGenreSortOrder() : Flow<SortType>
 
-    fun setFolderSortOrder(sortType: SortType) : Completable
-    fun setPlaylistSortOrder(sortType: SortType) : Completable
-    fun setAlbumSortOrder(sortType: SortType) : Completable
-    fun setArtistSortOrder(sortType: SortType) : Completable
-    fun setGenreSortOrder(sortType: SortType) : Completable
+    suspend fun setFolderSortOrder(sortType: SortType)
+    suspend fun setPlaylistSortOrder(sortType: SortType)
+    suspend fun setAlbumSortOrder(sortType: SortType)
+    suspend fun setArtistSortOrder(sortType: SortType)
+    suspend fun setGenreSortOrder(sortType: SortType)
 
-    fun getSortArranging(): SortArranging
-    fun toggleSortArranging(): Completable
+    fun getSortArranging(): Flow<SortArranging>
+    suspend fun toggleSortArranging()
 }

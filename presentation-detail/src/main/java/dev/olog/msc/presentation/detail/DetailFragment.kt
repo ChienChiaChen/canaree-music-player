@@ -7,11 +7,17 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
+import dev.olog.msc.presentation.base.adapter.SetupNestedList
 import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.CanChangeStatusBarColor
+import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.theme.dark.mode.isDark
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
@@ -25,7 +31,7 @@ import kotlinx.android.synthetic.main.fragment_detail.view.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-class DetailFragment : BaseFragment(), CanChangeStatusBarColor {
+class DetailFragment : BaseFragment(), CanChangeStatusBarColor, SetupNestedList {
 
     companion object {
         const val TAG = "DetailFragment"
@@ -43,23 +49,47 @@ class DetailFragment : BaseFragment(), CanChangeStatusBarColor {
 
     private val viewModel by lazyFast { viewModelProvider<DetailFragmentViewModel>(viewModelFactory) }
 
-    private val recyclerOnScrollListener by lazyFast { HeaderVisibilityScrollListener(this) }
+    private val recyclerOnScrollListener = HeaderVisibilityScrollListener(this)
 
-    private val mediaId by lazyFast {
-        val mediaId = arguments!!.getString(ARGUMENTS_MEDIA_ID)!!
-        MediaId.fromString(mediaId)
-    }
+    private val mediaId = MediaId.fromString(arguments!!.getString(ARGUMENTS_MEDIA_ID)!!)
 
-    private val mostPlayedAdapter by lazyFast { DetailMostPlayedAdapter(navigator) }
-    private val recentlyAddedAdapter by lazyFast { DetailRecentlyAddedAdapter(navigator) }
-    private val relatedArtistAdapter by lazyFast { DetailRelatedArtistsAdapter(navigator) }
+    private val mostPlayedAdapter = DetailMostPlayedAdapter(navigator)
+    private val recentlyAddedAdapter = DetailRecentlyAddedAdapter(navigator)
+    private val relatedArtistAdapter = DetailRelatedArtistsAdapter(navigator)
     private val albumsAdapter by lazyFast { DetailAlbumsAdapter(navigator) }
 
-    private val adapter by lazyFast {
-        DetailFragmentAdapter(
-            mediaId, recentlyAddedAdapter, mostPlayedAdapter, relatedArtistAdapter,
-            albumsAdapter, navigator, viewModel
-        )
+    private val adapter = DetailFragmentAdapter(mediaId, act as MediaProvider, this, navigator, viewModel)
+
+    override fun setupNestedList(layoutId: Int, recyclerView: RecyclerView) {
+        when (layoutId){
+            R.layout.item_detail_most_played_list -> {
+                setupHorizontalListAsGrid(recyclerView, mostPlayedAdapter)
+            }
+            R.layout.item_detail_recently_added_list -> {
+                setupHorizontalListAsGrid(recyclerView, recentlyAddedAdapter)
+            }
+            R.layout.item_detail_related_artists_list -> {
+                setupHorizontalListAsList(recyclerView, relatedArtistAdapter)
+            }
+            R.layout.item_detail_albums_list -> {
+                setupHorizontalListAsList(recyclerView, albumsAdapter)
+            }
+        }
+    }
+
+    private fun setupHorizontalListAsGrid(list: RecyclerView, adapter: BasePagedAdapter<*>){
+        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(list.context,
+            DetailFragmentViewModel.NESTED_SPAN_COUNT, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
+        list.layoutManager = layoutManager
+        list.adapter = adapter
+        val snapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(list)
+    }
+
+    private fun setupHorizontalListAsList(list: RecyclerView, adapter: BasePagedAdapter<*>){
+        val layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.HORIZONTAL, false)
+        list.layoutManager = layoutManager
+        list.adapter = adapter
     }
 
     internal var hasLightStatusBarColor by Delegates.observable(false) { _, _, new ->
@@ -67,7 +97,7 @@ class DetailFragment : BaseFragment(), CanChangeStatusBarColor {
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
-        view.list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(ctx)
+        view.list.layoutManager = LinearLayoutManager(ctx)
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
 

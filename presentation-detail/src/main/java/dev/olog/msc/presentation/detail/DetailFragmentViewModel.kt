@@ -1,25 +1,35 @@
 package dev.olog.msc.presentation.detail
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.entity.sort.SortArranging
+import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.core.interactor.sort.*
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
+import dev.olog.msc.core.gateway.track.PlaylistGateway
+import dev.olog.msc.core.interactor.sort.SetSortOrderRequestModel
+import dev.olog.msc.core.interactor.sort.SetSortOrderUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.domain.GetDetailSortDataUseCase
+import dev.olog.msc.presentation.detail.domain.MoveItemInPlaylistUseCase
+import dev.olog.msc.presentation.detail.domain.RemoveFromPlaylistUseCase
 import dev.olog.msc.presentation.detail.paging.*
 import dev.olog.msc.presentation.detail.sort.DetailSort
 import dev.olog.msc.shared.extensions.debounceFirst
-import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -30,12 +40,12 @@ internal class DetailFragmentViewModel @Inject constructor(
     mostPlayedDataSource: MostPlayedDataSourceFactory,
     recentlyAddedDataSource: RecentlyAddedDataSourceFactory,
     relatedArtistsSource: RelatedArtistsSourceFactory,
-    private val presenter: DetailFragmentPresenter,
     private val setSortOrderUseCase: SetSortOrderUseCase,
-    private val observeSortOrderUseCase: GetSortOrderUseCase,
-    private val setSortArrangingUseCase: SetSortArrangingUseCase,
-    private val getSortArrangingUseCase: GetSortArrangingUseCase,
-    private val getDetailSortDataUseCase: GetDetailSortDataUseCase
+    private val prefsGateway: AppPreferencesGateway,
+    private val tutorialPreferenceUseCase: TutorialPreferenceGateway,
+    private val getDetailSortDataUseCase: GetDetailSortDataUseCase,
+    private val removeFromPlaylistUseCase: RemoveFromPlaylistUseCase,
+    private val moveItemInPlaylistUseCase: MoveItemInPlaylistUseCase
 
 ) : ViewModel() {
 
@@ -45,8 +55,6 @@ internal class DetailFragmentViewModel @Inject constructor(
         const val RELATED_ARTISTS_TO_SEE = 10
     }
 
-    private val subscriptions = CompositeDisposable()
-
     private val filterPublisher = BehaviorSubject.createDefault("")
 
     val data : LiveData<PagedList<DisplayableItem>>
@@ -54,6 +62,8 @@ internal class DetailFragmentViewModel @Inject constructor(
     val mostPlayed: LiveData<PagedList<DisplayableItem>>
     val recentlyAdded: LiveData<PagedList<DisplayableItem>>
     val relatedArtists: LiveData<PagedList<DisplayableItem>>
+
+    private val sortingLiveData = MutableLiveData<DetailSort>()
 
     init {
         val config = PagedList.Config.Builder()
@@ -71,7 +81,14 @@ internal class DetailFragmentViewModel @Inject constructor(
         mostPlayed = LivePagedListBuilder(mostPlayedDataSource, miniConfig).build()
         recentlyAdded = LivePagedListBuilder(recentlyAddedDataSource, miniConfig).build()
         relatedArtists = LivePagedListBuilder(relatedArtistsSource, miniConfig).build()
+
+        viewModelScope.launch {
+            getDetailSortDataUseCase.execute(mediaId)
+                .collect { sortingLiveData.postValue(it) }
+        }
     }
+
+    fun observeSorting(): LiveData<DetailSort> = sortingLiveData
 
     fun updateFilter(filter: String){
         if (filter.isEmpty() || filter.length >= 2){
@@ -96,59 +113,52 @@ internal class DetailFragmentViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        subscriptions.clear()
+        viewModelScope.cancel()
     }
 
-    fun detailSortDataUseCase(mediaId: MediaId, action: (DetailSort) -> Unit){
-        getDetailSortDataUseCase.execute(mediaId)
-                .subscribe(action, Throwable::printStackTrace)
-                .addTo(subscriptions)
+    fun getDetailSort(action: (DetailSort) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        val sortData = getDetailSortDataUseCase.execute(mediaId).single()
+        withContext(Dispatchers.Main){
+            action(sortData)
+        }
     }
 
-    fun observeSortOrder(action: (SortType) -> Unit) {
-        observeSortOrderUseCase.execute(mediaId)
-                .firstOrError()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ action(it) }, Throwable::printStackTrace)
-                .addTo(subscriptions)
-    }
-
-    fun updateSortOrder(sortType: SortType){
+    fun updateSortOrder(sortType: SortType) = viewModelScope.launch(Dispatchers.IO) {
         setSortOrderUseCase.execute(SetSortOrderRequestModel(mediaId, sortType))
-                .subscribe({ }, Throwable::printStackTrace)
-                .addTo(subscriptions)
     }
 
-    fun toggleSortArranging(){
-        observeSortOrderUseCase.execute(mediaId)
-                .firstOrError()
-                .filter { it != SortType.CUSTOM }
-                .flatMapCompletable { setSortArrangingUseCase.execute() }
-                .subscribe({ }, Throwable::printStackTrace)
-                .addTo(subscriptions)
+    fun toggleSortArranging() = viewModelScope.launch(Dispatchers.IO) {
+        if (getDetailSortDataUseCase.execute(mediaId).single().sortType != SortType.CUSTOM){
+            prefsGateway.toggleSortArranging()
+        }
 
     }
 
-    fun moveItemInPlaylist(from: Int, to: Int){
-        presenter.moveInPlaylist(from, to)
+    fun moveItemInPlaylist(from: Int, to: Int) = viewModelScope.launch{
+        mediaId.assertPlaylist()
+        val playlistId = mediaId.resolveId
+        moveItemInPlaylistUseCase.execute(
+            MoveItemInPlaylistUseCase.Input(playlistId, from, to,
+                if (mediaId.isPodcastPlaylist) PlaylistType.PODCAST else PlaylistType.TRACK
+            ))
     }
 
-    fun removeFromPlaylist(item: DisplayableItem) {
-        presenter.removeFromPlaylist(item)
-                .subscribe({}, Throwable::printStackTrace)
-                .addTo(subscriptions)
+    fun removeFromPlaylist(item: DisplayableItem) = viewModelScope.launch {
+        mediaId.assertPlaylist()
+        val playlistId = mediaId.resolveId
+        val playlistType = if (item.mediaId.isPodcast) PlaylistType.PODCAST else PlaylistType.TRACK
+        if (playlistId == PlaylistGateway.FAVORITE_LIST_ID){
+            // favorites use songId instead of idInPlaylist
+            removeFromPlaylistUseCase.execute(RemoveFromPlaylistUseCase.Input(playlistId, item.mediaId.leaf!!, playlistType))
+        } else {
+            removeFromPlaylistUseCase.execute(RemoveFromPlaylistUseCase.Input(playlistId, item.trackNumber.toLong(), playlistType))
+        }
     }
 
-    fun observeSorting(): Observable<Pair<SortType, SortArranging>>{
-        return Observables.combineLatest(
-                observeSortOrderUseCase.execute(mediaId),
-                getSortArrangingUseCase.execute(),
-                { sort, arranging -> Pair(sort, arranging) }
-        )
-    }
-
-    fun showSortByTutorialIfNeverShown(): Completable {
-        return presenter.showSortByTutorialIfNeverShown()
+    fun canShowSortByTutorial(onCanShow: () -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        if (tutorialPreferenceUseCase.canShowSortByTutorial()){
+            onCanShow()
+        }
     }
 
 }

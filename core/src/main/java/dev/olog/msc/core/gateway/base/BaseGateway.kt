@@ -1,17 +1,13 @@
 package dev.olog.msc.core.gateway.base
 
-import dev.olog.msc.core.entity.ChunkedData
-import kotlinx.coroutines.flow.Flow
+import dev.olog.msc.core.entity.ItemRequest
+import dev.olog.msc.core.entity.PageRequest
 
 
 interface BaseGateway<T, in Params> {
 
-    fun getChunk(): ChunkedData<T>
-
-    suspend fun getAll(): Flow<List<T>>
-
-    fun getByParam(param: Params): T
-    suspend fun observeByParam(param: Params): Flow<T>
+    fun getAll(): PageRequest<T>
+    fun getByParam(param: Params): ItemRequest<T>
 
 }
 

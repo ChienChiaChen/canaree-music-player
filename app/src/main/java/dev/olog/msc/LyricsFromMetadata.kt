@@ -10,25 +10,36 @@ import javax.inject.Inject
 class LyricsFromMetadata @Inject constructor() : ILyricsFromMetadata {
 
     override fun getLyrics(song: Song): String {
-        val file = File(song.path)
+        try {
+            val file = File(song.path)
 
-        val fileName = file.nameWithoutExtension
-        val lyricsFile = File(file.parentFile, "$fileName.lrc")
+            val fileName = file.nameWithoutExtension
+            val lyricsFile = File(file.parentFile, "$fileName.lrc")
 
-        if (lyricsFile.exists()) {
-            return lyricsFile.bufferedReader().use { it.readText() }
+            if (lyricsFile.exists()) {
+                return lyricsFile.bufferedReader().use { it.readText() }
+            }
+
+            val audioFile = AudioFileIO.read(file)
+            val tag = audioFile.tagAndConvertOrCreateAndSetDefault
+            return tag.getFirst(FieldKey.LYRICS)
+        } catch (ex: Throwable) {
+            ex.printStackTrace()
+            return ""
         }
 
-        val audioFile = AudioFileIO.read(file)
-        val tag = audioFile.tagAndConvertOrCreateAndSetDefault
-        return tag.getFirst(FieldKey.LYRICS)
     }
 
     override fun setLyrics(song: Song, lyrics: String) {
-        val file = File(song.path)
-        val audioFile = AudioFileIO.read(file)
-        val tag = audioFile.tagAndConvertOrCreateAndSetDefault
-        tag.setField(FieldKey.LYRICS, lyrics)
-        audioFile.commit()
+        try {
+            val file = File(song.path)
+            val audioFile = AudioFileIO.read(file)
+            val tag = audioFile.tagAndConvertOrCreateAndSetDefault
+            tag.setField(FieldKey.LYRICS, lyrics)
+            audioFile.commit()
+        } catch (ex: Throwable) {
+            ex.printStackTrace()
+        }
+
     }
 }

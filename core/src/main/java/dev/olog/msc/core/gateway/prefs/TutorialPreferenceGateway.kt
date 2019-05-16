@@ -1,13 +1,11 @@
 package dev.olog.msc.core.gateway.prefs
 
-import io.reactivex.Completable
-
 interface TutorialPreferenceGateway {
 
-    fun sortByTutorial(): Completable
-    fun floatingWindowTutorial(): Completable
-    fun lyricsTutorial(): Completable
-    fun editLyrics(): Completable
+    fun canShowSortByTutorial(): Boolean
+    fun canShowFloatingWindowTutorial(): Boolean
+    fun canShowLyricsTutorial(): Boolean
+    fun canShowEditLyrics(): Boolean
     fun reset()
 
 }

@@ -133,13 +133,13 @@ internal class PlayerState @Inject constructor(
         mediaSession.setPlaybackState(builder.build())
     }
 
-    fun setEmptyQueue(){
-        val localBuilder = PlaybackStateCompat.Builder(builder.build())
-        localBuilder.setState(PlaybackStateCompat.STATE_ERROR, 0, 0f)
-                .setErrorMessage(PlaybackStateCompat.ERROR_CODE_UNKNOWN_ERROR, context.getString(R.string.music_error_empty_queue))
-
-        mediaSession.setPlaybackState(localBuilder.build())
-    }
+//    fun setEmptyQueue(){ TODO set empty queue on every error?
+//        val localBuilder = PlaybackStateCompat.Builder(builder.build())
+//        localBuilder.setState(PlaybackStateCompat.STATE_ERROR, 0, 0f)
+//                .setErrorMessage(PlaybackStateCompat.ERROR_CODE_UNKNOWN_ERROR, context.getString(R.string.music_error_empty_queue))
+//
+//        mediaSession.setPlaybackState(localBuilder.build())
+//    }
 
     private fun getActions(): Long {
         return PlaybackStateCompat.ACTION_PLAY_PAUSE or

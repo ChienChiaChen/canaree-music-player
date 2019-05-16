@@ -8,10 +8,8 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 import org.jaudiotagger.audio.mp3.MP3File
@@ -41,23 +39,23 @@ class GlideOriginalImageFetcher(
         }
 
         // TODO
-        disposable = when {
-            mediaId.isLeaf && !mediaId.isPodcast -> Observable.just(songGateway.getByParam(id)).map { it.path }
-            mediaId.isLeaf && mediaId.isPodcast -> Observable.just(podcastGateway.getByParam(id)).map { it.path }
-            mediaId.isAlbum -> songGateway.getByAlbumId(id).asObservable().map { it.path }
-            mediaId.isPodcastAlbum -> podcastGateway.getByAlbumId(id).map { it.path }
-            else -> Observable.error(IllegalArgumentException("not a valid media id=$mediaId"))
-        }.firstOrError().subscribe({
-            try {
-                val stream = loadImage(it)
-                callback.onDataReady(stream)
-            } catch (ex: Exception){
-                callback.onLoadFailed(ex)
-            }
-        }, {
-            it.printStackTrace()
-            callback.onLoadFailed(Exception(it))
-        })
+//        disposable = when {
+//            mediaId.isLeaf && !mediaId.isPodcast -> Observable.just(songGateway.getByParam(id)).map { it.path }
+//            mediaId.isLeaf && mediaId.isPodcast -> Observable.just(podcastGateway.getByParam(id)).map { it.path }
+//            mediaId.isAlbum -> songGateway.getByAlbumId(id).asObservable().map { it.path }
+//            mediaId.isPodcastAlbum -> podcastGateway.getByAlbumId(id).map { it.path }
+//            else -> Observable.error(IllegalArgumentException("not a valid media id=$mediaId"))
+//        }.firstOrError().subscribe({
+//            try {
+//                val stream = loadImage(it)
+//                callback.onDataReady(stream)
+//            } catch (ex: Exception){
+//                callback.onLoadFailed(ex)
+//            }
+//        }, {
+//            it.printStackTrace()
+//            callback.onLoadFailed(Exception(it))
+//        })
     }
 
     private fun loadImage(path: String): InputStream? {

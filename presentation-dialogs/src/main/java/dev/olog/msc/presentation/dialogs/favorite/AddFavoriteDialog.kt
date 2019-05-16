@@ -3,11 +3,14 @@ package dev.olog.msc.presentation.dialogs.favorite
 
 import android.content.Context
 import android.content.DialogInterface
+import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.dialogs.BaseDialog
 import dev.olog.msc.presentation.base.extensions.asHtml
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
+import dev.olog.msc.shared.extensions.lazyFast
 import io.reactivex.Completable
 import javax.inject.Inject
 
@@ -29,10 +32,13 @@ class AddFavoriteDialog : BaseDialog() {
         }
     }
 
-    @Inject lateinit var mediaId: MediaId
-    @Inject @JvmField var listSize: Int = 0
-    @Inject lateinit var title: String
-    @Inject lateinit var presenter: AddFavoriteDialogPresenter
+    private val mediaId: MediaId by lazyFast {
+        MediaId.fromString(arguments!!.getString(ARGUMENTS_MEDIA_ID)!!)
+    }
+    private val listSize: Int by lazyFast { arguments!!.getInt(ARGUMENTS_LIST_SIZE) }
+    private val title by lazyFast { arguments!!.getString(ARGUMENTS_ITEM_TITLE) }
+    @Inject lateinit var factory: ViewModelProvider.Factory
+    private val viewModel by lazyFast { viewModelProvider<AddFavoriteDialogViewModel>(factory) }
 
     override fun title(context: Context): CharSequence {
         return context.getString(R.string.popup_add_to_favorites)
@@ -62,7 +68,8 @@ class AddFavoriteDialog : BaseDialog() {
     }
 
     override fun positiveAction(dialogInterface: DialogInterface, which: Int): Completable {
-        return presenter.execute()
+//        return viewModel.execute(mediaId)
+        return TODO()
     }
 
     private fun createMessage() : String {

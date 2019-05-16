@@ -2,20 +2,19 @@ package dev.olog.msc.core.interactor.sort
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.coroutines.CompletableFlowWithParam
+import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
-import io.reactivex.Completable
 import javax.inject.Inject
 
 class SetSortOrderUseCase @Inject constructor(
-        schedulers: IoScheduler,
+        schedulers: IoDispatcher,
         private val gateway: AppPreferencesGateway
 
-) : CompletableUseCaseWithParam<SetSortOrderRequestModel>(schedulers){
+) : CompletableFlowWithParam<SetSortOrderRequestModel>(schedulers){
 
-    override fun buildUseCaseObservable(param: SetSortOrderRequestModel): Completable {
+    override suspend fun buildUseCaseObservable(param: SetSortOrderRequestModel) {
         val category = param.mediaId.category
         return when (category){
             MediaIdCategory.FOLDERS -> gateway.setFolderSortOrder(param.sortType)
