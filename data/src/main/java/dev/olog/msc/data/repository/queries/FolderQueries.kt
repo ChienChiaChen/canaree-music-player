@@ -27,15 +27,6 @@ internal class FolderQueries(
         return contentResolver.querySql(query)
     }
 
-    fun countAll(): Cursor {
-        val query = """
-            SELECT count(distinct $folderProjection)
-            FROM $EXTERNAL_CONTENT_URI
-            WHERE ${defaultSelection()}
-        """
-        return contentResolver.querySql(query)
-    }
-
     fun getByPath(folderPath: String): Cursor {
         val query = """
             SELECT distinct $folderProjection as ${Columns.FOLDER}, count(*) as ${Columns.N_SONGS}
@@ -111,7 +102,9 @@ internal class FolderQueries(
 
     fun getRelatedArtists(folderPath: String, chunk: Page?): Cursor {
         val query = """
-            SELECT distinct $ARTIST_ID, $ARTIST, $albumArtistProjection,
+            SELECT distinct $ARTIST_ID,
+                $artistProjection as ${Columns.ARTIST},
+                $albumArtistProjection,
                 count(*) as ${Columns.N_SONGS},
                 count(distinct $ALBUM_ID) as ${Columns.N_ALBUMS},
                 $folderProjection as ${Columns.FOLDER}

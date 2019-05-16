@@ -64,8 +64,8 @@ internal inline fun <T> ContentResolver.queryMaybe(cursor: Cursor, mapper: (Curs
     item = mapper(cursor)
     cursor.close()
 
-    if (item != null){
-        item = afterQuery?.invoke(item)
+    if (item != null && afterQuery != null){
+        item = afterQuery.invoke(item)
     }
 
     return item
