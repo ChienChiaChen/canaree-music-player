@@ -115,7 +115,9 @@ internal class GenreQueries(
 
     fun getRelatedArtists(genreId: Long, chunk: Page?): Cursor {
         val query = """
-            SELECT distinct $ARTIST_ID, $ARTIST, $albumArtistProjection,
+            SELECT distinct $ARTIST_ID,
+                $artistProjection as ${Columns.ARTIST},
+                $albumArtistProjection,
                 count(*) as ${Columns.N_SONGS},
                 count(distinct $ALBUM_ID) as ${Columns.N_ALBUMS}
             FROM ${getContentUri("external", genreId)}
@@ -124,7 +126,7 @@ internal class GenreQueries(
             ORDER BY $ARTIST_KEY
             ${tryGetChunk(chunk)}
         """
-        return contentResolver.querySql(query, arrayOf(genreId.toString()))
+        return contentResolver.querySql(query)
     }
 
     fun getExisting(songIds: String): Cursor {
