@@ -5,29 +5,50 @@ package dev.olog.msc.data.utils
 import android.database.Cursor
 
 internal inline fun Cursor.getInt(columnName: String): Int {
-    return this.getInt(this.getColumnIndex(columnName))
+    try {
+        return this.getInt(this.getColumnIndex(columnName))
+    } catch (ex: IllegalStateException) {
+        throw IllegalStateException("invalid column $columnName", ex)
+    }
 }
 
 internal inline fun Cursor.getLong(columnName: String): Long {
-    return this.getLong(this.getColumnIndex(columnName))
+    try {
+        return this.getLong(this.getColumnIndex(columnName))
+    } catch (ex: IllegalStateException) {
+        throw IllegalStateException("invalid column $columnName", ex)
+    }
 }
 
 internal inline fun Cursor.getString(columnName: String): String {
-    return this.getString(this.getColumnIndex(columnName))
+    try {
+        return this.getString(this.getColumnIndex(columnName))
+    } catch (ex: IllegalStateException) {
+        throw IllegalStateException("invalid column $columnName", ex)
+    }
 }
 
 internal inline fun Cursor.getIntOrNull(columnName: String): Int? {
-    return this.getInt(this.getColumnIndex(columnName))
+    try {
+        return this.getInt(this.getColumnIndex(columnName))
+    } catch (ex: IllegalStateException) {
+        throw IllegalStateException("invalid column $columnName", ex)
+    }
 }
 
 internal inline fun Cursor.getLongOrNull(columnName: String): Long? {
-    return this.getLong(this.getColumnIndex(columnName))
+    try {
+        return this.getLong(this.getColumnIndex(columnName))
+    } catch (ex: IllegalStateException) {
+        throw IllegalStateException("invalid column $columnName", ex)
+    }
+
 }
 
 internal inline fun Cursor.getStringOrNull(columnName: String): String? {
-    return this.getString(this.getColumnIndex(columnName))
-}
-
-internal inline fun Cursor.getStringOrNull(columnIndex: Int): String? {
-    return getString(columnIndex)
+    try {
+        return this.getString(this.getColumnIndex(columnName))
+    } catch (ex: IllegalStateException) {
+        throw IllegalStateException("invalid column $columnName", ex)
+    }
 }
