@@ -20,8 +20,11 @@ import dev.olog.msc.core.interactor.played.InsertMostPlayedUseCase
 import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class CurrentSong @Inject constructor(
@@ -35,7 +38,7 @@ internal class CurrentSong @Inject constructor(
     private val insertLastPlayedArtistUseCase: InsertLastPlayedArtistUseCase,
     playerLifecycle: PlayerLifecycle
 
-) : DefaultLifecycleObserver, CoroutineScope by CustomScope(Dispatchers.Default) {
+) : DefaultLifecycleObserver, CoroutineScope by CustomScope() {
 
     private val mediaEntityChannel = Channel<MediaEntity>()
     private val favoriteChannel = Channel<MediaEntity>()

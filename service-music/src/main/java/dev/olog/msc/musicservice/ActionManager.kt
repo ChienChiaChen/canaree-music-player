@@ -28,7 +28,7 @@ internal class ActionManager @Inject constructor(
     private val shuffleMode: ShuffleMode,
     private val playerState: PlayerState
 
-) : DefaultLifecycleObserver, CoroutineScope by CustomScope(Dispatchers.IO) {
+) : DefaultLifecycleObserver, CoroutineScope by CustomScope() {
 
     private val channel = Channel<Action>(capacity = Channel.UNLIMITED)
     lateinit var callback: Callback

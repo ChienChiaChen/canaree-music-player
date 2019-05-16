@@ -14,4 +14,4 @@ inline fun <T, R> Flow<List<T>>.mapToList(crossinline mapper: (T) -> R): Flow<Li
 }
 
 @Suppress("FunctionName")
-fun CustomScope(dispatcher: CoroutineDispatcher = Dispatchers.Main): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
+fun CustomScope(dispatcher: CoroutineDispatcher = Dispatchers.Default): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
