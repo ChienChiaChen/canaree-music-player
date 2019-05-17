@@ -3,6 +3,7 @@ package dev.olog.msc.presentation.dialogs.playlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -12,7 +13,7 @@ class ClearPlaylistDialogViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    fun execute(mediaId: MediaId) = viewModelScope.launch {
+    fun execute(mediaId: MediaId) = viewModelScope.launch(Dispatchers.Default) {
         useCase.execute(mediaId)
     }
 

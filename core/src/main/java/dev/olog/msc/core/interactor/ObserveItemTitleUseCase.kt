@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetItemTitleUseCase @Inject constructor(
+class ObserveItemTitleUseCase @Inject constructor(
     schedulers: ComputationDispatcher,
     private val getFolderUseCase: GetFolderUseCase,
     private val getPlaylistUseCase: GetPlaylistUseCase,

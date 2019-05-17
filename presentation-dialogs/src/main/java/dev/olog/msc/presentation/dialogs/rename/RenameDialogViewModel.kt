@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.interactor.GetPlaylistsBlockingUseCase
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RenameDialogViewModel @Inject constructor(
@@ -19,7 +18,7 @@ class RenameDialogViewModel @Inject constructor(
 //        .map { it.title }
 //        .map { it.toLowerCase() } TODO
 
-    fun execute(mediaId: MediaId, newTitle: String) = viewModelScope.launch {
+    fun execute(mediaId: MediaId, newTitle: String) = = viewModelScope.launch(Dispatchers.Default) {
         renameUseCase.execute(Pair(mediaId, newTitle))
     }
 

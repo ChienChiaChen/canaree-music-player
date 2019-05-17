@@ -77,7 +77,7 @@ internal class DetailFragmentViewModel @Inject constructor(
         recentlyAdded = LivePagedListBuilder(recentlyAddedDataSource, miniConfig).build()
         relatedArtists = LivePagedListBuilder(relatedArtistsSource, miniConfig).build()
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             observeDetailSortDataUseCase.execute(mediaId)
                 .collect {
                     sortingLiveData.postValue(it)

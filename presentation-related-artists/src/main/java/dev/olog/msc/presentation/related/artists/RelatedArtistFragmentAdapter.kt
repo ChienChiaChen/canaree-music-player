@@ -2,31 +2,28 @@ package dev.olog.msc.presentation.related.artists
 
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
-import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.presentation.base.BR
-import dev.olog.msc.presentation.base.adapter.AbsAdapter
+import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.msc.presentation.base.adapter.DiffCallbackDisplayableItem
 import dev.olog.msc.presentation.base.extensions.elevateAlbumOnTouch
 import dev.olog.msc.presentation.base.extensions.setOnClickListener
 import dev.olog.msc.presentation.base.extensions.setOnLongClickListener
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
-import javax.inject.Inject
 
-class RelatedArtistFragmentAdapter @Inject constructor(
-        @FragmentLifecycle lifecycle: Lifecycle,
-        private val navigator: Navigator
+class RelatedArtistFragmentAdapter(
+    private val navigator: Navigator
 
-): AbsAdapter<DisplayableItem>(lifecycle) {
+) : BasePagedAdapter<DisplayableItem>(DiffCallbackDisplayableItem) {
 
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
-        viewHolder.setOnClickListener(controller) { item, _, _ ->
+        viewHolder.setOnClickListener(this) { item, _, _ ->
             val activity = viewHolder.itemView.context as FragmentActivity
             navigator.toDetailFragment(activity, item.mediaId)
         }
-        viewHolder.setOnLongClickListener(controller) { item, _, _ ->
+        viewHolder.setOnLongClickListener(this) { item, _, _ ->
             navigator.toDialog(item.mediaId, viewHolder.itemView)
         }
         viewHolder.elevateAlbumOnTouch()

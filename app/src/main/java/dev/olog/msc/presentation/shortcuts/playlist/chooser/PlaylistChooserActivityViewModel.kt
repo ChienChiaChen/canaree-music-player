@@ -11,6 +11,7 @@ import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.interactor.all.GetAllPlaylistsUseCase
 import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.model.DisplayableItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class PlaylistChooserActivityViewModel @Inject constructor(
     private val data = liveDataOf<List<DisplayableItem>>()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             getAllPlaylistsUseCase.execute()
                 .mapToList { it.toDisplayableItem(resources) }
                 .collect { data.value = it }

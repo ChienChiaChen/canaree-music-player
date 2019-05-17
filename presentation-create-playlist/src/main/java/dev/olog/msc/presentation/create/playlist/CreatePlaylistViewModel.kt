@@ -83,7 +83,7 @@ class CreatePlaylistViewModel @Inject constructor(
 
     fun observeSelectedCount(): LiveData<Int> = selectionCountLiveData
 
-    fun savePlaylist(playlistType: PlaylistType, playlistTitle: String, onSuccess: OnSuccess, onFail: OnFail) = viewModelScope.launch {
+    fun savePlaylist(playlistType: PlaylistType, playlistTitle: String, onSuccess: OnSuccess, onFail: OnFail) = viewModelScope.launch(Dispatchers.Default) {
         if (selectedIds.isEmpty()) {
             withContext(Dispatchers.Main) { onFail() }
             return@launch

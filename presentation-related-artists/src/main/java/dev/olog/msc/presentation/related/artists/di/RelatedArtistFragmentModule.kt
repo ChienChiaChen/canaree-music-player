@@ -12,9 +12,9 @@ import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.related.artists.RelatedArtistFragment
 import dev.olog.msc.presentation.related.artists.RelatedArtistFragmentViewModel
 
-@Module(includes = [RelatedArtistFragmentModule.Binding::class])
+@Module
 class RelatedArtistFragmentModule(
-        private val fragment: RelatedArtistFragment
+    private val fragment: RelatedArtistFragment
 ) {
 
     @Provides
@@ -28,12 +28,15 @@ class RelatedArtistFragmentModule(
     }
 
     @Module
-    interface Binding {
+    companion object {
 
         @Binds
         @IntoMap
+        @JvmStatic
         @ViewModelKey(RelatedArtistFragmentViewModel::class)
-        fun provideViewModel(factory: RelatedArtistFragmentViewModel): ViewModel
+        internal fun provideViewModel(viewModel: RelatedArtistFragmentViewModel): ViewModel {
+            return viewModel
+        }
 
     }
 

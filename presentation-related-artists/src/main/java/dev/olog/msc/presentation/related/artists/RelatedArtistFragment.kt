@@ -3,18 +3,20 @@ package dev.olog.msc.presentation.related.artists
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
+import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.lazyFast
 import kotlinx.android.synthetic.main.fragment_related_artist.*
 import kotlinx.android.synthetic.main.fragment_related_artist.view.*
 import javax.inject.Inject
 
-class RelatedArtistFragment: BaseFragment() {
+class RelatedArtistFragment : BaseFragment() {
 
     companion object {
         const val TAG = "RelatedArtistFragment"
@@ -23,28 +25,33 @@ class RelatedArtistFragment: BaseFragment() {
 
         fun newInstance(mediaId: MediaId): RelatedArtistFragment {
             return RelatedArtistFragment().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString()
+                ARGUMENTS_MEDIA_ID to mediaId.toString()
             )
         }
     }
 
-    @Inject lateinit var adapter: RelatedArtistFragmentAdapter
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+    private val viewModel by lazyFast { viewModelProvider<RelatedArtistFragmentViewModel>(factory) }
 
-    private val viewModel by lazyFast { viewModelProvider<RelatedArtistFragmentViewModel>(viewModelFactory) }
+    @Inject
+    lateinit var navigator: Navigator
+
+    private val adapter by lazy { RelatedArtistFragmentAdapter(navigator) }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
-        view.list.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context!!, if (isPortrait()) 2 else 3)
+        view.list.layoutManager = GridLayoutManager(context!!, if (isPortrait()) 2 else 3)
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
 
-        viewModel.data.subscribe(viewLifecycleOwner, adapter::updateDataSet)
+        viewModel.data
+            .subscribe(viewLifecycleOwner, adapter::submitList)
 
-//        viewModel.itemTitle.subscribe(viewLifecycleOwner) { itemTitle ->
-//            val headersArray = resources.getStringArray(R.array.related_artists_header)
-//            val header = String.format(headersArray[viewModel.itemOrdinal], itemTitle)
-//            this.header.text = header
-//        }
+        viewModel.observeTitle().subscribe(viewLifecycleOwner) { itemTitle ->
+            val headersArray = resources.getStringArray(R.array.related_artists_header)
+            val header = String.format(headersArray[viewModel.itemOrdinal], itemTitle)
+            this.header.text = header
+        }
     }
 
     override fun onResume() {

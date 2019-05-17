@@ -26,15 +26,17 @@ class RecentlyAddedFragment : BaseFragment() {
 
         fun newInstance(mediaId: MediaId): RecentlyAddedFragment {
             return RecentlyAddedFragment().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString()
+                ARGUMENTS_MEDIA_ID to mediaId.toString()
             )
         }
     }
 
-    @Inject lateinit var navigator: Navigator
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var navigator: Navigator
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private val adapter by lazyFast {
-        RecentlyAddedFragmentAdapter(lifecycle, navigator, activity as MediaProvider)
+        RecentlyAddedFragmentAdapter(navigator, activity as MediaProvider)
     }
 
     private val viewModel by lazyFast { viewModelProvider<RecentlyAddedFragmentViewModel>(viewModelFactory) }
@@ -47,15 +49,14 @@ class RecentlyAddedFragment : BaseFragment() {
         val callback = TouchHelperAdapterCallback(adapter, ItemTouchHelper.LEFT)
         val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(view.list)
-        adapter.touchHelper = touchHelper
 
-        viewModel.data.subscribe(viewLifecycleOwner, adapter::updateDataSet)
+        viewModel.data.subscribe(viewLifecycleOwner, adapter::submitList)
 
-//        viewModel.itemTitle.subscribe(viewLifecycleOwner) { itemTitle ->
-//            val headersArray = resources.getStringArray(R.array.recently_added_header)
-//            val header = String.format(headersArray[viewModel.itemOrdinal], itemTitle)
-//            this.header.text = header
-//        }
+        viewModel.observeTitle().subscribe(viewLifecycleOwner) { itemTitle ->
+            val headersArray = resources.getStringArray(R.array.recently_added_header)
+            val header = String.format(headersArray[viewModel.itemOrdinal], itemTitle)
+            this.header.text = header
+        }
     }
 
     override fun onResume() {

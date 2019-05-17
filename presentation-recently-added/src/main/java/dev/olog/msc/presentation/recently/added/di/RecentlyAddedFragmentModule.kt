@@ -12,9 +12,9 @@ import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.recently.added.RecentlyAddedFragment
 import dev.olog.msc.presentation.recently.added.RecentlyAddedFragmentViewModel
 
-@Module(includes = [RecentlyAddedFragmentModule.Binding::class])
+@Module
 class RecentlyAddedFragmentModule(
-        private val fragment: RecentlyAddedFragment
+    private val fragment: RecentlyAddedFragment
 ) {
 
     @Provides
@@ -28,12 +28,15 @@ class RecentlyAddedFragmentModule(
     }
 
     @Module
-    interface Binding {
+    companion object {
 
         @Binds
+        @JvmStatic
         @IntoMap
         @ViewModelKey(RecentlyAddedFragmentViewModel::class)
-        fun provideViewModel(factory: RecentlyAddedFragmentViewModel): ViewModel
+        internal fun provideViewModel(viewModel: RecentlyAddedFragmentViewModel): ViewModel {
+            return viewModel
+        }
 
     }
 
