@@ -3,7 +3,6 @@ package dev.olog.msc.core.gateway.track
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.gateway.base.*
-import io.reactivex.Single
 
 interface PlaylistGateway :
     BaseGateway<Playlist, Long>,
@@ -33,7 +32,7 @@ interface PlaylistGateway :
 
 interface PlaylistGatewayHelper {
 
-    fun createPlaylist(playlistName: String): Single<Long>
+    fun createPlaylist(playlistName: String): Long
 
     fun renamePlaylist(playlistId: Long, newTitle: String)
 

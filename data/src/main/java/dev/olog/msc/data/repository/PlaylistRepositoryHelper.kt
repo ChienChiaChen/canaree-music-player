@@ -14,7 +14,6 @@ import dev.olog.msc.core.gateway.track.PlaylistGatewayHelper
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.utils.getLong
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import io.reactivex.Single
 import javax.inject.Inject
 
 private val MEDIA_STORE_URI = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI
@@ -28,24 +27,16 @@ internal class PlaylistRepositoryHelper @Inject constructor(
 
     private val historyDao = appDatabase.historyDao()
 
-    override fun createPlaylist(playlistName: String): Single<Long> {
-        return Single.create<Long> { e ->
-            val added = System.currentTimeMillis()
+    override fun createPlaylist(playlistName: String): Long {
+        val added = System.currentTimeMillis()
 
-            val contentValues = ContentValues()
-            contentValues.put(MediaStore.Audio.Playlists.NAME, playlistName)
-            contentValues.put(MediaStore.Audio.Playlists.DATE_ADDED, added)
-            contentValues.put(MediaStore.Audio.Playlists.DATE_MODIFIED, added)
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.Audio.Playlists.NAME, playlistName)
+        contentValues.put(MediaStore.Audio.Playlists.DATE_ADDED, added)
+        contentValues.put(MediaStore.Audio.Playlists.DATE_MODIFIED, added)
 
-            try {
-                val uri = context.contentResolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, contentValues)
-
-                e.onSuccess(ContentUris.parseId(uri))
-
-            } catch (exception: Exception) {
-                e.onError(exception)
-            }
-        }
+        val uri = context.contentResolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, contentValues)
+        return ContentUris.parseId(uri)
     }
 
     override suspend fun insertSongToHistory(songId: Long) {

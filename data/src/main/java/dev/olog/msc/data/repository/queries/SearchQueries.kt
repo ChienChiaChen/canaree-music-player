@@ -8,6 +8,7 @@ import android.util.Log
 import dev.olog.contentresolversql.querySql
 import dev.olog.msc.core.entity.Page
 import dev.olog.msc.core.gateway.SearchGateway.By
+import dev.olog.msc.core.gateway.SearchGateway.SearchRequest
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import javax.inject.Inject
 
@@ -19,8 +20,14 @@ class SearchQueries @Inject constructor(
     false // not considered
 ) {
 
-    fun searchTrack(chunk: Page?, word: String, columns: Array<out By>): Cursor {
-        val selection = createSelection(word, columns)
+    enum class SearchType {
+        ALL,
+        SONGS,
+        PODCAST
+    }
+
+    fun searchTrack(chunk: Page?, searchType: SearchType, search: SearchRequest): Cursor {
+        val filterSelection = createFilterSelection(search)
         val sql = """
             SELECT $_ID, $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
@@ -33,11 +40,15 @@ class SearchQueries @Inject constructor(
                 $DATE_ADDED,
                 $IS_PODCAST
             FROM $EXTERNAL_CONTENT_URI
-            WHERE ${defaultSelection()} AND $selection
+            WHERE ${defaultSelection(searchType)}
+                ${if (filterSelection.isEmpty()) "" else " AND $filterSelection"}
             ORDER BY lower($TITLE) COLLATE UNICODE
             ${tryGetChunk(chunk)}
         """
-        return contentResolver.querySql(sql, arrayOf("%$word%", "%$word%", "%$word%"))
+        val word = search.byWord.first.trim()
+        val numberOfParams = sql.count { it == '?' }
+        val bindParams = (0 until numberOfParams).map { "%$word%" }.toTypedArray()
+        return contentResolver.querySql(sql, bindParams)
     }
 
     fun searchTracksInGenre(genre: String): Cursor? {
@@ -47,7 +58,7 @@ class SearchQueries @Inject constructor(
             WHERE ${MediaStore.Audio.Genres.NAME} LIKE ?
         """
         val cursor = contentResolver.querySql(genreQuery, arrayOf("%$genre%"))
-        if (!cursor.moveToNext()){
+        if (!cursor.moveToNext()) {
             cursor.close()
             return null
         }
@@ -65,37 +76,61 @@ class SearchQueries @Inject constructor(
                 $trackNumberProjection as ${Columns.N_TRACK},
                 $DATE_ADDED, $IS_PODCAST
             FROM ${MediaStore.Audio.Genres.Members.getContentUri("external", genreId)}
-            WHERE ${defaultSelection()}
+            WHERE ${defaultSelection(SearchType.ALL)} AND $_ID = ?
             ORDER BY lower($TITLE) COLLATE UNICODE
         """
-        return contentResolver.querySql(sql)
+        return contentResolver.querySql(sql, arrayOf(genreId.toString()))
     }
 
-    private fun defaultSelection(): String {
-        return notBlacklisted()
+    private fun defaultSelection(searchType: SearchType): String {
+        return when (searchType) {
+            SearchType.ALL -> notBlacklisted()
+            SearchType.SONGS -> "$IS_PODCAST = 0 AND ${notBlacklisted()}"
+            SearchType.PODCAST -> "$IS_PODCAST <> 0 AND ${notBlacklisted()}"
+        }
     }
 
-    private fun createSelection(word: String, columns: Array<out By>): String {
-        if (columns.contains(By.ANY)){
-            return ""
-        }
-        if (columns.isEmpty()){
-            Log.w("SearchQueries", "Searching $word by not column")
-            return ""
+    private fun createFilterSelection(request: SearchRequest): String {
+        var selection = ""
+        val (word, columns) = request.byWord
+
+        if (columns.contains(By.NO_FILTER)) {
+            By.values().filter { it != By.NO_FILTER }
+                .forEach { check(!columns.contains(it)) {
+                       "Provide or By.NO_FILTER or one of the others. Current $columns"
+                } }
         }
 
-        val conditions = mutableListOf<String>()
-        for (column in columns) {
-            conditions.add(
-                when (column) {
-                    By.TITLE -> "$TITLE LIKE ?"
-                    By.ARTIST -> "${Columns.ARTIST} LIKE ?"
-                    By.ALBUM -> "${Columns.ALBUM} LIKE ?"
-                    else -> throw IllegalArgumentException("invalid condiction=by $column")
-                }
-            )
+        if (!columns.contains(By.NO_FILTER) && word.isNotBlank()) {
+            val conditions = mutableListOf<String>()
+            check(columns.isNotEmpty())
+            for (column in columns) {
+                conditions.add(
+                    when (column) {
+                        By.TITLE -> "$TITLE LIKE ?"
+                        By.ARTIST -> "${Columns.ARTIST} LIKE ?"
+                        By.ALBUM -> "${Columns.ALBUM} LIKE ?"
+                        else -> throw IllegalArgumentException("invalid condition=by $column")
+                    }
+                )
+            }
+            selection = conditions.joinToString(separator = " OR ")
         }
-        return conditions.joinToString(separator = " OR ")
+        if (columns.isEmpty()) {
+            // like using By.ANY
+            Log.w("SearchQueries", "Missing column selection, no filter will be applied")
+        }
+
+        if (request.byIds != null && request.byIds!!.isNotEmpty()) {
+            val idsSelection = "$_ID IN (${(request.byIds!!.joinToString())})"
+            if (selection.isNotBlank()) {
+                selection += " AND $idsSelection"
+            } else {
+                selection = idsSelection
+            }
+        }
+
+        return selection
     }
 
 }

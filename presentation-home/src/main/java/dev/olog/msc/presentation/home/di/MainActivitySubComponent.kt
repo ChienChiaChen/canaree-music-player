@@ -13,7 +13,6 @@ import dev.olog.msc.pro.ProModule
         MainActivityFragmentsModule::class,
         ProModule::class,
         TabFragmentModule::class
-//        PlaylistTracksChooserInjector::class,
     )
 )
 @PerActivity

@@ -149,6 +149,7 @@ dependencies {
     implementation project(':presentation-popup')
     implementation project(':presentation-about')
     implementation project(':presentation-dialogs')
+    implementation project(':presentation-create-playlist')
     debugImplementation project(':presentation-debug')
 
     // data binding

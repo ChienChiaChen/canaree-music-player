@@ -98,7 +98,7 @@ internal class PlaylistQueries(
             ORDER BY $ARTIST_KEY
             ${tryGetChunk(chunk)}
         """
-        return contentResolver.querySql(query, arrayOf(playlistId.toString()))
+        return contentResolver.querySql(query)
     }
 
     fun getExisting(songIds: String): Cursor {

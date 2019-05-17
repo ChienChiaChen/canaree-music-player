@@ -16,11 +16,11 @@ class InsertCustomTrackListToPlaylist @Inject constructor(
 
     override suspend fun buildUseCaseObservable(param: InsertCustomTrackListRequest) {
         if (param.type == PlaylistType.PODCAST) {
-            val playlisyId = podcastPlaylistGateway.createPlaylist(param.playlistTitle)
-            podcastPlaylistGateway.addSongsToPlaylist(playlisyId, param.tracksId)
+            val playlistId = podcastPlaylistGateway.createPlaylist(param.playlistTitle)
+            podcastPlaylistGateway.addSongsToPlaylist(playlistId, param.tracksId)
         } else {
-            val playlisyId = podcastPlaylistGateway.createPlaylist(param.playlistTitle)
-            playlistGateway.addSongsToPlaylist(playlisyId, param.tracksId)
+            val playlistId = playlistGateway.createPlaylist(param.playlistTitle)
+            playlistGateway.addSongsToPlaylist(playlistId, param.tracksId)
         }
 
 

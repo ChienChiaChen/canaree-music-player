@@ -12,6 +12,7 @@ import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.core.gateway.SearchGateway
 import dev.olog.msc.core.gateway.SearchGateway.By
+import dev.olog.msc.core.gateway.SearchGateway.SearchRequest
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.core.interactor.GetSongByFileUseCase
 import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
@@ -207,12 +208,12 @@ internal class QueueManager @Inject constructor(
         val params = VoiceSearchParams(query, extras)
 
         val songList = when {
-            params.isAny -> searchGateway.searchTracksBy(query, By.ANY).getAll()
-            params.isUnstructured -> searchGateway.searchTracksBy(query, By.TITLE, By.ARTIST, By.ALBUM).getAll()
-            params.isAlbumFocus -> searchGateway.searchTracksBy(params.album, By.ALBUM).getAll()
-            params.isArtistFocus -> searchGateway.searchTracksBy(params.artist, By.ARTIST).getAll()
-            params.isSongFocus -> searchGateway.searchTracksBy(params.song, By.ARTIST).getAll()
-            params.isGenreFocus -> searchGateway.searchTrackInGenre(params.genre)?.shuffled()
+            params.isAny -> searchGateway.searchSongsAndPocastsBy(SearchRequest(query to arrayOf(By.NO_FILTER))).getAll()
+            params.isUnstructured -> searchGateway.searchSongsAndPocastsBy(SearchRequest(query to arrayOf(By.TITLE, By.ARTIST, By.ALBUM))).getAll()
+            params.isAlbumFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.album to arrayOf(By.ALBUM))).getAll()
+            params.isArtistFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.artist to arrayOf(By.ARTIST))).getAll()
+            params.isSongFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.song to arrayOf(By.ARTIST))).getAll()
+            params.isGenreFocus -> searchGateway.searchSongsInGenre(params.genre)?.shuffled()
             else -> null
         }?.mapIndexed { index, song -> song.toMediaEntity(index, MediaId.songId(-1)) } ?: return null
 

@@ -1,6 +1,7 @@
 package dev.olog.msc.core.gateway
 
 import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 
 interface SearchGateway {
@@ -8,14 +9,21 @@ interface SearchGateway {
     /**
      * Songs + podcast
      */
-    suspend fun searchTracksBy(word: String, vararg columns: By): PageRequest<Song>
-    suspend fun searchTrackInGenre(genre: String): List<Song>?
+    fun searchSongsAndPocastsBy(request: SearchRequest): PageRequest<Song>
+    fun searchSongOnlyBy(request: SearchRequest): PageRequest<Song>
+    fun searchPodcastOnlyBy(request: SearchRequest): PageRequest<Podcast>
+    fun searchSongsInGenre(genre: String): List<Song>?
 
     enum class By {
-        ANY,
+        NO_FILTER,
         TITLE,
         ARTIST,
         ALBUM
     }
+
+    class SearchRequest(
+        val byWord: Pair<String, Array<By>>,
+        val byIds: List<Long>? = null
+    )
 
 }

@@ -34,7 +34,6 @@ import dev.olog.msc.presentation.edititem.artist.EditArtistFragment
 import dev.olog.msc.presentation.edititem.track.EditTrackFragment
 import dev.olog.msc.presentation.offlinelyrics.OfflineLyricsFragment
 import dev.olog.msc.presentation.playing.queue.PlayingQueueFragment
-import dev.olog.msc.presentation.playlist.track.chooser.PlaylistTracksChooserFragment
 import dev.olog.msc.presentation.popup.PopupMenuFactory
 import dev.olog.msc.presentation.popup.main.MainPopupDialog
 import dev.olog.msc.presentation.recently.added.RecentlyAddedFragment
@@ -255,8 +254,8 @@ class NavigatorImpl @Inject internal constructor(
                 setReorderingAllowed(true)
                 setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 getFragmentOnFragmentContainer(activity)?.let { hide(it) }
-                replace(R.id.upperFragmentContainer, PlaylistTracksChooserFragment.newInstance(type), PlaylistTracksChooserFragment.TAG)
-                addToBackStack(PlaylistTracksChooserFragment.TAG)
+                replace(R.id.upperFragmentContainer, dev.olog.msc.presentation.create.playlist.CreatePlaylistFragment.newInstance(type), dev.olog.msc.presentation.create.playlist.CreatePlaylistFragment.TAG)
+                addToBackStack(dev.olog.msc.presentation.create.playlist.CreatePlaylistFragment.TAG)
             }
         }
     }

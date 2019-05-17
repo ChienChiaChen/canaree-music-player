@@ -5,6 +5,8 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dev.olog.msc.NavigatorModule
 import dev.olog.msc.apilastfm.LastFmModule
+import dev.olog.msc.app.modules.DialogModules
+import dev.olog.msc.app.modules.PresentationModules
 import dev.olog.msc.appshortcuts.AppShortcutsModule
 import dev.olog.msc.appwidgets.di.WidgetBindingModule
 import dev.olog.msc.data.di.PreferenceModule
@@ -15,29 +17,7 @@ import dev.olog.msc.imagecreation.ImageCreationInjector
 import dev.olog.msc.musicservice.di.EqualizerModule
 import dev.olog.msc.musicservice.di.MusicServiceInjector
 import dev.olog.msc.presentation.ViewModelModule
-import dev.olog.msc.presentation.about.di.AboutActivityInjector
-import dev.olog.msc.presentation.detail.di.DetailFragmentInjector
-import dev.olog.msc.presentation.dialogs.delete.di.DeleteDialogModule
-import dev.olog.msc.presentation.dialogs.duplicates.di.RemoveDuplicatesDialogModule
-import dev.olog.msc.presentation.dialogs.favorite.di.AddFavoriteDialogModule
-import dev.olog.msc.presentation.dialogs.play.later.di.PlayLaterDialogModule
-import dev.olog.msc.presentation.dialogs.playlist.di.ClearPlaylistDialogModule
-import dev.olog.msc.presentation.dialogs.playlist.di.NewPlaylistDialogModule
-import dev.olog.msc.presentation.dialogs.rename.di.RenameDialogModule
-import dev.olog.msc.presentation.dialogs.ringtone.di.SetRingtoneDialogInjector
-import dev.olog.msc.presentation.edititem.di.EditItemInjector
-import dev.olog.msc.presentation.equalizer.di.EqualizerInjector
-import dev.olog.msc.presentation.home.di.MainActivityInjector
-import dev.olog.msc.presentation.offlinelyrics.di.OfflineLyricsInjector
-import dev.olog.msc.presentation.player.di.PlayerFragmentModule
-import dev.olog.msc.presentation.playing.queue.di.PlayingQueueFragmentInjector
-import dev.olog.msc.presentation.preferences.di.PreferencesActivityInjector
-import dev.olog.msc.presentation.recently.added.di.RecentlyAddedFragmentInjector
-import dev.olog.msc.presentation.related.artists.di.RelatedArtistFragmentInjector
-import dev.olog.msc.presentation.search.di.SearchFragmentInjector
-import dev.olog.msc.presentation.shortcuts.playlist.chooser.di.PlaylistChooserActivityModule
 import dev.olog.msc.presentation.sleeptimer.di.SleepTimerInjector
-import dev.olog.msc.presentation.tabs.foldertree.di.FolderTreeFragmentModule
 import javax.inject.Singleton
 
 @Component(
@@ -54,37 +34,12 @@ import javax.inject.Singleton
         PreferenceModule::class,
 //
 //        // presentation
-        NavigatorModule::class,
-        ActivityBindingsModule::class,
-        EqualizerInjector::class,
-        OfflineLyricsInjector::class,
         SleepTimerInjector::class,
+        DialogModules::class,
+        PresentationModules::class,
+        NavigatorModule::class,
         WidgetBindingModule::class,
-        MainActivityInjector::class,
-        AboutActivityInjector::class,
-        PreferencesActivityInjector::class,
-        PlaylistChooserActivityModule::class,
         ViewModelModule::class,
-
-        FolderTreeFragmentModule::class,
-        DetailFragmentInjector::class,
-        PlayerFragmentModule::class,
-        SearchFragmentInjector::class,
-        EditItemInjector::class,
-        PlayingQueueFragmentInjector::class,
-        RecentlyAddedFragmentInjector::class,
-
-        RecentlyAddedFragmentInjector::class,
-        RelatedArtistFragmentInjector::class,
-        AddFavoriteDialogModule::class,
-        PlayLaterDialogModule::class,
-        PlayLaterDialogModule::class,
-        SetRingtoneDialogInjector::class,
-        RenameDialogModule::class,
-        ClearPlaylistDialogModule::class,
-        DeleteDialogModule::class,
-        NewPlaylistDialogModule::class,
-        RemoveDuplicatesDialogModule::class,
 
         ImageCreationInjector::class,
 
