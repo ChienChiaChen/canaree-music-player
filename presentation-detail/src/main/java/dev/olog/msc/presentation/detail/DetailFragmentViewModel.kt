@@ -22,16 +22,11 @@ import dev.olog.msc.presentation.detail.domain.RemoveFromPlaylistUseCase
 import dev.olog.msc.presentation.detail.domain.RemoveFromPlaylistUseCase.Input
 import dev.olog.msc.presentation.detail.paging.*
 import dev.olog.msc.presentation.detail.sort.DetailSort
-import dev.olog.msc.shared.extensions.debounceFirst
-import io.reactivex.Observable
-import io.reactivex.rxkotlin.Observables
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class DetailFragmentViewModel @Inject constructor(
@@ -56,8 +51,6 @@ internal class DetailFragmentViewModel @Inject constructor(
         const val RECENTLY_ADDED_VISIBLE_PAGES = NESTED_SPAN_COUNT * 4
         const val RELATED_ARTISTS_TO_SEE = 10
     }
-
-    private val filterPublisher = BehaviorSubject.createDefault("")
 
     val data: LiveData<PagedList<DisplayableItem>>
     val siblings: LiveData<PagedList<DisplayableItem>>
@@ -95,25 +88,7 @@ internal class DetailFragmentViewModel @Inject constructor(
     fun observeSorting(): LiveData<DetailSort> = sortingLiveData
 
     fun updateFilter(filter: String) {
-        if (filter.isEmpty() || filter.length >= 2) {
-            filterPublisher.onNext(filter.toLowerCase())
-        }
-    }
-
-
-    private fun filterSongs(songObservable: Observable<List<DisplayableItem>>): Observable<List<DisplayableItem>> {
-        return Observables.combineLatest(
-            songObservable.debounceFirst(50, TimeUnit.MILLISECONDS).distinctUntilChanged(),
-            filterPublisher.debounceFirst().distinctUntilChanged()
-        ) { songs, filter ->
-            if (filter.isBlank()) {
-                songs
-            } else {
-                songs.filter {
-                    it.title.toLowerCase().contains(filter) || it.subtitle?.toLowerCase()?.contains(filter) == true
-                }
-            }
-        }.distinctUntilChanged()
+        detailDataSource.updateFilterBy(filter)
     }
 
     override fun onCleared() {

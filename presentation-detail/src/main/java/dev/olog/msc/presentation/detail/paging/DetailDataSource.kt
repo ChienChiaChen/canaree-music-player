@@ -71,6 +71,7 @@ internal class DetailDataSource @Inject constructor(
 ) : BaseDataSource<DisplayableItem>() {
 
     private val chunked = songListByParamUseCase.execute(mediaId)
+    var filterBy: String = ""
 
     init {
         launch {
@@ -83,29 +84,27 @@ internal class DetailDataSource @Inject constructor(
                     invalidate()
                 }
         }
-        // TODO sort song list in TypeQueries.kt
-        // TODO invalidate when updating sort order
         // TODO remove delete button from detail popup
         // TODO invalidate when can show most played
         // TODO invalidate when can show recently added
         // TODO invalidate when can show related artists
         // TODO invalid when siblings change
-        // TODO enable filter
     }
 
     override fun getMainDataSize(): Int {
         return chunked.getCount()
     }
 
+    // hide recently added and most played when filter is ON
     override fun getHeaders(mainListSize: Int): List<DisplayableItem> {
         val headers = mutableListOf(generateHeader())
 
         // show sibllings at the top if current item is an artists
-        if (mediaId.isArtist && siblingsUseCase.canShow(mediaId)) {
+        if (mediaId.isArtist && siblingsUseCase.canShow(mediaId) && filterBy.isBlank()) {
             headers.addAll(displayableHeaders.siblings())
         }
         // most played
-        if (mostPlayedUseCase.canShow(mediaId)) {
+        if (mostPlayedUseCase.canShow(mediaId) && filterBy.isBlank()) {
             headers.addAll(this.displayableHeaders.mostPlayed)
         }
         // recently added
@@ -201,11 +200,20 @@ internal class DetailDataSourceFactory @Inject constructor(
     private val dataSourceProvider: Provider<DetailDataSource>
 ) : DataSource.Factory<Int, DisplayableItem>() {
 
+    private var filterBy: String = ""
     private var dataSource: DetailDataSource? = null
+
+    fun updateFilterBy(filterBy: String) {
+        if (this.filterBy != filterBy) {
+            this.filterBy = filterBy
+            dataSource?.invalidate()
+        }
+    }
 
     override fun create(): DataSource<Int, DisplayableItem> {
         val dataSource = dataSourceProvider.get()
         this.dataSource = dataSource
+        dataSource.filterBy = filterBy
         return dataSource
     }
 

@@ -21,12 +21,14 @@ import dev.olog.msc.presentation.base.theme.dark.mode.isDark
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.shared.extensions.debounceFirst
 import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.setVisible
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -162,12 +164,15 @@ class DetailFragment : BaseFragment(),
 //        }
 
         RxTextView.afterTextChangeEvents(view.editText)
-            .map { it.view() }
+            .map { it.view().text.toString() }
+            .filter { it.isBlank() || it.trim().length >= 2 }
+            .debounceFirst(250, TimeUnit.MILLISECONDS)
+            .distinctUntilChanged()
             .asLiveData()
-            .subscribe(viewLifecycleOwner) { edit ->
-                val isEmpty = edit.text.isEmpty()
+            .subscribe(viewLifecycleOwner) { text ->
+                val isEmpty = text.isEmpty()
                 view.clear.toggleVisibility(!isEmpty, true)
-                viewModel.updateFilter(edit.text.toString())
+                viewModel.updateFilter(text)
             }
     }
 
