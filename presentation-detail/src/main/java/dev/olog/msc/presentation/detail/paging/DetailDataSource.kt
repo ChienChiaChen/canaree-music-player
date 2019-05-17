@@ -84,6 +84,7 @@ internal class DetailDataSource @Inject constructor(
                     invalidate()
                 }
         }
+        // TODO filter
         // TODO remove delete button from detail popup
         // TODO invalidate when can show most played
         // TODO invalidate when can show recently added

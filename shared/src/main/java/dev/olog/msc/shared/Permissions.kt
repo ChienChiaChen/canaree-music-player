@@ -8,12 +8,7 @@ import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import dev.olog.msc.shared.extensions.lazyFast
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.switchMap
-import kotlinx.coroutines.reactive.flow.asFlow
 
 val hasPermissionPublisher by lazyFast { BehaviorSubject.createDefault<Boolean>(false) }
 
@@ -22,17 +17,6 @@ fun updatePermissionValve(context: Context, enable: Boolean){
     context.contentResolver.notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null)
     context.contentResolver.notifyChange(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, null)
     context.contentResolver.notifyChange(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI, null)
-}
-
-fun <T> Flow<T>.emitOnlyWithStoragePermission(): Flow<T> {
-    return hasPermissionPublisher.filter { it }
-        .toFlowable(BackpressureStrategy.LATEST).asFlow()
-        .switchMap { this }
-}
-
-fun <T> Observable<T>.onlyWithStoragePermission(): Observable<T> {
-    return hasPermissionPublisher.filter { it }
-            .switchMap { this }
 }
 
 object Permissions {
