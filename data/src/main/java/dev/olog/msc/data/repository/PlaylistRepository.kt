@@ -22,6 +22,7 @@ import dev.olog.msc.data.entity.PlaylistMostPlayedEntity
 import dev.olog.msc.data.entity.custom.*
 import dev.olog.msc.data.mapper.toArtist
 import dev.olog.msc.data.mapper.toPlaylist
+import dev.olog.msc.data.mapper.toPlaylistSong
 import dev.olog.msc.data.mapper.toSong
 import dev.olog.msc.data.repository.queries.PlaylistQueries
 import dev.olog.msc.data.repository.queries.TrackQueries
@@ -170,7 +171,7 @@ internal class PlaylistRepository @Inject constructor(
 
         return PageRequestImpl(
             cursorFactory = { queries.getSongList(param, it) },
-            cursorMapper = { it.toSong() },
+            cursorMapper = { it.toPlaylistSong() },
             listMapper = {
                 val result = SongRepository.adjustImages(context, it)
                 SongRepository.updateImages(result, usedImageGateway)
