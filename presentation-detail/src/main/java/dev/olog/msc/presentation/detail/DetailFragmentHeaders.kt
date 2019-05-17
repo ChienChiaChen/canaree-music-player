@@ -35,15 +35,10 @@ class DetailFragmentHeaders @Inject constructor(
     )
 
     fun siblings() = listOf(
-            albumHeader(),
+        DisplayableItem(R.layout.item_detail_header_albums, MediaId.headerId("detail albums"),
+            context.resources.getStringArray(R.array.detail_album_header)[mediaId.source]),
             DisplayableItem(R.layout.item_detail_albums_list, MediaId.headerId("albums horiz list"), "")
     )
-
-    private fun albumHeader() : DisplayableItem {
-        return DisplayableItem(R.layout.item_detail_header_albums, MediaId.headerId("detail albums"),
-                context.resources.getStringArray(R.array.detail_album_header)[mediaId.source]
-        )
-    }
 
     val shuffle = DisplayableItem(R.layout.item_detail_shuffle, MediaId.headerId("detail shuffle"), "")
 
