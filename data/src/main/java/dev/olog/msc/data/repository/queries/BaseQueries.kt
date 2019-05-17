@@ -60,7 +60,7 @@ abstract class BaseQueries(
             SortType.ALBUM_ARTIST -> "lower(${Columns.ALBUM_ARTIST})"
             SortType.RECENTLY_ADDED -> DATE_ADDED // DESC
             SortType.DURATION -> DURATION
-            SortType.TRACK_NUMBER -> "${Columns.N_DISC}, ${Columns.N_TRACK}"
+            SortType.TRACK_NUMBER -> "${Columns.N_DISC}, ${Columns.N_TRACK}, $TITLE"
             SortType.CUSTOM -> default
             else -> "lower($TITLE)"
         }
