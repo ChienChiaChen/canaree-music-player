@@ -69,6 +69,8 @@ abstract class BaseQueries(
             return@runBlocking sort
         }
 
+        sort += " COLLATE UNICODE "
+
         if (arranging == SortArranging.ASCENDING && type == SortType.RECENTLY_ADDED){
             // recently added works in reverse
             sort += " DESC"
@@ -82,7 +84,7 @@ abstract class BaseQueries(
             }
 
         }
-        return@runBlocking "$sort COLLATE UNICODE"
+        return@runBlocking sort
     }
 
     private fun getSortType(category: MediaIdCategory): SortType {

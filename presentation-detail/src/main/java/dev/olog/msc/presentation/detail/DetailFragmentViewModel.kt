@@ -17,7 +17,9 @@ import dev.olog.msc.core.interactor.sort.SetSortOrderUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.domain.GetDetailSortDataUseCase
 import dev.olog.msc.presentation.detail.domain.MoveItemInPlaylistUseCase
+import dev.olog.msc.presentation.detail.domain.ObserveDetailSortDataUseCase
 import dev.olog.msc.presentation.detail.domain.RemoveFromPlaylistUseCase
+import dev.olog.msc.presentation.detail.domain.RemoveFromPlaylistUseCase.Input
 import dev.olog.msc.presentation.detail.paging.*
 import dev.olog.msc.presentation.detail.sort.DetailSort
 import dev.olog.msc.shared.extensions.debounceFirst
@@ -27,7 +29,6 @@ import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
@@ -35,7 +36,7 @@ import javax.inject.Inject
 
 internal class DetailFragmentViewModel @Inject constructor(
     val mediaId: MediaId,
-    detailDataSource: DetailDataSourceFactory,
+    private val detailDataSource: DetailDataSourceFactory,
     siblingsDataSource: SiblingsDataSourceFactory,
     mostPlayedDataSource: MostPlayedDataSourceFactory,
     recentlyAddedDataSource: RecentlyAddedDataSourceFactory,
@@ -43,6 +44,7 @@ internal class DetailFragmentViewModel @Inject constructor(
     private val setSortOrderUseCase: SetSortOrderUseCase,
     private val prefsGateway: AppPreferencesGateway,
     private val tutorialPreferenceUseCase: TutorialPreferenceGateway,
+    private val observeDetailSortDataUseCase: ObserveDetailSortDataUseCase,
     private val getDetailSortDataUseCase: GetDetailSortDataUseCase,
     private val removeFromPlaylistUseCase: RemoveFromPlaylistUseCase,
     private val moveItemInPlaylistUseCase: MoveItemInPlaylistUseCase
@@ -57,7 +59,7 @@ internal class DetailFragmentViewModel @Inject constructor(
 
     private val filterPublisher = BehaviorSubject.createDefault("")
 
-    val data : LiveData<PagedList<DisplayableItem>>
+    val data: LiveData<PagedList<DisplayableItem>>
     val siblings: LiveData<PagedList<DisplayableItem>>
     val mostPlayed: LiveData<PagedList<DisplayableItem>>
     val recentlyAdded: LiveData<PagedList<DisplayableItem>>
@@ -83,26 +85,28 @@ internal class DetailFragmentViewModel @Inject constructor(
         relatedArtists = LivePagedListBuilder(relatedArtistsSource, miniConfig).build()
 
         viewModelScope.launch {
-            getDetailSortDataUseCase.execute(mediaId)
-                .collect { sortingLiveData.postValue(it) }
+            observeDetailSortDataUseCase.execute(mediaId)
+                .collect {
+                    sortingLiveData.postValue(it)
+                }
         }
     }
 
     fun observeSorting(): LiveData<DetailSort> = sortingLiveData
 
-    fun updateFilter(filter: String){
-        if (filter.isEmpty() || filter.length >= 2){
+    fun updateFilter(filter: String) {
+        if (filter.isEmpty() || filter.length >= 2) {
             filterPublisher.onNext(filter.toLowerCase())
         }
     }
 
 
-    private fun filterSongs(songObservable: Observable<List<DisplayableItem>>): Observable<List<DisplayableItem>>{
+    private fun filterSongs(songObservable: Observable<List<DisplayableItem>>): Observable<List<DisplayableItem>> {
         return Observables.combineLatest(
-                songObservable.debounceFirst(50, TimeUnit.MILLISECONDS).distinctUntilChanged(),
-                filterPublisher.debounceFirst().distinctUntilChanged()
+            songObservable.debounceFirst(50, TimeUnit.MILLISECONDS).distinctUntilChanged(),
+            filterPublisher.debounceFirst().distinctUntilChanged()
         ) { songs, filter ->
-            if (filter.isBlank()){
+            if (filter.isBlank()) {
                 songs
             } else {
                 songs.filter {
@@ -116,47 +120,59 @@ internal class DetailFragmentViewModel @Inject constructor(
         viewModelScope.cancel()
     }
 
-    fun getDetailSort(action: (DetailSort) -> Unit) = viewModelScope.launch(Dispatchers.IO) {
-        val sortData = getDetailSortDataUseCase.execute(mediaId).single()
-        withContext(Dispatchers.Main){
+    fun getDetailSort(action: (DetailSort) -> Unit) = viewModelScope.launch(Dispatchers.Default) {
+        val sortData = getDetailSortDataUseCase.execute(mediaId)
+        withContext(Dispatchers.Main) {
             action(sortData)
         }
     }
 
-    fun updateSortOrder(sortType: SortType) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateSortOrder(sortType: SortType) = viewModelScope.launch(Dispatchers.Default) {
         setSortOrderUseCase.execute(SetSortOrderRequestModel(mediaId, sortType))
     }
 
-    fun toggleSortArranging() = viewModelScope.launch(Dispatchers.IO) {
-        if (getDetailSortDataUseCase.execute(mediaId).single().sortType != SortType.CUSTOM){
+    fun toggleSortArranging() = viewModelScope.launch(Dispatchers.Default) {
+        if (getDetailSortDataUseCase.execute(mediaId).sortType != SortType.CUSTOM) {
             prefsGateway.toggleSortArranging()
         }
-
     }
 
-    fun moveItemInPlaylist(from: Int, to: Int) = viewModelScope.launch{
+    fun moveItemInPlaylist(headersCount: Int, itemToMove: List<Pair<Int, Int>>) = viewModelScope.launch(Dispatchers.Default) {
         mediaId.assertPlaylist()
         val playlistId = mediaId.resolveId
-        moveItemInPlaylistUseCase.execute(
-            MoveItemInPlaylistUseCase.Input(playlistId, from, to,
-                if (mediaId.isPodcastPlaylist) PlaylistType.PODCAST else PlaylistType.TRACK
-            ))
+        val type = if (mediaId.isPodcastPlaylist) PlaylistType.PODCAST else PlaylistType.TRACK
+        for ((from, to) in itemToMove) {
+            moveItemInPlaylistUseCase.execute(
+                MoveItemInPlaylistUseCase.Input(
+                    playlistId,
+                    from - headersCount,
+                    to - headersCount,
+                    type
+                )
+            )
+        }
+        withContext(Dispatchers.Main) {
+            detailDataSource.invalidate()
+        }
     }
 
-    fun removeFromPlaylist(item: DisplayableItem) = viewModelScope.launch {
+    fun removeFromPlaylist(item: DisplayableItem) = viewModelScope.launch(Dispatchers.Default) {
         mediaId.assertPlaylist()
         val playlistId = mediaId.resolveId
         val playlistType = if (item.mediaId.isPodcast) PlaylistType.PODCAST else PlaylistType.TRACK
-        if (playlistId == PlaylistGateway.FAVORITE_LIST_ID){
+        if (playlistId == PlaylistGateway.FAVORITE_LIST_ID) {
             // favorites use songId instead of idInPlaylist
-            removeFromPlaylistUseCase.execute(RemoveFromPlaylistUseCase.Input(playlistId, item.mediaId.leaf!!, playlistType))
+            removeFromPlaylistUseCase.execute(Input(playlistId, item.mediaId.leaf!!, playlistType))
         } else {
-            removeFromPlaylistUseCase.execute(RemoveFromPlaylistUseCase.Input(playlistId, item.trackNumber.toLong(), playlistType))
+            removeFromPlaylistUseCase.execute(Input(playlistId, item.trackNumber.toLong(), playlistType))
+        }
+        withContext(Dispatchers.Main) {
+            detailDataSource.invalidate()
         }
     }
 
-    fun canShowSortByTutorial(onCanShow: () -> Unit) = viewModelScope.launch(Dispatchers.IO) {
-        if (tutorialPreferenceUseCase.canShowSortByTutorial()){
+    fun canShowSortByTutorial(onCanShow: () -> Unit) = viewModelScope.launch(Dispatchers.Default) {
+        if (tutorialPreferenceUseCase.canShowSortByTutorial()) {
             viewModelScope.launch(Dispatchers.Main) {
                 onCanShow()
             }

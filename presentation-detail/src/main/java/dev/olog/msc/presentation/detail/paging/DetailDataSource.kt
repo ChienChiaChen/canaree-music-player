@@ -6,12 +6,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.paging.DataSource
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.coroutines.merge
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.core.entity.Page
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.toSong
-import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
 import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
@@ -28,13 +28,16 @@ import dev.olog.msc.presentation.detail.DetailFragmentHeaders
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.RECENTLY_ADDED_VISIBLE_PAGES
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.RELATED_ARTISTS_TO_SEE
 import dev.olog.msc.presentation.detail.R
+import dev.olog.msc.presentation.detail.domain.GetDetailSortDataUseCase
 import dev.olog.msc.presentation.detail.domain.GetTotalSongDurationUseCase
+import dev.olog.msc.presentation.detail.domain.ObserveDetailSortDataUseCase
 import dev.olog.msc.presentation.detail.mapper.toDetailDisplayableItem
 import dev.olog.msc.presentation.detail.mapper.toHeaderItem
 import dev.olog.msc.shared.ui.TimeUtils
 import dev.olog.msc.shared.utils.TextUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -60,7 +63,10 @@ internal class DetailDataSource @Inject constructor(
     private val recentlyAddedSongUseCase: GetRecentlyAddedSongsUseCase,
     private val siblingsUseCase: GetSiblingsUseCase,
     private val relatedArtistsUseCase: GetRelatedArtistsUseCase,
-    private val songDurationUseCase: GetTotalSongDurationUseCase
+    private val songDurationUseCase: GetTotalSongDurationUseCase,
+    private val getSortUseCase: GetDetailSortDataUseCase,
+    private val observeSortUseCase: ObserveDetailSortDataUseCase
+
 
 ) : BaseDataSource<DisplayableItem>() {
 
@@ -69,7 +75,9 @@ internal class DetailDataSource @Inject constructor(
     init {
         launch {
             withContext(Dispatchers.Main) { lifecycle.addObserver(this@DetailDataSource) }
-            chunked.observeNotification() // TODO check if has to observe sort
+            // TODO check if has to observe sort
+            chunked.observeNotification()
+                .merge(observeSortUseCase.execute(mediaId).drop(1))
                 .take(1)
                 .collect {
                     invalidate()
@@ -140,13 +148,15 @@ internal class DetailDataSource @Inject constructor(
     }
 
     override fun loadInternal(page: Page): List<DisplayableItem> {
+        val sortType = getSortUseCase.execute(mediaId).sortType
+
         val data = chunked.getPage(page)
         val result = mutableListOf<DisplayableItem>()
         for (datum in data) {
             if (datum is Song) {
-                result.add(datum.toDetailDisplayableItem(mediaId, SortType.TITLE)) // TODO sortings
+                result.add(datum.toDetailDisplayableItem(mediaId, sortType))
             } else if (datum is Podcast) {
-                result.add(datum.toSong().toDetailDisplayableItem(mediaId, SortType.TITLE))
+                result.add(datum.toSong().toDetailDisplayableItem(mediaId, sortType))
             }
         }
         return result
@@ -165,7 +175,9 @@ internal class DetailDataSource @Inject constructor(
 
     private fun generateHeader(): DisplayableItem {
         return when (mediaId.category) {
-            MediaIdCategory.FOLDERS -> folderGateway.getByParam(mediaId.categoryValue).getItem()!!.toHeaderItem(resources)
+            MediaIdCategory.FOLDERS -> folderGateway.getByParam(mediaId.categoryValue).getItem()!!.toHeaderItem(
+                resources
+            )
             MediaIdCategory.PLAYLISTS -> playlistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(
                 resources
             )
@@ -186,10 +198,18 @@ internal class DetailDataSource @Inject constructor(
 }
 
 internal class DetailDataSourceFactory @Inject constructor(
-    private val dataSource: Provider<DetailDataSource>
+    private val dataSourceProvider: Provider<DetailDataSource>
 ) : DataSource.Factory<Int, DisplayableItem>() {
 
+    private var dataSource: DetailDataSource? = null
+
     override fun create(): DataSource<Int, DisplayableItem> {
-        return dataSource.get()
+        val dataSource = dataSourceProvider.get()
+        this.dataSource = dataSource
+        return dataSource
+    }
+
+    fun invalidate() {
+        dataSource?.invalidate()
     }
 }

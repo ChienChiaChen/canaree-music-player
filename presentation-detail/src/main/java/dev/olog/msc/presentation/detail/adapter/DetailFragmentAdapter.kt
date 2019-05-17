@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.detail.adapter
 
 import android.view.MotionEvent
-import androidx.core.view.MotionEventCompat
+import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -10,7 +10,10 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.track.PlaylistGateway
-import dev.olog.msc.presentation.base.adapter.*
+import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
+import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
+import dev.olog.msc.presentation.base.adapter.NestedListSpanSizeCorrector
+import dev.olog.msc.presentation.base.adapter.SetupNestedList
 import dev.olog.msc.presentation.base.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.drag.TouchableAdapter
 import dev.olog.msc.presentation.base.extensions.elevateSongOnTouch
@@ -21,10 +24,12 @@ import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.*
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.NESTED_SPAN_COUNT
+import dev.olog.msc.presentation.detail.paging.DiffCallbackDetail
 import dev.olog.msc.presentation.detail.sort.DetailSortDialog
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.toast
 import kotlinx.android.synthetic.main.item_detail_header_all_song.view.*
+import kotlinx.android.synthetic.main.item_detail_item_image.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -38,7 +43,7 @@ internal class DetailFragmentAdapter(
     private val viewModel: DetailFragmentViewModel,
     private val onStartDragListener: OnStartDragListener
 
-) : BasePagedAdapter<DisplayableItem>(DiffCallbackDisplayableItem), TouchableAdapter {
+) : BasePagedAdapter<DisplayableItem>(DiffCallbackDetail), TouchableAdapter {
 
     private val spanCorrectors = mutableMapOf<Int, NestedListSpanSizeCorrector>()
 
@@ -66,8 +71,8 @@ internal class DetailFragmentAdapter(
                 viewHolder.setOnClickListener(R.id.more, this) { item, _, view ->
                     navigator.toDialog(item.mediaId, view)
                 }
-                viewHolder.itemView.setOnTouchListener { v, event ->
-                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                viewHolder.itemView.findViewById<View>(R.id.dragHandle)?.setOnTouchListener { _, event ->
+                    if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                         onStartDragListener.onStartDrag(viewHolder)
                     }
                     false
@@ -137,6 +142,21 @@ internal class DetailFragmentAdapter(
         binding.setVariable(BR.item, item)
     }
 
+    override fun onBindViewHolder(holder: DataBoundViewHolder, position: Int, payloads: MutableList<Any>) {
+        var updated = false
+        if (payloads.isNotEmpty()) {
+            if (payloads[0] is String) {
+                // header case, update only the track number
+                holder.itemView.subtitle.text = payloads[0] as CharSequence
+                updated = true
+            }
+        }
+        if (!updated) {
+            super.onBindViewHolder(holder, position, payloads)
+        }
+
+    }
+
     override fun onViewAttachedToWindow(holder: DataBoundViewHolder) {
         super.onViewAttachedToWindow(holder)
         when (holder.itemViewType) {
@@ -170,7 +190,9 @@ internal class DetailFragmentAdapter(
     }
 
     override fun onMoved(from: Int, to: Int) {
-        // TODO move
+        TODO()
+//        notifyItemMoved(from, to)
+//        itemToMove.add(from to to)
     }
 
     override fun onSwipedLeft(viewHolder: RecyclerView.ViewHolder) {
@@ -185,7 +207,11 @@ internal class DetailFragmentAdapter(
     }
 
     override fun onSwipedRight(viewHolder: RecyclerView.ViewHolder) {
-        // TODO handle remove
+        GlobalScope.launch(Dispatchers.Main) {
+            val item = getItem(viewHolder.adapterPosition)!!
+            delay(300)
+            viewModel.removeFromPlaylist(item)
+        }
     }
 
     override fun canInteractWithViewHolder(viewType: Int): Boolean? {
@@ -199,7 +225,6 @@ internal class DetailFragmentAdapter(
     }
 
     override fun onClearView() {
-
     }
 
     val canSwipeRight: Boolean
@@ -210,16 +235,4 @@ internal class DetailFragmentAdapter(
             }
             return false
         }
-
-//    override val onDragAction = { from: Int, to: Int -> viewModel.moveItemInPlaylist(from, to) }
-//
-//    override fun onSwipedRight(position: Int) {
-//        onSwipeRightAction.invoke(position)
-//        controller.remove(position)
-//        notifyItemRemoved(position)
-//    }
-//
-//    override val onSwipeRightAction = { position: Int ->
-//        controller.getItem(position)?.let { viewModel.removeFromPlaylist(it) } ?: Any()
-//    }
 }
