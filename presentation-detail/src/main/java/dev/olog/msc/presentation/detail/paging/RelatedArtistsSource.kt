@@ -9,7 +9,9 @@ import dev.olog.msc.core.entity.Page
 import dev.olog.msc.core.interactor.GetRelatedArtistsUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.paging.BaseDataSource
+import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.RELATED_ARTISTS_TO_SEE
 import dev.olog.msc.presentation.detail.mapper.toRelatedArtist
+import dev.olog.msc.shared.utils.clamp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
@@ -45,7 +47,7 @@ internal class RelatedArtistsSource @Inject constructor(
         get() = relatedArtistsUseCase.canShow(mediaId)
 
     override fun getMainDataSize(): Int {
-        return chunked.getCount()
+        return clamp(chunked.getCount(), 0, RELATED_ARTISTS_TO_SEE)
     }
 
     override fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()

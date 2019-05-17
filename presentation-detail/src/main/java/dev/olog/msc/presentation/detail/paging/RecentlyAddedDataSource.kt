@@ -8,7 +8,9 @@ import dev.olog.msc.core.entity.Page
 import dev.olog.msc.core.interactor.played.GetRecentlyAddedSongsUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.paging.BaseDataSource
+import dev.olog.msc.presentation.detail.DetailFragmentViewModel
 import dev.olog.msc.presentation.detail.mapper.toRecentDetailDisplayableItem
+import dev.olog.msc.shared.utils.clamp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
@@ -42,7 +44,7 @@ internal class RecentlyAddedDataSource @Inject constructor(
         get() = recentlyAddedUseCase.canShow(mediaId)
 
     override fun getMainDataSize(): Int {
-        return chunked.getCount()
+        return clamp(chunked.getCount(), 0, DetailFragmentViewModel.RECENTLY_ADDED_VISIBLE_PAGES)
     }
 
     override fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
