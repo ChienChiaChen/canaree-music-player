@@ -18,7 +18,6 @@ import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.shared.MusicConstants
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.WidgetConstants
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
 import dev.olog.msc.shared.extensions.unsubscribe
@@ -64,8 +63,8 @@ internal class PlayerMetadata @Inject constructor(
     private fun update(entity: MediaEntity) {
         builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, entity.mediaId.toString())
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, entity.title)
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, TrackUtils.adjustArtist(entity.artist))
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, TrackUtils.adjustAlbum(entity.album))
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, entity.artist)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, entity.album)
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, entity.title)
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, entity.artist)
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, entity.album)

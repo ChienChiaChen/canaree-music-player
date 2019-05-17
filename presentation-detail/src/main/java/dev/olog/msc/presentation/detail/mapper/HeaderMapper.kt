@@ -8,7 +8,6 @@ import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.core.entity.track.*
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.R
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.utils.TextUtils
 
 internal fun Folder.toHeaderItem(resources: Resources): DisplayableItem {
@@ -46,7 +45,7 @@ internal fun Album.toHeaderItem(): DisplayableItem {
         R.layout.item_detail_item_image,
         MediaId.albumId(this.id),
         title,
-        TrackUtils.adjustArtist(this.artist),
+        this.artist,
         image = image
     )
 }
@@ -105,7 +104,7 @@ internal fun PodcastAlbum.toHeaderItem(): DisplayableItem {
         R.layout.item_detail_item_image,
         MediaId.podcastAlbumId(this.id),
         title,
-        TrackUtils.adjustArtist(this.artist),
+        this.artist,
         image = image
     )
 }

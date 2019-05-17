@@ -11,18 +11,4 @@ object TrackUtils {
         UNKNOWN_ARTIST = unknownArtist
     }
 
-    fun adjustArtist(data: String): String{
-        if (data == UNKNOWN){
-            return UNKNOWN_ARTIST
-        }
-        return data
-    }
-
-    fun adjustAlbum(data: String): String{
-        if (data == UNKNOWN){
-            return UNKNOWN_ALBUM
-        }
-        return data
-    }
-
 }

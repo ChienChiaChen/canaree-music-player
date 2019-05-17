@@ -10,7 +10,6 @@ import dev.olog.msc.appwidgets.WidgetMetadata
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.imageprovider.getBitmapAsync
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.ui.processor.ImageProcessor
 
 private const val IMAGE_SIZE = 300
@@ -22,7 +21,7 @@ open class WidgetColored : BaseWidget() {
         context.getBitmapAsync(model, IMAGE_SIZE) {
             val remote = remoteViews ?: RemoteViews(context.packageName, layoutId)
             remote.setTextViewText(R.id.title, metadata.title)
-            remote.setTextViewText(R.id.subtitle, TrackUtils.adjustArtist(metadata.subtitle))
+            remote.setTextViewText(R.id.subtitle, metadata.subtitle)
 
             colorize(context, remote, it)
 

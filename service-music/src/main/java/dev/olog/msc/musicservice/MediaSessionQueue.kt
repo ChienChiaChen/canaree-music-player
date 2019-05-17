@@ -15,7 +15,6 @@ import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.musicservice.model.MediaEntity
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.WidgetConstants
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
 import dev.olog.msc.shared.extensions.unsubscribe
@@ -102,7 +101,7 @@ internal class MediaSessionQueue @Inject constructor(
         val description = MediaDescriptionCompat.Builder()
                 .setMediaId(MediaId.songId(this.id).toString())
                 .setTitle(this.title)
-                .setSubtitle(TrackUtils.adjustArtist(this.artist))
+                .setSubtitle(this.artist)
                 .setMediaUri(Uri.parse(this.image))
                 .build()
 

@@ -8,7 +8,6 @@ import dev.olog.msc.core.interactor.GetItemTitleUseCase
 import dev.olog.msc.core.interactor.added.GetRecentlyAddedUseCase
 import dev.olog.msc.presentation.base.extensions.asLiveData
 import dev.olog.msc.presentation.base.model.DisplayableItem
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.mapToList
 import javax.inject.Inject
 
@@ -35,7 +34,7 @@ private fun Song.toRecentDetailDisplayableItem(parentId: MediaId): DisplayableIt
             R.layout.item_recently_added,
             MediaId.playableItem(parentId, id),
             title,
-            TrackUtils.adjustArtist(artist),
+            artist,
             image,
             true
     )

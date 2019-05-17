@@ -3,7 +3,6 @@ package dev.olog.msc.floatingwindowservice.music.service
 import android.support.v4.media.MediaMetadataCompat
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.shared.MusicConstants
-import dev.olog.msc.shared.TrackUtils
 
 internal fun MediaMetadataCompat.getTitle(): CharSequence {
     return getText(MediaMetadataCompat.METADATA_KEY_TITLE)
@@ -11,7 +10,7 @@ internal fun MediaMetadataCompat.getTitle(): CharSequence {
 
 internal fun MediaMetadataCompat.getArtist(): CharSequence {
     val artist = getText(MediaMetadataCompat.METADATA_KEY_ARTIST)
-    return TrackUtils.adjustArtist(artist.toString())
+    return artist.toString()
 }
 
 internal fun MediaMetadataCompat.getDuration(): Long {

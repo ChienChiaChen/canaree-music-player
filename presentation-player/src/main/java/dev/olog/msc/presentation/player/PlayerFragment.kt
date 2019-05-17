@@ -28,7 +28,6 @@ import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.base.widgets.SwipeableView
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.*
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.ui.theme.ImageShape
@@ -327,7 +326,7 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
             R.layout.item_mini_queue,
             MediaId.fromString(description.mediaId!!),
             description.title!!.toString(),
-            TrackUtils.adjustArtist(description.subtitle!!.toString()),
+            description.subtitle!!.toString(),
             description.mediaUri!!.toString(),
             isPlayable = true,
             trackNumber = "${this.queueId}"

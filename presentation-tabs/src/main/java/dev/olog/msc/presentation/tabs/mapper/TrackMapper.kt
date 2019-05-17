@@ -7,7 +7,6 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.*
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.tabs.R
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.utils.TextUtils
 
 internal inline fun Folder.toTabDisplayableItem(resources: Resources): DisplayableItem {
@@ -45,8 +44,8 @@ internal inline fun Playlist.toTabDisplayableItem(resources: Resources): Display
 }
 
 internal inline fun Song.toTabDisplayableItem(): DisplayableItem {
-    val artist = TrackUtils.adjustArtist(this.artist)
-    val album = TrackUtils.adjustAlbum(this.album)
+    val artist = this.artist
+    val album = this.album
 
     return DisplayableItem(
         R.layout.item_tab_song,
@@ -64,7 +63,7 @@ internal inline fun Album.toTabDisplayableItem(): DisplayableItem {
         R.layout.item_tab_album,
         MediaId.albumId(id),
         title,
-        TrackUtils.adjustArtist(artist),
+        artist,
         image
     )
 }
@@ -99,7 +98,7 @@ internal inline fun Album.toTabLastPlayedDisplayableItem(): DisplayableItem {
         R.layout.item_tab_album_last_played,
         MediaId.albumId(id),
         title,
-        TrackUtils.adjustArtist(artist),
+        artist,
         image
     )
 }

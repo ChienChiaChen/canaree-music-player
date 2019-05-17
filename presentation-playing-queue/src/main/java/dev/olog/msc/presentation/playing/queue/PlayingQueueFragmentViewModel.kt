@@ -6,7 +6,6 @@ import dev.olog.msc.core.entity.PlayingQueueSong
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.core.interactor.queue.ObservePlayingQueueUseCase
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
-import dev.olog.msc.shared.TrackUtils
 import javax.inject.Inject
 
 
@@ -38,7 +37,7 @@ class PlayingQueueFragmentViewModel @Inject constructor(
             R.layout.item_playing_queue,
             MediaId.songId(this.idInPlaylist.toLong()),
             title,
-            TrackUtils.adjustArtist(artist),
+            artist,
             image,
             positionInList,
             position == currentItemIndex

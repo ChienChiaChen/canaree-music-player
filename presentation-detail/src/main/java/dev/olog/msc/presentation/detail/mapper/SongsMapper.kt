@@ -9,7 +9,6 @@ import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.R
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.utils.TextUtils
 
 internal fun Artist.toRelatedArtist(resources: Resources): DisplayableItem {
@@ -40,8 +39,8 @@ internal fun Song.toDetailDisplayableItem(parentId: MediaId, sortType: SortType)
     }
 
     val subtitle = when {
-        parentId.isArtist || parentId.isPodcastArtist -> TrackUtils.adjustAlbum(this.album)
-        else -> TrackUtils.adjustArtist(this.artist)
+        parentId.isArtist || parentId.isPodcastArtist -> this.album
+        else -> this.artist
     }
 
     val track = when {
@@ -66,7 +65,7 @@ internal fun Song.toMostPlayedDetailDisplayableItem(parentId: MediaId): Displaya
         R.layout.item_detail_song_most_played,
         MediaId.playableItem(parentId, id),
         this.title,
-        TrackUtils.adjustArtist(this.artist),
+        this.artist,
         this.image,
         true
     )
@@ -77,7 +76,7 @@ internal fun Song.toRecentDetailDisplayableItem(parentId: MediaId): DisplayableI
         R.layout.item_detail_song_recent,
         MediaId.playableItem(parentId, id),
         this.title,
-        TrackUtils.adjustArtist(this.artist),
+        this.artist,
         this.image,
         true
     )

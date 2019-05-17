@@ -10,7 +10,6 @@ import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.tabs.R
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.utils.TextUtils
 import java.util.concurrent.TimeUnit
 
@@ -40,7 +39,7 @@ internal inline fun PodcastPlaylist.toAutoPlaylist(): DisplayableItem {
 }
 
 internal inline fun Podcast.toTabDisplayableItem(resources: Resources): DisplayableItem {
-    val artist = TrackUtils.adjustArtist(this.artist)
+    val artist = this.artist
 
     val duration = resources.getString(R.string.tab_podcast_duration, TimeUnit.MILLISECONDS.toMinutes(this.duration))
 
@@ -75,7 +74,7 @@ internal inline fun PodcastAlbum.toTabDisplayableItem(): DisplayableItem {
         R.layout.item_tab_album,
         MediaId.podcastAlbumId(id),
         title,
-        TrackUtils.adjustArtist(artist),
+        artist,
         image
     )
 }

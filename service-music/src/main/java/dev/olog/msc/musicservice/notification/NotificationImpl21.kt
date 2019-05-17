@@ -21,7 +21,6 @@ import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.musicservice.R
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.asActivityPendingIntent
 import dev.olog.msc.shared.extensions.asServicePendingIntent
 import dev.olog.msc.shared.utils.assertBackgroundThread
@@ -82,8 +81,8 @@ internal open class NotificationImpl21 @Inject constructor(
         createIfNeeded()
 
         val title = state.title
-        val artist = TrackUtils.adjustArtist(state.artist)
-        val album = TrackUtils.adjustAlbum(state.album)
+        val artist = state.artist
+        val album = state.album
 
         val spannableTitle = SpannableString(title)
         spannableTitle.setSpan(StyleSpan(Typeface.BOLD), 0, title.length, 0)

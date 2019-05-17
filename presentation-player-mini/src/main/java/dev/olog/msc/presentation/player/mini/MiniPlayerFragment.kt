@@ -16,7 +16,6 @@ import dev.olog.msc.presentation.base.utils.getDuration
 import dev.olog.msc.presentation.base.utils.getTitle
 import dev.olog.msc.presentation.base.utils.isPodcast
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.unsubscribe
@@ -47,7 +46,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
         }
         val (modelTitle, modelSubtitle) = presenter.getMetadata()
         view.title.text = modelTitle
-        view.artist.text = TrackUtils.adjustArtist(modelSubtitle)
+        view.artist.text = modelSubtitle
 
         val media = activity as MediaProvider
 

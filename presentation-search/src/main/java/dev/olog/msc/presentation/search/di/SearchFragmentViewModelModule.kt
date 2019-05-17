@@ -23,7 +23,6 @@ import dev.olog.msc.presentation.search.SearchFragmentHeaders
 import dev.olog.msc.presentation.search.SearchFragmentType
 import dev.olog.msc.presentation.search.domain.GetAllRecentSearchesUseCase
 import dev.olog.msc.shared.RecentSearchesTypes
-import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.extensions.mapToList
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -277,7 +276,7 @@ private fun Song.toSearchDisplayableItem(): DisplayableItem {
         R.layout.item_search_song,
         MediaId.songId(this.id),
         title,
-        TrackUtils.adjustArtist(artist),
+        artist,
         image,
         true
     )
@@ -288,7 +287,7 @@ private fun Podcast.toSearchDisplayableItem(): DisplayableItem {
         R.layout.item_search_song,
         MediaId.podcastId(this.id),
         title,
-        TrackUtils.adjustArtist(artist),
+        artist,
         image,
         true
     )
@@ -299,7 +298,7 @@ private fun Album.toSearchDisplayableItem(): DisplayableItem {
         R.layout.item_search_album,
         MediaId.albumId(id),
         title,
-        TrackUtils.adjustArtist(artist),
+        artist,
         image
     )
 }
@@ -309,7 +308,7 @@ private fun PodcastAlbum.toSearchDisplayableItem(): DisplayableItem {
         R.layout.item_search_album,
         MediaId.podcastAlbumId(id),
         title,
-        TrackUtils.adjustArtist(artist),
+        artist,
         image
     )
 }

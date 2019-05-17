@@ -6,7 +6,6 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.core.os.bundleOf
 import dev.olog.msc.appwidgets.R
-
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.PlayingQueueSong
@@ -14,7 +13,6 @@ import dev.olog.msc.core.interactor.queue.GetMiniQueueUseCase
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.imageprovider.getBitmap
 import dev.olog.msc.shared.MusicConstants
-import dev.olog.msc.shared.TrackUtils
 import javax.inject.Inject
 
 class QueueRemoteViewsFactory @Inject constructor(
@@ -85,12 +83,12 @@ class QueueRemoteViewsFactory @Inject constructor(
             MediaId.songId(this.id)
         }
 
-        return dev.olog.msc.appwidgets.queue.QueueRemoteViewsFactory.WidgetItem(
+        return WidgetItem(
                 this.id,
                 this.trackNumber,
                 mediaId,
                 this.title,
-                TrackUtils.adjustArtist(this.artist),
+                this.artist,
                 this.image
         )
     }
