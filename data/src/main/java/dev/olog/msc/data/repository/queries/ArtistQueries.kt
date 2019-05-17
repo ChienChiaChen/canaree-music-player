@@ -87,7 +87,7 @@ internal class ArtistQueries constructor(
                 count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
             WHERE $ARTIST_ID = ? AND ${defaultSelection()}
-            GROUP BY $ARTIST_ID
+            GROUP BY $ALBUM_ID
             ORDER BY $ALBUM_KEY
             ${tryGetChunk(chunk)}
         """
