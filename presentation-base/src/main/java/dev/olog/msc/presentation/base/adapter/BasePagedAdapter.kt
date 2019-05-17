@@ -7,12 +7,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import dev.olog.msc.presentation.base.R
 import dev.olog.msc.presentation.base.model.BaseModel
 
 abstract class BasePagedAdapter<Model : BaseModel>(diffCallback: DiffUtil.ItemCallback<Model>) :
     PagedListAdapter<Model, DataBoundViewHolder>(diffCallback) {
 
 
+    open val placeholder : Int = R.layout.item_placeholder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBoundViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -41,7 +43,7 @@ abstract class BasePagedAdapter<Model : BaseModel>(diffCallback: DiffUtil.ItemCa
     }
 
     override fun getItemViewType(position: Int): Int {
-        return getItem(position)?.type ?: -1 // TODO loading placeholder
+        return getItem(position)?.type ?: placeholder
     }
 
     fun elementAt(position: Int): Model? {

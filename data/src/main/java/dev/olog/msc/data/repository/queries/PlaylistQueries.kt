@@ -46,9 +46,13 @@ internal class PlaylistQueries(
         return contentResolver.querySql(query, arrayOf(playlistId.toString()))
     }
 
+    // _ID is idInPlaylist
+    // AUDIO_ID is song id
     fun getSongList(playlistId: Long, chunk: Page?): Cursor{
         val query = """
-            SELECT ${Members._ID}, $ARTIST_ID, $ALBUM_ID,
+            SELECT ${Members._ID},
+                ${Members.AUDIO_ID}
+                $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
@@ -101,6 +105,7 @@ internal class PlaylistQueries(
         return contentResolver.querySql(query)
     }
 
+    // TODO existing in plylist, not in all
     fun getExisting(songIds: String): Cursor {
         val query = """
             SELECT ${Members._ID}, $ARTIST_ID, $ALBUM_ID,
