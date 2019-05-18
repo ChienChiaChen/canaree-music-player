@@ -4,22 +4,27 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.FloatingWindowHelper
+import dev.olog.msc.presentation.base.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.ctx
+import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.playing.queue.adapter.PlayingQueueFragmentAdapter
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.lazyFast
 import kotlinx.android.synthetic.main.fragment_playing_queue.*
 import kotlinx.android.synthetic.main.fragment_playing_queue.view.*
 import javax.inject.Inject
 
-class PlayingQueueFragment : BaseFragment() {
+class PlayingQueueFragment : BaseFragment(), OnStartDragListener {
 
     companion object {
         const val TAG = "PlayingQueueFragment"
@@ -36,24 +41,20 @@ class PlayingQueueFragment : BaseFragment() {
     lateinit var navigator: Navigator
     @Inject
     lateinit var classes: Classes
-    private lateinit var layoutManager: androidx.recyclerview.widget.LinearLayoutManager
+    private lateinit var layoutManager: LinearLayoutManager
 
-    private val adapter by lazyFast {
-        PlayingQueueFragmentAdapter(lifecycle, navigator)
-    }
+    private val adapter by lazyFast { PlayingQueueFragmentAdapter(navigator, this) }
 
     private val viewModel by lazyFast { act.viewModelProvider<PlayingQueueFragmentViewModel>(viewModelFactory) }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private var itemTouchHelper: ItemTouchHelper? = null
 
-        adapter.onFirstEmission {
-            layoutManager.scrollToPositionWithOffset(viewModel.getCurrentPosition(), ctx.dip(20))
-        }
+    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+        itemTouchHelper?.startDrag(viewHolder)
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
-        layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context!!)
+        layoutManager = LinearLayoutManager(context!!)
         view.list.adapter = adapter
         view.list.layoutManager = layoutManager
         view.list.setHasFixedSize(true)
@@ -61,14 +62,20 @@ class PlayingQueueFragment : BaseFragment() {
         view.fastScroller.showBubble(false)
 
         val callback = TouchHelperAdapterCallback(adapter, ItemTouchHelper.RIGHT)
-        val touchHelper = ItemTouchHelper(callback)
-        touchHelper.attachToRecyclerView(view.list)
-        adapter.touchHelper = touchHelper
+        itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper!!.attachToRecyclerView(view.list)
 
-//        viewModel.data.subscribe(viewLifecycleOwner) { // TODO
-//            adapter.updateDataSet(it)
-//            view.emptyStateText.toggleVisibility(it.isEmpty(), true)
-//        }
+        var emitted = false
+
+        viewModel.data.subscribe(viewLifecycleOwner) {
+            adapter.submitList(it) {
+                if (!emitted){
+                    layoutManager.scrollToPositionWithOffset(viewModel.getCurrentPosition(), ctx.dip(20))
+                    emitted = true
+                }
+            }
+//            view.emptyStateText.toggleVisibility(it.isEmpty(), true) TODO empty list
+        }
     }
 
     override fun onResume() {
@@ -76,7 +83,7 @@ class PlayingQueueFragment : BaseFragment() {
         more.setOnClickListener {
             try {
                 navigator.toMainPopup(requireActivity(), it, MediaIdCategory.PLAYING_QUEUE)
-            } catch (ex: Throwable){
+            } catch (ex: Throwable) {
                 ex.printStackTrace()
             }
         }

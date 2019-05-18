@@ -4,7 +4,7 @@ import android.content.Context
 import android.provider.MediaStore
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.interactor.all.GetAllSongsUseCase
+import dev.olog.msc.core.interactor.all.ObserveAllSongsUseCase
 import dev.olog.msc.imagecreation.impl.MergedImagesCreator
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.shared.utils.assertBackgroundThread
@@ -15,9 +15,9 @@ import javax.inject.Inject
 private val MEDIA_STORE_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
 internal class FolderImagesCreator @Inject constructor(
-        @ApplicationContext private val ctx: Context,
-        private val getAllSongsUseCase: GetAllSongsUseCase,
-        private val imagesThreadPool: ImagesThreadPool
+    @ApplicationContext private val ctx: Context,
+    private val getAllSongsUseCase: ObserveAllSongsUseCase,
+    private val imagesThreadPool: ImagesThreadPool
 
 ) {
 

@@ -6,7 +6,7 @@ import dev.olog.msc.core.gateway.track.FolderGateway
 import dev.olog.msc.core.interactor.base.GetGroupUseCase
 import javax.inject.Inject
 
-class GetAllFoldersUseCase @Inject constructor(
+class ObserveAllFoldersUseCase @Inject constructor(
     gateway: FolderGateway,
     schedulers: IoDispatcher
 ) : GetGroupUseCase<Folder>(gateway, schedulers)

@@ -5,7 +5,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.core.interactor.item.GetPodcastUseCase
 import dev.olog.msc.core.interactor.item.GetSongUseCase
 import dev.olog.msc.shared.extensions.toast
@@ -23,7 +23,7 @@ class EditItemDialogFactory @Inject constructor(
         @ApplicationContext private val context: Context,
         private val getSongUseCase: GetSongUseCase,
         private val getPodcastUseCase: GetPodcastUseCase,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase
+        private val getSongListByParamUseCase: GetSongListChunkByParamUseCase
 
 ) {
 

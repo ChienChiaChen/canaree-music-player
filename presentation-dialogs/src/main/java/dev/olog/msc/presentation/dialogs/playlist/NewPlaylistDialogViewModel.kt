@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.core.interactor.GetPlaylistsBlockingUseCase
-import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.core.interactor.InsertCustomTrackListToPlaylist
 import dev.olog.msc.core.interactor.item.GetPodcastUseCase
 import dev.olog.msc.core.interactor.item.GetSongUseCase
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class NewPlaylistDialogViewModel @Inject constructor(
         playlists: GetPlaylistsBlockingUseCase,
         private val insertCustomTrackListToPlaylist: InsertCustomTrackListToPlaylist,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase,
+        private val getSongListByParamUseCase: GetSongListChunkByParamUseCase,
         private val getSongUseCase: GetSongUseCase,
         private val getPodcastUseCase: GetPodcastUseCase,
         private val playingQueueGateway: PlayingQueueGateway

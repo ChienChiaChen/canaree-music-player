@@ -6,7 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.shared.MusicConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class PlayNextDialogViewModel @Inject constructor(
     private val mediaId: MediaId,
-    private val getSongListByParamUseCase: GetSongListByParamUseCase
+    private val getSongListByParamUseCase: GetSongListChunkByParamUseCase
 ) : ViewModel() {
 
     fun execute(mediaController: MediaControllerCompat) = viewModelScope.launch(Dispatchers.Default) {

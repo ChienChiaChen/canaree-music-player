@@ -7,24 +7,24 @@ import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.core.interactor.all.GetAllFoldersUseCase
-import dev.olog.msc.core.interactor.all.GetAllGenresUseCase
-import dev.olog.msc.core.interactor.all.GetAllPlaylistsUseCase
+import dev.olog.msc.core.interactor.all.ObserveAllFoldersUseCase
+import dev.olog.msc.core.interactor.all.ObserveAllGenresUseCase
+import dev.olog.msc.core.interactor.all.ObserveAllPlaylistsUseCase
 import dev.olog.msc.imagecreation.utils.isLowMemoryDevice
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 internal class ImagesCreator @Inject constructor(
-        @ApplicationContext private val context: Context,
-        @ProcessLifecycle lifecycle: Lifecycle,
-        private val getAllFoldersUseCase: GetAllFoldersUseCase,
-        private val getAllPlaylistsUseCase: GetAllPlaylistsUseCase,
-        private val getAllGenresUseCase: GetAllGenresUseCase,
+    @ApplicationContext private val context: Context,
+    @ProcessLifecycle lifecycle: Lifecycle,
+    private val getAllFoldersUseCase: ObserveAllFoldersUseCase,
+    private val getAllPlaylistsUseCase: ObserveAllPlaylistsUseCase,
+    private val getAllGenresUseCase: ObserveAllGenresUseCase,
 
-        private val folderImagesCreator: FolderImagesCreator,
-        private val playlistImagesCreator: PlaylistImagesCreator,
-        private val genreImagesCreator: GenreImagesCreator,
-        private val appPreferencesUseCase: AppPreferencesGateway
+    private val folderImagesCreator: FolderImagesCreator,
+    private val playlistImagesCreator: PlaylistImagesCreator,
+    private val genreImagesCreator: GenreImagesCreator,
+    private val appPreferencesUseCase: AppPreferencesGateway
 
 ) : DefaultLifecycleObserver, IImageCreator {
 

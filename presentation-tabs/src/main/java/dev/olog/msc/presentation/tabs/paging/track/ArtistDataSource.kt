@@ -64,8 +64,8 @@ internal class ArtistDataSource @Inject constructor(
         return chunked.getCount(Filter.NO_FILTER)
     }
 
-    override fun loadInternal(page: Request): List<DisplayableItem> {
-        return chunked.getPage(page)
+    override fun loadInternal(request: Request): List<DisplayableItem> {
+        return chunked.getPage(request)
             .map { it.toTabDisplayableItem(resources) }
     }
 

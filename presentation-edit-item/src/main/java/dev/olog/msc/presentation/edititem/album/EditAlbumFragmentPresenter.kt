@@ -4,7 +4,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.track.Album
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.core.interactor.item.GetAlbumUseCase
 import dev.olog.msc.core.interactor.item.GetPodcastAlbumUseCase
 import dev.olog.msc.presentation.edititem.utils.get
@@ -19,7 +19,7 @@ class EditAlbumFragmentPresenter @Inject constructor(
         private val mediaId: MediaId,
         private val getAlbumUseCase: GetAlbumUseCase,
         private val getPodcastAlbumUseCase: GetPodcastAlbumUseCase,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase
+        private val getSongListByParamUseCase: GetSongListChunkByParamUseCase
 
 ) {
 
@@ -56,9 +56,10 @@ class EditAlbumFragmentPresenter @Inject constructor(
     }
 
     fun getSongList(): Single<List<Song>> {
-        return getSongListByParamUseCase.execute(mediaId)
-                .firstOrError()
-                .doOnSuccess { songList = it }
+        TODO()
+//        return getSongListByParamUseCase.execute(mediaId)
+//                .firstOrError()
+//                .doOnSuccess { songList = it }
     }
 
     fun getAlbum(): DisplayableAlbum = originalAlbum

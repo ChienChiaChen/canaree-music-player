@@ -7,7 +7,7 @@ import dev.olog.msc.core.interactor.base.ObservableUseCase
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class GetAllFoldersUnfiltered @Inject constructor(
+class ObserveAllFoldersUnfiltered @Inject constructor(
         scheduler: IoScheduler,
         private val gateway: FolderGateway
 

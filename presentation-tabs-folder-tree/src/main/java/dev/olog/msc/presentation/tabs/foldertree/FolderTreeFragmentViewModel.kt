@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.core.interactor.all.GetAllFoldersUseCase
+import dev.olog.msc.core.interactor.all.ObserveAllFoldersUseCase
 import dev.olog.msc.presentation.base.extensions.asLiveData
 import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.*
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class FolderTreeFragmentViewModel @Inject constructor(
         @ApplicationContext private val context: Context,
         private val appPreferencesUseCase: AppPreferencesGateway,
-        private val getAllFoldersUseCase: GetAllFoldersUseCase
+        private val getAllFoldersUseCase: ObserveAllFoldersUseCase
 
 ) : ViewModel() {
 

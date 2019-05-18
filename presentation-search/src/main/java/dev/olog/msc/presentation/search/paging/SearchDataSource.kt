@@ -104,8 +104,8 @@ internal class SearchDataSource @Inject constructor(
 
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun loadInternal(page: Request): List<DisplayableItem> {
-        return songGateway.getAll().getPage(page.with(filter = filterRequest))
+    override fun loadInternal(request: Request): List<DisplayableItem> {
+        return songGateway.getAll().getPage(request.with(filter = filterRequest))
             .map { it.toSearchDisplayableItem() }
     }
 

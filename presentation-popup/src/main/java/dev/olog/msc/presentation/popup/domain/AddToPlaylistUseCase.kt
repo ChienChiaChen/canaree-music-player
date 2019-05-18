@@ -6,14 +6,14 @@ import dev.olog.msc.core.coroutines.ComputationDispatcher
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
-import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import javax.inject.Inject
 
 class AddToPlaylistUseCase @Inject constructor(
     scheduler: ComputationDispatcher,
     private val playlistGateway: PlaylistGateway,
     private val podcastPlaylistGateway: PodcastPlaylistGateway,
-    private val getSongListByParamUseCase: GetSongListByParamUseCase
+    private val getSongListByParamUseCase: GetSongListChunkByParamUseCase
 
 ) : CompletableFlowWithParam<Pair<Playlist, MediaId>>(scheduler) {
 

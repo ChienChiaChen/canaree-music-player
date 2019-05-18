@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Page
 import dev.olog.msc.core.entity.data.request.getAll
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.toSong
@@ -27,6 +28,7 @@ import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.safeCompare
 import dev.olog.msc.shared.extensions.swap
+import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.shared.utils.clamp
 import io.reactivex.functions.Function
 import kotlinx.coroutines.coroutineScope
@@ -50,7 +52,8 @@ internal class QueueManager @Inject constructor(
 ) : Queue {
 
     override suspend fun prepare(): PlayerMediaEntity = coroutineScope {
-        val playingQueue = queueGateway.getAll().map { it.toMediaEntity() }
+        assertBackgroundThread()
+        val playingQueue = queueGateway.getAll(Page.NO_PAGING).map { it.toMediaEntity() }
         queueImpl.updatePlayingQueueAndPersist(playingQueue) // TODO why i'm saving at startup? try to remove
         val (queue, index) = lastSessionSong.apply(playingQueue) // TODO change
         queueImpl.updateCurrentSongPosition(queue, index) // TODO why i'm saving at startup?
@@ -81,30 +84,35 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun handleSkipToQueueItem(idInPlaylist: Long): PlayerMediaEntity {
+        assertBackgroundThread()
         val mediaEntity = queueImpl.getSongById(idInPlaylist)
         val bookmark = getPodcastBookmarkOrDefault(mediaEntity)
         return mediaEntity.toPlayerMediaEntity(queueImpl.currentPositionInQueue(), bookmark)
     }
 
     override suspend fun handleSkipToNext(trackEnded: Boolean): PlayerMediaEntity? {
+        assertBackgroundThread()
         val mediaEntity = queueImpl.getNextSong(trackEnded)
         val bookmark = getPodcastBookmarkOrDefault(mediaEntity)
         return mediaEntity?.toPlayerMediaEntity(queueImpl.currentPositionInQueue(), bookmark)
     }
 
     override suspend fun getPlayingSong(): PlayerMediaEntity {
+        assertBackgroundThread()
         val mediaEntity = queueImpl.getCurrentSong()!!
         val bookmark = getPodcastBookmarkOrDefault(mediaEntity)
         return mediaEntity.toPlayerMediaEntity(queueImpl.currentPositionInQueue(), bookmark)
     }
 
     override suspend fun handleSkipToPrevious(playerBookmark: Long): PlayerMediaEntity? {
+        assertBackgroundThread()
         val mediaEntity = queueImpl.getPreviousSong(playerBookmark)
         val bookmark = getPodcastBookmarkOrDefault(mediaEntity)
         return mediaEntity?.toPlayerMediaEntity(queueImpl.currentPositionInQueue(), bookmark)
     }
 
     override suspend fun handlePlayFromMediaId(mediaId: MediaId, extras: Bundle?): PlayerMediaEntity {
+        assertBackgroundThread()
         val songId = mediaId.leaf ?: -1L
 
         var songList = songListUseCase.execute(mediaId).getAll(Filter.NO_FILTER)
@@ -124,6 +132,7 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun handlePlayFolderTree(mediaId: MediaId): PlayerMediaEntity {
+        assertBackgroundThread()
         return handlePlayFromMediaId(mediaId, null)
     }
 
@@ -144,6 +153,7 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun handlePlayRecentlyPlayed(mediaId: MediaId): PlayerMediaEntity {
+        assertBackgroundThread()
         val songId = mediaId.leaf!!
 
         var songList = recentlyAddedUseCase.get(mediaId).getAll(Filter.NO_FILTER)
@@ -160,6 +170,7 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun handlePlayMostPlayed(mediaId: MediaId): PlayerMediaEntity {
+        assertBackgroundThread()
         val songId = mediaId.leaf!!
 
         var songList = mostPlayedSongsUseCase.get(mediaId).getAll(Filter.NO_FILTER)
@@ -176,6 +187,7 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun handlePlayShuffle(mediaId: MediaId): PlayerMediaEntity {
+        assertBackgroundThread()
         shuffleMode.setEnabled(true)
         var songList = songListUseCase.execute(mediaId).getAll(Filter.NO_FILTER)
             .map{ any: Any? -> if (any is Podcast){ any.toSong() } else { any as Song } }
@@ -192,6 +204,7 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun handlePlayFromUri(uri: Uri): PlayerMediaEntity? {
+        assertBackgroundThread()
         val song = getSongByFileUseCase.execute(uri.toString()) ?: return null
         val mediaEntity = song.toMediaEntity(0, MediaId.songId(song.id))
         val songList = listOf(mediaEntity)
@@ -205,7 +218,7 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun handlePlayFromGoogleSearch(query: String, extras: Bundle): PlayerMediaEntity? {
-
+        assertBackgroundThread()
         val params = VoiceSearchParams(query, extras)
 
         val songList = when {
@@ -235,6 +248,7 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun handleSwap(from: Int, to: Int, relative: Boolean) {
+        assertBackgroundThread()
         if (relative) {
             queueImpl.handleSwapRelative(from, to)
         } else {
@@ -243,6 +257,7 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun handleRemove(position: Int, relative: Boolean, callback: (Boolean) -> Unit) {
+        assertBackgroundThread()
         if (relative) {
             if (queueImpl.handleRemoveRelative(position)) {
                 callback(true)
@@ -255,10 +270,12 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun sort() {
+        assertBackgroundThread()
         queueImpl.sort()
     }
 
     override suspend fun shuffle() {
+        assertBackgroundThread()
         queueImpl.shuffle()
     }
 
@@ -296,10 +313,12 @@ internal class QueueManager @Inject constructor(
     }
 
     override fun onRepeatModeChanged() {
+        assertBackgroundThread()
         queueImpl.onRepeatModeChanged()
     }
 
     override suspend fun playLater(songIds: List<Long>, isPodcast: Boolean): PositionInQueue {
+        assertBackgroundThread()
         val currentPositionInQueue = getCurrentPositionInQueue()
         queueImpl.playLater(songIds, isPodcast)
         return when (currentPositionInQueue) {
@@ -310,6 +329,7 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun playNext(songIds: List<Long>, isPodcast: Boolean): PositionInQueue {
+        assertBackgroundThread()
         val currentPositionInQueue = getCurrentPositionInQueue()
         queueImpl.playNext(songIds, isPodcast)
         return when (currentPositionInQueue) {

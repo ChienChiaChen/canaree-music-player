@@ -8,7 +8,7 @@ import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.coroutines.mapToList
 import dev.olog.msc.core.entity.track.Playlist
-import dev.olog.msc.core.interactor.all.GetAllPlaylistsUseCase
+import dev.olog.msc.core.interactor.all.ObserveAllPlaylistsUseCase
 import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class PlaylistChooserActivityViewModel @Inject constructor(
     resources: Resources,
-    private val getAllPlaylistsUseCase: GetAllPlaylistsUseCase
+    private val getAllPlaylistsUseCase: ObserveAllPlaylistsUseCase
 ) : ViewModel() {
 
     private val data = liveDataOf<List<DisplayableItem>>()

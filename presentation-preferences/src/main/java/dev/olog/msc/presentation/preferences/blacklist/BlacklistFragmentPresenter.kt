@@ -4,7 +4,7 @@ package dev.olog.msc.presentation.preferences.blacklist
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.core.interactor.all.GetAllFoldersUnfiltered
+import dev.olog.msc.core.interactor.all.ObserveAllFoldersUnfiltered
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.preferences.R
 import dev.olog.msc.shared.extensions.mapToList
@@ -12,8 +12,8 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 class BlacklistFragmentPresenter @Inject constructor(
-        getAllFoldersUnfiltered: GetAllFoldersUnfiltered,
-        private val appPreferencesUseCase: AppPreferencesGateway
+    getAllFoldersUnfiltered: ObserveAllFoldersUnfiltered,
+    private val appPreferencesUseCase: AppPreferencesGateway
 ) {
 
     val data : Observable<List<BlacklistModel>> = getAllFoldersUnfiltered.execute()

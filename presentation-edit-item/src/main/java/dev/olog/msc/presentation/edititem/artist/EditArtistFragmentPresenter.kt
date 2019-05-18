@@ -4,7 +4,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.interactor.GetSongListByParamUseCase
+import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.core.interactor.item.GetArtistUseCase
 import dev.olog.msc.core.interactor.item.GetPodcastArtistUseCase
 import io.reactivex.Single
@@ -15,7 +15,7 @@ class EditArtistFragmentPresenter @Inject constructor(
         private val mediaId: MediaId,
         private val getArtistUseCase: GetArtistUseCase,
         private val getPodcastArtistUseCase: GetPodcastArtistUseCase,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase
+        private val getSongListByParamUseCase: GetSongListChunkByParamUseCase
 
 ) {
 
@@ -46,9 +46,10 @@ class EditArtistFragmentPresenter @Inject constructor(
     }
 
     fun getSongList(): Single<List<Song>> {
-        return getSongListByParamUseCase.execute(mediaId)
-                .firstOrError()
-                .doOnSuccess { songList = it }
+        TODO()
+//        return getSongListByParamUseCase.execute(mediaId)
+//                .firstOrError()
+//                .doOnSuccess { songList = it }
     }
 
     fun getArtist(): DisplayableArtist = originalArtist

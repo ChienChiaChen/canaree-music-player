@@ -14,6 +14,7 @@ import dagger.Lazy
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.musicservice.helper.CarHelper
 import dev.olog.msc.musicservice.helper.MediaIdHelper
@@ -25,30 +26,43 @@ import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.extensions.asServicePendingIntent
 import dev.olog.msc.shared.extensions.toast
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class MusicService : dev.olog.msc.musicservice.BaseMusicService() {
+class MusicService : dev.olog.msc.musicservice.BaseMusicService(), CoroutineScope by CustomScope() {
 
     companion object {
         const val TAG = "MusicService"
     }
 
-    @Inject internal lateinit var mediaSession: MediaSessionCompat
-    @Inject internal lateinit var callback: MediaSessionCallback
+    @Inject
+    internal lateinit var mediaSession: MediaSessionCompat
+    @Inject
+    internal lateinit var callback: MediaSessionCallback
 
-    @Inject internal lateinit var currentSong : CurrentSong
-    @Inject internal lateinit var playerMetadata: PlayerMetadata
-    @Inject internal lateinit var notification: MusicNotificationManager
-    @Inject internal lateinit var sleepTimerUseCase: SleepTimerUseCase
-    @Inject internal lateinit var mediaItemGenerator: Lazy<MediaItemGenerator>
-    @Inject internal lateinit var alarmManager: AlarmManager
-    @Inject internal lateinit var lastFmScrobbling: LastFmScrobbling
-    @Inject internal lateinit var classes: Classes
+    @Suppress("unused")
+    @Inject
+    internal lateinit var currentSong: CurrentSong
 
-    private val subsriptions = CompositeDisposable()
+    @Suppress("unused")
+    @Inject
+    internal lateinit var playerMetadata: PlayerMetadata
+
+    @Suppress("unused")
+    @Inject
+    internal lateinit var notification: MusicNotificationManager
+    @Inject
+    internal lateinit var sleepTimerUseCase: SleepTimerUseCase
+    @Inject
+    internal lateinit var mediaItemGenerator: Lazy<MediaItemGenerator>
+    @Inject
+    internal lateinit var alarmManager: AlarmManager
+
+    @Suppress("unused")
+    @Inject
+    internal lateinit var lastFmScrobbling: LastFmScrobbling
+    @Inject
+    internal lateinit var classes: Classes
 
     override fun onCreate() {
         super.onCreate()
@@ -56,9 +70,10 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService() {
         sessionToken = mediaSession.sessionToken
 
         mediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS or
-                        MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS)
+            MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
+                    MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS or
+                    MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS
+        )
 
         mediaSession.setMediaButtonReceiver(buildMediaButtonReceiverPendingIntent())
         mediaSession.setSessionActivity(buildSessionActivityPendingIntent())
@@ -71,17 +86,17 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService() {
     override fun onDestroy() {
         super.onDestroy()
         resetSleepTimer()
-        subsriptions.clear()
         mediaSession.setMediaButtonReceiver(null)
         mediaSession.setCallback(null)
         mediaSession.isActive = false
         mediaSession.release()
+        cancel()
     }
 
     override fun handleAppShortcutPlay(intent: Intent) {
         try {
             mediaSession.controller.transportControls.play()
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             this.applicationContext.toast("Please check your storage permission, contact the developer if the problem persists")
         }
     }
@@ -91,8 +106,9 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService() {
             val bundle = Bundle()
             bundle.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, MediaId.shuffleAllId().toString())
             mediaSession.controller.transportControls.sendCustomAction(
-                    MusicConstants.ACTION_SHUFFLE, bundle)
-        } catch (ex: Exception){
+                MusicConstants.ACTION_SHUFFLE, bundle
+            )
+        } catch (ex: Exception) {
             this.applicationContext.toast("Please check your storage permission, contact the developer if the problem persists")
         }
     }
@@ -139,21 +155,21 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService() {
         }
     }
 
-    private fun resetSleepTimer(){
+    private fun resetSleepTimer() {
         sleepTimerUseCase.reset()
         alarmManager.cancel(PendingIntents.stopMusicServiceIntent(this, this::class.java))
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
-        if (clientPackageName == packageName){
+        if (clientPackageName == packageName) {
             return BrowserRoot(MediaIdHelper.MEDIA_ID_ROOT, null)
         }
 
-        if (CarHelper.isValidCarPackage(clientPackageName)){
+        if (CarHelper.isValidCarPackage(clientPackageName)) {
             grantUriPermissions(CarHelper.AUTO_APP_PACKAGE_NAME)
             return BrowserRoot(MediaIdHelper.MEDIA_ID_ROOT, null)
         }
-        if (WearHelper.isValidWearCompanionPackage(clientPackageName)){
+        if (WearHelper.isValidWearCompanionPackage(clientPackageName)) {
             return BrowserRoot(MediaIdHelper.MEDIA_ID_ROOT, null)
         }
 
@@ -161,46 +177,47 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService() {
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
-        if (parentId == MediaIdHelper.MEDIA_ID_ROOT){
+        if (parentId == MediaIdHelper.MEDIA_ID_ROOT) {
             result.sendResult(MediaIdHelper.getLibraryCategories(this))
             return
         }
-        val mediaIdCategory = MediaIdCategory.values()
-                .toList()
-                .firstOrNull { it.toString() == parentId }
 
-        if (mediaIdCategory != null){
-            result.detach()
-            mediaItemGenerator.get().getCategoryChilds(mediaIdCategory)
-                    .map { it.toMutableList() }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(result::sendResult, Throwable::printStackTrace)
-                    .addTo(subsriptions)
-            return
+        result.detach() // async get
+
+        val mediaIdCategory = MediaIdCategory.values().firstOrNull { it.toString() == parentId }
+
+        if (mediaIdCategory != null) {
+            launch {
+                val items = mediaItemGenerator.get().getCategoryChilds(mediaIdCategory)
+                withContext(Dispatchers.Main) { result.sendResult(items) }
+            }
+        } else {
+            launch {
+                val mediaId = MediaId.fromString(parentId)
+                val items = mediaItemGenerator.get().getCategoryValueChilds(mediaId)
+                withContext(Dispatchers.Main) { result.sendResult(items) }
+            }
         }
-        val mediaId = MediaId.fromString(parentId)
-        result.detach()
-
-        mediaItemGenerator.get().getCategoryValueChilds(mediaId)
-                .map { it.toMutableList() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result::sendResult, Throwable::printStackTrace)
-                .addTo(subsriptions)
-
     }
 
-    private fun grantUriPermissions(packageName: String){
+    private fun grantUriPermissions(packageName: String) {
         try {
-            grantUriPermission(packageName,
-                    Uri.parse("content://media/external/audio/albumart"),
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        } catch (ex: Exception){}
+            grantUriPermission(
+                packageName,
+                Uri.parse("content://media/external/audio/albumart"),
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        } catch (ex: Exception) {
+        }
 
         try {
-            grantUriPermission(packageName,
-                    FileProvider.getUriForPath(this, cacheDir.path),
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        } catch (ex: Throwable){}
+            grantUriPermission(
+                packageName,
+                FileProvider.getUriForPath(this, cacheDir.path),
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        } catch (ex: Throwable) {
+        }
     }
 
     private fun buildMediaButtonReceiverPendingIntent(): PendingIntent {
@@ -210,7 +227,9 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService() {
     }
 
     private fun buildSessionActivityPendingIntent(): PendingIntent {
-        return PendingIntent.getActivity(this, 0,
-                Intent(this, classes.mainActivity()::class.java), PendingIntent.FLAG_CANCEL_CURRENT)
+        return PendingIntent.getActivity(
+            this, 0,
+            Intent(this, classes.mainActivity()::class.java), PendingIntent.FLAG_CANCEL_CURRENT
+        )
     }
 }

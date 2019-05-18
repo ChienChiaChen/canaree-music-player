@@ -3,6 +3,7 @@ package dev.olog.msc.core.gateway.prefs
 import dev.olog.msc.core.entity.LastMetadata
 import io.reactivex.Completable
 import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 interface MusicPreferencesGateway {
 
@@ -41,7 +42,7 @@ interface MusicPreferencesGateway {
     fun getPlaybackSpeed(): Float
 
     fun setLastPositionInQueue(position: Int)
-    fun observeLastPositionInQueue(): Observable<Int>
+    fun observeLastPositionInQueue(): Flow<Int>
     fun getLastPositionInQueue(): Int
 
 }

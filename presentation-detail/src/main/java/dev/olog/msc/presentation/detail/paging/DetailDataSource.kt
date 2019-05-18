@@ -159,10 +159,10 @@ internal class DetailDataSource @Inject constructor(
         return footers
     }
 
-    override fun loadInternal(page: Request): List<DisplayableItem> {
+    override fun loadInternal(request: Request): List<DisplayableItem> {
         val sortType = getSortUseCase.execute(mediaId).sortType
 
-        val data = chunked.getPage(page.with(filter = filterRequest))
+        val data = chunked.getPage(request.with(filter = filterRequest))
         val result = mutableListOf<DisplayableItem>()
         for (datum in data) {
             if (datum is Song) {

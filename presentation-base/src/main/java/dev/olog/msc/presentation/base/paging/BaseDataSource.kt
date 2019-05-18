@@ -81,7 +81,7 @@ abstract class BaseDataSource<PresentationModel> :
         }
     }
 
-    protected abstract fun loadInternal(page: Request): List<PresentationModel>
+    protected abstract fun loadInternal(request: Request): List<PresentationModel>
 
     protected open val canLoadData = true
 

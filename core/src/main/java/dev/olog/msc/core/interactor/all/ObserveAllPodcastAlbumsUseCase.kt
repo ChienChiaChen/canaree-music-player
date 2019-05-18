@@ -6,7 +6,7 @@ import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
 import dev.olog.msc.core.interactor.base.GetGroupUseCase
 import javax.inject.Inject
 
-class GetAllPodcastAlbumsUseCase @Inject constructor(
+class ObserveAllPodcastAlbumsUseCase @Inject constructor(
     gateway: PodcastAlbumGateway,
     schedulers: IoDispatcher
 ) : GetGroupUseCase<PodcastAlbum>(gateway, schedulers)

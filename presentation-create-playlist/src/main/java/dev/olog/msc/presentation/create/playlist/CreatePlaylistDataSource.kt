@@ -54,12 +54,12 @@ class CreatePlaylistDataSource @Inject constructor(
         }
     }
 
-    override fun loadInternal(page: Request): List<DisplayableItem> {
+    override fun loadInternal(request: Request): List<DisplayableItem> {
         if (playlistType == PlaylistType.TRACK) {
-            return searchGateway.searchSongOnlyBy(searchRequest).getPage(page)
+            return searchGateway.searchSongOnlyBy(searchRequest).getPage(request)
                 .map { it.toDisplayableItem() }
         } else {
-            return searchGateway.searchPodcastOnlyBy(searchRequest).getPage(page)
+            return searchGateway.searchPodcastOnlyBy(searchRequest).getPage(request)
                 .map { it.toDisplayableItem() }
         }
     }

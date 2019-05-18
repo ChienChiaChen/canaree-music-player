@@ -6,7 +6,7 @@ import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.interactor.base.GetGroupUseCase
 import javax.inject.Inject
 
-class GetAllPlaylistsUseCase @Inject constructor(
+class ObserveAllPlaylistsUseCase @Inject constructor(
     gateway: PlaylistGateway,
     schedulers: IoDispatcher
 ) : GetGroupUseCase<Playlist>(gateway, schedulers)

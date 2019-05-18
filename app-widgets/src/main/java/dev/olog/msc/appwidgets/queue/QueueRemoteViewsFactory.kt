@@ -9,7 +9,7 @@ import dev.olog.msc.appwidgets.R
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.PlayingQueueSong
-import dev.olog.msc.core.interactor.queue.GetMiniQueueUseCase
+import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.imageprovider.getBitmap
 import dev.olog.msc.shared.MusicConstants
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class QueueRemoteViewsFactory @Inject constructor(
         @ApplicationContext private val context: Context,
-        private val getMiniQueueUseCase: GetMiniQueueUseCase
+        private val playingQueueGateway: PlayingQueueGateway
 
 ) : RemoteViewsService.RemoteViewsFactory {
 
@@ -30,10 +30,12 @@ class QueueRemoteViewsFactory @Inject constructor(
     override fun getLoadingView(): RemoteViews? = null
 
     override fun onDataSetChanged() {
-        val data = getMiniQueueUseCase.execute().blockingGet()
-        this.dataSet.clear()
-        this.dataSet.addAll(data.map { it.toWidgetItem() })
+        // TODO
     }
+//        val data = playingQueueGateway.get().blockingGet()
+//        this.dataSet.clear()
+//        this.dataSet.addAll(data.map { it.toWidgetItem() })
+//    }
 
     override fun hasStableIds(): Boolean {
         return false

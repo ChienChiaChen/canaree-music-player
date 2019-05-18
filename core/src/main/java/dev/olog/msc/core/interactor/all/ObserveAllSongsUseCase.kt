@@ -6,7 +6,7 @@ import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.core.interactor.base.GetGroupUseCase
 import javax.inject.Inject
 
-class GetAllSongsUseCase @Inject constructor(
+class ObserveAllSongsUseCase @Inject constructor(
     gateway: SongGateway,
     schedulers: IoDispatcher
 ) : GetGroupUseCase<Song>(gateway, schedulers)

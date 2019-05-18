@@ -59,8 +59,8 @@ internal class RelatedArtistsSource @Inject constructor(
 
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun loadInternal(page: Request): List<DisplayableItem> {
-        return chunked.getPage(page.with(filter = filterRequest))
+    override fun loadInternal(request: Request): List<DisplayableItem> {
+        return chunked.getPage(request.with(filter = filterRequest))
             .map { it.toRelatedArtist(resources) }
     }
 }

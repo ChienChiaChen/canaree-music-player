@@ -15,7 +15,6 @@ import dev.olog.msc.musicservice.model.PositionInQueue
 import dev.olog.msc.musicservice.model.toMediaEntity
 import dev.olog.msc.shared.extensions.swap
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import dev.olog.msc.shared.utils.assertMainThread
 import dev.olog.msc.shared.utils.clamp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -73,13 +72,9 @@ internal class QueueImpl @Inject constructor(
         miniQueue = handleQueueOnRepeatMode(miniQueue)
 
         val activeId = playingQueue[currentSongPosition].idInPlaylist.toLong()
-        val model = MediaSessionQueueModel(activeId, miniQueue)
+        val model = MediaSessionQueueModel(activeId, miniQueue, immediate)
 
-        if (immediate) {
-            queueMediaSession.onNextImmediate(model)
-        } else {
-            queueMediaSession.onNext(model)
-        }
+        queueMediaSession.onNext(model)
     }
 
     @CheckResult
@@ -101,8 +96,6 @@ internal class QueueImpl @Inject constructor(
     @CheckResult
     @MainThread
     fun getNextSong(trackEnded: Boolean): MediaEntity? {
-        assertMainThread()
-
         if (repeatMode.isRepeatOne() && trackEnded) {
             return playingQueue[currentSongPosition]
         }
@@ -123,8 +116,6 @@ internal class QueueImpl @Inject constructor(
     @CheckResult
     @MainThread
     fun getPreviousSong(playerBookmark: Long): MediaEntity? {
-        assertMainThread()
-
         if (/*repeatMode.isRepeatOne() || */playerBookmark > SKIP_TO_PREVIOUS_THRESHOLD) {
             return playingQueue[currentSongPosition]
         }
@@ -196,7 +187,7 @@ internal class QueueImpl @Inject constructor(
 
         try {
             val activeId = playingQueue[currentSongPosition].idInPlaylist.toLong()
-            queueMediaSession.onNext(MediaSessionQueueModel(activeId, list))
+            queueMediaSession.onNext(MediaSessionQueueModel(activeId, list, false))
         } catch (ex: IndexOutOfBoundsException) {
             ex.printStackTrace()
         }
@@ -218,8 +209,6 @@ internal class QueueImpl @Inject constructor(
     }
 
     suspend fun handleSwap(from: Int, to: Int) {
-        assertMainThread()
-
         if (from !in 0..playingQueue.lastIndex || to !in 0..playingQueue.lastIndex) {
             return
         }

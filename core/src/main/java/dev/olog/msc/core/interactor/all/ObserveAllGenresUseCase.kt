@@ -6,7 +6,7 @@ import dev.olog.msc.core.gateway.track.GenreGateway
 import dev.olog.msc.core.interactor.base.GetGroupUseCase
 import javax.inject.Inject
 
-class GetAllGenresUseCase @Inject constructor(
+class ObserveAllGenresUseCase @Inject constructor(
     gateway: GenreGateway,
     schedulers: IoDispatcher
 ) : GetGroupUseCase<Genre>(gateway, schedulers)

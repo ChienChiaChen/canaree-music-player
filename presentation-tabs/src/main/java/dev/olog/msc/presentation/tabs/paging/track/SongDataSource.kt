@@ -55,8 +55,8 @@ internal class SongDataSource @Inject constructor(
 
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun loadInternal(page: Request): List<DisplayableItem> {
-        return pageRequest.getPage(page)
+    override fun loadInternal(request: Request): List<DisplayableItem> {
+        return pageRequest.getPage(request)
             .map { it.toTabDisplayableItem() }
     }
 

@@ -54,8 +54,8 @@ class SearchAlbumsDataSource @Inject constructor(
 
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun loadInternal(page: Request): List<DisplayableItem> {
-        return chunk.getPage(page.with(filter = filterRequest))
+    override fun loadInternal(request: Request): List<DisplayableItem> {
+        return chunk.getPage(request.with(filter = filterRequest))
             .map { it.toSearchDisplayableItem() }
     }
 

@@ -57,8 +57,8 @@ internal class PodcastAlbumDataSource @Inject constructor(
 
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun loadInternal(page: Request): List<DisplayableItem> {
-        return chunked.getPage(page)
+    override fun loadInternal(request: Request): List<DisplayableItem> {
+        return chunked.getPage(request)
             .map { it.toTabDisplayableItem() }
     }
 

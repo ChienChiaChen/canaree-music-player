@@ -14,7 +14,6 @@ object DiffCallbackDetail : DiffUtil.ItemCallback<DisplayableItem>(){
 
     override fun getChangePayload(oldItem: DisplayableItem, newItem: DisplayableItem): Any? {
         if (!newItem.mediaId.isLeaf && oldItem.subtitle != newItem.subtitle){
-            println("old item $oldItem, new item $newItem in change playload")
             return newItem.subtitle
         }
         return super.getChangePayload(oldItem, newItem)

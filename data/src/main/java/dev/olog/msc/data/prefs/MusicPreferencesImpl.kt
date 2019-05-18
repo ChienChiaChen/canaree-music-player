@@ -8,9 +8,12 @@ import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
+import dev.olog.msc.shared.extensions.asFlowable
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
 private const val TAG = "MusicPreferences"
@@ -34,12 +37,12 @@ private const val PLAYBACK_SPEED = "$TAG.playback_speed"
 private const val LAST_POSITION = "$TAG.last_position"
 
 internal class MusicPreferencesImpl @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val preferences: SharedPreferences,
-        private val rxPreferences: RxSharedPreferences,
-        private val prefsKeys: PrefsKeys
+    @ApplicationContext private val context: Context,
+    private val preferences: SharedPreferences,
+    private val rxPreferences: RxSharedPreferences,
+    private val prefsKeys: PrefsKeys
 
-): MusicPreferencesGateway {
+) : MusicPreferencesGateway {
 
     override fun getBookmark(): Long {
         return preferences.getLong(BOOKMARK, 0)
@@ -96,15 +99,15 @@ internal class MusicPreferencesImpl @Inject constructor(
     override fun isMidnightMode(): Observable<Boolean> {
         val key = context.getString(prefsKeys.midnightMode())
         return rxPreferences.getBoolean(key, false)
-                .asObservable()
+            .asObservable()
     }
 
     override fun getLastMetadata(): LastMetadata {
         return LastMetadata(
-                preferences.getString(LAST_TITLE, "")!!,
-                preferences.getString(LAST_SUBTITLE, "")!!,
-                preferences.getString(LAST_IMAGE, "")!!,
-                preferences.getLong(LAST_ID, -1)
+            preferences.getString(LAST_TITLE, "")!!,
+            preferences.getString(LAST_SUBTITLE, "")!!,
+            preferences.getString(LAST_IMAGE, "")!!,
+            preferences.getLong(LAST_ID, -1)
         )
     }
 
@@ -119,8 +122,8 @@ internal class MusicPreferencesImpl @Inject constructor(
 
     override fun observeLastMetadata(): Observable<LastMetadata> {
         return rxPreferences.getString(LAST_TITLE)
-                .asObservable()
-                .map { getLastMetadata() }
+            .asObservable()
+            .map { getLastMetadata() }
     }
 
     override fun setDefault(): Completable {
@@ -133,13 +136,13 @@ internal class MusicPreferencesImpl @Inject constructor(
         }
     }
 
-    private fun setMidnightMode(enable: Boolean){
+    private fun setMidnightMode(enable: Boolean) {
         preferences.edit {
             putBoolean(context.getString(prefsKeys.midnightMode()), enable)
         }
     }
 
-    private fun setCrossFade(value: Int){
+    private fun setCrossFade(value: Int) {
         val key = context.getString(prefsKeys.crossfade())
         preferences.edit { putInt(key, value) }
     }
@@ -147,25 +150,25 @@ internal class MusicPreferencesImpl @Inject constructor(
     override fun observeCrossFade(): Observable<Int> {
         val key = context.getString(prefsKeys.crossfade())
         return rxPreferences.getInteger(key, 0)
-                .asObservable()
-                .map { it * 1000 }
+            .asObservable()
+            .map { it * 1000 }
     }
 
     override fun observeGapless(): Observable<Boolean> {
         val key = context.getString(prefsKeys.gapless())
         return rxPreferences.getBoolean(key, false)
-                .asObservable()
+            .asObservable()
     }
 
-    private fun setGapless(enabled: Boolean){
+    private fun setGapless(enabled: Boolean) {
         val key = context.getString(prefsKeys.gapless())
         preferences.edit { putBoolean(key, enabled) }
     }
 
     override fun observePlaybackSpeed(): Observable<Float> {
         return rxPreferences.getFloat(PLAYBACK_SPEED, 1f)
-                .asObservable()
-                .subscribeOn(Schedulers.io())
+            .asObservable()
+            .subscribeOn(Schedulers.io())
     }
 
     override fun setPlaybackSpeed(speed: Float) {
@@ -184,9 +187,11 @@ internal class MusicPreferencesImpl @Inject constructor(
         }
     }
 
-    override fun observeLastPositionInQueue(): Observable<Int> {
+    override fun observeLastPositionInQueue(): Flow<Int> {
         return rxPreferences.getInteger(LAST_POSITION, -1)
-                .asObservable()
+            .asObservable()
+            .asFlowable()
+            .asFlow()
     }
 
     override fun getLastPositionInQueue(): Int {
