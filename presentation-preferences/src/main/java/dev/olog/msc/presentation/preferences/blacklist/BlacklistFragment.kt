@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
-import dev.olog.msc.presentation.base.extensions.asLiveData
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.fragment.BaseDialogFragment
@@ -25,26 +24,27 @@ class BlacklistFragment : BaseDialogFragment() {
         }
     }
 
-    @Inject lateinit var presenter: BlacklistFragmentPresenter
-    private lateinit var adapter : BlacklistFragmentAdapter
+    @Inject
+    lateinit var presenter: BlacklistFragmentViewModel
+    private lateinit var adapter: BlacklistFragmentAdapter
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        presenter.data.asLiveData()
-                .subscribe(this, adapter::updateDataSet)
+        presenter.observeData()
+            .subscribe(viewLifecycleOwner, adapter::updateDataSet)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = LayoutInflater.from(activity!!)
-        val view : View = inflater.inflate(R.layout.dialog_list, null, false)
+        val view: View = inflater.inflate(R.layout.dialog_list, null, false)
 
         val builder = ThemedDialog.builder(ctx)
-                .setTitle(R.string.prefs_blacklist_title)
-                .setMessage(R.string.prefs_blacklist_description)
-                .setView(view)
-                .setNegativeButton(R.string.common_cancel, null)
-                .setPositiveButton(R.string.common_save, null)
+            .setTitle(R.string.prefs_blacklist_title)
+            .setMessage(R.string.prefs_blacklist_description)
+            .setView(view)
+            .setNegativeButton(R.string.common_cancel, null)
+            .setPositiveButton(R.string.common_save, null)
 
         val list = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.list)
         adapter = BlacklistFragmentAdapter()
@@ -54,27 +54,28 @@ class BlacklistFragment : BaseDialogFragment() {
         val dialog = builder.show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-                    val allIsBlacklisted = adapter.data.all { it.isBlacklisted }
-                    if (allIsBlacklisted){
-                        showErrorMessage()
-                    } else {
-                        presenter.setDataSet(adapter.data)
-                        notifyMediaStore()
-                        dismiss()
-                    }
+            val allIsBlacklisted = adapter.data.all { it.isBlacklisted }
+            if (allIsBlacklisted) {
+                showErrorMessage()
+            } else {
+                presenter.setDataSet(adapter.data) {
+                    notifyMediaStore()
+                    dismiss()
                 }
+            }
+        }
 
         return dialog
     }
 
-    private fun notifyMediaStore(){
+    private fun notifyMediaStore() {
         val contentResolver = context!!.contentResolver
         contentResolver.notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null)
         contentResolver.notifyChange(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, null)
         contentResolver.notifyChange(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI, null)
     }
 
-    private fun showErrorMessage(){
+    private fun showErrorMessage() {
         activity!!.toast(R.string.prefs_blacklist_error)
     }
 

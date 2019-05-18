@@ -6,8 +6,9 @@ import dev.olog.msc.core.entity.favorite.FavoriteType
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.data.db.AppDatabase
 import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.processors.BehaviorProcessor
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
 internal class FavoriteRepository @Inject constructor(
@@ -17,9 +18,11 @@ internal class FavoriteRepository @Inject constructor(
 
     private val favoriteDao = appDatabase.favoriteDao()
 
-    private val favoriteStatePublisher = BehaviorSubject.create<FavoriteStateEntity>()
+    private val favoriteStatePublisher = BehaviorProcessor.create<FavoriteStateEntity>()
 
-    override fun observeToggleFavorite(): Observable<FavoriteEnum> = favoriteStatePublisher.map { it.enum }
+    override suspend fun observeToggleFavorite(): Flow<FavoriteEnum> = favoriteStatePublisher
+        .onBackpressureLatest()
+        .map { it.enum }.asFlow()
 
     override fun updateFavoriteState(type: FavoriteType, state: FavoriteStateEntity) {
         favoriteStatePublisher.onNext(state)

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="placeholder_image_tint">@android:color/white</color>
+    <color name="placeholder_background">#222326</color>
+
+</resources>

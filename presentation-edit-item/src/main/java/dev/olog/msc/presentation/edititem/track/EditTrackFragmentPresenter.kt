@@ -12,7 +12,6 @@ import dev.olog.msc.core.interactor.last.fm.GetLastFmTrackUseCase
 import dev.olog.msc.core.interactor.last.fm.LastFmTrackRequest
 import dev.olog.msc.presentation.edititem.DisplayableSong
 import dev.olog.msc.presentation.edititem.utils.get
-import dev.olog.msc.shared.TrackUtils
 import io.reactivex.Single
 import kotlinx.coroutines.runBlocking
 import org.jaudiotagger.audio.AudioFileIO
@@ -39,19 +38,20 @@ class EditTrackFragmentPresenter @Inject constructor(
     }
 
     private fun observeSongInternal(): Single<DisplayableSong> {
-        return getSongUseCase.execute(mediaId)
-                .firstOrError()
-                .map { it.copy(
-                        artist = if (it.artist == TrackUtils.UNKNOWN) "" else it.artist,
-                        album = if (it.album == TrackUtils.UNKNOWN) "" else it.album
-                ) }
-                .map { it.toDisplayableSong() }
-                .doOnSuccess {
-                    val usedImage = usedImageGateway.getForTrack(it.id)
-                            ?: usedImageGateway.getForAlbum(it.albumId)
-                            ?: it.image
-                    originalSong = it.copy(image = usedImage)
-                }
+        TODO()
+//        return getSongUseCase.execute(mediaId)
+//                .firstOrError()
+//                .map { it.copy(
+//                        artist = if (it.artist == TrackUtils.UNKNOWN) "" else it.artist,
+//                        album = if (it.album == TrackUtils.UNKNOWN) "" else it.album
+//                ) }
+//                .map { it.toDisplayableSong() }
+//                .doOnSuccess {
+//                    val usedImage = usedImageGateway.getForTrack(it.id)
+//                            ?: usedImageGateway.getForAlbum(it.albumId)
+//                            ?: it.image
+//                    originalSong = it.copy(image = usedImage)
+//                }
     }
 
     private fun observePodcastInternal(): Single<DisplayableSong> = runBlocking{

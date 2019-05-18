@@ -8,49 +8,51 @@ import de.umass.lastfm.Caller
 import de.umass.lastfm.Session
 import de.umass.lastfm.Track
 import de.umass.lastfm.scrobble.ScrobbleData
+import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.interactor.scrobble.ObserveLastFmUserCredentials
 import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.Maybe
-import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import java.util.logging.Level
 import javax.inject.Inject
 
 internal class LastFmScrobbling @Inject constructor(
-        @ServiceLifecycle lifecycle: Lifecycle,
-        observeLastFmUserCredentials: ObserveLastFmUserCredentials,
-        playerLifecycle: PlayerLifecycle
+    @ServiceLifecycle lifecycle: Lifecycle,
+    observeLastFmUserCredentials: ObserveLastFmUserCredentials,
+    playerLifecycle: PlayerLifecycle
 
-) : DefaultLifecycleObserver, PlayerLifecycle.Listener {
+) : DefaultLifecycleObserver, PlayerLifecycle.Listener, CoroutineScope by CustomScope() {
 
     private var session: Session? = null
-    private var userCredentials : UserCredentials? = null
+    private var userCredentials: UserCredentials? = null
 
-    private val credendialsDisposable = observeLastFmUserCredentials.execute()
-            .observeOn(Schedulers.io())
-            .filter { it.username.isNotBlank() }
-            .subscribe(this::tryAutenticate, Throwable::printStackTrace)
+    private var scrollbeJob: Job? = null
 
-    private fun tryAutenticate(credentials: UserCredentials){
+    init {
+        launch {
+            observeLastFmUserCredentials.execute()
+                .filter { it.username.isNotBlank() }
+                .collect { tryAutenticate(it) }
+        }
+    }
+
+    private fun tryAutenticate(credentials: UserCredentials) {
         try {
             session = Authenticator.getMobileSession(
                 credentials.username,
                 credentials.password,
                 BuildConfig.LAST_FM_KEY,
-                BuildConfig.LAST_FM_SECRET)
+                BuildConfig.LAST_FM_SECRET
+            )
             userCredentials = credentials
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
-
-    private var scrobbleSubscriptions = CompositeDisposable()
 
     init {
         lifecycle.addObserver(this)
@@ -61,38 +63,39 @@ internal class LastFmScrobbling @Inject constructor(
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        credendialsDisposable.unsubscribe()
+        cancel()
+        scrollbeJob?.cancel()
     }
 
     override fun onMetadataChanged(entity: MediaEntity) {
-        scrobble(entity)
+        scrollbeJob?.cancel()
+        scrollbeJob = launch {
+            delay(10 * 1000)
+            scrobble(entity)
+        }
     }
 
-    private fun scrobble(entity: MediaEntity){
-        Single.just(true)
-                .observeOn(Schedulers.io())
-                .filter { session != null && userCredentials != null }
-                .flatMap { Maybe.fromCallable {
-                    val scrobbleData = entity.toScrollData()
-                    Track.scrobble(scrobbleData, session)
-                    Track.updateNowPlaying(scrobbleData, session)
-                } }
-                .subscribe({ }, Throwable::printStackTrace)
-                .addTo(scrobbleSubscriptions)
+    private suspend fun scrobble(entity: MediaEntity) = coroutineScope {
+        if (session == null || userCredentials == null) {
+            return@coroutineScope
+        }
+        val scrobbleData = entity.toScroblleData()
+        Track.scrobble(scrobbleData, session)
+        Track.updateNowPlaying(scrobbleData, session)
     }
 
-    private fun MediaEntity.toScrollData(): ScrobbleData {
+    private fun MediaEntity.toScroblleData(): ScrobbleData {
         return ScrobbleData(
-                this.artist,
-                this.title,
-                (System.currentTimeMillis() / 1000).toInt(),
-                this.duration.toInt(),
-                this.album,
-                null,
-                null,
-                this.trackNumber,
-                null,
-                true
+            this.artist,
+            this.title,
+            (System.currentTimeMillis() / 1000).toInt(),
+            this.duration.toInt(),
+            this.album,
+            null,
+            null,
+            this.trackNumber,
+            null,
+            true
         )
     }
 

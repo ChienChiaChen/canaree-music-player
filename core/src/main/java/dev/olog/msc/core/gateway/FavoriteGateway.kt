@@ -4,7 +4,7 @@ import dev.olog.msc.core.entity.favorite.FavoriteEnum
 import dev.olog.msc.core.entity.favorite.FavoriteStateEntity
 import dev.olog.msc.core.entity.favorite.FavoriteType
 import io.reactivex.Flowable
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 interface FavoriteGateway {
 
@@ -27,7 +27,7 @@ interface FavoriteGateway {
 
     suspend fun isFavorite(type: FavoriteType, songId: Long): Boolean
 
-    fun observeToggleFavorite(): Observable<FavoriteEnum>
+    suspend fun observeToggleFavorite(): Flow<FavoriteEnum>
     fun updateFavoriteState(type: FavoriteType, state: FavoriteStateEntity)
 
     suspend fun toggleFavorite()

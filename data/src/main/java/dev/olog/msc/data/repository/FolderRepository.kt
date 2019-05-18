@@ -25,7 +25,7 @@ import dev.olog.msc.data.mapper.toSong
 import dev.olog.msc.data.repository.queries.FolderQueries
 import dev.olog.msc.data.repository.util.ContentObserverFlow
 import dev.olog.msc.data.repository.util.queryFirstColumn
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
@@ -171,10 +171,10 @@ internal class FolderRepository @Inject constructor(
 
     }
 
-    override fun getAllUnfiltered(): Observable<List<Folder>> {
+    override fun getAllUnfiltered(): Flow<List<Folder>> {
+        TODO()
 //        return songGateway.getAllUnfiltered()
 //            .map(this::mapToFolderList)
-        return Observable.just(listOf())
     }
 
 }

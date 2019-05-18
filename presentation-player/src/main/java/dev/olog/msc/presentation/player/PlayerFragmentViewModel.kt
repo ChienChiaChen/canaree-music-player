@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.favorite.FavoriteEnum
@@ -11,12 +12,18 @@ import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.core.interactor.favorite.ObserveFavoriteAnimationUseCase
+import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.theme.player.theme.*
 import dev.olog.msc.shared.ui.imageview.adaptive.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PlayerFragmentViewModel @Inject constructor(
@@ -30,6 +37,22 @@ class PlayerFragmentViewModel @Inject constructor(
 
     private val processorPublisher = BehaviorSubject.create<ProcessorColors>()
     private val palettePublisher = BehaviorSubject.create<PaletteColors>()
+
+    private val favoriteLiveData = liveDataOf<FavoriteEnum>()
+
+    init {
+        viewModelScope.launch(Dispatchers.Default) {
+            observeFavoriteAnimationUseCase.execute()
+                .distinctUntilChanged()
+                .collect { favoriteLiveData.postValue((it)) }
+        }
+    }
+
+    override fun onCleared() {
+        viewModelScope.cancel()
+    }
+
+    val onFavoriteStateChanged: LiveData<FavoriteEnum> = favoriteLiveData
 
     fun observeProcessorColors(): Observable<ProcessorColors> = processorPublisher
         .map {
@@ -100,8 +123,6 @@ class PlayerFragmentViewModel @Inject constructor(
         }
         return DisplayableItem(id, MediaId.headerId("player controls id"), "")
     }
-
-    val onFavoriteStateChanged: Observable<FavoriteEnum> = observeFavoriteAnimationUseCase.execute()
 
     val skipToNextVisibility = musicPrefsUseCase
         .observeSkipToNextVisibility()

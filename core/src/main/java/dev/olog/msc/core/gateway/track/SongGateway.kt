@@ -4,6 +4,7 @@ import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.base.BaseGateway
 import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 interface SongGateway : BaseGateway<Song, Long> {
 
@@ -15,7 +16,7 @@ interface SongGateway : BaseGateway<Song, Long> {
 
     fun deleteGroup(songList: List<Song>)
 
-    fun getUneditedByParam(songId: Long): Observable<Song>
+    suspend fun getUneditedByParam(songId: Long): Flow<Song>
 
     // handles song and podcast
     suspend fun getByUri(uri: String): Song?

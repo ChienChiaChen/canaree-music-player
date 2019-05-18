@@ -12,10 +12,13 @@ import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.Sorting
+import dev.olog.msc.shared.extensions.asFlowable
 import dev.olog.msc.shared.extensions.safeGetCanonicalPath
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactive.flow.asFlow
 import java.io.File
 import javax.inject.Inject
 
@@ -388,13 +391,13 @@ internal class AppPreferencesImpl @Inject constructor(
     /*
         Must be encrypted
      */
-    override fun observeLastFmCredentials(): Observable<UserCredentials> {
+    override suspend fun observeLastFmCredentials(): Flow<UserCredentials> {
         return rxPreferences.getString(LAST_FM_USERNAME, "")
                 .asObservable()
                 .map { UserCredentials(
                         it,
                         preferences.getString(LAST_FM_PASSWORD, "")!!
-                ) }
+                ) }.asFlowable().asFlow()
     }
 
     /*

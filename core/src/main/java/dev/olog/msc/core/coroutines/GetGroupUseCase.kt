@@ -1,7 +1,5 @@
-package dev.olog.msc.core.interactor.base
+package dev.olog.msc.core.coroutines
 
-import dev.olog.msc.core.coroutines.IoDispatcher
-import dev.olog.msc.core.coroutines.ObservableFlow
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.getAll
 import dev.olog.msc.core.gateway.base.BaseGateway

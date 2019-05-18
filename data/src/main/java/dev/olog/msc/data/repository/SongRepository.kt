@@ -29,6 +29,7 @@ import dev.olog.msc.data.utils.getLong
 import dev.olog.msc.data.utils.getString
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 import java.io.File
 import javax.inject.Inject
 
@@ -178,7 +179,7 @@ internal class SongRepository @Inject constructor(
         return path
     }
 
-    override fun getUneditedByParam(songId: Long): Observable<Song> {
+    override suspend fun getUneditedByParam(songId: Long): Flow<Song> {
         return TODO()
 //        return rxContentResolver.createQuery(
 //            TrackQueries.MEDIA_STORE_URI,

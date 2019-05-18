@@ -1,19 +1,19 @@
 package dev.olog.msc.core.interactor.favorite
 
+import dev.olog.msc.core.coroutines.ComputationDispatcher
+import dev.olog.msc.core.coroutines.ObservableFlow
 import dev.olog.msc.core.entity.favorite.FavoriteEnum
-import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.FavoriteGateway
-import dev.olog.msc.core.interactor.base.ObservableUseCase
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ObserveFavoriteAnimationUseCase @Inject constructor(
-        scheduler: IoScheduler,
-        private val gateway: FavoriteGateway
+    scheduler: ComputationDispatcher,
+    private val gateway: FavoriteGateway
 
-) : ObservableUseCase<FavoriteEnum>(scheduler) {
+) : ObservableFlow<FavoriteEnum>(scheduler) {
 
-    override fun buildUseCaseObservable(): Observable<FavoriteEnum> {
+    override suspend fun buildUseCaseObservable(): Flow<FavoriteEnum> {
         return gateway.observeToggleFavorite()
     }
 }

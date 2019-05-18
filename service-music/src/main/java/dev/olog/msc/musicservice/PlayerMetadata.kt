@@ -13,8 +13,8 @@ import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.imageprovider.IImageProvider
 import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.imageprovider.getBitmapAsync
 import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.shared.MusicConstants
@@ -26,13 +26,12 @@ import javax.inject.Inject
 
 @PerService
 internal class PlayerMetadata @Inject constructor(
-        @ServiceLifecycle lifecycle: Lifecycle,
-        @ApplicationContext private val context: Context,
-        private val mediaSession: MediaSessionCompat,
-        playerLifecycle: PlayerLifecycle,
-        private val widgetClasses: WidgetClasses,
-        appPreferencesGateway: AppPreferencesGateway,
-        private val imageProvider: IImageProvider
+    @ServiceLifecycle lifecycle: Lifecycle,
+    @ApplicationContext private val context: Context,
+    private val mediaSession: MediaSessionCompat,
+    playerLifecycle: PlayerLifecycle,
+    private val widgetClasses: WidgetClasses,
+    appPreferencesGateway: AppPreferencesGateway
 
 ) : PlayerLifecycle.Listener, DefaultLifecycleObserver {
 
@@ -45,7 +44,7 @@ internal class PlayerMetadata @Inject constructor(
         lifecycle.addObserver(this)
         playerLifecycle.addListener(this)
         disposable = appPreferencesGateway.observeLockscreenArtworkEnabled()
-                .subscribe({ showLockscreenImage = it }, Throwable::printStackTrace)
+            .subscribe({ showLockscreenImage = it }, Throwable::printStackTrace)
     }
 
     override fun onPrepare(entity: MediaEntity) {
@@ -62,21 +61,21 @@ internal class PlayerMetadata @Inject constructor(
 
     private fun update(entity: MediaEntity) {
         builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, entity.mediaId.toString())
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, entity.title)
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, entity.artist)
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, entity.album)
-                .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, entity.title)
-                .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, entity.artist)
-                .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, entity.album)
-                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, entity.duration)
-                .putString(MediaMetadataCompat.METADATA_KEY_ART_URI, entity.image)
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, entity.image)
-                .putString(MusicConstants.PATH, entity.path)
-                .putLong(MusicConstants.IS_PODCAST, if (entity.isPodcast) 1 else 0)
+            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, entity.title)
+            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, entity.artist)
+            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, entity.album)
+            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, entity.title)
+            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, entity.artist)
+            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, entity.album)
+            .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, entity.duration)
+            .putString(MediaMetadataCompat.METADATA_KEY_ART_URI, entity.image)
+            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, entity.image)
+            .putString(MusicConstants.PATH, entity.path)
+            .putLong(MusicConstants.IS_PODCAST, if (entity.isPodcast) 1 else 0)
 
         if (showLockscreenImage) {
             val model = ImageModel(entity.mediaId, entity.image)
-            imageProvider.getBitmapAsync(context, model, action = { bitmap ->
+            context.getBitmapAsync(model, action = { bitmap ->
                 builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
                 mediaSession.setMetadata(builder.build())
             })
@@ -88,7 +87,7 @@ internal class PlayerMetadata @Inject constructor(
 
     }
 
-    private fun notifyWidgets(entity: MediaEntity){
+    private fun notifyWidgets(entity: MediaEntity) {
         for (clazz in widgetClasses.get()) {
             val ids = context.getAppWidgetsIdsFor(clazz)
 

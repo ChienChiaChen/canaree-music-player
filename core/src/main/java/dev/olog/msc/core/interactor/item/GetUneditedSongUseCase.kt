@@ -1,21 +1,21 @@
 package dev.olog.msc.core.interactor.item
 
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.coroutines.ComputationDispatcher
+import dev.olog.msc.core.coroutines.ObservableFlowWithParam
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.executors.IoScheduler
 import dev.olog.msc.core.gateway.track.SongGateway
-import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetUneditedSongUseCase @Inject internal constructor(
-        schedulers: IoScheduler,
-        private val gateway: SongGateway
+    schedulers: ComputationDispatcher,
+    private val gateway: SongGateway
 
-) : ObservableUseCaseWithParam<Song, MediaId>(schedulers) {
+) : ObservableFlowWithParam<Song, MediaId>(schedulers) {
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Observable<Song> {
+    override suspend fun buildUseCaseObservable(mediaId: MediaId): Flow<Song> {
         val songId = mediaId.leaf!!
         return gateway.getUneditedByParam(songId)
     }

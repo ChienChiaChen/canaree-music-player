@@ -105,7 +105,7 @@ class PlayerFragmentAdapter (
                     ?.takeUntil(RxView.detaches(view))
                     ?.subscribe(viewModel::updatePaletteColors, Throwable::printStackTrace)
 
-            bindPlayerControls(view)
+            bindPlayerControls(view, holder)
         }
 
         val view = holder.itemView
@@ -199,7 +199,7 @@ class PlayerFragmentAdapter (
 
     @SuppressLint("RxLeakedSubscription", "CheckResult")
     // using -> takeUntil(RxView.detaches(view))
-    private fun bindPlayerControls(view: View){
+    private fun bindPlayerControls(view: View, holder: DataBoundViewHolder){
 
         val waveWrapper : AudioWaveViewWrapper? = view.findViewById(R.id.waveWrapper)
 
@@ -293,9 +293,7 @@ class PlayerFragmentAdapter (
         })
 
         viewModel.onFavoriteStateChanged
-                .takeUntil(RxView.detaches(view))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(view.favorite::onNextState, Throwable::printStackTrace)
+            .subscribe(holder, view.favorite::onNextState)
 
         RxView.clicks(view.lyrics)
                 .takeUntil(RxView.detaches(view))

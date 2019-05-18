@@ -16,8 +16,8 @@ import androidx.core.content.ContextCompat
 import dagger.Lazy
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.imageprovider.IImageProvider
 import dev.olog.msc.imageprovider.ImageModel
+import dev.olog.msc.imageprovider.getBitmap
 import dev.olog.msc.musicservice.R
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
@@ -27,11 +27,10 @@ import dev.olog.msc.shared.utils.assertBackgroundThread
 import javax.inject.Inject
 
 internal open class NotificationImpl21 @Inject constructor(
-        protected val service: Service,
-        private val token: MediaSessionCompat.Token,
-        protected val notificationManager: Lazy<NotificationManager>,
-        private val classes: Classes,
-        protected val imageProvider: IImageProvider
+    protected val service: Service,
+    private val token: MediaSessionCompat.Token,
+    protected val notificationManager: Lazy<NotificationManager>,
+    private val classes: Classes
 
 ) : INotification {
 
@@ -40,39 +39,44 @@ internal open class NotificationImpl21 @Inject constructor(
     private var isCreated = false
 
     private fun createIfNeeded() {
-        if (isCreated){
+        assertBackgroundThread()
+        if (isCreated) {
             return
         }
 
         val mediaStyle = androidx.media.app.NotificationCompat.MediaStyle()
-                .setMediaSession(token)
-                .setShowActionsInCompactView(1, 2, 3)
+            .setMediaSession(token)
+            .setShowActionsInCompactView(1, 2, 3)
 
         builder.setSmallIcon(R.drawable.vd_bird_not_singing)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setColor(ContextCompat.getColor(service, R.color.dark_grey))
-                .setColorized(false)
-                .setContentIntent(buildContentIntent())
-                .setDeleteIntent(buildPendingIntent(PlaybackStateCompat.ACTION_STOP))
-                .setCategory(NotificationCompat.CATEGORY_TRANSPORT)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setStyle(mediaStyle)
-                .addAction(R.drawable.vd_not_favorite, "Add to Favorite", buildToggleFavoritePendingIntent())
-                .addAction(R.drawable.vd_skip_previous, "Previous", buildPendingIntent(PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS))
-                .addAction(R.drawable.vd_pause_big, "PlayPause", buildPendingIntent(PlaybackStateCompat.ACTION_PLAY_PAUSE))
-                .addAction(R.drawable.vd_skip_next, "Next", buildPendingIntent(PlaybackStateCompat.ACTION_SKIP_TO_NEXT))
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setColor(ContextCompat.getColor(service, R.color.dark_grey))
+            .setColorized(false)
+            .setContentIntent(buildContentIntent())
+            .setDeleteIntent(buildPendingIntent(PlaybackStateCompat.ACTION_STOP))
+            .setCategory(NotificationCompat.CATEGORY_TRANSPORT)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setStyle(mediaStyle)
+            .addAction(R.drawable.vd_not_favorite, "Add to Favorite", buildToggleFavoritePendingIntent())
+            .addAction(
+                R.drawable.vd_skip_previous,
+                "Previous",
+                buildPendingIntent(PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
+            )
+            .addAction(R.drawable.vd_pause_big, "PlayPause", buildPendingIntent(PlaybackStateCompat.ACTION_PLAY_PAUSE))
+            .addAction(R.drawable.vd_skip_next, "Next", buildPendingIntent(PlaybackStateCompat.ACTION_SKIP_TO_NEXT))
 
         extendInitialization()
 
         isCreated = true
     }
 
-    protected open fun extendInitialization(){}
+    protected open fun extendInitialization() {}
 
-    protected open fun startChronometer(bookmark: Long){
+    protected open fun startChronometer(bookmark: Long) {
     }
 
-    protected open fun stopChronometer(bookmark: Long){
+    protected open fun stopChronometer(bookmark: Long) {
     }
 
     override fun update(state: MusicNotificationState): Notification {
@@ -109,24 +113,27 @@ internal open class NotificationImpl21 @Inject constructor(
         }
     }
 
-    private fun updateFavorite(isFavorite: Boolean){
+    private fun updateFavorite(isFavorite: Boolean) {
+        assertBackgroundThread()
         val favoriteAction = builder.mActions[0]
         favoriteAction.icon = if (isFavorite) R.drawable.vd_favorite else R.drawable.vd_not_favorite
     }
 
-    protected open fun updateMetadataImpl (
-            id: Long,
-            title: SpannableString,
-            artist: String,
-            album: String,
-            image: String){
+    protected open fun updateMetadataImpl(
+        id: Long,
+        title: SpannableString,
+        artist: String,
+        album: String,
+        image: String
+    ) {
+        assertBackgroundThread()
 
         val model = ImageModel(MediaId.songId(id), image)
-        val bitmap = imageProvider.getBitmap(service, model, size = INotification.IMAGE_SIZE)
+        val bitmap = service.getBitmap(model, size = INotification.IMAGE_SIZE)
         builder.setLargeIcon(bitmap)
-                .setContentTitle(title)
-                .setContentText(artist)
-                .setSubText(album)
+            .setContentTitle(title)
+            .setContentText(artist)
+            .setSubText(album)
     }
 
     private fun buildToggleFavoritePendingIntent(): PendingIntent {
@@ -143,7 +150,8 @@ internal open class NotificationImpl21 @Inject constructor(
 
     private fun buildPendingIntent(action: Long): PendingIntent {
         return androidx.media.session.MediaButtonReceiver.buildMediaButtonPendingIntent(
-                service, ComponentName(service, androidx.media.session.MediaButtonReceiver::class.java), action)
+            service, ComponentName(service, androidx.media.session.MediaButtonReceiver::class.java), action
+        )
     }
 
     override fun cancel() {
