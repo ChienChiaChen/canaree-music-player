@@ -14,6 +14,7 @@ import dev.olog.msc.presentation.search.paging.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class SearchFragmentViewModel @Inject constructor(
@@ -65,16 +66,31 @@ internal class SearchFragmentViewModel @Inject constructor(
         searchGenresDataSource.updateFilterBy(trimmed)
     }
 
+    private fun invalidateData(){
+        searchDataSource.invalidate()
+        searchArtistsDataSource.invalidate()
+        searchAlbumsDataSource.invalidate()
+        searchFoldersDataSource.invalidate()
+        searchPlaylistsDataSource.invalidate()
+        searchGenresDataSource.invalidate()
+    }
+
     fun insertToRecent(mediaId: MediaId) = viewModelScope.launch(Dispatchers.Default){
         insertRecentUse.execute(mediaId)
     }
 
     fun deleteFromRecent(mediaId: MediaId)= viewModelScope.launch(Dispatchers.Default){
         deleteRecentSearchUseCase.execute(mediaId)
+        withContext(Dispatchers.Main){
+            invalidateData()
+        }
     }
 
     fun clearRecentSearches() = viewModelScope.launch(Dispatchers.Default){
         clearRecentSearchesUseCase.execute()
+        withContext(Dispatchers.Main){
+            invalidateData()
+        }
     }
 
     override fun onCleared() {
