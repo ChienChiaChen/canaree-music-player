@@ -72,7 +72,7 @@ internal inline fun <T> ContentResolver.queryMaybe(cursor: Cursor, mapper: (Curs
 }
 
 @Suppress("unused")
-internal fun ContentResolver.querySize(cursor: Cursor): Int {
+internal fun ContentResolver.queryFirstColumn(cursor: Cursor): Int {
     var size = 0
     cursor.moveToFirst()
     size = cursor.getInt(0)

@@ -4,8 +4,9 @@ import android.content.Context
 import android.provider.MediaStore
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.ItemRequest
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.PodcastArtist
@@ -22,7 +23,7 @@ import dev.olog.msc.data.mapper.toPodcastArtist
 import dev.olog.msc.data.repository.queries.ArtistQueries
 import dev.olog.msc.data.repository.util.ContentObserverFlow
 import dev.olog.msc.data.repository.util.queryCountRow
-import dev.olog.msc.data.repository.util.querySize
+import dev.olog.msc.data.repository.util.queryFirstColumn
 import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
@@ -53,7 +54,7 @@ internal class PodcastArtistRepository @Inject constructor(
 
     private val lastPlayedDao = appDatabase.lastPlayedPodcastArtistDao()
 
-    override fun getAll(): PageRequest<PodcastArtist> {
+    override fun getAll(): DataRequest<PodcastArtist> {
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
             cursorMapper = { it.toPodcastArtist() },
@@ -75,7 +76,7 @@ internal class PodcastArtistRepository @Inject constructor(
         )
     }
 
-    override fun getLastPlayed(): PageRequest<PodcastArtist> {
+    override fun getLastPlayed(): DataRequest<PodcastArtist> {
         val maxAllowed = 10
         return PageRequestDao(
             cursorFactory = {
@@ -98,11 +99,11 @@ internal class PodcastArtistRepository @Inject constructor(
 
     override fun canShowLastPlayed(): Boolean {
         return prefsGateway.canShowLibraryRecentPlayedVisibility() &&
-                getAll().getCount() >= 5 &&
+                getAll().getCount(Filter.NO_FILTER) >= 5 &&
                 lastPlayedDao.getCount() > 0
     }
 
-    override fun getRecentlyAdded(): PageRequest<PodcastArtist> {
+    override fun getRecentlyAdded(): DataRequest<PodcastArtist> {
         return PageRequestImpl(
             cursorFactory = { queries.getRecentlyAdded(it) },
             cursorMapper = { it.toPodcastArtist() },
@@ -113,7 +114,7 @@ internal class PodcastArtistRepository @Inject constructor(
         )
     }
 
-    override fun getPodcastListByParam(param: Long): PageRequest<Podcast> {
+    override fun getPodcastListByParam(param: Long): DataRequest<Podcast> {
         return PageRequestImpl(
             cursorFactory = { queries.getSongList(param, it) },
             cursorMapper = { it.toPodcast() },
@@ -126,11 +127,11 @@ internal class PodcastArtistRepository @Inject constructor(
         )
     }
 
-    override fun getPodcastListByParamDuration(param: Long): Int {
-        return contentResolver.querySize(queries.getSongListDuration(param))
+    override fun getPodcastListByParamDuration(param: Long, filter: Filter): Int {
+        return contentResolver.queryFirstColumn(queries.getSongListDuration(param, filter))
     }
 
-    override fun getSiblings(mediaId: MediaId): PageRequest<PodcastAlbum> {
+    override fun getSiblings(mediaId: MediaId): DataRequest<PodcastAlbum> {
         return PageRequestImpl(
             cursorFactory = { queries.getSiblings(mediaId.categoryId, it) },
             cursorMapper = { it.toPodcastAlbum() },
@@ -141,11 +142,11 @@ internal class PodcastArtistRepository @Inject constructor(
         )
     }
 
-    override fun canShowSiblings(mediaId: MediaId): Boolean {
-        return getSiblings(mediaId).getCount() > 0
+    override fun canShowSiblings(mediaId: MediaId, filter: Filter): Boolean {
+        return getSiblings(mediaId).getCount(filter) > 0
     }
 
-    override fun canShowRecentlyAdded(): Boolean {
+    override fun canShowRecentlyAdded(filter: Filter): Boolean {
         val cursor = queries.getRecentlyAdded(null)
         return prefsGateway.canShowLibraryNewVisibility() &&
                 contentResolver.queryCountRow(cursor) > 0

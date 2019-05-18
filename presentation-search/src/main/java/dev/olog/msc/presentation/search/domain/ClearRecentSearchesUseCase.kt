@@ -1,18 +1,17 @@
 package dev.olog.msc.presentation.search.domain
 
-import dev.olog.msc.core.executors.IoScheduler
+import dev.olog.msc.core.coroutines.CompletableFlow
+import dev.olog.msc.core.coroutines.ComputationDispatcher
 import dev.olog.msc.core.gateway.RecentSearchesGateway
-import dev.olog.msc.core.interactor.base.CompletableUseCase
-import io.reactivex.Completable
 import javax.inject.Inject
 
 class ClearRecentSearchesUseCase @Inject constructor(
-        scheduler: IoScheduler,
-        private val recentSearchesGateway: RecentSearchesGateway
+    scheduler: ComputationDispatcher,
+    private val recentSearchesGateway: RecentSearchesGateway
 
-) : CompletableUseCase(scheduler) {
+) : CompletableFlow(scheduler) {
 
-    override fun buildUseCaseObservable(): Completable {
+    override suspend fun buildUseCaseObservable() {
         return recentSearchesGateway.deleteAll()
     }
 }

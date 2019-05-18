@@ -5,7 +5,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.paging.PositionalDataSource
 import dev.olog.msc.core.coroutines.CustomScope
-import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Page
+import dev.olog.msc.core.entity.data.request.Request
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlin.math.abs
@@ -31,7 +33,7 @@ abstract class BaseDataSource<PresentationModel> :
 
     @CallSuper
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<PresentationModel>) {
-        if (canLoadData){
+        if (canLoadData) {
             val mainDataSize = getMainDataSize()
 
             headers.addAll(getHeaders(mainDataSize))
@@ -40,7 +42,14 @@ abstract class BaseDataSource<PresentationModel> :
 
             val result = mutableListOf<PresentationModel>()
             result.addAll(headers)
-            result.addAll(loadInternal(Page(params.requestedStartPosition, params.requestedLoadSize - headers.size)))
+            result.addAll(
+                loadInternal(
+                    Request(
+                        Page(params.requestedStartPosition, params.requestedLoadSize - headers.size),
+                        Filter.NO_FILTER
+                    )
+                )
+            )
             tryAddFooter(result, params.requestedLoadSize)
             callback.onResult(result, 0, mainDataSize + headers.size + footerSize)
         }
@@ -48,16 +57,23 @@ abstract class BaseDataSource<PresentationModel> :
 
     @CallSuper
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<PresentationModel>) {
-        if (canLoadData){
+        if (canLoadData) {
             val result = mutableListOf<PresentationModel>()
-            result.addAll(loadInternal(Page(params.startPosition - headers.size, params.loadSize)))
+            result.addAll(
+                loadInternal(
+                    Request(
+                        Page(params.startPosition - headers.size, params.loadSize),
+                        Filter.NO_FILTER
+                    )
+                )
+            )
             tryAddFooter(result, params.loadSize)
 
             callback.onResult(result)
         }
     }
 
-    private fun tryAddFooter(toList: MutableList<PresentationModel>, pageSize: Int){
+    private fun tryAddFooter(toList: MutableList<PresentationModel>, pageSize: Int) {
         if (toList.size != pageSize && footers.isNotEmpty()) {
             val diff = abs(toList.size - pageSize)
             toList.addAll(footers.take(diff))
@@ -65,7 +81,7 @@ abstract class BaseDataSource<PresentationModel> :
         }
     }
 
-    protected abstract fun loadInternal(page: Page): List<PresentationModel>
+    protected abstract fun loadInternal(page: Request): List<PresentationModel>
 
     protected open val canLoadData = true
 

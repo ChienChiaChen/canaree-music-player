@@ -4,7 +4,8 @@ import android.content.Context
 import android.provider.MediaStore
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
+import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Genre
 import dev.olog.msc.core.entity.track.Song
@@ -23,7 +24,7 @@ import dev.olog.msc.data.mapper.toSong
 import dev.olog.msc.data.repository.queries.GenreQueries
 import dev.olog.msc.data.repository.util.ContentObserverFlow
 import dev.olog.msc.data.repository.util.queryCountRow
-import dev.olog.msc.data.repository.util.querySize
+import dev.olog.msc.data.repository.util.queryFirstColumn
 import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
@@ -42,7 +43,7 @@ internal class GenreRepository @Inject constructor(
 
     private val mostPlayedDao = appDatabase.genreMostPlayedDao()
 
-    override fun getAll(): PageRequest<Genre> {
+    override fun getAll(): DataRequest<Genre> {
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
             cursorMapper = { it.toGenre(context) },
@@ -76,7 +77,7 @@ internal class GenreRepository @Inject constructor(
         )
     }
 
-    override fun getSongListByParam(param: Long): PageRequest<Song> {
+    override fun getSongListByParam(param: Long): DataRequest<Song> {
         return PageRequestImpl(
             cursorFactory = { queries.getSongList(param, it) },
             cursorMapper = { it.toSong() },
@@ -90,11 +91,11 @@ internal class GenreRepository @Inject constructor(
         )
     }
 
-    override fun getSongListByParamDuration(param: Long): Int {
-        return contentResolver.querySize(queries.getSongListDuration(param))
+    override fun getSongListByParamDuration(param: Long, filter: Filter): Int {
+        return contentResolver.queryFirstColumn(queries.getSongListDuration(param, filter))
     }
 
-    override fun getRecentlyAddedSongs(mediaId: MediaId): PageRequest<Song> {
+    override fun getRecentlyAddedSongs(mediaId: MediaId): DataRequest<Song> {
         return PageRequestImpl(
             cursorFactory = { queries.getRecentlyAddedSongs(mediaId.categoryId, it) },
             cursorMapper = { it.toSong() },
@@ -109,10 +110,10 @@ internal class GenreRepository @Inject constructor(
     }
 
     override fun canShowRecentlyAddedSongs(mediaId: MediaId): Boolean {
-        return getRecentlyAddedSongs(mediaId).getCount() > 0 && prefsGateway.getVisibleTabs()[1]
+        return getRecentlyAddedSongs(mediaId).getCount(Filter.NO_FILTER) > 0 && prefsGateway.getVisibleTabs()[1]
     }
 
-    override fun getSiblings(mediaId: MediaId): PageRequest<Genre> {
+    override fun getSiblings(mediaId: MediaId): DataRequest<Genre> {
         return PageRequestImpl(
             cursorFactory = { queries.getSiblings(mediaId.categoryId, it) },
             cursorMapper = { it.toGenre(context) },
@@ -130,11 +131,11 @@ internal class GenreRepository @Inject constructor(
         )
     }
 
-    override fun canShowSiblings(mediaId: MediaId): Boolean {
-        return getSiblings(mediaId).getCount() > 0
+    override fun canShowSiblings(mediaId: MediaId, filter: Filter): Boolean {
+        return getSiblings(mediaId).getCount(filter) > 0
     }
 
-    override fun getRelatedArtists(mediaId: MediaId): PageRequest<Artist> {
+    override fun getRelatedArtists(mediaId: MediaId): DataRequest<Artist> {
         return PageRequestImpl(
             cursorFactory = { queries.getRelatedArtists(mediaId.categoryId, it) },
             cursorMapper = { it.toArtist() },
@@ -145,8 +146,8 @@ internal class GenreRepository @Inject constructor(
         )
     }
 
-    override fun canShowRelatedArtists(mediaId: MediaId): Boolean {
-        return getRelatedArtists(mediaId).getCount() > 0 && prefsGateway.getVisibleTabs()[2]
+    override fun canShowRelatedArtists(mediaId: MediaId, filter: Filter): Boolean {
+        return getRelatedArtists(mediaId).getCount(filter) > 0 && prefsGateway.getVisibleTabs()[2]
     }
 
 
@@ -158,7 +159,7 @@ internal class GenreRepository @Inject constructor(
         return getMostPlayedSize(mediaId) > 0 && prefsGateway.getVisibleTabs()[0]
     }
 
-    override fun getMostPlayed(mediaId: MediaId): PageRequest<Song> {
+    override fun getMostPlayed(mediaId: MediaId): DataRequest<Song> {
         val maxAllowed = 10
         return PageRequestDao(
             cursorFactory = {

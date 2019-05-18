@@ -10,30 +10,30 @@ import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.R
 import dev.olog.msc.shared.utils.TextUtils
 
-internal fun Folder.toHeaderItem(resources: Resources): DisplayableItem {
+internal fun Folder.toHeaderItem(resources: Resources, listSize: Int): DisplayableItem {
 
     return DisplayableItem(
         R.layout.item_detail_item_image,
         MediaId.folderId(path),
         title,
-        subtitle = resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase(),
+        subtitle = resources.getQuantityString(R.plurals.common_plurals_song, listSize, listSize).toLowerCase(),
         image = image
     )
 
 }
 
-internal fun Playlist.toHeaderItem(resources: Resources): DisplayableItem {
-    val listSize = if (this.size == -1) {
+internal fun Playlist.toHeaderItem(resources: Resources, listSize: Int): DisplayableItem {
+    val finalListSize = if (listSize == -1) {
         ""
     } else {
-        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase()
+        resources.getQuantityString(R.plurals.common_plurals_song, listSize, listSize).toLowerCase()
     }
 
     return DisplayableItem(
         R.layout.item_detail_item_image,
         MediaId.playlistId(this.id),
         title,
-        listSize,
+        finalListSize,
         image = image
     )
 
@@ -50,13 +50,13 @@ internal fun Album.toHeaderItem(): DisplayableItem {
     )
 }
 
-internal fun Artist.toHeaderItem(resources: Resources): DisplayableItem {
-    val songs = resources.getQuantityString(R.plurals.common_plurals_song, this.songs, this.songs)
-    val albums = if (this.albums == 0) "" else {
+internal fun Artist.toHeaderItem(resources: Resources, songListSize: Int, albumListSize: Int): DisplayableItem {
+    val songs = resources.getQuantityString(R.plurals.common_plurals_song, songListSize, songListSize)
+    val albums = if (albumListSize == 0) "" else {
         "${resources.getQuantityString(
             R.plurals.common_plurals_album,
-            this.albums,
-            this.albums
+            albumListSize,
+            albumListSize
         )}${TextUtils.MIDDLE_DOT_SPACED}"
     }
 
@@ -69,30 +69,30 @@ internal fun Artist.toHeaderItem(resources: Resources): DisplayableItem {
     )
 }
 
-internal fun Genre.toHeaderItem(resources: Resources): DisplayableItem {
+internal fun Genre.toHeaderItem(resources: Resources, listSize: Int): DisplayableItem {
 
     return DisplayableItem(
         R.layout.item_detail_item_image,
         MediaId.genreId(this.id),
         name,
-        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase(),
+        resources.getQuantityString(R.plurals.common_plurals_song, listSize, listSize).toLowerCase(),
         image = image
     )
 }
 
 
-internal fun PodcastPlaylist.toHeaderItem(resources: Resources): DisplayableItem {
-    val listSize = if (this.size == -1) {
+internal fun PodcastPlaylist.toHeaderItem(resources: Resources, listSize: Int): DisplayableItem {
+    val finalListSize = if (listSize == -1) {
         ""
     } else {
-        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase()
+        resources.getQuantityString(R.plurals.common_plurals_song, listSize, listSize).toLowerCase()
     }
 
     return DisplayableItem(
         R.layout.item_detail_item_image,
         MediaId.podcastPlaylistId(this.id),
         title,
-        listSize,
+        finalListSize,
         image = image
     )
 
@@ -109,13 +109,13 @@ internal fun PodcastAlbum.toHeaderItem(): DisplayableItem {
     )
 }
 
-internal fun PodcastArtist.toHeaderItem(resources: Resources): DisplayableItem {
-    val songs = resources.getQuantityString(R.plurals.common_plurals_song, this.songs, this.songs)
-    val albums = if (this.albums == 0) "" else {
+internal fun PodcastArtist.toHeaderItem(resources: Resources, songListSize: Int, albumListSize: Int): DisplayableItem {
+    val songs = resources.getQuantityString(R.plurals.common_plurals_song, songListSize, songListSize)
+    val albums = if (albumListSize == 0) "" else {
         "${resources.getQuantityString(
             R.plurals.common_plurals_album,
-            this.albums,
-            this.albums
+            albumListSize,
+            albumListSize
         )}${TextUtils.MIDDLE_DOT_SPACED}"
     }
 

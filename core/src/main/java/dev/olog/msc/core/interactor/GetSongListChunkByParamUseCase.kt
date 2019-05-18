@@ -2,7 +2,7 @@ package dev.olog.msc.core.interactor
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
 import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
 import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
@@ -21,7 +21,7 @@ class GetSongListChunkByParamUseCase @Inject constructor(
 
 ) {
 
-    fun execute(mediaId: MediaId): PageRequest<*> {
+    fun execute(mediaId: MediaId): DataRequest<*> {
         return when (mediaId.category) {
             MediaIdCategory.FOLDERS -> folderGateway.getSongListByParam(mediaId.categoryValue)
             MediaIdCategory.PLAYLISTS -> playlistGateway.getSongListByParam(mediaId.categoryValue.toLong())

@@ -2,7 +2,6 @@ package dev.olog.msc.presentation.search.di
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
@@ -12,7 +11,7 @@ import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.search.SearchFragment
 import dev.olog.msc.presentation.search.SearchFragmentViewModel
 
-@Module(includes = [SearchFragmentModule.Binding::class])
+@Module
 class SearchFragmentModule(private val fragment: SearchFragment) {
 
     @Provides
@@ -24,12 +23,15 @@ class SearchFragmentModule(private val fragment: SearchFragment) {
     fun provideRecycledViewPool() = androidx.recyclerview.widget.RecyclerView.RecycledViewPool()
 
     @Module
-    interface Binding {
+    companion object {
 
-        @Binds
+        @Provides
+        @JvmStatic
         @IntoMap
         @ViewModelKey(SearchFragmentViewModel::class)
-        fun provideViewModel(factory: SearchFragmentViewModel): ViewModel
+        internal fun provideViewModel(viewModel: SearchFragmentViewModel): ViewModel {
+            return viewModel
+        }
 
     }
 

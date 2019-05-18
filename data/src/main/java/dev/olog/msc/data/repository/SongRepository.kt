@@ -11,8 +11,8 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.core.util.getOrDefault
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.ItemRequest
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
+import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
@@ -66,7 +66,7 @@ internal class SongRepository @Inject constructor(
     private val contentResolver = context.contentResolver
     private val queries = TrackQueries(prefsGateway, false, contentResolver)
 
-    override fun getAll(): PageRequest<Song> {
+    override fun getAll(): DataRequest<Song> {
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
             cursorMapper = { it.toSong() },

@@ -5,10 +5,11 @@ import dagger.android.AndroidInjector
 import dev.olog.msc.core.dagger.scope.PerFragment
 import dev.olog.msc.presentation.search.SearchFragment
 
-@Subcomponent(modules = arrayOf(
-        SearchFragmentModule::class,
-        SearchFragmentViewModelModule::class
-))
+@Subcomponent(
+    modules = arrayOf(
+        SearchFragmentModule::class
+    )
+)
 @PerFragment
 interface SearchFragmentSubComponent : AndroidInjector<SearchFragment> {
 

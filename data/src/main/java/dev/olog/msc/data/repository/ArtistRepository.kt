@@ -4,8 +4,9 @@ import android.content.Context
 import android.provider.MediaStore.Audio.Media
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.ItemRequest
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.track.Album
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Song
@@ -21,7 +22,7 @@ import dev.olog.msc.data.mapper.toArtist
 import dev.olog.msc.data.mapper.toSong
 import dev.olog.msc.data.repository.queries.ArtistQueries
 import dev.olog.msc.data.repository.util.ContentObserverFlow
-import dev.olog.msc.data.repository.util.querySize
+import dev.olog.msc.data.repository.util.queryFirstColumn
 import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
@@ -52,7 +53,7 @@ internal class ArtistRepository @Inject constructor(
 
     private val lastPlayedDao = appDatabase.lastPlayedArtistDao()
 
-    override fun getAll(): PageRequest<Artist> {
+    override fun getAll(): DataRequest<Artist> {
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
             cursorMapper = { it.toArtist() },
@@ -74,7 +75,7 @@ internal class ArtistRepository @Inject constructor(
         )
     }
 
-    override fun getLastPlayed(): PageRequest<Artist> {
+    override fun getLastPlayed(): DataRequest<Artist> {
         val maxAllowed = 10
         return PageRequestDao(
             cursorFactory = {
@@ -97,11 +98,11 @@ internal class ArtistRepository @Inject constructor(
 
     override fun canShowLastPlayed(): Boolean {
         return prefsGateway.canShowLibraryRecentPlayedVisibility() &&
-                getAll().getCount() >= 5 &&
+                getAll().getCount(Filter.NO_FILTER) >= 5 &&
                 lastPlayedDao.getCount() > 0
     }
 
-    override fun getRecentlyAdded(): PageRequest<Artist> {
+    override fun getRecentlyAdded(): DataRequest<Artist> {
         return PageRequestImpl(
             cursorFactory = { queries.getRecentlyAdded(it) },
             cursorMapper = { it.toArtist() },
@@ -112,7 +113,12 @@ internal class ArtistRepository @Inject constructor(
         )
     }
 
-    override fun getSongListByParam(param: Long): PageRequest<Song> {
+    override fun canShowRecentlyAdded(filter: Filter): Boolean {
+        return prefsGateway.canShowLibraryNewVisibility() &&
+                getRecentlyAdded().getCount(filter) > 0
+    }
+
+    override fun getSongListByParam(param: Long): DataRequest<Song> {
         return PageRequestImpl(
             cursorFactory = { queries.getSongList(param, it) },
             cursorMapper = { it.toSong() },
@@ -126,11 +132,11 @@ internal class ArtistRepository @Inject constructor(
         )
     }
 
-    override fun getSongListByParamDuration(param: Long): Int {
-        return contentResolver.querySize(queries.getSongListDuration(param))
+    override fun getSongListByParamDuration(param: Long, filter: Filter): Int {
+        return contentResolver.queryFirstColumn(queries.getSongListDuration(param, filter))
     }
 
-    override fun getSiblings(mediaId: MediaId): PageRequest<Album> {
+    override fun getSiblings(mediaId: MediaId): DataRequest<Album> {
         return PageRequestImpl(
             cursorFactory = { queries.getSiblings(mediaId.categoryId, it) },
             cursorMapper = { it.toAlbum() },
@@ -141,13 +147,8 @@ internal class ArtistRepository @Inject constructor(
         )
     }
 
-    override fun canShowSiblings(mediaId: MediaId): Boolean {
-        return getSiblings(mediaId).getCount() > 0
-    }
-
-    override fun canShowRecentlyAdded(): Boolean {
-        return prefsGateway.canShowLibraryNewVisibility() &&
-                getRecentlyAdded().getCount() > 0
+    override fun canShowSiblings(mediaId: MediaId, filter: Filter): Boolean {
+        return getSiblings(mediaId).getCount(filter) > 0
     }
 
     override suspend fun addLastPlayed(id: Long) {

@@ -1,141 +1,84 @@
 package dev.olog.msc.presentation.search
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.interactor.all.GetAllAlbumsUseCase
-import dev.olog.msc.core.interactor.all.GetAllArtistsUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.search.domain.ClearRecentSearchesUseCase
 import dev.olog.msc.presentation.search.domain.DeleteRecentSearchUseCase
 import dev.olog.msc.presentation.search.domain.InsertRecentSearchUseCase
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.Singles
-import io.reactivex.rxkotlin.addTo
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
-import me.xdrop.fuzzywuzzy.FuzzySearch
-import me.xdrop.fuzzywuzzy.model.ExtractedResult
+import dev.olog.msc.presentation.search.paging.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SearchFragmentViewModel @Inject constructor(
-        private val queryText: MutableLiveData<String>,
-        val searchData: LiveData<Pair<MutableMap<SearchFragmentType, MutableList<DisplayableItem>>, String>>,
-        private val searchHeaders: SearchFragmentHeaders,
+internal class SearchFragmentViewModel @Inject constructor(
         private val insertRecentUse: InsertRecentSearchUseCase,
         private val deleteRecentSearchUseCase: DeleteRecentSearchUseCase,
         private val clearRecentSearchesUseCase: ClearRecentSearchesUseCase,
-        private val getAllArtistsUseCase: GetAllArtistsUseCase,
-        private val getAllAlbumsUseCase: GetAllAlbumsUseCase
+        private val searchDataSource: SearchDataSourceFactory,
+        private val searchArtistsDataSource: SearchArtistsDataSourceFactory,
+        private val searchAlbumsDataSource: SearchAlbumsDataSourceFactory,
+        private val searchFoldersDataSource: SearchFoldersDataSourceFactory,
+        private val searchPlaylistsDataSource: SearchPlaylistsDataSourceFactory,
+        private val searchGenresDataSource: SearchGenresDataSourceFactory
 
 ) : ViewModel() {
 
-    private val subscriptions = CompositeDisposable()
+    val data : LiveData<PagedList<DisplayableItem>>
+    val albumsData : LiveData<PagedList<DisplayableItem>>
+    val artistsData : LiveData<PagedList<DisplayableItem>>
+    val foldersData : LiveData<PagedList<DisplayableItem>>
+    val playlistData : LiveData<PagedList<DisplayableItem>>
+    val genreData : LiveData<PagedList<DisplayableItem>>
 
-    fun setNewQuery(newQuery: String){
-        queryText.value = newQuery.trim()
+    init {
+        val config = PagedList.Config.Builder()
+            .setPageSize(20)
+            .setInitialLoadSizeHint(20)
+            .setEnablePlaceholders(true)
+            .build()
+        val miniConfig = PagedList.Config.Builder()
+            .setInitialLoadSizeHint(8)
+            .setPageSize(4)
+            .setEnablePlaceholders(true)
+            .build()
+        data = LivePagedListBuilder(searchDataSource, config).build()
+        albumsData = LivePagedListBuilder(searchAlbumsDataSource, miniConfig).build()
+        artistsData = LivePagedListBuilder(searchArtistsDataSource, miniConfig).build()
+        foldersData = LivePagedListBuilder(searchFoldersDataSource, miniConfig).build()
+        genreData = LivePagedListBuilder(searchGenresDataSource, miniConfig).build()
+        playlistData = LivePagedListBuilder(searchPlaylistsDataSource, miniConfig).build()
     }
 
-    fun getBestMatch(query: String): Single<String> = runBlocking{
-        Singles.zip(
-                getAllArtistsUseCase.execute().asObservable().firstOrError(),
-                getAllAlbumsUseCase.execute().asObservable().firstOrError()
-        ) { artists, albums -> listOf(
-                artists.map { it.name },
-                albums.map { it.title }
-        ) }
-                .flattenAsFlowable { it }
-                .parallel()
-                .map { extractBest(query, it) }
-                .sequential()
-                .toList()
-                .map { list -> list.filter { it.score >= 75 }.maxBy { it.score }?.string ?: ""}
-                .observeOn(AndroidSchedulers.mainThread())
+    fun updateFilter(filter: String){
+        val trimmed = filter.trim()
+        searchDataSource.updateFilterBy(trimmed)
+        searchArtistsDataSource.updateFilterBy(trimmed)
+        searchAlbumsDataSource.updateFilterBy(trimmed)
+        searchFoldersDataSource.updateFilterBy(trimmed)
+        searchPlaylistsDataSource.updateFilterBy(trimmed)
+        searchGenresDataSource.updateFilterBy(trimmed)
     }
 
-    private fun extractBest(query: String, list: List<String>): ExtractedResult {
-        return FuzzySearch.extractOne(query, list)
-    }
-
-    fun adjustDataMap(data: MutableMap<SearchFragmentType, MutableList<DisplayableItem>>)
-            : MutableMap<SearchFragmentType, MutableList<DisplayableItem>>{
-
-        val map = data.toMutableMap()
-        map[SearchFragmentType.ALBUMS] = adjustAlbums(data[SearchFragmentType.ALBUMS]!!)
-        map[SearchFragmentType.ARTISTS] = adjustArtists(data[SearchFragmentType.ARTISTS]!!)
-        map[SearchFragmentType.PLAYLISTS] = adjustPlaylists(data[SearchFragmentType.PLAYLISTS]!!)
-        map[SearchFragmentType.FOLDERS] = adjustFolders(data[SearchFragmentType.FOLDERS]!!)
-        map[SearchFragmentType.GENRES] = adjustGenres(data[SearchFragmentType.GENRES]!!)
-        map[SearchFragmentType.SONGS] = adjustSongs(data[SearchFragmentType.SONGS]!!)
-        return map
-    }
-
-    private fun adjustAlbums(list: MutableList<DisplayableItem>): MutableList<DisplayableItem> {
-        return if (list.isNotEmpty()){
-            val size = list.size
-            return searchHeaders.albumsHeaders(size)
-        } else mutableListOf()
-    }
-
-    private fun adjustArtists(list: MutableList<DisplayableItem>): MutableList<DisplayableItem>{
-        return if (list.isNotEmpty()){
-            val size = list.size
-            searchHeaders.artistsHeaders(size)
-        } else mutableListOf()
-    }
-
-    private fun adjustFolders(list: MutableList<DisplayableItem>): MutableList<DisplayableItem>{
-        return if (list.isNotEmpty()){
-            val size = list.size
-            searchHeaders.foldersHeaders(size)
-        } else mutableListOf()
-    }
-
-    private fun adjustPlaylists(list: MutableList<DisplayableItem>): MutableList<DisplayableItem>{
-        return if (list.isNotEmpty()){
-            val size = list.size
-            searchHeaders.playlistsHeaders(size)
-        } else mutableListOf()
-    }
-
-    private fun adjustGenres(list: MutableList<DisplayableItem>): MutableList<DisplayableItem>{
-        return if (list.isNotEmpty()){
-            val size = list.size
-            searchHeaders.genreHeaders(size)
-        } else mutableListOf()
-    }
-
-    private fun adjustSongs(list: MutableList<DisplayableItem>): MutableList<DisplayableItem>{
-        return if (list.isNotEmpty()){
-            val copy = list.toMutableList()
-            copy.add(0, searchHeaders.songsHeaders(list.size))
-            copy
-        } else mutableListOf()
-    }
-
-    fun insertToRecent(mediaId: MediaId){
+    fun insertToRecent(mediaId: MediaId) = viewModelScope.launch(Dispatchers.Default){
         insertRecentUse.execute(mediaId)
-                .subscribe({}, Throwable::printStackTrace)
-                .addTo(subscriptions)
     }
 
-    fun deleteFromRecent(mediaId: MediaId){
+    fun deleteFromRecent(mediaId: MediaId)= viewModelScope.launch(Dispatchers.Default){
         deleteRecentSearchUseCase.execute(mediaId)
-                .subscribe({}, Throwable::printStackTrace)
-                .addTo(subscriptions)
     }
 
-    fun clearRecentSearches() {
+    fun clearRecentSearches() = viewModelScope.launch(Dispatchers.Default){
         clearRecentSearchesUseCase.execute()
-                .subscribe({}, Throwable::printStackTrace)
-                .addTo(subscriptions)
     }
 
     override fun onCleared() {
-        subscriptions.clear()
+        viewModelScope.cancel()
     }
 
 }

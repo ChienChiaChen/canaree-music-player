@@ -1,11 +1,12 @@
 package dev.olog.msc.core.gateway.base
 
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
+import dev.olog.msc.core.entity.data.request.Filter
 
 
 interface HasRecentlyAdded<T>{
 
-    fun getRecentlyAdded(): PageRequest<T>
-    fun canShowRecentlyAdded(): Boolean
+    fun getRecentlyAdded(): DataRequest<T>
+    fun canShowRecentlyAdded(filter: Filter): Boolean
 
 }

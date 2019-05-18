@@ -4,7 +4,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.paging.DataSource
 import dev.olog.msc.core.coroutines.merge
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
-import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.presentation.base.model.DisplayableItem
@@ -42,7 +43,7 @@ internal class SongDataSource @Inject constructor(
     }
 
     override fun getMainDataSize(): Int {
-        return pageRequest.getCount()
+        return pageRequest.getCount(Filter.NO_FILTER)
     }
 
     override fun getHeaders(mainListSize: Int): List<DisplayableItem> {
@@ -54,7 +55,7 @@ internal class SongDataSource @Inject constructor(
 
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun loadInternal(page: Page): List<DisplayableItem> {
+    override fun loadInternal(page: Request): List<DisplayableItem> {
         return pageRequest.getPage(page)
             .map { it.toTabDisplayableItem() }
     }

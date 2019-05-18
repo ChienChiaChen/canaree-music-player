@@ -2,8 +2,10 @@ package dev.olog.msc.data.entity.custom
 
 import android.content.ContentResolver
 import android.database.Cursor
-import dev.olog.msc.core.entity.Page
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Page
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.data.repository.util.queryAll
 import dev.olog.msc.data.repository.util.queryCountRow
 import dev.olog.msc.shared.utils.assertBackgroundThread
@@ -13,30 +15,34 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 
 internal class PageRequestDao<T>(
-    private val cursorFactory: (Page) -> Cursor,
+    private val cursorFactory: (Request) -> Cursor,
     private val cursorMapper: CursorMapper<T>,
-    private val listMapper: (List<T>, Page) -> List<T>,
+    private val listMapper: (List<T>, Request) -> List<T>,
     private val contentResolver: ContentResolver,
     private val changeNotification: suspend () -> Flow<List<*>>,
     private val overrideSize: Int = Int.MIN_VALUE
-) : PageRequest<T> {
+) : DataRequest<T> {
 
-    override fun getPage(page: Page): List<T> {
+    override fun getPage(request: Request): List<T> {
         assertBackgroundThread()
-        val list = contentResolver.queryAll(cursorFactory(page), cursorMapper, null)
-        return listMapper(list, page)
+        val list = contentResolver.queryAll(cursorFactory(request), cursorMapper, null)
+        return listMapper(list, request)
     }
 
-    override fun getCount(): Int {
+    override fun getCount(filter: Filter): Int {
         assertBackgroundThread()
-        if (overrideSize == Int.MIN_VALUE){
-            return contentResolver.queryCountRow(cursorFactory(Page(0, Int.MAX_VALUE)))
+        if (overrideSize == Int.MIN_VALUE) {
+            return contentResolver.queryCountRow(
+                cursorFactory(
+                    Request(Page.NO_PAGING, filter)
+                )
+            )
         } else {
             return overrideSize
         }
     }
 
-    override suspend fun observePage(page: Page): Flow<List<T>> {
+    override suspend fun observePage(page: Request): Flow<List<T>> {
 //        contentObserverFlow.createQuery<T>(cursorFactory, page, mediaStoreUri, true)
 //            .mapToList { cursorMapper(it) }
 //            .map {

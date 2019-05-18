@@ -3,11 +3,19 @@ package dev.olog.msc.data.db
 import androidx.room.*
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.SearchResult
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Page
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.core.entity.track.*
+import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
+import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
+import dev.olog.msc.core.gateway.podcast.PodcastGateway
+import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.track.*
 import dev.olog.msc.data.entity.RecentSearchesEntity
 import dev.olog.msc.shared.RecentSearchesTypes.ALBUM
 import dev.olog.msc.shared.RecentSearchesTypes.ARTIST
@@ -19,237 +27,323 @@ import dev.olog.msc.shared.RecentSearchesTypes.PODCAST_ALBUM
 import dev.olog.msc.shared.RecentSearchesTypes.PODCAST_ARTIST
 import dev.olog.msc.shared.RecentSearchesTypes.PODCAST_PLAYLIST
 import dev.olog.msc.shared.RecentSearchesTypes.SONG
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.rxkotlin.toFlowable
+import dev.olog.msc.shared.utils.assertBackgroundThread
 
 @Dao
 internal abstract class RecentSearchesDao {
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM recent_searches
         ORDER BY insertionTime DESC
         LIMIT 50
-    """)
-    internal abstract fun getAllImpl(): Flowable<List<RecentSearchesEntity>>
+    """
+    )
+    internal abstract fun getAllImpl(): List<RecentSearchesEntity>
 
-    internal fun getAll(songList: Single<List<Song>>,
-               albumList: Single<List<Album>>,
-               artistList: Single<List<Artist>>,
-               playlistList: Single<List<Playlist>>,
-               genreList: Single<List<Genre>>,
-               folderList: Single<List<Folder>>,
-               podcastList: Single<List<Podcast>>,
-               podcastPlaylistList: Single<List<PodcastPlaylist>>,
-               podcastAlbumList: Single<List<PodcastAlbum>>,
-               podcastArtistList: Single<List<PodcastArtist>>) : Observable<List<SearchResult>> {
+    internal fun getAll(
+        songGateway: SongGateway,
+        albumGateway: AlbumGateway,
+        artistGateway: ArtistGateway,
+        playlistGateway: PlaylistGateway,
+        genreGateway: GenreGateway,
+        folderGateway: FolderGateway,
+        podcastGateway: PodcastGateway,
+        podcastPlaylistGateway: PodcastPlaylistGateway,
+        podcastAlbumGateway: PodcastAlbumGateway,
+        podcastArtistList: PodcastArtistGateway
+    ): List<SearchResult> {
+        assertBackgroundThread()
 
-        return getAllImpl()
-                .toObservable()
-                .flatMapSingle {  all -> all.toFlowable().concatMapMaybe { recentEntity ->
-                        when (recentEntity.dataType) {
-                            SONG -> songList.flattenAsFlowable { it }
-                                    .filter { it.id == recentEntity.itemId }
-                                    .map { searchSongMapper(recentEntity, it) }
-                                    .firstElement()
-                            ALBUM -> albumList.flattenAsFlowable { it }
-                                    .filter { it.id == recentEntity.itemId }
-                                    .map { searchAlbumMapper(recentEntity, it) }
-                                    .firstElement()
-                            ARTIST -> artistList.flattenAsFlowable { it }
-                                    .filter { it.id == recentEntity.itemId }
-                                    .map { searchArtistMapper(recentEntity, it) }
-                                    .firstElement()
-                            PLAYLIST -> playlistList.flattenAsFlowable { it }
-                                    .filter { it.id == recentEntity.itemId }
-                                    .map { searchPlaylistMapper(recentEntity, it) }
-                                    .firstElement()
-                            GENRE -> genreList.flattenAsFlowable { it }
-                                    .filter { it.id == recentEntity.itemId }
-                                    .map { searchGenreMapper(recentEntity, it) }
-                                    .firstElement()
-                            FOLDER -> folderList.flattenAsFlowable { it }
-                                    .filter { it.path.hashCode().toLong() == recentEntity.itemId }
-                                    .map { searchFolderMapper(recentEntity, it) }
-                                    .firstElement()
-                            PODCAST -> podcastList.flattenAsFlowable { it }
-                                    .filter { it.id == recentEntity.itemId }
-                                    .map { searchPodcastMapper(recentEntity, it) }
-                                    .firstElement()
-                            PODCAST_PLAYLIST -> podcastPlaylistList.flattenAsFlowable { it }
-                                    .filter { it.id == recentEntity.itemId }
-                                    .map { searchPodcastPlaylistMapper(recentEntity, it) }
-                                    .firstElement()
-                            PODCAST_ALBUM -> podcastAlbumList.flattenAsFlowable { it }
-                                    .filter { it.id == recentEntity.itemId }
-                                    .map { searchPodcastAlbumMapper(recentEntity, it) }
-                                    .firstElement()
-                            PODCAST_ARTIST -> podcastArtistList.flattenAsFlowable { it }
-                                    .filter { it.id == recentEntity.itemId }
-                                    .map { searchPodcastArtistMapper(recentEntity, it) }
-                                    .firstElement()
-                            else -> throw IllegalArgumentException("invalid recent element type ${recentEntity.dataType}")
-                        } }.toList()
+        val recentSearches = getAllImpl()
+
+        val result = mutableListOf<Pair<SearchResult, Long>>()
+        for ((key, value) in recentSearches.groupBy { it.dataType }) {
+            when (key) {
+                SONG -> {
+                    val songs = songGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
+                    result.addAll(value.map { search ->
+                        searchSongMapper(
+                            search,
+                            songs.first { it.id == search.itemId }
+                        ) to search.insertionTime
+                    })
                 }
+                ALBUM -> {
+                    val albums = albumGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
+                    result.addAll(value.map { search ->
+                        searchAlbumMapper(
+                            search,
+                            albums.first { it.id == search.itemId }
+                        ) to search.insertionTime
+                    })
+                }
+                ARTIST -> {
+                    val artists = artistGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
+                    result.addAll(value.map { search ->
+                        searchArtistMapper(
+                            search,
+                            artists.first { it.id == search.itemId }
+                        ) to search.insertionTime
+                    })
+                }
+                PLAYLIST -> {
+                    val playlists = playlistGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
+                    result.addAll(value.map { search ->
+                        searchPlaylistMapper(
+                            search,
+                            playlists.first { it.id == search.itemId }
+                        ) to search.insertionTime
+                    })
+                }
+                GENRE -> {
+                    val genres = genreGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
+                    result.addAll(value.map { search ->
+                        searchGenreMapper(
+                            search,
+                            genres.first { it.id == search.itemId }
+                        ) to search.insertionTime
+                    })
+                }
+                FOLDER -> {
+                    val folders = folderGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
+                    result.addAll(value.map { search ->
+                        searchFolderMapper(
+                            search,
+                            folders.first { it.path.hashCode().toLong() == search.itemId }
+                        ) to search.insertionTime
+                    })
+                }
+                PODCAST -> {
+                    val podcasts = podcastGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
+                    result.addAll(value.map { search ->
+                        searchPodcastMapper(
+                            search,
+                            podcasts.first { it.id == search.itemId }
+                        ) to search.insertionTime
+                    })
+                }
+                PODCAST_PLAYLIST -> {
+                    val podcastsPlaylist =
+                        podcastPlaylistGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
+                    result.addAll(value.map { search ->
+                        searchPodcastPlaylistMapper(
+                            search,
+                            podcastsPlaylist.first { it.id == search.itemId }
+                        ) to search.insertionTime
+                    })
+                }
+                PODCAST_ALBUM -> {
+                    val podcastsAlbum =
+                        podcastAlbumGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
+                    result.addAll(value.map { search ->
+                        searchPodcastAlbumMapper(
+                            search,
+                            podcastsAlbum.first { it.id == search.itemId }
+                        ) to search.insertionTime
+                    })
+                }
+                PODCAST_ARTIST -> {
+                    val podcastsArtist =
+                        podcastArtistList.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
+                    result.addAll(value.map { search ->
+                        searchPodcastArtistMapper(
+                            search,
+                            podcastsArtist.first { it.id == search.itemId }
+                        ) to search.insertionTime
+                    })
+                }
+                else -> throw IllegalArgumentException("invalid recent element type ${key}")
+            }
+        }
+        return result.sortedByDescending { it.second }.map { it.first }
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    internal abstract fun insertImpl(recent: RecentSearchesEntity)
+    internal abstract suspend fun insertImpl(recent: RecentSearchesEntity)
 
     @Delete
-    internal abstract fun deleteImpl(recentSearch: RecentSearchesEntity)
+    internal abstract suspend fun deleteImpl(recentSearch: RecentSearchesEntity)
 
     @Query("DELETE FROM recent_searches WHERE dataType = :dataType AND itemId = :itemId")
-    internal abstract fun deleteImpl(dataType: Int, itemId: Long)
+    internal abstract suspend fun deleteImpl(dataType: Int, itemId: Long)
 
     @Query("DELETE FROM recent_searches")
-    internal abstract fun deleteAllImpl()
+    internal abstract suspend fun deleteAllImpl()
 
-    internal open fun deleteSong(itemId: Long): Completable {
-        return Completable.fromCallable { deleteImpl(SONG, itemId) }
+    internal open suspend fun deleteSong(itemId: Long) {
+        deleteImpl(SONG, itemId)
     }
 
-    internal open fun deleteAlbum(itemId: Long): Completable {
-        return Completable.fromCallable { deleteImpl(ALBUM, itemId) }
+    internal open suspend fun deleteAlbum(itemId: Long) {
+        deleteImpl(ALBUM, itemId)
     }
 
-    internal open fun deleteArtist(itemId: Long): Completable {
-        return Completable.fromCallable { deleteImpl(ARTIST, itemId) }
+    internal open suspend fun deleteArtist(itemId: Long) {
+        deleteImpl(ARTIST, itemId)
     }
 
-    internal open fun deletePlaylist(itemId: Long): Completable {
-        return Completable.fromCallable { deleteImpl(PLAYLIST, itemId) }
+    internal open suspend fun deletePlaylist(itemId: Long) {
+        deleteImpl(PLAYLIST, itemId)
     }
 
-    internal open fun deleteGenre(itemId: Long): Completable {
-        return Completable.fromCallable { deleteImpl(GENRE, itemId) }
+    internal open suspend fun deleteGenre(itemId: Long) {
+        deleteImpl(GENRE, itemId)
     }
 
-    internal open fun deleteFolder(itemId: Long): Completable {
-        return Completable.fromCallable { deleteImpl(FOLDER, itemId) }
+    internal open suspend fun deleteFolder(itemId: Long) {
+        deleteImpl(FOLDER, itemId)
     }
 
-    internal open fun deletePodcast(podcastid: Long): Completable {
-        return Completable.fromCallable { deleteImpl(PODCAST, podcastid) }
+    internal open suspend fun deletePodcast(podcastid: Long) {
+        deleteImpl(PODCAST, podcastid)
     }
 
-    internal open fun deletePodcastPlaylist(playlistId: Long): Completable {
-        return Completable.fromCallable { deleteImpl(PODCAST_PLAYLIST, playlistId) }
+    internal open suspend fun deletePodcastPlaylist(playlistId: Long) {
+        deleteImpl(PODCAST_PLAYLIST, playlistId)
     }
 
-    internal open fun deletePodcastArtist(artistId: Long): Completable {
-        return Completable.fromCallable { deleteImpl(PODCAST_ARTIST, artistId) }
+    internal open suspend fun deletePodcastArtist(artistId: Long) {
+        deleteImpl(PODCAST_ARTIST, artistId)
     }
 
-    internal open fun deletePodcastAlbum(albumId: Long): Completable {
-        return Completable.fromCallable { deleteImpl(PODCAST_ALBUM, albumId) }
+    internal open suspend fun deletePodcastAlbum(albumId: Long) {
+        deleteImpl(PODCAST_ALBUM, albumId)
     }
 
-    internal open fun deleteAll(): Completable {
-        return Completable.fromCallable { deleteAllImpl() }
+    internal open suspend fun deleteAll() {
+        deleteAllImpl()
     }
 
-    internal open fun insertSong(songId: Long): Completable{
-        return deleteSong(songId)
-                .andThen { insertImpl(RecentSearchesEntity(dataType = SONG, itemId = songId)) }
+    @Transaction
+    internal open suspend fun insertSong(songId: Long) {
+        deleteSong(songId)
+        insertImpl(RecentSearchesEntity(dataType = SONG, itemId = songId))
     }
 
-    internal open fun insertAlbum(albumId: Long): Completable{
-        return deleteAlbum(albumId)
-                .andThen { insertImpl(RecentSearchesEntity(dataType = ALBUM, itemId = albumId)) }
+    @Transaction
+    internal open suspend fun insertAlbum(albumId: Long) {
+        deleteAlbum(albumId)
+        insertImpl(RecentSearchesEntity(dataType = ALBUM, itemId = albumId))
     }
 
-    internal open fun insertArtist(artistId: Long): Completable{
-        return deleteArtist(artistId)
-                .andThen { insertImpl(RecentSearchesEntity(dataType = ARTIST, itemId = artistId)) }
+    @Transaction
+    internal open suspend fun insertArtist(artistId: Long) {
+        deleteArtist(artistId)
+        insertImpl(RecentSearchesEntity(dataType = ARTIST, itemId = artistId))
     }
 
-    internal open fun insertPlaylist(playlistId: Long): Completable{
-        return deletePlaylist(playlistId)
-                .andThen { insertImpl(RecentSearchesEntity(dataType = PLAYLIST, itemId = playlistId)) }
+    @Transaction
+    internal open suspend fun insertPlaylist(playlistId: Long) {
+        deletePlaylist(playlistId)
+        insertImpl(RecentSearchesEntity(dataType = PLAYLIST, itemId = playlistId))
     }
 
-    internal open fun insertGenre(genreId: Long): Completable{
-        return deleteGenre(genreId)
-                .andThen { insertImpl(RecentSearchesEntity(dataType = GENRE, itemId = genreId)) }
+    @Transaction
+    internal open suspend fun insertGenre(genreId: Long) {
+        deleteGenre(genreId)
+        insertImpl(RecentSearchesEntity(dataType = GENRE, itemId = genreId))
     }
 
-    internal open fun insertFolder(folderId: Long): Completable{
-        return deleteFolder(folderId)
-                .andThen { insertImpl(RecentSearchesEntity(dataType = FOLDER, itemId = folderId)) }
+    @Transaction
+    internal open suspend fun insertFolder(folderId: Long) {
+        deleteFolder(folderId)
+        insertImpl(RecentSearchesEntity(dataType = FOLDER, itemId = folderId))
     }
 
 
-    internal open fun insertPodcast(podcastId: Long): Completable{
-        return deletePodcast(podcastId)
-                .andThen { insertImpl(RecentSearchesEntity(dataType = PODCAST, itemId = podcastId)) }
+    @Transaction
+    internal open suspend fun insertPodcast(podcastId: Long) {
+        deletePodcast(podcastId)
+        insertImpl(RecentSearchesEntity(dataType = PODCAST, itemId = podcastId))
     }
 
-    internal open fun insertPodcastPlaylist(playlistId: Long): Completable{
-        return deletePodcastPlaylist(playlistId)
-                .andThen { insertImpl(RecentSearchesEntity(dataType = PODCAST_PLAYLIST, itemId = playlistId)) }
+    internal open suspend fun insertPodcastPlaylist(playlistId: Long) {
+        deletePodcastPlaylist(playlistId)
+        insertImpl(RecentSearchesEntity(dataType = PODCAST_PLAYLIST, itemId = playlistId))
     }
 
-    internal open fun insertPodcastAlbum(albumId: Long): Completable{
-        return deletePodcastAlbum(albumId)
-                .andThen { insertImpl(RecentSearchesEntity(dataType = PODCAST_ALBUM, itemId = albumId)) }
+    internal open suspend fun insertPodcastAlbum(albumId: Long) {
+        deletePodcastAlbum(albumId)
+        insertImpl(RecentSearchesEntity(dataType = PODCAST_ALBUM, itemId = albumId))
     }
 
-    internal open fun insertPodcastArtist(artistId: Long): Completable{
-        return deletePodcastArtist(artistId)
-                .andThen { insertImpl(RecentSearchesEntity(dataType = PODCAST_ARTIST, itemId = artistId)) }
+    internal open suspend fun insertPodcastArtist(artistId: Long) {
+        deletePodcastArtist(artistId)
+        insertImpl(RecentSearchesEntity(dataType = PODCAST_ARTIST, itemId = artistId))
     }
 
-    private fun searchSongMapper(recentSearch: RecentSearchesEntity, song: Song) : SearchResult {
-        return SearchResult(MediaId.songId(song.id), recentSearch.dataType,
-                song.title, song.image)
+    private fun searchSongMapper(recentSearch: RecentSearchesEntity, song: Song): SearchResult {
+        return SearchResult(
+            MediaId.songId(song.id), recentSearch.dataType,
+            song.title, song.image
+        )
     }
 
-    private fun searchAlbumMapper(recentSearch: RecentSearchesEntity, album: Album) : SearchResult {
-        return SearchResult(MediaId.albumId(album.id), recentSearch.dataType,
-                album.title, album.image)
+    private fun searchAlbumMapper(recentSearch: RecentSearchesEntity, album: Album): SearchResult {
+        return SearchResult(
+            MediaId.albumId(album.id), recentSearch.dataType,
+            album.title, album.image
+        )
     }
 
-    private fun searchArtistMapper(recentSearch: RecentSearchesEntity, artist: Artist) : SearchResult {
-        return SearchResult(MediaId.artistId(artist.id), recentSearch.dataType,
-                artist.name, artist.image)
+    private fun searchArtistMapper(recentSearch: RecentSearchesEntity, artist: Artist): SearchResult {
+        return SearchResult(
+            MediaId.artistId(artist.id), recentSearch.dataType,
+            artist.name, artist.image
+        )
     }
 
-    private fun searchPlaylistMapper(recentSearch: RecentSearchesEntity, playlist: Playlist) : SearchResult {
-        return SearchResult(MediaId.playlistId(playlist.id), recentSearch.dataType,
-                playlist.title, playlist.image)
+    private fun searchPlaylistMapper(recentSearch: RecentSearchesEntity, playlist: Playlist): SearchResult {
+        return SearchResult(
+            MediaId.playlistId(playlist.id), recentSearch.dataType,
+            playlist.title, playlist.image
+        )
     }
 
-    private fun searchGenreMapper(recentSearch: RecentSearchesEntity, genre: Genre) : SearchResult {
-        return SearchResult(MediaId.genreId(genre.id), recentSearch.dataType,
-                genre.name, genre.image)
+    private fun searchGenreMapper(recentSearch: RecentSearchesEntity, genre: Genre): SearchResult {
+        return SearchResult(
+            MediaId.genreId(genre.id), recentSearch.dataType,
+            genre.name, genre.image
+        )
     }
 
-    private fun searchFolderMapper(recentSearch: RecentSearchesEntity, folder: Folder) : SearchResult {
-        return SearchResult(MediaId.folderId(folder.path), recentSearch.dataType,
-                folder.title, folder.image)
+    private fun searchFolderMapper(recentSearch: RecentSearchesEntity, folder: Folder): SearchResult {
+        return SearchResult(
+            MediaId.folderId(folder.path), recentSearch.dataType,
+            folder.title, folder.image
+        )
     }
 
-    private fun searchPodcastMapper(recentSearch: RecentSearchesEntity, podcast: Podcast) : SearchResult {
-        return SearchResult(MediaId.podcastId(podcast.id), recentSearch.dataType,
-                podcast.title, podcast.image)
+    private fun searchPodcastMapper(recentSearch: RecentSearchesEntity, podcast: Podcast): SearchResult {
+        return SearchResult(
+            MediaId.podcastId(podcast.id), recentSearch.dataType,
+            podcast.title, podcast.image
+        )
     }
 
-    private fun searchPodcastPlaylistMapper(recentSearch: RecentSearchesEntity, playlist: PodcastPlaylist) : SearchResult {
-        return SearchResult(MediaId.podcastPlaylistId(playlist.id), recentSearch.dataType,
-                playlist.title, playlist.image)
+    private fun searchPodcastPlaylistMapper(
+        recentSearch: RecentSearchesEntity,
+        playlist: PodcastPlaylist
+    ): SearchResult {
+        return SearchResult(
+            MediaId.podcastPlaylistId(playlist.id), recentSearch.dataType,
+            playlist.title, playlist.image
+        )
     }
 
-    private fun searchPodcastAlbumMapper(recentSearch: RecentSearchesEntity, album: PodcastAlbum) : SearchResult {
-        return SearchResult(MediaId.podcastAlbumId(album.id), recentSearch.dataType,
-                album.title, album.image)
+    private fun searchPodcastAlbumMapper(recentSearch: RecentSearchesEntity, album: PodcastAlbum): SearchResult {
+        return SearchResult(
+            MediaId.podcastAlbumId(album.id), recentSearch.dataType,
+            album.title, album.image
+        )
     }
 
-    private fun searchPodcastArtistMapper(recentSearch: RecentSearchesEntity, artist: PodcastArtist) : SearchResult {
-        return SearchResult(MediaId.podcastArtistId(artist.id), recentSearch.dataType,
-                artist.name, artist.image)
+    private fun searchPodcastArtistMapper(recentSearch: RecentSearchesEntity, artist: PodcastArtist): SearchResult {
+        return SearchResult(
+            MediaId.podcastArtistId(artist.id), recentSearch.dataType,
+            artist.name, artist.image
+        )
     }
 
 }

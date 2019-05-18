@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.data.request.Request
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -27,8 +27,8 @@ internal class ContentObserverFlow @Inject constructor(
 
 
     suspend fun <T> createQuery(
-        cursor: (Page?) -> Cursor,
-        page: Page?,
+        cursor: (Request?) -> Cursor,
+        page: Request?,
         notificationUri: Uri,
         notifyForDescendents: Boolean
     ): QueryFlow<T> = coroutineScope {

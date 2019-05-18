@@ -5,7 +5,8 @@ import android.database.Cursor
 import android.provider.MediaStore.Audio.Media.*
 import dev.olog.contentresolversql.querySql
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 
 internal class FolderQueries(
@@ -14,17 +15,19 @@ internal class FolderQueries(
 ) : BaseQueries(prefsGateway, false) {
 
 
-    fun getAll(chunk: Page?): Cursor {
+    fun getAll(request: Request?): Cursor {
+        val (filter, bindParams) = createFilter(request?.filter, overrideTitleColumn = Columns.FOLDER)
+
         val query = """
             SELECT distinct $folderProjection as ${Columns.FOLDER}, count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
-            WHERE ${defaultSelection()}
+            WHERE ${defaultSelection()} $filter
             GROUP BY ${Columns.FOLDER}
             ORDER BY ${sortOrder()}
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
 
-        return contentResolver.querySql(query)
+        return contentResolver.querySql(query, bindParams)
     }
 
     fun getByPath(folderPath: String): Cursor {
@@ -38,7 +41,9 @@ internal class FolderQueries(
         return contentResolver.querySql(query, arrayOf(folderPath))
     }
 
-    fun getSongList(folderPath: String, chunk: Page?): Cursor {
+    fun getSongList(folderPath: String, request: Request?): Cursor {
+        val (filter, bindParams) = createFilter(request?.filter)
+
         val query = """
             SELECT $_ID, $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
@@ -51,23 +56,26 @@ internal class FolderQueries(
                 $DATE_ADDED, $IS_PODCAST,
                 $folderProjection as ${Columns.FOLDER}
             FROM $EXTERNAL_CONTENT_URI
-            WHERE ${defaultSelection()} AND ${Columns.FOLDER} = ?
+            WHERE ${defaultSelection()} AND ${Columns.FOLDER} = ? $filter
             ORDER BY ${songListSortOrder(MediaIdCategory.FOLDERS, DEFAULT_SORT_ORDER)}
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
-        return contentResolver.querySql(query, arrayOf(folderPath))
+        return contentResolver.querySql(query, arrayOf(folderPath).plus(bindParams))
     }
 
-    fun getSongListDuration(folderPath: String): Cursor {
+    fun getSongListDuration(folderPath: String, filterRequest: Filter?): Cursor {
+        val (filter, bindParams) = createFilter(filterRequest, overrideTitleColumn = folderProjection)
+
         val query = """
             SELECT sum($DURATION)
             FROM $EXTERNAL_CONTENT_URI
-            WHERE ${defaultSelection()} AND $folderProjection = ?
+            WHERE ${defaultSelection()} AND $folderProjection = ? $filter
         """
-        return contentResolver.querySql(query, arrayOf(folderPath))
+        return contentResolver.querySql(query, arrayOf(folderPath).plus(bindParams))
     }
 
-    fun getRecentlyAddedSongs(folderPath: String, chunk: Page?): Cursor {
+    fun getRecentlyAddedSongs(folderPath: String, request: Request?): Cursor {
+
         val query = """
             SELECT $_ID, $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
@@ -83,24 +91,28 @@ internal class FolderQueries(
             WHERE ${defaultSelection()} AND ${isRecentlyAdded()} AND ${Columns.FOLDER} = ?
             GROUP BY ${Columns.FOLDER}
             ORDER BY $DATE_ADDED DESC
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
         return contentResolver.querySql(query, arrayOf(folderPath))
     }
 
-    fun getSiblings(folderPath: String, chunk: Page?): Cursor {
+    fun getSiblings(folderPath: String, request: Request?): Cursor {
+        val (filter, bindParams) = createFilter(request?.filter, overrideTitleColumn = Columns.FOLDER)
+
         val query = """
             SELECT distinct $folderProjection as ${Columns.FOLDER}, count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
-            WHERE ${Columns.FOLDER} <> ? AND ${defaultSelection()}
+            WHERE ${Columns.FOLDER} <> ? AND ${defaultSelection()} $filter
             GROUP BY ${Columns.FOLDER}
             ORDER BY ${sortOrder()}
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
-        return contentResolver.querySql(query, arrayOf(folderPath))
+        return contentResolver.querySql(query, arrayOf(folderPath).plus(bindParams))
     }
 
-    fun getRelatedArtists(folderPath: String, chunk: Page?): Cursor {
+    fun getRelatedArtists(folderPath: String, request: Request?): Cursor {
+        val (filter, bindParams) = createFilter(request?.filter)
+
         val query = """
             SELECT distinct $ARTIST_ID,
                 $artistProjection as ${Columns.ARTIST},
@@ -110,11 +122,12 @@ internal class FolderQueries(
                 $folderProjection as ${Columns.FOLDER}
             FROM $EXTERNAL_CONTENT_URI
             WHERE ${Columns.FOLDER} = ? AND ${defaultSelection()} AND $ARTIST <> '<unknown>'
+                $filter
             GROUP BY $ARTIST_ID
             ORDER BY $ARTIST_KEY
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
-        return contentResolver.querySql(query, arrayOf(folderPath))
+        return contentResolver.querySql(query, arrayOf(folderPath).plus(bindParams))
     }
 
     fun getExisting(folderPath: String, songIds: String): Cursor {

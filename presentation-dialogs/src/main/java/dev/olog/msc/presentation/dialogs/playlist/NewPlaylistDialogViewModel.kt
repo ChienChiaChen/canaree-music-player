@@ -9,7 +9,9 @@ import dev.olog.msc.core.interactor.GetSongListByParamUseCase
 import dev.olog.msc.core.interactor.InsertCustomTrackListToPlaylist
 import dev.olog.msc.core.interactor.item.GetPodcastUseCase
 import dev.olog.msc.core.interactor.item.GetSongUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class NewPlaylistDialogViewModel @Inject constructor(
@@ -25,7 +27,7 @@ class NewPlaylistDialogViewModel @Inject constructor(
 //    private val existingPlaylists = playlists.execute(playlistType)
 //            .map { it.title.toLowerCase() }
 
-    fun execute(mediaId: MediaId, playlistTitle: String) = = viewModelScope.launch(Dispatchers.Default) {
+    fun execute(mediaId: MediaId, playlistTitle: String) = viewModelScope.launch(Dispatchers.Default) {
 //        val playlistType = if (mediaId.isPodcast) PlaylistType.PODCAST else PlaylistType.TRACK TODO
 //        val trackToInsert = when {
 //            mediaId.isPlayingQueue -> playingQueueGateway.getAll().map { it.id }

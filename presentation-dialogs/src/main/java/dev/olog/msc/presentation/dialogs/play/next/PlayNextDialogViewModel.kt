@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.interactor.GetSongListByParamUseCase
 import dev.olog.msc.shared.MusicConstants
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PlayNextDialogViewModel @Inject constructor(
@@ -16,7 +18,7 @@ class PlayNextDialogViewModel @Inject constructor(
     private val getSongListByParamUseCase: GetSongListByParamUseCase
 ) : ViewModel() {
 
-    fun execute(mediaController: MediaControllerCompat) = = viewModelScope.launch(Dispatchers.Default) {
+    fun execute(mediaController: MediaControllerCompat) = viewModelScope.launch(Dispatchers.Default) {
         TODO()
 //        return if (mediaId.isLeaf) {
 //            Single.fromCallable { "${mediaId.leaf!!}" }.subscribeOn(Schedulers.io())

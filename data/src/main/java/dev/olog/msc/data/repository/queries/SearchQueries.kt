@@ -6,7 +6,7 @@ import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media.*
 import android.util.Log
 import dev.olog.contentresolversql.querySql
-import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.SearchGateway.By
 import dev.olog.msc.core.gateway.SearchGateway.SearchRequest
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
@@ -26,7 +26,7 @@ class SearchQueries @Inject constructor(
         PODCAST
     }
 
-    fun searchTrack(chunk: Page?, searchType: SearchType, search: SearchRequest): Cursor {
+    fun searchTrack(request: Request?, searchType: SearchType, search: SearchRequest): Cursor {
         val filterSelection = createFilterSelection(search)
         val sql = """
             SELECT $_ID, $ARTIST_ID, $ALBUM_ID,
@@ -43,7 +43,7 @@ class SearchQueries @Inject constructor(
             WHERE ${defaultSelection(searchType)}
                 ${if (filterSelection.isEmpty()) "" else " AND $filterSelection"}
             ORDER BY lower($TITLE) COLLATE UNICODE
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
         val word = search.byWord.first.trim()
         val numberOfParams = sql.count { it == '?' }

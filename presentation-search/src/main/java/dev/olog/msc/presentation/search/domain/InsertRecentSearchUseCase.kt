@@ -1,21 +1,19 @@
 package dev.olog.msc.presentation.search.domain
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.executors.IoScheduler
+import dev.olog.msc.core.coroutines.CompletableFlowWithParam
+import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.gateway.RecentSearchesGateway
-import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
-import io.reactivex.Completable
 import javax.inject.Inject
 
 
 class InsertRecentSearchUseCase @Inject constructor(
-        scheduler: IoScheduler,
-        private val recentSearchesGateway: RecentSearchesGateway
+    scheduler: IoDispatcher,
+    private val recentSearchesGateway: RecentSearchesGateway
 
-) : CompletableUseCaseWithParam<MediaId>(scheduler) {
+) : CompletableFlowWithParam<MediaId>(scheduler) {
 
-    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-    override fun buildUseCaseObservable(mediaId: MediaId): Completable {
+    override suspend fun buildUseCaseObservable(mediaId: MediaId) {
         val id = mediaId.resolveId
         return when {
             mediaId.isLeaf && !mediaId.isPodcast -> recentSearchesGateway.insertSong(id)

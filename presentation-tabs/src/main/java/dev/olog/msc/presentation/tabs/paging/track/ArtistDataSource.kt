@@ -5,7 +5,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.paging.DataSource
 import dev.olog.msc.core.coroutines.merge
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
-import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.ArtistGateway
 import dev.olog.msc.presentation.base.model.DisplayableItem
@@ -45,7 +46,7 @@ internal class ArtistDataSource @Inject constructor(
 
     override fun getHeaders(mainListSize: Int): List<DisplayableItem> {
         val headers = mutableListOf<DisplayableItem>()
-        if (gateway.canShowRecentlyAdded()) {
+        if (gateway.canShowRecentlyAdded(Filter.NO_FILTER)) {
             headers.addAll(displayableHeaders.recentlyAddedArtistsHeaders)
         }
         if (gateway.canShowLastPlayed()) {
@@ -60,10 +61,10 @@ internal class ArtistDataSource @Inject constructor(
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun getMainDataSize(): Int {
-        return chunked.getCount()
+        return chunked.getCount(Filter.NO_FILTER)
     }
 
-    override fun loadInternal(page: Page): List<DisplayableItem> {
+    override fun loadInternal(page: Request): List<DisplayableItem> {
         return chunked.getPage(page)
             .map { it.toTabDisplayableItem(resources) }
     }

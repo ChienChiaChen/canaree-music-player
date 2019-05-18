@@ -2,7 +2,8 @@ package dev.olog.msc.data.repository
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlayingQueueSong
-import dev.olog.msc.core.entity.getAll
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.getAll
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
@@ -23,8 +24,8 @@ internal class PlayingQueueRepository @Inject constructor(
     private val playingQueueDao = database.playingQueueDao()
 
     override suspend fun getAll(): List<PlayingQueueSong> {
-        val allSongs = songGateway.getAll().getAll()
-        val playingQueue = playingQueueDao.getAllAsSongs(allSongs, podcastGateway.getAll().getAll())
+        val allSongs = songGateway.getAll().getAll(Filter.NO_FILTER)
+        val playingQueue = playingQueueDao.getAllAsSongs(allSongs, podcastGateway.getAll().getAll(Filter.NO_FILTER))
         if (playingQueue.isNotEmpty()){
             return playingQueue
         }

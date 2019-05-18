@@ -7,9 +7,10 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.coroutines.mapToList
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.ItemRequest
-import dev.olog.msc.core.entity.Page
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.ItemRequest
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.entity.favorite.FavoriteType
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
@@ -73,17 +74,18 @@ internal class PodcastPlaylistRepository @Inject constructor(
         )
     }
 
-    override fun getAll(): PageRequest<PodcastPlaylist> {
-        return object : PageRequest<PodcastPlaylist> {
-            override fun getPage(page: Page): List<PodcastPlaylist> {
+    override fun getAll(): DataRequest<PodcastPlaylist> {
+        return object : DataRequest<PodcastPlaylist> {
+            override fun getPage(request: Request): List<PodcastPlaylist> {
+                val page = request.page
                 return podcastPlaylistDao.getChunk(page.limit, page.offset).map { it.toDomain() }
             }
 
-            override fun getCount(): Int {
+            override fun getCount(filter: Filter): Int {
                 return podcastPlaylistDao.getCount()
             }
 
-            override suspend fun observePage(page: Page): Flow<List<PodcastPlaylist>> {
+            override suspend fun observePage(page: Request): Flow<List<PodcastPlaylist>> {
                 return podcastPlaylistDao.observeAll()
                     .asFlow()
                     .distinctUntilChanged()
@@ -115,11 +117,11 @@ internal class PodcastPlaylistRepository @Inject constructor(
         )
     }
 
-    override fun getPodcastListByParamDuration(param: Long): Int {
+    override fun getPodcastListByParamDuration(param: Long, filter: Filter): Int {
         return 0
     }
 
-    override fun getPodcastListByParam(param: Long): PageRequest<Podcast> {
+    override fun getPodcastListByParam(param: Long): DataRequest<Podcast> {
         if (param == PodcastPlaylistGateway.PODCAST_LAST_ADDED_ID) {
             return PageRequestImpl(
                 cursorFactory = { trackQueries.getByLastAdded(it) },
@@ -134,15 +136,17 @@ internal class PodcastPlaylistRepository @Inject constructor(
         }
         if (param == PodcastPlaylistGateway.PODCAST_FAVORITE_LIST_ID) {
             return PageRequestDao(
-                cursorFactory = { page ->
+                cursorFactory = { request ->
                     // TODO sort by now is lost, repair
-                    val favoritesIds = favoriteGateway.getAllPodcasts(page?.limit ?: Int.MAX_VALUE, page?.offset ?: 0)
+                    val page = request.page // TODO add filter
+                    val favoritesIds = favoriteGateway.getAllPodcasts(page.limit, page.offset)
                     trackQueries.getExisting(favoritesIds.joinToString { "'$it'" })
                 },
                 cursorMapper = { it.toPodcast() },
-                listMapper = { list, page ->
+                listMapper = { list, request ->
                     val existing = PodcastRepository.adjustImages(context, list)
-                    val favoritesIds = favoriteGateway.getAll(page?.limit ?: Int.MAX_VALUE, page?.offset ?: 0)
+                    val page = request.page // TODO add filter
+                    val favoritesIds = favoriteGateway.getAll(page.limit, page.offset)
                     favoritesIds.asSequence()
                         .mapNotNull { fav -> existing.first { it.id == fav } }
                         .toList()
@@ -154,14 +158,16 @@ internal class PodcastPlaylistRepository @Inject constructor(
         }
         if (param == PodcastPlaylistGateway.PODCAST_HISTORY_LIST_ID) {
             return PageRequestDao(
-                cursorFactory = { page ->
-                    val historyIds = historyDao.getAllPodcasts(page?.limit ?: Int.MAX_VALUE, page?.offset ?: 0)
+                cursorFactory = { request ->
+                    val page = request.page // TODO add filter
+                    val historyIds = historyDao.getAllPodcasts(page.limit, page.offset)
                     trackQueries.getExisting(historyIds.joinToString { "'${it.podcastId}'" })
                 },
                 cursorMapper = { it.toPodcast() },
-                listMapper = { list, page ->
+                listMapper = { list, request ->
                     val existing = PodcastRepository.adjustImages(context, list)
-                    val historyIds = historyDao.getAll(page?.limit ?: Int.MAX_VALUE, page?.offset ?: 0)
+                    val page = request.page // TODO add filter
+                    val historyIds = historyDao.getAll(page.limit, page.offset)
                     historyIds.asSequence()
                         .mapNotNull { hist -> existing.first { it.id == hist.songId } to hist }
                         .map {
@@ -179,13 +185,15 @@ internal class PodcastPlaylistRepository @Inject constructor(
             )
         }
         return PageRequestDao(
-            cursorFactory = { page ->
+            cursorFactory = { request ->
+                val page = request.page // TODO add filter
                 val podcastIds = podcastPlaylistDao.getPlaylistTracks(param, page.offset, page.limit)
                 trackQueries.getExisting(podcastIds.joinToString { "'$it'" })
             },
             cursorMapper = { it.toPodcast() },
-            listMapper = { list, page ->
+            listMapper = { list, request ->
                 val existing = PodcastRepository.adjustImages(context, list)
+                val page = request.page // TODO add filter
                 podcastPlaylistDao.getPlaylistTracks(param, page.offset, page.limit)
                     .asSequence()
                     .mapNotNull { podcast ->
@@ -200,18 +208,19 @@ internal class PodcastPlaylistRepository @Inject constructor(
         )
     }
 
-    override fun getSiblings(mediaId: MediaId): PageRequest<PodcastPlaylist> {
-        return object : PageRequest<PodcastPlaylist> {
-            override fun getPage(page: Page): List<PodcastPlaylist> {
+    override fun getSiblings(mediaId: MediaId): DataRequest<PodcastPlaylist> {
+        return object : DataRequest<PodcastPlaylist> {
+            override fun getPage(request: Request): List<PodcastPlaylist> {
+                val page = request.page // TODO add filter
                 return podcastPlaylistDao.getSiblings(mediaId.categoryId, page.limit, page.offset)
                     .map { it.toDomain() }
             }
 
-            override fun getCount(): Int {
+            override fun getCount(filter: Filter): Int {
                 return podcastPlaylistDao.countSiblings(mediaId.categoryId)
             }
 
-            override suspend fun observePage(page: Page): Flow<List<PodcastPlaylist>> {
+            override suspend fun observePage(page: Request): Flow<List<PodcastPlaylist>> {
                 return podcastPlaylistDao.observeSibling(mediaId.categoryId)
                     .asFlow()
                     .distinctUntilChanged()
@@ -227,7 +236,7 @@ internal class PodcastPlaylistRepository @Inject constructor(
         }
     }
 
-    override fun canShowSiblings(mediaId: MediaId): Boolean {
+    override fun canShowSiblings(mediaId: MediaId, filter: Filter): Boolean {
         return !PodcastPlaylistGateway.isPodcastAutoPlaylist(mediaId.categoryId) &&
                 podcastPlaylistDao.countSiblings(mediaId.categoryId) > 0
     }

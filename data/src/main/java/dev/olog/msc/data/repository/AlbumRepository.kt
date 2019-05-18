@@ -4,8 +4,7 @@ import android.content.Context
 import android.provider.MediaStore.Audio.Media
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.ItemRequest
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.*
 import dev.olog.msc.core.entity.track.Album
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.UsedImageGateway
@@ -20,7 +19,7 @@ import dev.olog.msc.data.mapper.toSong
 import dev.olog.msc.data.repository.queries.AlbumQueries
 import dev.olog.msc.data.repository.util.ContentObserverFlow
 import dev.olog.msc.data.repository.util.queryCountRow
-import dev.olog.msc.data.repository.util.querySize
+import dev.olog.msc.data.repository.util.queryFirstColumn
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
@@ -61,7 +60,7 @@ internal class AlbumRepository @Inject constructor(
 
     private val lastPlayedDao = appDatabase.lastPlayedAlbumDao()
 
-    override fun getAll(): PageRequest<Album> {
+    override fun getAll(): DataRequest<Album> {
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
             cursorMapper = { it.toAlbum() },
@@ -83,7 +82,7 @@ internal class AlbumRepository @Inject constructor(
         )
     }
 
-    override fun getLastPlayed(): PageRequest<Album> {
+    override fun getLastPlayed(): DataRequest<Album> {
         val maxAllowed = 10
         return PageRequestDao(
             cursorFactory = {
@@ -106,11 +105,11 @@ internal class AlbumRepository @Inject constructor(
 
     override fun canShowLastPlayed(): Boolean {
         return prefsGateway.canShowLibraryRecentPlayedVisibility() &&
-                getAll().getCount() >= 5 &&
+                getAll().getCount(Filter.NO_FILTER) >= 5 &&
                 lastPlayedDao.getCount() > 0
     }
 
-    override fun getRecentlyAdded(): PageRequest<Album> {
+    override fun getRecentlyAdded(): DataRequest<Album> {
         return PageRequestImpl(
             cursorFactory = { queries.getRecentlyAdded(it) },
             cursorMapper = { it.toAlbum() },
@@ -121,7 +120,13 @@ internal class AlbumRepository @Inject constructor(
         )
     }
 
-    override fun getSongListByParam(param: Long): PageRequest<Song> {
+    override fun canShowRecentlyAdded(filter: Filter): Boolean {
+        val cursor = queries.getRecentlyAdded(Request(Page.NO_PAGING, filter))
+        val size = contentResolver.queryCountRow(cursor)
+        return prefsGateway.canShowLibraryNewVisibility() && size > 0
+    }
+
+    override fun getSongListByParam(param: Long): DataRequest<Song> {
         return PageRequestImpl(
             cursorFactory = { queries.getSongList(param, it) },
             cursorMapper = { it.toSong() },
@@ -135,11 +140,11 @@ internal class AlbumRepository @Inject constructor(
         )
     }
 
-    override fun getSongListByParamDuration(param: Long): Int {
-        return contentResolver.querySize(queries.getSongListDuration(param))
+    override fun getSongListByParamDuration(param: Long, filter: Filter): Int {
+        return contentResolver.queryFirstColumn(queries.getSongListDuration(param, filter))
     }
 
-    override fun getSiblings(mediaId: MediaId): PageRequest<Album> {
+    override fun getSiblings(mediaId: MediaId): DataRequest<Album> {
         return PageRequestImpl(
             cursorFactory = { queries.getSiblings(mediaId.categoryId, it) },
             cursorMapper = { it.toAlbum() },
@@ -150,14 +155,8 @@ internal class AlbumRepository @Inject constructor(
         )
     }
 
-    override fun canShowSiblings(mediaId: MediaId): Boolean {
-        return getSiblings(mediaId).getCount() > 0
-    }
-
-    override fun canShowRecentlyAdded(): Boolean {
-        val cursor = queries.getRecentlyAdded(null)
-        val size = contentResolver.queryCountRow(cursor)
-        return prefsGateway.canShowLibraryNewVisibility() && size > 0
+    override fun canShowSiblings(mediaId: MediaId, filter: Filter): Boolean {
+        return getSiblings(mediaId).getCount(filter) > 0
     }
 
     override suspend fun addLastPlayed(id: Long) {

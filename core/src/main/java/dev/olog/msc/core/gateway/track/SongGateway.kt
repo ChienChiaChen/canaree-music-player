@@ -1,6 +1,6 @@
 package dev.olog.msc.core.gateway.track
 
-import dev.olog.msc.core.entity.ItemRequest
+import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.base.BaseGateway
 import io.reactivex.Observable

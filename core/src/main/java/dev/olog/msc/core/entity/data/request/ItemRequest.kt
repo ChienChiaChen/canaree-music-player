@@ -1,4 +1,4 @@
-package dev.olog.msc.core.entity
+package dev.olog.msc.core.entity.data.request
 
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope

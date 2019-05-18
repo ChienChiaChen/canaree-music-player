@@ -32,10 +32,10 @@ import javax.inject.Inject
 internal class DetailFragmentViewModel @Inject constructor(
     val mediaId: MediaId,
     private val detailDataSource: DetailDataSourceFactory,
-    siblingsDataSource: SiblingsDataSourceFactory,
+    private val siblingsDataSource: SiblingsDataSourceFactory,
     mostPlayedDataSource: MostPlayedDataSourceFactory,
     recentlyAddedDataSource: RecentlyAddedDataSourceFactory,
-    relatedArtistsSource: RelatedArtistsSourceFactory,
+    private val relatedArtistsSource: RelatedArtistsSourceFactory,
     private val setSortOrderUseCase: SetSortOrderUseCase,
     private val prefsGateway: AppPreferencesGateway,
     private val tutorialPreferenceUseCase: TutorialPreferenceGateway,
@@ -89,6 +89,8 @@ internal class DetailFragmentViewModel @Inject constructor(
 
     fun updateFilter(filter: String) {
         detailDataSource.updateFilterBy(filter)
+        relatedArtistsSource.updateFilterBy(filter)
+        siblingsDataSource.updateFilterBy(filter)
     }
 
     override fun onCleared() {

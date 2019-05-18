@@ -3,7 +3,7 @@ package dev.olog.msc.data.repository
 import android.content.Context
 import android.provider.MediaStore
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.SearchGateway
@@ -31,7 +31,7 @@ internal class SearchRepository @Inject constructor(
     private val contentResolver = context.contentResolver
     private val searchQueries = SearchQueries(prefsGateway, contentResolver)
 
-    override fun searchSongsAndPocastsBy(request: SearchRequest): PageRequest<Song> {
+    override fun searchSongsAndPocastsBy(request: SearchRequest): DataRequest<Song> {
         assertBackgroundThread()
         return PageRequestImpl(
             cursorFactory = { searchQueries.searchTrack(it, SearchType.ALL, request) },
@@ -46,7 +46,7 @@ internal class SearchRepository @Inject constructor(
         )
     }
 
-    override fun searchSongOnlyBy(request: SearchRequest): PageRequest<Song> {
+    override fun searchSongOnlyBy(request: SearchRequest): DataRequest<Song> {
         assertBackgroundThread()
         return PageRequestImpl(
             cursorFactory = { searchQueries.searchTrack(it, SearchType.SONGS, request) },
@@ -61,7 +61,7 @@ internal class SearchRepository @Inject constructor(
         )
     }
 
-    override fun searchPodcastOnlyBy(request: SearchRequest): PageRequest<Podcast> {
+    override fun searchPodcastOnlyBy(request: SearchRequest): DataRequest<Podcast> {
         assertBackgroundThread()
         return PageRequestImpl(
             cursorFactory = { searchQueries.searchTrack(it, SearchType.PODCAST, request) },

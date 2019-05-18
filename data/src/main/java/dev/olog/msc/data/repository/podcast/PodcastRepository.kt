@@ -6,8 +6,8 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.core.util.getOrDefault
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.entity.ItemRequest
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
+import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
@@ -46,7 +46,7 @@ internal class PodcastRepository @Inject constructor(
 
     private val podcastPositionDao = appDatabase.podcastPositionDao()
 
-    override fun getAll(): PageRequest<Podcast> {
+    override fun getAll(): DataRequest<Podcast> {
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
             cursorMapper = { it.toPodcast() },

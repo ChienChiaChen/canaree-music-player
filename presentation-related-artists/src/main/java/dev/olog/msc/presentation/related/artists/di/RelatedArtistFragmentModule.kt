@@ -2,7 +2,6 @@ package dev.olog.msc.presentation.related.artists.di
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
@@ -30,7 +29,7 @@ class RelatedArtistFragmentModule(
     @Module
     companion object {
 
-        @Binds
+        @Provides
         @IntoMap
         @JvmStatic
         @ViewModelKey(RelatedArtistFragmentViewModel::class)

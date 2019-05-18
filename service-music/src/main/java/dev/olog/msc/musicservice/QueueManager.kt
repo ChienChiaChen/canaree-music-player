@@ -3,7 +3,8 @@ package dev.olog.msc.musicservice
 import android.net.Uri
 import android.os.Bundle
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.entity.getAll
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.getAll
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.toSong
 import dev.olog.msc.core.entity.sort.SortArranging
@@ -106,7 +107,7 @@ internal class QueueManager @Inject constructor(
     override suspend fun handlePlayFromMediaId(mediaId: MediaId, extras: Bundle?): PlayerMediaEntity {
         val songId = mediaId.leaf ?: -1L
 
-        var songList = songListUseCase.execute(mediaId).getAll()
+        var songList = songListUseCase.execute(mediaId).getAll(Filter.NO_FILTER)
             .map{ any: Any? -> if (any is Podcast){ any.toSong() } else { any as Song } }
             .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
 
@@ -145,7 +146,7 @@ internal class QueueManager @Inject constructor(
     override suspend fun handlePlayRecentlyPlayed(mediaId: MediaId): PlayerMediaEntity {
         val songId = mediaId.leaf!!
 
-        var songList = recentlyAddedUseCase.get(mediaId).getAll()
+        var songList = recentlyAddedUseCase.get(mediaId).getAll(Filter.NO_FILTER)
             .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
 
         songList = shuffleIfNeeded(songId).apply(songList)
@@ -161,7 +162,7 @@ internal class QueueManager @Inject constructor(
     override suspend fun handlePlayMostPlayed(mediaId: MediaId): PlayerMediaEntity {
         val songId = mediaId.leaf!!
 
-        var songList = mostPlayedSongsUseCase.get(mediaId).getAll()
+        var songList = mostPlayedSongsUseCase.get(mediaId).getAll(Filter.NO_FILTER)
             .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
 
         songList = shuffleIfNeeded(songId).apply(songList)
@@ -176,7 +177,7 @@ internal class QueueManager @Inject constructor(
 
     override suspend fun handlePlayShuffle(mediaId: MediaId): PlayerMediaEntity {
         shuffleMode.setEnabled(true)
-        var songList = songListUseCase.execute(mediaId).getAll()
+        var songList = songListUseCase.execute(mediaId).getAll(Filter.NO_FILTER)
             .map{ any: Any? -> if (any is Podcast){ any.toSong() } else { any as Song } }
             .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
 
@@ -208,11 +209,12 @@ internal class QueueManager @Inject constructor(
         val params = VoiceSearchParams(query, extras)
 
         val songList = when {
-            params.isAny -> searchGateway.searchSongsAndPocastsBy(SearchRequest(query to arrayOf(By.NO_FILTER))).getAll()
-            params.isUnstructured -> searchGateway.searchSongsAndPocastsBy(SearchRequest(query to arrayOf(By.TITLE, By.ARTIST, By.ALBUM))).getAll()
-            params.isAlbumFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.album to arrayOf(By.ALBUM))).getAll()
-            params.isArtistFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.artist to arrayOf(By.ARTIST))).getAll()
-            params.isSongFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.song to arrayOf(By.ARTIST))).getAll()
+            // TODO remove search gateway
+            params.isAny -> searchGateway.searchSongsAndPocastsBy(SearchRequest(query to arrayOf(By.NO_FILTER))).getAll(Filter.NO_FILTER)
+            params.isUnstructured -> searchGateway.searchSongsAndPocastsBy(SearchRequest(query to arrayOf(By.TITLE, By.ARTIST, By.ALBUM))).getAll(Filter.NO_FILTER)
+            params.isAlbumFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.album to arrayOf(By.ALBUM))).getAll(Filter.NO_FILTER)
+            params.isArtistFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.artist to arrayOf(By.ARTIST))).getAll(Filter.NO_FILTER)
+            params.isSongFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.song to arrayOf(By.ARTIST))).getAll(Filter.NO_FILTER)
             params.isGenreFocus -> searchGateway.searchSongsInGenre(params.genre)?.shuffled()
             else -> null
         }?.mapIndexed { index, song -> song.toMediaEntity(index, MediaId.songId(-1)) } ?: return null

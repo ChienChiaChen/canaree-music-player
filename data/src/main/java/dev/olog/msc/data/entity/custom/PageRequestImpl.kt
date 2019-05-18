@@ -2,8 +2,10 @@ package dev.olog.msc.data.entity.custom
 
 import android.content.ContentResolver
 import android.net.Uri
-import dev.olog.msc.core.entity.Page
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Page
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.data.repository.util.ContentObserverFlow
 import dev.olog.msc.data.repository.util.queryAll
 import dev.olog.msc.data.repository.util.queryCountRow
@@ -19,19 +21,20 @@ internal class PageRequestImpl<T>(
     private val contentResolver: ContentResolver,
     private val contentObserverFlow: ContentObserverFlow,
     private val mediaStoreUri: Uri
-) : PageRequest<T> {
+) : DataRequest<T> {
 
-    override fun getPage(page: Page): List<T> {
+    override fun getPage(request: Request): List<T> {
         assertBackgroundThread()
-        return contentResolver.queryAll(cursorFactory(page), cursorMapper, listMapper)
+        return contentResolver.queryAll(cursorFactory(request), cursorMapper, listMapper)
     }
 
-    override fun getCount(): Int {
+    override fun getCount(filter: Filter): Int {
         assertBackgroundThread()
-        return contentResolver.queryCountRow(cursorFactory(null))
+        val count = contentResolver.queryCountRow(cursorFactory(Request(Page.NO_PAGING, filter)))
+        return count
     }
 
-    override suspend fun observePage(page: Page): Flow<List<T>> {
+    override suspend fun observePage(page: Request): Flow<List<T>> {
         return contentObserverFlow.createQuery<T>(cursorFactory, page, mediaStoreUri, true)
             .mapToList { cursorMapper(it) }
             .map { listMapper?.invoke(it) ?: it }

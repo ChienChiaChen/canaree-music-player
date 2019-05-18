@@ -2,7 +2,7 @@ package dev.olog.msc.core.interactor.played
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.track.FolderGateway
 import dev.olog.msc.core.gateway.track.GenreGateway
@@ -25,7 +25,7 @@ class GetMostPlayedSongsUseCase @Inject constructor(
         }
     }
 
-    fun get(mediaId: MediaId): PageRequest<Song> {
+    fun get(mediaId: MediaId): DataRequest<Song> {
         return when (mediaId.category) {
             MediaIdCategory.GENRES -> genreGateway.getMostPlayed(mediaId)
             MediaIdCategory.PLAYLISTS -> playlistGateway.getMostPlayed(mediaId)

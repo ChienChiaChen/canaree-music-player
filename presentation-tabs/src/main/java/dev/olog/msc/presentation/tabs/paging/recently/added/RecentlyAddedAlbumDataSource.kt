@@ -3,7 +3,8 @@ package dev.olog.msc.presentation.tabs.paging.recently.added
 import androidx.lifecycle.Lifecycle
 import androidx.paging.DataSource
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
-import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.track.AlbumGateway
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.paging.BaseDataSource
@@ -35,17 +36,17 @@ internal class RecentlyAddedAlbumDataSource @Inject constructor(
     }
 
     override val canLoadData: Boolean
-        get() = gateway.canShowRecentlyAdded()
+        get() = gateway.canShowRecentlyAdded(Filter.NO_FILTER)
 
     override fun getMainDataSize(): Int {
-        return chunked.getCount()
+        return chunked.getCount(Filter.NO_FILTER)
     }
 
     override fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun loadInternal(page: Page): List<DisplayableItem> {
+    override fun loadInternal(page: Request): List<DisplayableItem> {
         return chunked.getPage(page)
             .map { it.toTabLastPlayedDisplayableItem() }
     }

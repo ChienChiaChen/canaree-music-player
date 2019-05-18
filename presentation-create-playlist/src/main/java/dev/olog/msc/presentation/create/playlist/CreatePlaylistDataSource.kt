@@ -3,8 +3,9 @@ package dev.olog.msc.presentation.create.playlist
 import androidx.lifecycle.Lifecycle
 import androidx.paging.DataSource
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.core.entity.Page
 import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.SearchGateway
 import dev.olog.msc.core.gateway.SearchGateway.By
 import dev.olog.msc.presentation.base.model.DisplayableItem
@@ -45,14 +46,15 @@ class CreatePlaylistDataSource @Inject constructor(
     }
 
     override fun getMainDataSize(): Int {
+
         if (playlistType == PlaylistType.TRACK) {
-            return searchGateway.searchSongOnlyBy(searchRequest).getCount()
+            return searchGateway.searchSongOnlyBy(searchRequest).getCount(Filter.NO_FILTER)
         } else {
-            return searchGateway.searchPodcastOnlyBy(searchRequest).getCount()
+            return searchGateway.searchPodcastOnlyBy(searchRequest).getCount(Filter.NO_FILTER)
         }
     }
 
-    override fun loadInternal(page: Page): List<DisplayableItem> {
+    override fun loadInternal(page: Request): List<DisplayableItem> {
         if (playlistType == PlaylistType.TRACK) {
             return searchGateway.searchSongOnlyBy(searchRequest).getPage(page)
                 .map { it.toDisplayableItem() }

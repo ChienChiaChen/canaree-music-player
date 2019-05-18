@@ -5,7 +5,8 @@ import android.database.Cursor
 import android.provider.MediaStore.Audio.Media.*
 import dev.olog.contentresolversql.querySql
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
@@ -16,7 +17,9 @@ internal class AlbumQueries constructor(
     private val contentResolver: ContentResolver
 ) : BaseQueries(prefsGateway, isPodcast) {
 
-    fun getAll(chunk: Page?): Cursor {
+    fun getAll(request: Request?): Cursor {
+        val (filter, bindParams) = createFilter(request?.filter)
+
         val query = """
             SELECT distinct $ALBUM_ID, $ARTIST_ID,
                 $artistProjection as ${Columns.ARTIST},
@@ -24,13 +27,13 @@ internal class AlbumQueries constructor(
                 $albumArtistProjection,
                 count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
-            WHERE ${defaultSelection()}
+            WHERE ${defaultSelection()} $filter
             GROUP BY $ALBUM_ID
             ORDER BY ${sortOrder()}
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
 
-        return contentResolver.querySql(query)
+        return contentResolver.querySql(query, bindParams)
     }
 
     fun getById(albumId: Long): Cursor {
@@ -77,7 +80,9 @@ internal class AlbumQueries constructor(
         return contentResolver.querySql(query)
     }
 
-    fun getRecentlyAdded(chunk: Page?): Cursor {
+    fun getRecentlyAdded(request: Request?): Cursor {
+        val (filter, bindParams) = createFilter(request?.filter)
+
         val query = """
             SELECT distinct $ALBUM_ID, $ARTIST_ID,
                 $artistProjection as ${Columns.ARTIST},
@@ -85,15 +90,15 @@ internal class AlbumQueries constructor(
                 $albumArtistProjection,
                 count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
-            WHERE ${defaultSelection()} AND ${isRecentlyAdded()}
+            WHERE ${defaultSelection()} AND ${isRecentlyAdded()} $filter
             GROUP BY $ALBUM_ID
             ORDER BY $DATE_ADDED DESC
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
-        return contentResolver.querySql(query)
+        return contentResolver.querySql(query, bindParams)
     }
 
-    fun getSiblings(albumId: Long, chunk: Page?): Cursor {
+    fun getSiblings(albumId: Long, request: Request?): Cursor {
         val artistQuery = """
              SELECT $ARTIST_ID
              FROM $EXTERNAL_CONTENT_URI
@@ -104,6 +109,8 @@ internal class AlbumQueries constructor(
         val artistId = cursor.getInt(0)
         cursor.close()
 
+        val (filter, bindParams) = createFilter(request?.filter)
+
         val query = """
             SELECT distinct $ALBUM_ID, $ARTIST_ID,
                 $artistProjection as ${Columns.ARTIST},
@@ -112,14 +119,20 @@ internal class AlbumQueries constructor(
                 count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
             WHERE $ALBUM_ID <> ? AND $ARTIST_ID = ? AND ${defaultSelection()}
+                $filter
             GROUP BY $ALBUM_ID
             ORDER BY $ALBUM_KEY
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
-        return contentResolver.querySql(query, arrayOf(albumId.toString(), artistId.toString()))
+        return contentResolver.querySql(
+            query = query,
+            selectionArgs = arrayOf(albumId.toString(), artistId.toString()).plus(bindParams)
+        )
     }
 
-    fun getSongList(albumId: Long, chunk: Page?): Cursor {
+    fun getSongList(albumId: Long, request: Request?): Cursor {
+        val (filter, bindParams) = createFilter(request?.filter)
+
         val query = """
             SELECT $_ID, $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
@@ -131,27 +144,33 @@ internal class AlbumQueries constructor(
                 $trackNumberProjection as ${Columns.N_TRACK},
                 $DATE_ADDED, $IS_PODCAST
             FROM $EXTERNAL_CONTENT_URI
-            WHERE ${defaultSongSelection()} AND $ALBUM_ID = ?
+            WHERE ${defaultSongSelection()} AND $ALBUM_ID = ? $filter
             ORDER BY ${songListSortOrder(MediaIdCategory.ALBUMS, DEFAULT_SORT_ORDER)}
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
-        return contentResolver.querySql(query, arrayOf(albumId.toString()))
+        return contentResolver.querySql(query, arrayOf(albumId.toString()).plus(bindParams))
     }
 
-    fun getSongListDuration(albumId: Long): Cursor {
+    fun getSongListDuration(albumId: Long, filterRequest: Filter?): Cursor {
+        val (filter, bindParams) = createFilter(
+            filterRequest,
+            overrideArtistColumn = ARTIST,
+            overrideAlbumColumn = ALBUM
+        )
+
         val query = """
             SELECT sum($DURATION)
             FROM $EXTERNAL_CONTENT_URI
-            WHERE ${defaultSongSelection()} AND $ALBUM_ID = ?
+            WHERE ${defaultSongSelection()} AND $ALBUM_ID = ? $filter
         """
-        return contentResolver.querySql(query, arrayOf(albumId.toString()))
+        return contentResolver.querySql(query, arrayOf(albumId.toString()).plus(bindParams))
     }
 
-    private fun defaultSelection(): String{
+    private fun defaultSelection(): String {
         return "${isPodcast()} AND $ALBUM <> '<unknown>' AND ${notBlacklisted()}"
     }
 
-    private fun defaultSongSelection(): String{
+    private fun defaultSongSelection(): String {
         return "${isPodcast()} AND ${notBlacklisted()}"
     }
 

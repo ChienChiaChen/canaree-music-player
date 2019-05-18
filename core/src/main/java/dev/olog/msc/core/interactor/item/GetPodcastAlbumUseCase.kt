@@ -2,7 +2,7 @@ package dev.olog.msc.core.interactor.item
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.coroutines.IoDispatcher
-import dev.olog.msc.core.entity.ItemRequest
+import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
 import kotlinx.coroutines.withContext

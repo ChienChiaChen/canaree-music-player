@@ -1,6 +1,6 @@
 package dev.olog.msc.core.gateway
 
-import dev.olog.msc.core.entity.PageRequest
+import dev.olog.msc.core.entity.data.request.DataRequest
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 
@@ -9,9 +9,9 @@ interface SearchGateway {
     /**
      * Songs + podcast
      */
-    fun searchSongsAndPocastsBy(request: SearchRequest): PageRequest<Song>
-    fun searchSongOnlyBy(request: SearchRequest): PageRequest<Song>
-    fun searchPodcastOnlyBy(request: SearchRequest): PageRequest<Podcast>
+    fun searchSongsAndPocastsBy(request: SearchRequest): DataRequest<Song>
+    fun searchSongOnlyBy(request: SearchRequest): DataRequest<Song>
+    fun searchPodcastOnlyBy(request: SearchRequest): DataRequest<Podcast>
     fun searchSongsInGenre(genre: String): List<Song>?
 
     enum class By {

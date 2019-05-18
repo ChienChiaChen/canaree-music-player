@@ -1,6 +1,6 @@
 package dev.olog.msc.data.entity.custom
 
-import dev.olog.msc.core.entity.ItemRequest
+import dev.olog.msc.core.entity.data.request.ItemRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 

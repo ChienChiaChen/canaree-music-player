@@ -5,7 +5,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.paging.DataSource
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.Request
+import dev.olog.msc.core.entity.data.request.with
 import dev.olog.msc.core.interactor.GetRelatedArtistsUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.paging.BaseDataSource
@@ -43,28 +45,44 @@ internal class RelatedArtistsSource @Inject constructor(
         }
     }
 
+    var filterBy: String = ""
+    private val filterRequest by lazy { Filter(filterBy, arrayOf(Filter.By.ARTIST)) }
+
     override val canLoadData: Boolean
-        get() = relatedArtistsUseCase.canShow(mediaId)
+        get() = relatedArtistsUseCase.canShow(mediaId, filterRequest)
 
     override fun getMainDataSize(): Int {
-        return clamp(chunked.getCount(), 0, RELATED_ARTISTS_TO_SEE)
+        return clamp(chunked.getCount(filterRequest), 0, RELATED_ARTISTS_TO_SEE)
     }
 
     override fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun loadInternal(page: Page): List<DisplayableItem> {
-        return chunked.getPage(page)
+    override fun loadInternal(page: Request): List<DisplayableItem> {
+        return chunked.getPage(page.with(filter = filterRequest))
             .map { it.toRelatedArtist(resources) }
     }
 }
 
 internal class RelatedArtistsSourceFactory @Inject constructor(
-    private val dataSource: Provider<RelatedArtistsSource>
+    private val dataSourceProvider: Provider<RelatedArtistsSource>
 ) : DataSource.Factory<Int, DisplayableItem>() {
 
+    private var filterBy: String = ""
+    private var dataSource: RelatedArtistsSource? = null
+
+    fun updateFilterBy(filterBy: String) {
+        if (this.filterBy != filterBy) {
+            this.filterBy = filterBy
+            dataSource?.invalidate()
+        }
+    }
+
     override fun create(): DataSource<Int, DisplayableItem> {
-        return dataSource.get()
+        val dataSource = dataSourceProvider.get()
+        this.dataSource = dataSource
+        dataSource.filterBy = filterBy
+        return dataSource
     }
 }

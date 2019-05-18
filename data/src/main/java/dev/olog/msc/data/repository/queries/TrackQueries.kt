@@ -4,7 +4,7 @@ import android.content.ContentResolver
 import android.database.Cursor
 import android.provider.MediaStore.Audio.Media.*
 import dev.olog.contentresolversql.querySql
-import dev.olog.msc.core.entity.Page
+import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
@@ -15,7 +15,9 @@ internal open class TrackQueries constructor(
     private val contentResolver: ContentResolver
 ) : BaseQueries(prefsGateway, isPodcast) {
 
-    fun getAll(chunk: Page?): Cursor {
+    fun getAll(request: Request?): Cursor {
+        val (filter, bindParams) = createFilter(request?.filter)
+
         val query = """
             SELECT $_ID, $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
@@ -28,12 +30,12 @@ internal open class TrackQueries constructor(
                 $DATE_ADDED,
                 $IS_PODCAST
             FROM $EXTERNAL_CONTENT_URI
-            WHERE ${defaultSelection()}
+            WHERE ${defaultSelection()} $filter
             ORDER BY ${sortOrder()}
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
 
-        return contentResolver.querySql(query)
+        return contentResolver.querySql(query, bindParams)
     }
 
     fun getById(trackId: Long, includeAll: Boolean = false): Cursor {
@@ -72,7 +74,7 @@ internal open class TrackQueries constructor(
         return contentResolver.querySql(query, selectionArgs = arrayOf(albumId.toString()))
     }
 
-    fun getByLastAdded(chunk: Page?): Cursor {
+    fun getByLastAdded(request: Request?): Cursor {
         val query = """
             SELECT $_ID, $ARTIST_ID, $ALBUM_ID,
                 $TITLE,
@@ -86,7 +88,7 @@ internal open class TrackQueries constructor(
             FROM $EXTERNAL_CONTENT_URI
             WHERE ${defaultSelection()}
             ORDER BY $DATE_ADDED DESC
-            ${tryGetChunk(chunk)}
+            ${tryGetChunk(request?.page)}
         """
         return contentResolver.querySql(query)
     }

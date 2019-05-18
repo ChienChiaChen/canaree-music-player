@@ -2,7 +2,7 @@ package dev.olog.msc.data.entity.custom
 
 import android.content.ContentResolver
 import android.net.Uri
-import dev.olog.msc.core.entity.ItemRequest
+import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.data.repository.util.ContentObserverFlow
 import dev.olog.msc.data.repository.util.queryMaybe
 import dev.olog.msc.shared.utils.assertBackgroundThread
