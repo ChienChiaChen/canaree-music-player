@@ -42,6 +42,7 @@ internal class MediaSessionQueue @Inject constructor(
                 if (!item.immediate) { // TODO check if still need
                     delay(1000)
                 }
+                yield()
 
                 persistMiniQueue(item.queue)
                 val queueItemList = item.queue.map { it.toQueueItem() }

@@ -34,10 +34,11 @@ internal class LastFmRepository @Inject constructor(
     override suspend fun getTrackImage(trackId: Long): String? {
         val item = lastFmRepoTrack.getOriginalItem(trackId) ?: return null
 
-        try {
-            return lastFmRepoAlbum.get(item.albumId)?.image
+        return try {
+            lastFmRepoAlbum.get(item.albumId)?.image
+                ?: lastFmRepoTrack.get(trackId)?.image
         } catch (ex: Exception) {
-            return lastFmRepoTrack.get(trackId)?.image
+            null
         }
     }
 
