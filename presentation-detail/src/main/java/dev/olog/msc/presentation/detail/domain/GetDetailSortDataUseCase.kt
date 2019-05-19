@@ -13,7 +13,7 @@ class GetDetailSortDataUseCase @Inject constructor(
 ) {
 
     fun execute(param: MediaId): DetailSort {
-        val arranging = prefsGateway.getSortArranging()
+        val arranging = prefsGateway.getDetailSortArranging()
         val sortType = getSortType(param)
         return DetailSort(sortType, arranging)
     }
@@ -21,14 +21,14 @@ class GetDetailSortDataUseCase @Inject constructor(
     private fun getSortType(mediaId: MediaId): SortType {
         val category = mediaId.category
         return when (category) {
-            MediaIdCategory.FOLDERS -> prefsGateway.getFolderSortOrder()
+            MediaIdCategory.FOLDERS -> prefsGateway.getDetailFolderSortOrder()
             MediaIdCategory.PLAYLISTS,
-            MediaIdCategory.PODCASTS_PLAYLIST -> prefsGateway.getPlaylistSortOrder()
+            MediaIdCategory.PODCASTS_PLAYLIST -> prefsGateway.getDetailPlaylistSortOrder()
             MediaIdCategory.ALBUMS,
-            MediaIdCategory.PODCASTS_ALBUMS -> prefsGateway.getAlbumSortOrder()
+            MediaIdCategory.PODCASTS_ALBUMS -> prefsGateway.getDetailAlbumSortOrder()
             MediaIdCategory.ARTISTS,
-            MediaIdCategory.PODCASTS_ARTISTS -> prefsGateway.getArtistSortOrder()
-            MediaIdCategory.GENRES -> prefsGateway.getGenreSortOrder()
+            MediaIdCategory.PODCASTS_ARTISTS -> prefsGateway.getDetailArtistSortOrder()
+            MediaIdCategory.GENRES -> prefsGateway.getDetailGenreSortOrder()
             else -> throw IllegalArgumentException("invalid media id $mediaId")
         }
     }

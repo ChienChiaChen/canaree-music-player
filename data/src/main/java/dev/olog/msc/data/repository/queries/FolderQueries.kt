@@ -10,7 +10,7 @@ import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 
-internal class FolderQueries(
+class FolderQueries(
     prefsGateway: AppPreferencesGateway,
     sortGateway: SortPreferencesGateway,
     private val contentResolver: ContentResolver

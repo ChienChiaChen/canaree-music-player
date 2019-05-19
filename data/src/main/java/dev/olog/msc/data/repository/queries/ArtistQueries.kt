@@ -12,7 +12,7 @@ import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 
-internal class ArtistQueries constructor(
+class ArtistQueries constructor(
     prefsGateway: AppPreferencesGateway,
     sortGateway: SortPreferencesGateway,
     isPodcast: Boolean,

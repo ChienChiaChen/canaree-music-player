@@ -133,7 +133,7 @@ abstract class BaseQueries(
     protected fun songListSortOrder(category: MediaIdCategory, default: String): String {
 
         val type = getSortType(category)
-        val arranging = sortGateway.getSortArranging()
+        val arranging = sortGateway.getDetailSortArranging()
         var sort = when (type) {
             SortType.TITLE -> "lower($TITLE)"
             SortType.ARTIST -> "lower(${Columns.ARTIST})"
@@ -170,11 +170,11 @@ abstract class BaseQueries(
 
     private fun getSortType(category: MediaIdCategory): SortType {
         return when (category) {
-            MediaIdCategory.FOLDERS -> sortGateway.getFolderSortOrder()
-            MediaIdCategory.PLAYLISTS -> sortGateway.getPlaylistSortOrder()
-            MediaIdCategory.ALBUMS -> sortGateway.getAlbumSortOrder()
-            MediaIdCategory.ARTISTS -> sortGateway.getArtistSortOrder()
-            MediaIdCategory.GENRES -> sortGateway.getGenreSortOrder()
+            MediaIdCategory.FOLDERS -> sortGateway.getDetailFolderSortOrder()
+            MediaIdCategory.PLAYLISTS -> sortGateway.getDetailPlaylistSortOrder()
+            MediaIdCategory.ALBUMS -> sortGateway.getDetailAlbumSortOrder()
+            MediaIdCategory.ARTISTS -> sortGateway.getDetailArtistSortOrder()
+            MediaIdCategory.GENRES -> sortGateway.getDetailGenreSortOrder()
             else -> throw IllegalArgumentException("invalid category $category")
         }
     }

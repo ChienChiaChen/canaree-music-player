@@ -89,11 +89,11 @@ interface SortPreferencesGateway {
     fun observeAlbumSortOrder() : Flow<SortType>
     fun observeArtistSortOrder() : Flow<SortType>
     fun observeGenreSortOrder() : Flow<SortType>
-    fun getFolderSortOrder() : SortType
-    fun getPlaylistSortOrder() : SortType
-    fun getAlbumSortOrder() : SortType
-    fun getArtistSortOrder() : SortType
-    fun getGenreSortOrder() : SortType
+    fun getDetailFolderSortOrder() : SortType
+    fun getDetailPlaylistSortOrder() : SortType
+    fun getDetailAlbumSortOrder() : SortType
+    fun getDetailArtistSortOrder() : SortType
+    fun getDetailGenreSortOrder() : SortType
 
     suspend fun setFolderSortOrder(sortType: SortType)
     suspend fun setPlaylistSortOrder(sortType: SortType)
@@ -102,6 +102,6 @@ interface SortPreferencesGateway {
     suspend fun setGenreSortOrder(sortType: SortType)
 
     fun observeSortArranging(): Flow<SortArranging>
-    fun getSortArranging(): SortArranging
+    fun getDetailSortArranging(): SortArranging
     suspend fun toggleSortArranging()
 }

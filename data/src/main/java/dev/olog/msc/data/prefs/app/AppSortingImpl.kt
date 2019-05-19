@@ -74,27 +74,27 @@ internal class AppSortingImpl @Inject constructor(
             .asFlowable().asFlow()
     }
 
-    override fun getFolderSortOrder(): SortType {
+    override fun getDetailFolderSortOrder(): SortType {
         val ordinal = preferences.getInt(DETAIL_SORT_FOLDER_ORDER, SortType.TITLE.ordinal)
         return SortType.values()[ordinal]
     }
 
-    override fun getPlaylistSortOrder(): SortType {
+    override fun getDetailPlaylistSortOrder(): SortType {
         val ordinal = preferences.getInt(DETAIL_SORT_PLAYLIST_ORDER, SortType.CUSTOM.ordinal)
         return SortType.values()[ordinal]
     }
 
-    override fun getAlbumSortOrder(): SortType {
+    override fun getDetailAlbumSortOrder(): SortType {
         val ordinal = preferences.getInt(DETAIL_SORT_ALBUM_ORDER, SortType.TITLE.ordinal)
         return SortType.values()[ordinal]
     }
 
-    override fun getArtistSortOrder(): SortType {
+    override fun getDetailArtistSortOrder(): SortType {
         val ordinal = preferences.getInt(DETAIL_SORT_ARTIST_ORDER, SortType.TITLE.ordinal)
         return SortType.values()[ordinal]
     }
 
-    override fun getGenreSortOrder(): SortType {
+    override fun getDetailGenreSortOrder(): SortType {
         val ordinal = preferences.getInt(DETAIL_SORT_GENRE_ORDER, SortType.TITLE.ordinal)
         return SortType.values()[ordinal]
     }
@@ -131,7 +131,7 @@ internal class AppSortingImpl @Inject constructor(
             .asFlowable().asFlow()
     }
 
-    override fun getSortArranging(): SortArranging {
+    override fun getDetailSortArranging(): SortArranging {
         val ordinal = preferences.getInt(DETAIL_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
         return SortArranging.values()[ordinal]
     }

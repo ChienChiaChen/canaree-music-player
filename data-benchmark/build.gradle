@@ -38,8 +38,12 @@ dependencies {
     // want to benchmark to a library module:
     // https://developer.android.com/studio/projects/android-library#Convert
     implementation project(':data')
+    implementation project(':core')
+    implementation project(':shared')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation librariesCore.kotlin
+    implementation librariesCore.rxJava
+    implementation librariesCore.coroutines
 
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
