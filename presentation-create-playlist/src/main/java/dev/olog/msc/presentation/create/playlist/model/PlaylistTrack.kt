@@ -12,7 +12,6 @@ internal fun Podcast.toDisplayableItem(): DisplayableItem {
         MediaId.podcastId(this.id),
         this.title,
         this.artist,
-        this.image,
         true
     )
 }
@@ -23,7 +22,6 @@ internal fun Song.toDisplayableItem(): DisplayableItem {
         MediaId.songId(this.id),
         this.title,
         this.artist,
-        this.image,
         true
     )
 }

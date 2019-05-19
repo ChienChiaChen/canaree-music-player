@@ -8,17 +8,20 @@ import dev.olog.msc.appwidgets.BaseWidget
 import dev.olog.msc.appwidgets.R
 import dev.olog.msc.appwidgets.WidgetMetadata
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.imageprovider.ImageModel
-import dev.olog.msc.imageprovider.getBitmapAsync
+import dev.olog.msc.imageprovider.glide.getBitmapAsync
 import dev.olog.msc.shared.ui.processor.ImageProcessor
 
 private const val IMAGE_SIZE = 300
 
 open class WidgetColored : BaseWidget() {
 
-    override fun onMetadataChanged(context: Context, metadata: WidgetMetadata, appWidgetIds: IntArray, remoteViews: RemoteViews?) {
-        val model = metadata.toImageModel()
-        context.getBitmapAsync(model, IMAGE_SIZE) {
+    override fun onMetadataChanged(
+        context: Context,
+        metadata: WidgetMetadata,
+        appWidgetIds: IntArray,
+        remoteViews: RemoteViews?
+    ) {
+        context.getBitmapAsync(MediaId.songId(metadata.id), IMAGE_SIZE) {
             val remote = remoteViews ?: RemoteViews(context.packageName, layoutId)
             remote.setTextViewText(R.id.title, metadata.title)
             remote.setTextViewText(R.id.subtitle, metadata.subtitle)
@@ -41,11 +44,4 @@ open class WidgetColored : BaseWidget() {
     }
 
     override val layoutId: Int = R.layout.widget_colored
-
-    private fun WidgetMetadata.toImageModel(): ImageModel {
-        return ImageModel(
-                MediaId.songId(this.id), this.image
-        )
-    }
-
 }

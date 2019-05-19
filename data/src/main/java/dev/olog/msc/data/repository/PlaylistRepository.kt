@@ -13,7 +13,6 @@ import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.FavoriteGateway
-import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGatewayHelper
@@ -40,7 +39,6 @@ internal class PlaylistRepository @Inject constructor(
     helper: PlaylistRepositoryHelper,
     private val prefsGateway: AppPreferencesGateway,
     prefsKeys: PrefsKeys,
-    private val usedImageGateway: UsedImageGateway,
     private val contentObserverFlow: ContentObserverFlow,
     private val songGateway: SongGateway
 
@@ -58,13 +56,13 @@ internal class PlaylistRepository @Inject constructor(
     private val autoPlaylistTitles = resources.getStringArray(prefsKeys.autoPlaylist())
 
     private fun createAutoPlaylist(id: Long, title: String): Playlist {
-        return Playlist(id, title, 0, "")
+        return Playlist(id, title, 0)
     }
 
     override fun getAll(): DataRequest<Playlist> {
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
-            cursorMapper = { it.toPlaylist(context) },
+            cursorMapper = { it.toPlaylist() },
             listMapper = { playlistList ->
                 playlistList.map { playlist ->
                     // get the size for every playlist
@@ -86,7 +84,7 @@ internal class PlaylistRepository @Inject constructor(
         }
         return ItemRequestImpl(
             cursorFactory = { queries.getById(param) },
-            cursorMapper = { it.toPlaylist(context) },
+            cursorMapper = { it.toPlaylist() },
             itemMapper = { playlist ->
                 // get the size for every playlist
                 val sizeQueryCursor = queries.countPlaylistSize(playlist.id)
@@ -108,20 +106,17 @@ internal class PlaylistRepository @Inject constructor(
     }
 
     override fun getSongListByParam(param: Long): DataRequest<Song> {
-        if (param == PlaylistGateway.LAST_ADDED_ID){
+        if (param == PlaylistGateway.LAST_ADDED_ID) {
             return PageRequestImpl(
                 cursorFactory = { trackQueries.getByLastAdded(it) },
                 cursorMapper = { it.toSong() },
-                listMapper = {
-                    val result = SongRepository.adjustImages(context, it)
-                    SongRepository.updateImages(result, usedImageGateway)
-                },
+                listMapper = null,
                 contentResolver = contentResolver,
                 contentObserverFlow = contentObserverFlow,
                 mediaStoreUri = Media.EXTERNAL_CONTENT_URI
             )
         }
-        if (param == PlaylistGateway.FAVORITE_LIST_ID){
+        if (param == PlaylistGateway.FAVORITE_LIST_ID) {
             return PageRequestDao(
                 cursorFactory = { request ->
                     // TODO sort by now is lost, repair
@@ -131,12 +126,10 @@ internal class PlaylistRepository @Inject constructor(
                 },
                 cursorMapper = { it.toSong() },
                 listMapper = { list, request ->
-                    val result = SongRepository.adjustImages(context, list)
-                    val existing = SongRepository.updateImages(result, usedImageGateway)
                     val page = request.page // TODO add filter
                     val favoritesIds = favoriteGateway.getAll(page.limit, page.offset)
                     favoritesIds.asSequence()
-                        .mapNotNull { fav -> existing.first { it.id == fav } }
+                        .mapNotNull { fav -> list.first { it.id == fav } }
                         .toList()
                 },
                 contentResolver = contentResolver,
@@ -144,7 +137,7 @@ internal class PlaylistRepository @Inject constructor(
                 overrideSize = favoriteGateway.countAll()
             )
         }
-        if (param == PlaylistGateway.HISTORY_LIST_ID){
+        if (param == PlaylistGateway.HISTORY_LIST_ID) {
             return PageRequestDao(
                 cursorFactory = { request ->
                     val page = request.page // TODO add filter
@@ -153,12 +146,10 @@ internal class PlaylistRepository @Inject constructor(
                 },
                 cursorMapper = { it.toSong() },
                 listMapper = { list, request ->
-                    val result = SongRepository.adjustImages(context, list)
-                    val existing = SongRepository.updateImages(result, usedImageGateway)
                     val page = request.page // TODO add filter
                     val historyIds = historyDao.getAll(page.limit, page.offset)
                     historyIds.asSequence()
-                        .mapNotNull { hist -> existing.first { it.id == hist.songId } to hist }
+                        .mapNotNull { hist -> list.first { it.id == hist.songId } to hist }
                         .map {
                             it.first.copy(
                                 trackNumber = it.second.id,
@@ -177,10 +168,7 @@ internal class PlaylistRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getSongList(param, it) },
             cursorMapper = { it.toPlaylistSong() },
-            listMapper = {
-                val result = SongRepository.adjustImages(context, it)
-                SongRepository.updateImages(result, usedImageGateway)
-            },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = Playlists.Members.getContentUri("external", param)
@@ -200,7 +188,7 @@ internal class PlaylistRepository @Inject constructor(
     override fun getSiblings(mediaId: MediaId): DataRequest<Playlist> {
         return PageRequestImpl(
             cursorFactory = { queries.getSiblings(mediaId.categoryId, it) },
-            cursorMapper = { it.toPlaylist(context) },
+            cursorMapper = { it.toPlaylist() },
             listMapper = { playlistList ->
                 playlistList.map { playlist ->
                     // get the size for every playlist
@@ -220,14 +208,14 @@ internal class PlaylistRepository @Inject constructor(
     }
 
     override fun getRelatedArtists(mediaId: MediaId): DataRequest<Artist> {
-        if (PlaylistGateway.isAutoPlaylist(mediaId.categoryId)){
+        if (PlaylistGateway.isAutoPlaylist(mediaId.categoryId)) {
             // auto playlist has not related artists
             return PageRequestStub()
         }
         return PageRequestImpl(
             cursorFactory = { queries.getRelatedArtists(mediaId.categoryId, it) },
             cursorMapper = { it.toArtist() },
-            listMapper = { ArtistRepository.updateImages(it, usedImageGateway) },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = Media.EXTERNAL_CONTENT_URI
@@ -235,7 +223,7 @@ internal class PlaylistRepository @Inject constructor(
     }
 
     override fun canShowRelatedArtists(mediaId: MediaId, filter: Filter): Boolean {
-        if (PlaylistGateway.isAutoPlaylist(mediaId.categoryId)){
+        if (PlaylistGateway.isAutoPlaylist(mediaId.categoryId)) {
             return false
         }
         return getRelatedArtists(mediaId).getCount(filter) > 0 &&
@@ -266,11 +254,9 @@ internal class PlaylistRepository @Inject constructor(
             },
             cursorMapper = { it.toSong() },
             listMapper = { list, _ ->
-                val result = SongRepository.adjustImages(context, list)
-                val existing =SongRepository.updateImages(result, usedImageGateway)
                 val mostPlayed = mostPlayedDao.query(mediaId.categoryId, maxAllowed)
                 mostPlayed.asSequence()
-                    .mapNotNull { mostPlayed -> existing.firstOrNull { it.id == mostPlayed.songId }  }
+                    .mapNotNull { mostPlayed -> list.firstOrNull { it.id == mostPlayed.songId } }
                     .take(maxAllowed)
                     .toList()
             },

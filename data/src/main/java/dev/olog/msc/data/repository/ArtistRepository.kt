@@ -10,7 +10,6 @@ import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.track.Album
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.ArtistGateway
 import dev.olog.msc.data.db.AppDatabase
@@ -29,24 +28,10 @@ import javax.inject.Inject
 internal class ArtistRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     appDatabase: AppDatabase,
-    private val usedImageGateway: UsedImageGateway,
     private val prefsGateway: AppPreferencesGateway,
     private val contentObserverFlow: ContentObserverFlow
 
 ) : ArtistGateway {
-
-    companion object {
-        internal fun updateImages(list: List<Artist>, usedImageGateway: UsedImageGateway): List<Artist> {
-            val allForArtists = usedImageGateway.getAllForArtists()
-            if (allForArtists.isEmpty()) {
-                return list
-            }
-            return list.map { artist ->
-                val image = allForArtists.firstOrNull { it.id == artist.id }?.image ?: artist.image
-                artist.copy(image = image)
-            }
-        }
-    }
 
     private val contentResolver = context.contentResolver
     private val queries = ArtistQueries(prefsGateway, false, contentResolver)
@@ -57,7 +42,7 @@ internal class ArtistRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
             cursorMapper = { it.toArtist() },
-            listMapper = { updateImages(it, usedImageGateway) },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = Media.EXTERNAL_CONTENT_URI
@@ -68,7 +53,7 @@ internal class ArtistRepository @Inject constructor(
         return ItemRequestImpl(
             cursorFactory = { queries.getById(param) },
             cursorMapper = { it.toArtist() },
-            itemMapper = { updateImages(listOf(it), usedImageGateway).first() },
+            itemMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = Media.EXTERNAL_CONTENT_URI
@@ -85,9 +70,8 @@ internal class ArtistRepository @Inject constructor(
             cursorMapper = { it.toArtist() },
             listMapper = { list, _ ->
                 val lastPlayed = lastPlayedDao.getAll(maxAllowed)
-                val existingLastPlayed = updateImages(list, usedImageGateway)
                 lastPlayed.asSequence()
-                    .mapNotNull { last -> existingLastPlayed.firstOrNull { it.id == last.id } }
+                    .mapNotNull { last -> list.firstOrNull { it.id == last.id } }
                     .take(maxAllowed)
                     .toList()
             },
@@ -106,7 +90,7 @@ internal class ArtistRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getRecentlyAdded(it) },
             cursorMapper = { it.toArtist() },
-            listMapper = { updateImages(it, usedImageGateway) },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = Media.EXTERNAL_CONTENT_URI
@@ -122,10 +106,7 @@ internal class ArtistRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getSongList(param, it) },
             cursorMapper = { it.toSong() },
-            listMapper = {
-                val result = SongRepository.adjustImages(context, it)
-                SongRepository.updateImages(result, usedImageGateway)
-            },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = Media.EXTERNAL_CONTENT_URI
@@ -140,7 +121,7 @@ internal class ArtistRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getSiblings(mediaId.categoryId, it) },
             cursorMapper = { it.toAlbum() },
-            listMapper = { AlbumRepository.updateImages(context, it, usedImageGateway) },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = Media.EXTERNAL_CONTENT_URI

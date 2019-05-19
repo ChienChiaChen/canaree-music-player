@@ -11,29 +11,6 @@ import dev.olog.msc.data.entity.UsedTrackImageEntity
 @Dao
 internal abstract class UsedImageDao {
 
-    // get all
-
-    @Query("""
-        SELECT *
-        FROM used_image_track
-        ORDER BY id
-        """)
-    internal abstract fun getAllImagesForTracks(): List<UsedTrackImageEntity>
-
-    @Query("""
-        SELECT *
-        FROM used_image_album
-        ORDER BY id
-        """)
-    internal abstract fun getAllImagesForAlbums(): List<UsedAlbumImageEntity>
-
-    @Query("""
-        SELECT *
-        FROM used_image_artist
-        ORDER BY id
-        """)
-    internal abstract fun getAllImagesForArtists(): List<UsedArtistImageEntity>
-
     // get by param
 
     @Query("SELECT image FROM used_image_track WHERE id = :id")
@@ -48,23 +25,23 @@ internal abstract class UsedImageDao {
     // insert
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    internal abstract fun insertForTrack(entity: UsedTrackImageEntity)
+    internal abstract suspend fun insertForTrack(entity: UsedTrackImageEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    internal abstract fun insertForAlbum(entity: UsedAlbumImageEntity)
+    internal abstract suspend fun insertForAlbum(entity: UsedAlbumImageEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    internal abstract fun insertForArtist(entity: UsedArtistImageEntity)
+    internal abstract suspend fun insertForArtist(entity: UsedArtistImageEntity)
 
     // delete
 
     @Query("DELETE FROM used_image_track WHERE id = :id")
-    internal abstract fun deleteForTrack(id: Long)
+    internal abstract suspend fun deleteForTrack(id: Long)
 
     @Query("DELETE FROM used_image_album WHERE id = :id")
-    internal abstract fun deleteForAlbum(id: Long)
+    internal abstract suspend fun deleteForAlbum(id: Long)
 
     @Query("DELETE FROM used_image_artist WHERE id = :id")
-    internal abstract fun deleteForArtist(id: Long)
+    internal abstract suspend fun deleteForArtist(id: Long)
 
 }

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SongGateway : BaseGateway<Song, Long> {
 
-    suspend fun getByAlbumId(albumId: Long): ItemRequest<Song>
+    fun getByAlbumId(albumId: Long): ItemRequest<Song>
 
     fun getAllUnfiltered(): Observable<List<Song>>
 

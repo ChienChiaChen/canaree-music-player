@@ -33,15 +33,14 @@ class PlaylistChooserActivityViewModel @Inject constructor(
 
     fun observeData(): LiveData<List<DisplayableItem>> = data
 
-    private inline fun Playlist.toDisplayableItem(resources: Resources): DisplayableItem {
+    private fun Playlist.toDisplayableItem(resources: Resources): DisplayableItem {
         val size = DisplayableItem.handleSongListSize(resources, size)
 
         return DisplayableItem(
             R.layout.item_tab_album,
             MediaId.playlistId(id),
             title,
-            size,
-            this.image
+            size
         )
     }
 

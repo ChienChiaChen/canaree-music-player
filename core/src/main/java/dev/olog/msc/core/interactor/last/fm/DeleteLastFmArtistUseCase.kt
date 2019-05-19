@@ -1,26 +1,18 @@
 package dev.olog.msc.core.interactor.last.fm
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.executors.IoScheduler
+import dev.olog.msc.core.coroutines.CompletableFlowWithParam
+import dev.olog.msc.core.coroutines.ComputationDispatcher
 import dev.olog.msc.core.gateway.LastFmGateway
-import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
-import io.reactivex.Completable
 import javax.inject.Inject
 
 class DeleteLastFmArtistUseCase @Inject constructor(
-        schedulers: IoScheduler,
-        private val gateway: LastFmGateway
+    schedulers: ComputationDispatcher,
+    private val gateway: LastFmGateway
 
-): CompletableUseCaseWithParam<MediaId>(schedulers) {
+) : CompletableFlowWithParam<MediaId>(schedulers) {
 
-    override fun buildUseCaseObservable(param: MediaId): Completable {
-        return Completable.fromCallable {
-            if (param.isPodcastArtist){
-                gateway.deletePodcastArtist(param.resolveId)
-            } else {
-                gateway.deleteArtist(param.resolveId)
-            }
-
-        }
+    override suspend fun buildUseCaseObservable(param: MediaId) {
+        gateway.deleteArtist(param.resolveId)
     }
 }

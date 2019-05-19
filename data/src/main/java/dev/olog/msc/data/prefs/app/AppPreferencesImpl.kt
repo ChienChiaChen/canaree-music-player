@@ -23,13 +23,13 @@ import java.io.File
 import javax.inject.Inject
 
 internal class AppPreferencesImpl @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val preferences: SharedPreferences,
-        private val rxPreferences: RxSharedPreferences,
-        private val prefsKeys: PrefsKeys
+    @ApplicationContext private val context: Context,
+    private val preferences: SharedPreferences,
+    private val rxPreferences: RxSharedPreferences,
+    private val prefsKeys: PrefsKeys
 
 ) : AppPreferencesGateway,
-        Sorting by AppSortingImpl(preferences, rxPreferences) {
+    Sorting by AppSortingImpl(preferences, rxPreferences) {
 
     companion object {
         private const val TAG = "AppPreferencesDataStoreImpl"
@@ -123,43 +123,43 @@ internal class AppPreferencesImpl @Inject constructor(
 
     override fun getLibraryCategories(): List<LibraryCategoryBehavior> {
         return listOf(
-                LibraryCategoryBehavior(
-                        MediaIdCategory.FOLDERS,
-                        preferences.getBoolean(CATEGORY_FOLDER_VISIBILITY, true),
-                        preferences.getInt(CATEGORY_FOLDER_ORDER, 0)
-                ),
-                LibraryCategoryBehavior(
-                        MediaIdCategory.PLAYLISTS,
-                        preferences.getBoolean(CATEGORY_PLAYLIST_VISIBILITY, true),
-                        preferences.getInt(CATEGORY_PLAYLIST_ORDER, 1)
-                ),
-                LibraryCategoryBehavior(
-                        MediaIdCategory.SONGS,
-                        preferences.getBoolean(CATEGORY_SONG_VISIBILITY, true),
-                        preferences.getInt(CATEGORY_SONG_ORDER, 2)
-                ),
-                LibraryCategoryBehavior(
-                        MediaIdCategory.ALBUMS,
-                        preferences.getBoolean(CATEGORY_ALBUM_VISIBILITY, true),
-                        preferences.getInt(CATEGORY_ALBUM_ORDER, 3)
-                ),
-                LibraryCategoryBehavior(
-                        MediaIdCategory.ARTISTS,
-                        preferences.getBoolean(CATEGORY_ARTIST_VISIBILITY, true),
-                        preferences.getInt(CATEGORY_ARTIST_ORDER, 4)
-                ),
-                LibraryCategoryBehavior(
-                        MediaIdCategory.GENRES,
-                        preferences.getBoolean(CATEGORY_GENRE_VISIBILITY, true),
-                        preferences.getInt(CATEGORY_GENRE_ORDER, 5)
-                )
+            LibraryCategoryBehavior(
+                MediaIdCategory.FOLDERS,
+                preferences.getBoolean(CATEGORY_FOLDER_VISIBILITY, true),
+                preferences.getInt(CATEGORY_FOLDER_ORDER, 0)
+            ),
+            LibraryCategoryBehavior(
+                MediaIdCategory.PLAYLISTS,
+                preferences.getBoolean(CATEGORY_PLAYLIST_VISIBILITY, true),
+                preferences.getInt(CATEGORY_PLAYLIST_ORDER, 1)
+            ),
+            LibraryCategoryBehavior(
+                MediaIdCategory.SONGS,
+                preferences.getBoolean(CATEGORY_SONG_VISIBILITY, true),
+                preferences.getInt(CATEGORY_SONG_ORDER, 2)
+            ),
+            LibraryCategoryBehavior(
+                MediaIdCategory.ALBUMS,
+                preferences.getBoolean(CATEGORY_ALBUM_VISIBILITY, true),
+                preferences.getInt(CATEGORY_ALBUM_ORDER, 3)
+            ),
+            LibraryCategoryBehavior(
+                MediaIdCategory.ARTISTS,
+                preferences.getBoolean(CATEGORY_ARTIST_VISIBILITY, true),
+                preferences.getInt(CATEGORY_ARTIST_ORDER, 4)
+            ),
+            LibraryCategoryBehavior(
+                MediaIdCategory.GENRES,
+                preferences.getBoolean(CATEGORY_GENRE_VISIBILITY, true),
+                preferences.getInt(CATEGORY_GENRE_ORDER, 5)
+            )
         ).sortedBy { it.order }
     }
 
     override fun getDefaultLibraryCategories(): List<LibraryCategoryBehavior> {
         return MediaIdCategory.values()
-                .take(6)
-                .mapIndexed { index, category -> LibraryCategoryBehavior(category, true, index) }
+            .take(6)
+            .mapIndexed { index, category -> LibraryCategoryBehavior(category, true, index) }
     }
 
     override fun setLibraryCategories(behavior: List<LibraryCategoryBehavior>) {
@@ -192,34 +192,34 @@ internal class AppPreferencesImpl @Inject constructor(
 
     override fun getPodcastLibraryCategories(): List<LibraryCategoryBehavior> {
         return listOf(
-                LibraryCategoryBehavior(
-                        MediaIdCategory.PODCASTS_PLAYLIST,
-                        preferences.getBoolean(CATEGORY_PODCAST_PLAYLIST_VISIBILITY, true),
-                        preferences.getInt(CATEGORY_PODCAST_PLAYLIST_ORDER, 0)
-                ),
-                LibraryCategoryBehavior(
-                        MediaIdCategory.PODCASTS,
-                        preferences.getBoolean(CATEGORY_PODCAST_VISIBILITY, true),
-                        preferences.getInt(CATEGORY_PODCAST_ORDER, 1)
-                ),
-                LibraryCategoryBehavior(
-                        MediaIdCategory.PODCASTS_ALBUMS,
-                        preferences.getBoolean(CATEGORY_PODCAST_ALBUM_VISIBILITY, true),
-                        preferences.getInt(CATEGORY_PODCAST_ALBUM_ORDER, 2)
-                ),
-                LibraryCategoryBehavior(
-                        MediaIdCategory.PODCASTS_ARTISTS,
-                        preferences.getBoolean(CATEGORY_PODCAST_ARTIST_VISIBILITY, true),
-                        preferences.getInt(CATEGORY_PODCAST_ARTIST_ORDER, 3)
-                )
+            LibraryCategoryBehavior(
+                MediaIdCategory.PODCASTS_PLAYLIST,
+                preferences.getBoolean(CATEGORY_PODCAST_PLAYLIST_VISIBILITY, true),
+                preferences.getInt(CATEGORY_PODCAST_PLAYLIST_ORDER, 0)
+            ),
+            LibraryCategoryBehavior(
+                MediaIdCategory.PODCASTS,
+                preferences.getBoolean(CATEGORY_PODCAST_VISIBILITY, true),
+                preferences.getInt(CATEGORY_PODCAST_ORDER, 1)
+            ),
+            LibraryCategoryBehavior(
+                MediaIdCategory.PODCASTS_ALBUMS,
+                preferences.getBoolean(CATEGORY_PODCAST_ALBUM_VISIBILITY, true),
+                preferences.getInt(CATEGORY_PODCAST_ALBUM_ORDER, 2)
+            ),
+            LibraryCategoryBehavior(
+                MediaIdCategory.PODCASTS_ARTISTS,
+                preferences.getBoolean(CATEGORY_PODCAST_ARTIST_VISIBILITY, true),
+                preferences.getInt(CATEGORY_PODCAST_ARTIST_ORDER, 3)
+            )
         ).sortedBy { it.order }
     }
 
     override fun getDefaultPodcastLibraryCategories(): List<LibraryCategoryBehavior> {
         return MediaIdCategory.values()
-                .drop(6)
-                .take(4)
-                .mapIndexed { index, category -> LibraryCategoryBehavior(category, true, index) }
+            .drop(6)
+            .take(4)
+            .mapIndexed { index, category -> LibraryCategoryBehavior(category, true, index) }
     }
 
     override fun setPodcastLibraryCategories(behavior: List<LibraryCategoryBehavior>) {
@@ -273,8 +273,8 @@ internal class AppPreferencesImpl @Inject constructor(
     override fun observePlayerControlsVisibility(): Observable<Boolean> {
         val key = context.getString(prefsKeys.playerControlsVisibility())
         return rxPreferences.getBoolean(key, false)
-                .asObservable()
-                .subscribeOn(Schedulers.io())
+            .asObservable()
+            .subscribeOn(Schedulers.io())
     }
 
     override fun setDefault(): Completable {
@@ -300,80 +300,83 @@ internal class AppPreferencesImpl @Inject constructor(
         }
     }
 
-    private fun setDefaultLockscreenArtwork(){
+    private fun setDefaultLockscreenArtwork() {
         preferences.edit {
             putBoolean(context.getString(prefsKeys.showLockscreenArtwork()), false)
-            putBoolean(context.getString(prefsKeys.ignoreMediaStoreCover()), false)
         }
     }
 
-    private fun setDefaultAdaptiveColors(){
+    private fun setDefaultAdaptiveColors() {
         preferences.edit {
-            putBoolean(context.getString(prefsKeys.ignoreMediaStoreCover()), false)
+            putBoolean(context.getString(prefsKeys.adaptiveColors()), false)
         }
     }
 
-    private fun setDefaultLibraryAlbumArtistVisibility(){
+    private fun setDefaultLibraryAlbumArtistVisibility() {
         preferences.edit {
             putBoolean(context.getString(prefsKeys.showNewAlbumsArtists()), true)
             putBoolean(context.getString(prefsKeys.showRecentAlbumsArtists()), true)
         }
     }
 
-    private fun setDefaultPodcastVisibility(){
+    private fun setDefaultPodcastVisibility() {
         preferences.edit {
             putBoolean(context.getString(prefsKeys.showPodcast()), true)
         }
     }
 
-    private fun setDefaultAccentColor(){
+    private fun setDefaultAccentColor() {
         preferences.edit {
             putInt(context.getString(prefsKeys.colorAccentLightMode()), prefsKeys.defaultColorAccentLightMode())
             putInt(context.getString(prefsKeys.defaultColorAccentDarkMode()), prefsKeys.defaultColorAccentDarkMode())
         }
     }
 
-    override fun observeAutoCreateImages(): Observable<Boolean> {
-        return rxPreferences.getBoolean(context.getString(prefsKeys.autoCreateImages()), true)
-                .asObservable()
-                .subscribeOn(Schedulers.io())
+    override fun canAutoCreateImages(): Boolean {
+        return preferences.getBoolean(context.getString(prefsKeys.autoCreateImages()), true)
     }
 
-    private fun setDefaultFolderView(){
+    private fun setDefaultFolderView() {
         preferences.edit {
             putBoolean(context.getString(prefsKeys.showFoldersAsTree()), false)
         }
     }
 
-    private fun setDefaultAutoDownloadImages(){
+    private fun setDefaultAutoDownloadImages() {
         preferences.edit {
-            putString(context.getString(prefsKeys.autoDownloadImages()), context.getString(prefsKeys.defaultAutoDownloadImages()))
+            putString(
+                context.getString(prefsKeys.autoDownloadImages()),
+                context.getString(prefsKeys.defaultAutoDownloadImages())
+            )
             putBoolean(context.getString(prefsKeys.autoCreateImages()), true)
         }
     }
 
-    private fun hideQuickAction(){
+    private fun hideQuickAction() {
         preferences.edit {
             putString(context.getString(prefsKeys.quickAction()), context.getString(prefsKeys.defaultQuickAction()))
         }
     }
 
-    private fun setDefaultVisibleSections(){
+    private fun setDefaultVisibleSections() {
         preferences.edit {
             val default = context.resources.getStringArray(prefsKeys.defaultVisibleDetailSections()).toSet()
             putStringSet(context.getString(prefsKeys.visibleDetailSections()), default)
         }
     }
 
-    private fun hideClassicPlayerControls(){
+    private fun hideClassicPlayerControls() {
         preferences.edit {
             putBoolean(context.getString(prefsKeys.playerControlsVisibility()), false)
         }
     }
 
-    private fun setDefaultTheme(){
+    private fun setDefaultTheme() {
         preferences.edit {
-            putString(context.getString(prefsKeys.playerAppearance()), context.getString(prefsKeys.defaultPlayerAppearance()))
+            putString(
+                context.getString(prefsKeys.playerAppearance()),
+                context.getString(prefsKeys.defaultPlayerAppearance())
+            )
             putString(context.getString(prefsKeys.darkMode()), context.getString(prefsKeys.defaultDarkMode()))
         }
     }
@@ -383,8 +386,8 @@ internal class AppPreferencesImpl @Inject constructor(
          */
     override fun getLastFmCredentials(): UserCredentials {
         return UserCredentials(
-                preferences.getString(LAST_FM_USERNAME, "")!!,
-                preferences.getString(LAST_FM_PASSWORD, "")!!
+            preferences.getString(LAST_FM_USERNAME, "")!!,
+            preferences.getString(LAST_FM_PASSWORD, "")!!
         )
     }
 
@@ -393,11 +396,13 @@ internal class AppPreferencesImpl @Inject constructor(
      */
     override suspend fun observeLastFmCredentials(): Flow<UserCredentials> {
         return rxPreferences.getString(LAST_FM_USERNAME, "")
-                .asObservable()
-                .map { UserCredentials(
-                        it,
-                        preferences.getString(LAST_FM_PASSWORD, "")!!
-                ) }.asFlowable().asFlow()
+            .asObservable()
+            .map {
+                UserCredentials(
+                    it,
+                    preferences.getString(LAST_FM_PASSWORD, "")!!
+                )
+            }.asFlowable().asFlow()
     }
 
     /*
@@ -421,11 +426,11 @@ internal class AppPreferencesImpl @Inject constructor(
     private fun defaultFolder(): String {
         val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
         var startFolder = File(File.separator)
-        if (musicDir.exists() && musicDir.isDirectory){
+        if (musicDir.exists() && musicDir.isDirectory) {
             startFolder = musicDir
         } else {
             val externalStorage = Environment.getExternalStorageDirectory()
-            if (externalStorage.exists() && externalStorage.isDirectory){
+            if (externalStorage.exists() && externalStorage.isDirectory) {
                 startFolder = externalStorage
             }
         }
@@ -434,8 +439,8 @@ internal class AppPreferencesImpl @Inject constructor(
 
     override fun observeDefaultMusicFolder(): Observable<File> {
         return rxPreferences.getString(DEFAULT_MUSIC_FOLDER, defaultFolder())
-                .asObservable()
-                .map { File(it) }
+            .asObservable()
+            .map { File(it) }
     }
 
     override fun getDefaultMusicFolder(): File {
@@ -466,14 +471,10 @@ internal class AppPreferencesImpl @Inject constructor(
 
     override fun observeLockscreenArtworkEnabled(): Observable<Boolean> {
         return rxPreferences.getBoolean(context.getString(prefsKeys.showLockscreenArtwork()), false)
-                .asObservable()
+            .asObservable()
     }
 
     override fun getShowFolderAsTreeView(): Boolean {
         return preferences.getBoolean(context.getString(prefsKeys.showFolderAsTreeView()), false)
-    }
-
-    override fun ignoreMediaStoreCover(): Boolean {
-        return preferences.getBoolean(context.getString(prefsKeys.ignoreMediaStoreCover()), false)
     }
 }

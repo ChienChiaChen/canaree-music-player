@@ -7,7 +7,7 @@ import dev.olog.msc.apilastfm.artist.info.ArtistInfo
 import dev.olog.msc.apilastfm.artist.search.ArtistSearch
 import dev.olog.msc.apilastfm.track.info.TrackInfo
 import dev.olog.msc.apilastfm.track.search.TrackSearch
-import io.reactivex.Single
+import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -23,49 +23,49 @@ private const val BASE_URL = "?api_key=${BuildConfig.LAST_FM_KEY}&format=json"
 interface LastFmService {
 
     @GET("$BASE_URL&method=track.getInfo")
-    fun getTrackInfo(
-            @Query("track", encoded = true) track: String,
-            @Query("artist", encoded = true) artist: String,
-            @IntRange(from = 0, to = 1) @Query("autocorrect") autocorrect: Long = DEFAULT_AUTO_CORRECT
-    ) : Single<TrackInfo>
+    fun getTrackInfoAsync(
+        @Query("track", encoded = true) track: String,
+        @Query("artist", encoded = true) artist: String,
+        @IntRange(from = 0, to = 1) @Query("autocorrect") autocorrect: Long = DEFAULT_AUTO_CORRECT
+    ): Deferred<TrackInfo>
 
     @GET("$BASE_URL&method=track.search")
-    fun searchTrack(
-            @Query("track", encoded = true) track: String,
-            @Query("artist", encoded = true) artist: String = "",
-            @IntRange(from = MIN_SEARCH_PAGES, to = MAX_SEARCH_PAGES)
-            @Query("limit") limit: Long = DEFAULT_SEARCH_PAGES
-    ): Single<TrackSearch>
+    fun searchTrackAsync(
+        @Query("track", encoded = true) track: String,
+        @Query("artist", encoded = true) artist: String = "",
+        @IntRange(from = MIN_SEARCH_PAGES, to = MAX_SEARCH_PAGES)
+        @Query("limit") limit: Long = DEFAULT_SEARCH_PAGES
+    ): Deferred<TrackSearch>
 
     @GET("$BASE_URL&method=artist.getinfo")
-    fun getArtistInfo(
-            @Query("artist", encoded = true) artist: String,
-            @IntRange(from = 0, to = 1)
-            @Query("autocorrect") autocorrect: Long = DEFAULT_AUTO_CORRECT,
-            @Query("lang") language: String = "en"
-    ): Single<ArtistInfo>
+    fun getArtistInfoAsync(
+        @Query("artist", encoded = true) artist: String,
+        @IntRange(from = 0, to = 1)
+        @Query("autocorrect") autocorrect: Long = DEFAULT_AUTO_CORRECT,
+        @Query("lang") language: String = "en"
+    ): Deferred<ArtistInfo>
 
     @GET("$BASE_URL&method=artist.search")
-    fun searchArtist(
-            @Query("artist", encoded = true) artist: String,
-            @IntRange(from = MIN_SEARCH_PAGES, to = MAX_SEARCH_PAGES)
-            @Query("limit") limit: Long = DEFAULT_SEARCH_PAGES
-    ): Single<ArtistSearch>
+    fun searchArtistAsync(
+        @Query("artist", encoded = true) artist: String,
+        @IntRange(from = MIN_SEARCH_PAGES, to = MAX_SEARCH_PAGES)
+        @Query("limit") limit: Long = DEFAULT_SEARCH_PAGES
+    ): Deferred<ArtistSearch>
 
     @GET("$BASE_URL&method=album.getinfo")
-    fun getAlbumInfo(
-            @Query("album", encoded = true) album: String,
-            @Query("artist", encoded = true) artist: String,
-            @IntRange(from = 0, to = 1)
-            @Query("autocorrect") autocorrect: Long= DEFAULT_AUTO_CORRECT,
-            @Query("lang") language: String = "en"
-    ): Single<AlbumInfo>
+    fun getAlbumInfoAsync(
+        @Query("album", encoded = true) album: String,
+        @Query("artist", encoded = true) artist: String,
+        @IntRange(from = 0, to = 1)
+        @Query("autocorrect") autocorrect: Long = DEFAULT_AUTO_CORRECT,
+        @Query("lang") language: String = "en"
+    ): Deferred<AlbumInfo>
 
     @GET("$BASE_URL&method=album.search")
-    fun searchAlbum(
-            @Query("album", encoded = true) album: String,
-            @IntRange(from = MIN_SEARCH_PAGES, to = MAX_SEARCH_PAGES)
-            @Query("limit") limit: Long = DEFAULT_SEARCH_PAGES
-    ): Single<AlbumSearch>
+    fun searchAlbumAsync(
+        @Query("album", encoded = true) album: String,
+        @IntRange(from = MIN_SEARCH_PAGES, to = MAX_SEARCH_PAGES)
+        @Query("limit") limit: Long = DEFAULT_SEARCH_PAGES
+    ): Deferred<AlbumSearch>
 
 }

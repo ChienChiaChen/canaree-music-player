@@ -10,7 +10,6 @@ import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.FolderGateway
 import dev.olog.msc.core.gateway.track.SongGateway
@@ -34,7 +33,6 @@ internal class FolderRepository @Inject constructor(
     private val contentObserverFlow: ContentObserverFlow,
     appDatabase: AppDatabase,
     private val prefsGateway: AppPreferencesGateway,
-    private val usedImageGateway: UsedImageGateway,
     private val songGateway: SongGateway
 
 ) : FolderGateway {
@@ -47,7 +45,7 @@ internal class FolderRepository @Inject constructor(
     override fun getAll(): DataRequest<Folder> {
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
-            cursorMapper = { it.toFolder(context) },
+            cursorMapper = { it.toFolder() },
             listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
@@ -58,7 +56,7 @@ internal class FolderRepository @Inject constructor(
     override fun getByParam(param: String): ItemRequest<Folder> {
         return ItemRequestImpl(
             cursorFactory = { queries.getByPath(param) },
-            cursorMapper = { it.toFolder(context) },
+            cursorMapper = { it.toFolder() },
             itemMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
@@ -70,10 +68,7 @@ internal class FolderRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getSongList(param, it) },
             cursorMapper = { it.toSong() },
-            listMapper = {
-                val result = SongRepository.adjustImages(context, it)
-                SongRepository.updateImages(result, usedImageGateway)
-            },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = Media.EXTERNAL_CONTENT_URI
@@ -88,10 +83,7 @@ internal class FolderRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getRecentlyAddedSongs(mediaId.categoryValue, it) },
             cursorMapper = { it.toSong() },
-            listMapper = {
-                val result = SongRepository.adjustImages(context, it)
-                SongRepository.updateImages(result, usedImageGateway)
-            },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = Media.EXTERNAL_CONTENT_URI
@@ -105,7 +97,7 @@ internal class FolderRepository @Inject constructor(
     override fun getSiblings(mediaId: MediaId): DataRequest<Folder> {
         return PageRequestImpl(
             cursorFactory = { queries.getSiblings(mediaId.categoryValue, it) },
-            cursorMapper = { it.toFolder(context) },
+            cursorMapper = { it.toFolder() },
             listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
@@ -121,7 +113,7 @@ internal class FolderRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getRelatedArtists(mediaId.categoryValue, it) },
             cursorMapper = { it.toArtist() },
-            listMapper = { ArtistRepository.updateImages(it, usedImageGateway) },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = Media.EXTERNAL_CONTENT_URI
@@ -150,11 +142,9 @@ internal class FolderRepository @Inject constructor(
             },
             cursorMapper = { it.toSong() },
             listMapper = { list, _ ->
-                val result = SongRepository.adjustImages(context, list)
-                val existing = SongRepository.updateImages(result, usedImageGateway)
                 val mostPlayed = mostPlayedDao.query(mediaId.categoryValue, maxAllowed)
                 mostPlayed.asSequence()
-                    .mapNotNull { mostPlayed -> existing.firstOrNull { it.id == mostPlayed.songId } }
+                    .mapNotNull { mostPlayed -> list.firstOrNull { it.id == mostPlayed.songId } }
                     .take(maxAllowed)
                     .toList()
             },

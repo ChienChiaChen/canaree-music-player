@@ -15,7 +15,6 @@ import dev.olog.msc.core.Classes
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
-import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.shared.MusicServiceConnectionState
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
@@ -139,7 +138,7 @@ internal class MusicServiceBinder @Inject constructor(
 
     val onMetadataChanged : Observable<MusicServiceMetadata> = metadataPublisher
             .map { MusicServiceMetadata(it.getId(), it.getTitle().toString(),
-                    it.getArtist().toString(), ImageModel(it.getMediaId(), it.getImage()),
+                    it.getArtist().toString(), it.getMediaId(),
                     it.getDuration(), it.isPodcast()
             ) }
 

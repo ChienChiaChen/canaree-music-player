@@ -3,7 +3,6 @@ package dev.olog.msc.musicservice
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -84,7 +83,7 @@ internal class MediaSessionQueue @Inject constructor(
             .setMediaId(MediaId.songId(this.id).toString())
             .setTitle(this.title)
             .setSubtitle(this.artist)
-            .setMediaUri(Uri.parse(this.image))
+//            .setMediaUri(Uri.parse(this.image)) TODO
             .build()
 
         return MediaSessionCompat.QueueItem(description, this.idInPlaylist.toLong())

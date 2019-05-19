@@ -114,7 +114,6 @@ dependencies {
     implementation project(':shared-ui-components')
     implementation project(':offline-lyrics')
     implementation project(':image-provider')
-    implementation project(':image-creation')
 
     implementation project(':api-lastfm')
 
@@ -217,8 +216,8 @@ dependencies {
     implementation librariesPersistency.room
     implementation librariesPersistency.rxPrefs
 
-    implementation librariesUtils.optional
     implementation librariesNetwork.retrofit
+    implementation librariesNetwork.retrofitCoroutines
     implementation librariesUtils.gson
 
     // debug

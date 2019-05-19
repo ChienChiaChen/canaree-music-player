@@ -58,8 +58,7 @@ class SearchPlaylistsDataSource @Inject constructor(
             R.layout.item_search_album,
             MediaId.playlistId(id),
             title,
-            null,
-            image
+            null
         )
     }
 
@@ -68,8 +67,7 @@ class SearchPlaylistsDataSource @Inject constructor(
             R.layout.item_search_album,
             MediaId.podcastPlaylistId(id),
             title,
-            null,
-            image
+            null
         )
     }
 

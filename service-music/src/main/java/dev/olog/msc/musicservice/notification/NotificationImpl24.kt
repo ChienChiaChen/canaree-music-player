@@ -9,8 +9,7 @@ import androidx.annotation.RequiresApi
 import dagger.Lazy
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.imageprovider.ImageModel
-import dev.olog.msc.imageprovider.getBitmap
+import dev.olog.msc.imageprovider.glide.getBitmap
 import dev.olog.msc.shared.utils.TextUtils
 import javax.inject.Inject
 
@@ -42,12 +41,10 @@ internal open class NotificationImpl24 @Inject constructor(
         id: Long,
         title: SpannableString,
         artist: String,
-        album: String,
-        image: String
+        album: String
     ) {
 
-        val model = ImageModel(MediaId.songId(id), image)
-        val bitmap = service.getBitmap(model, size = INotification.IMAGE_SIZE)
+        val bitmap = service.getBitmap(MediaId.songId(id), size = INotification.IMAGE_SIZE)
         builder.setLargeIcon(bitmap)
             .setContentTitle(title)
             .setContentText(artist)

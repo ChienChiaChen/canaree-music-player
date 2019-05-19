@@ -13,8 +13,7 @@ import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.imageprovider.ImageModel
-import dev.olog.msc.imageprovider.getBitmapAsync
+import dev.olog.msc.imageprovider.glide.getBitmapAsync
 import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.shared.MusicConstants
@@ -68,14 +67,13 @@ internal class PlayerMetadata @Inject constructor(
             .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, entity.artist)
             .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, entity.album)
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, entity.duration)
-            .putString(MediaMetadataCompat.METADATA_KEY_ART_URI, entity.image)
-            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, entity.image)
+//            .putString(MediaMetadataCompat.METADATA_KEY_ART_URI, entity.image)
+//            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, entity.image) TODO get uri
             .putString(MusicConstants.PATH, entity.path)
             .putLong(MusicConstants.IS_PODCAST, if (entity.isPodcast) 1 else 0)
 
         if (showLockscreenImage) {
-            val model = ImageModel(entity.mediaId, entity.image)
-            context.getBitmapAsync(model, action = { bitmap ->
+            context.getBitmapAsync(entity.mediaId, action = { bitmap ->
                 builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
                 mediaSession.setMetadata(builder.build())
             })
@@ -96,7 +94,7 @@ internal class PlayerMetadata @Inject constructor(
                 putExtra(WidgetConstants.ARGUMENT_SONG_ID, entity.id)
                 putExtra(WidgetConstants.ARGUMENT_TITLE, entity.title)
                 putExtra(WidgetConstants.ARGUMENT_SUBTITLE, entity.artist)
-                putExtra(WidgetConstants.ARGUMENT_IMAGE, entity.image)
+//                putExtra(WidgetConstants.ARGUMENT_IMAGE, entity.image) TODO check
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
             }
 

@@ -10,14 +10,13 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.PlayingQueueSong
 import dev.olog.msc.core.gateway.PlayingQueueGateway
-import dev.olog.msc.imageprovider.ImageModel
-import dev.olog.msc.imageprovider.getBitmap
+import dev.olog.msc.imageprovider.glide.getBitmap
 import dev.olog.msc.shared.MusicConstants
 import javax.inject.Inject
 
 class QueueRemoteViewsFactory @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val playingQueueGateway: PlayingQueueGateway
+    @ApplicationContext private val context: Context,
+    private val playingQueueGateway: PlayingQueueGateway
 
 ) : RemoteViewsService.RemoteViewsFactory {
 
@@ -57,7 +56,7 @@ class QueueRemoteViewsFactory @Inject constructor(
         val extras = bundleOf(MusicConstants.EXTRA_SKIP_TO_ITEM_ID to item.idInPlaylist)
         val fillIntent = Intent().also { it.putExtras(extras) }
         removeViews.setOnClickFillInIntent(R.id.root, fillIntent)
-        val bitmap = context.getBitmap(ImageModel(item.mediaId, item.image), 100)
+        val bitmap = context.getBitmap(item.mediaId, 100)
         removeViews.setImageViewBitmap(R.id.cover, bitmap)
 
         return removeViews
@@ -70,28 +69,26 @@ class QueueRemoteViewsFactory @Inject constructor(
     }
 
     private class WidgetItem(
-            val id: Long,
-            val idInPlaylist: Int,
-            val mediaId: MediaId,
-            val title: String,
-            val subtitle: String,
-            val image: String
+        val id: Long,
+        val idInPlaylist: Int,
+        val mediaId: MediaId,
+        val title: String,
+        val subtitle: String
     )
 
     private fun PlayingQueueSong.toWidgetItem(): WidgetItem {
-        val mediaId = if (this.isPodcast){
+        val mediaId = if (this.isPodcast) {
             MediaId.podcastId(this.id)
         } else {
             MediaId.songId(this.id)
         }
 
         return WidgetItem(
-                this.id,
-                this.trackNumber,
-                mediaId,
-                this.title,
-                this.artist,
-                this.image
+            this.id,
+            this.trackNumber,
+            mediaId,
+            this.title,
+            this.artist
         )
     }
 

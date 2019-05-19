@@ -26,7 +26,6 @@ import dev.olog.msc.musicservice.model.*
 import dev.olog.msc.musicservice.voice.VoiceSearchParams
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.collator
-import dev.olog.msc.shared.extensions.safeCompare
 import dev.olog.msc.shared.extensions.swap
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.shared.utils.clamp
@@ -116,7 +115,13 @@ internal class QueueManager @Inject constructor(
         val songId = mediaId.leaf ?: -1L
 
         var songList = songListUseCase.execute(mediaId).getAll(Filter.NO_FILTER)
-            .map{ any: Any? -> if (any is Podcast){ any.toSong() } else { any as Song } }
+            .map { any: Any? ->
+                if (any is Podcast) {
+                    any.toSong()
+                } else {
+                    any as Song
+                }
+            }
             .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
 
         songList = sortOnDemand(songList, extras)
@@ -190,7 +195,13 @@ internal class QueueManager @Inject constructor(
         assertBackgroundThread()
         shuffleMode.setEnabled(true)
         var songList = songListUseCase.execute(mediaId).getAll(Filter.NO_FILTER)
-            .map{ any: Any? -> if (any is Podcast){ any.toSong() } else { any as Song } }
+            .map { any: Any? ->
+                if (any is Podcast) {
+                    any.toSong()
+                } else {
+                    any as Song
+                }
+            }
             .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
 
         songList = enhancedShuffle.shuffle(songList.toMutableList())
@@ -223,16 +234,32 @@ internal class QueueManager @Inject constructor(
 
         val songList = when {
             // TODO remove search gateway
-            params.isAny -> searchGateway.searchSongsAndPocastsBy(SearchRequest(query to arrayOf(By.NO_FILTER))).getAll(Filter.NO_FILTER)
-            params.isUnstructured -> searchGateway.searchSongsAndPocastsBy(SearchRequest(query to arrayOf(By.TITLE, By.ARTIST, By.ALBUM))).getAll(Filter.NO_FILTER)
-            params.isAlbumFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.album to arrayOf(By.ALBUM))).getAll(Filter.NO_FILTER)
-            params.isArtistFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.artist to arrayOf(By.ARTIST))).getAll(Filter.NO_FILTER)
-            params.isSongFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.song to arrayOf(By.ARTIST))).getAll(Filter.NO_FILTER)
+            params.isAny -> searchGateway.searchSongsAndPocastsBy(SearchRequest(query to arrayOf(By.NO_FILTER))).getAll(
+                Filter.NO_FILTER
+            )
+            params.isUnstructured -> searchGateway.searchSongsAndPocastsBy(
+                SearchRequest(
+                    query to arrayOf(
+                        By.TITLE,
+                        By.ARTIST,
+                        By.ALBUM
+                    )
+                )
+            ).getAll(Filter.NO_FILTER)
+            params.isAlbumFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.album to arrayOf(By.ALBUM))).getAll(
+                Filter.NO_FILTER
+            )
+            params.isArtistFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.artist to arrayOf(By.ARTIST))).getAll(
+                Filter.NO_FILTER
+            )
+            params.isSongFocus -> searchGateway.searchSongsAndPocastsBy(SearchRequest(params.song to arrayOf(By.ARTIST))).getAll(
+                Filter.NO_FILTER
+            )
             params.isGenreFocus -> searchGateway.searchSongsInGenre(params.genre)?.shuffled()
             else -> null
         }?.mapIndexed { index, song -> song.toMediaEntity(index, MediaId.songId(-1)) } ?: return null
 
-        if (songList.isEmpty()){
+        if (songList.isEmpty()) {
             return null
         }
         queueImpl.updatePlayingQueueAndPersist(songList)
@@ -358,10 +385,10 @@ internal class QueueManager @Inject constructor(
 
 private fun getAscendingComparator(sortType: SortType): Comparator<MediaEntity> {
     return when (sortType) {
-        SortType.TITLE -> Comparator { o1, o2 -> collator.safeCompare(o1.title, o2.title) }
-        SortType.ARTIST -> Comparator { o1, o2 -> collator.safeCompare(o1.artist, o2.artist) }
-        SortType.ALBUM_ARTIST -> Comparator { o1, o2 -> collator.safeCompare(o1.albumArtist, o2.albumArtist) }
-        SortType.ALBUM -> Comparator { o1, o2 -> collator.safeCompare(o1.album, o2.album) }
+        SortType.TITLE -> Comparator { o1, o2 -> collator.compare(o1.title, o2.title) }
+        SortType.ARTIST -> Comparator { o1, o2 -> collator.compare(o1.artist, o2.artist) }
+        SortType.ALBUM_ARTIST -> Comparator { o1, o2 -> collator.compare(o1.albumArtist, o2.albumArtist) }
+        SortType.ALBUM -> Comparator { o1, o2 -> collator.compare(o1.album, o2.album) }
         SortType.DURATION -> compareBy { it.duration }
         SortType.RECENTLY_ADDED -> compareBy { it.dateAdded }
         SortType.TRACK_NUMBER -> ComparatorUtils.getMediaEntityAscendingTrackNumberComparator()
@@ -371,10 +398,10 @@ private fun getAscendingComparator(sortType: SortType): Comparator<MediaEntity> 
 
 private fun getDescendingComparator(sortType: SortType): Comparator<MediaEntity> {
     return when (sortType) {
-        SortType.TITLE -> Comparator { o1, o2 -> collator.safeCompare(o2.title, o1.title) }
-        SortType.ARTIST -> Comparator { o1, o2 -> collator.safeCompare(o2.artist, o1.artist) }
-        SortType.ALBUM_ARTIST -> Comparator { o1, o2 -> collator.safeCompare(o2.albumArtist, o1.albumArtist) }
-        SortType.ALBUM -> Comparator { o1, o2 -> collator.safeCompare(o2.album, o1.album) }
+        SortType.TITLE -> Comparator { o1, o2 -> collator.compare(o2.title, o1.title) }
+        SortType.ARTIST -> Comparator { o1, o2 -> collator.compare(o2.artist, o1.artist) }
+        SortType.ALBUM_ARTIST -> Comparator { o1, o2 -> collator.compare(o2.albumArtist, o1.albumArtist) }
+        SortType.ALBUM -> Comparator { o1, o2 -> collator.compare(o2.album, o1.album) }
         SortType.DURATION -> compareByDescending { it.duration }
         SortType.RECENTLY_ADDED -> compareByDescending { it.dateAdded }
         SortType.TRACK_NUMBER -> ComparatorUtils.getMediaEntityDescendingTrackNumberComparator()

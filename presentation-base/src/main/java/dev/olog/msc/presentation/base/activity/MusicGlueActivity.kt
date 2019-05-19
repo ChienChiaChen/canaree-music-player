@@ -20,6 +20,7 @@ import dev.olog.msc.presentation.base.media.MediaServiceCallback
 import dev.olog.msc.presentation.base.media.MusicServiceConnection
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.MusicServiceConnectionState
+import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -60,16 +61,18 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
     override fun onStart() {
         super.onStart()
 
-        connectionDisposable = publisher.subscribe({
-            when (it){
-                MusicServiceConnectionState.CONNECTED -> onConnected()
-                MusicServiceConnectionState.FAILED -> onConnectionFailed()
-                else -> {}
-            }
+        if (Permissions.canReadStorage(this)){
+            connectionDisposable = publisher.subscribe({
+                when (it){
+                    MusicServiceConnectionState.CONNECTED -> onConnected()
+                    MusicServiceConnectionState.FAILED -> onConnectionFailed()
+                    else -> {}
+                }
 
-        }, Throwable::printStackTrace)
+            }, Throwable::printStackTrace)
 
-        mediaBrowser.connect()
+            mediaBrowser.connect()
+        }
     }
 
     @CallSuper

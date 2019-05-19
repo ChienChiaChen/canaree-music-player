@@ -25,6 +25,7 @@ internal class AlbumQueries constructor(
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
                 $albumArtistProjection,
+                $folderProjection as ${Columns.FOLDER},
                 count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
             WHERE ${defaultSelection()} $filter
@@ -42,6 +43,7 @@ internal class AlbumQueries constructor(
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
                 $albumArtistProjection,
+                $folderProjection as ${Columns.FOLDER},
                 count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
             WHERE $ALBUM_ID = ? AND ${defaultSelection()}
@@ -51,27 +53,13 @@ internal class AlbumQueries constructor(
         return contentResolver.querySql(query, arrayOf(albumId.toString()))
     }
 
-    fun getArtistById(albumId: Long): Cursor {
-        val query = """
-            SELECT distinct $ARTIST_ID,
-                $artistProjection as ${Columns.ARTIST},
-                $albumArtistProjection,
-                count(*) as ${Columns.N_SONGS},
-                count(distinct $ALBUM_ID) as ${Columns.N_ALBUMS}
-            FROM $EXTERNAL_CONTENT_URI
-            WHERE $ALBUM_ID = ? AND ${defaultSelection()}
-            GROUP BY $ARTIST_ID
-        """
-        return contentResolver.querySql(query, arrayOf(albumId.toString()))
-    }
-
-
     fun getExistingLastPlayed(lastPlayedAlbums: String): Cursor {
         val query = """
             SELECT distinct $ALBUM_ID, $ARTIST_ID,
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
                 $albumArtistProjection,
+                $folderProjection as ${Columns.FOLDER},
                 count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
             WHERE ${defaultSelection()} AND $ALBUM_ID in ($lastPlayedAlbums)
@@ -88,6 +76,7 @@ internal class AlbumQueries constructor(
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
                 $albumArtistProjection,
+                $folderProjection as ${Columns.FOLDER},
                 count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
             WHERE ${defaultSelection()} AND ${isRecentlyAdded()} $filter
@@ -116,6 +105,7 @@ internal class AlbumQueries constructor(
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
                 $albumArtistProjection,
+                $folderProjection as ${Columns.FOLDER},
                 count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
             WHERE $ALBUM_ID <> ? AND $ARTIST_ID = ? AND ${defaultSelection()}

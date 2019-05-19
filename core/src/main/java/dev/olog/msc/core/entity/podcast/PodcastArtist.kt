@@ -1,10 +1,9 @@
 package dev.olog.msc.core.entity.podcast
 
-data class PodcastArtist (
-        val id: Long,
-        val name: String,
-        val albumArtist: String,
-        val songs: Int,
-        val albums: Int,
-        val image: String
+data class PodcastArtist(
+    val id: Long,
+    val name: String,
+    val albumArtist: String,
+    val songs: Int,
+    val albums: Int
 )

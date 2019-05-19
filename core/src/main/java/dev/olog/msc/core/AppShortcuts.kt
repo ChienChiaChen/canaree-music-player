@@ -5,6 +5,6 @@ interface AppShortcuts {
     fun disablePlay()
     fun enablePlay()
 
-    fun addDetailShortcut(mediaId: MediaId, title: String, image: String)
+    fun addDetailShortcut(mediaId: MediaId, title: String)
 
 }

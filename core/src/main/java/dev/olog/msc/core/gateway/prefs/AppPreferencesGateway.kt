@@ -45,7 +45,7 @@ interface AppPreferencesGateway : Sorting {
 
     fun setDefault(): Completable
 
-    fun observeAutoCreateImages(): Observable<Boolean>
+    fun canAutoCreateImages(): Boolean
 
     fun getLastFmCredentials(): UserCredentials
     suspend fun observeLastFmCredentials(): Flow<UserCredentials>
@@ -67,8 +67,6 @@ interface AppPreferencesGateway : Sorting {
     fun observeLockscreenArtworkEnabled(): Observable<Boolean>
 
     fun getShowFolderAsTreeView(): Boolean
-
-    fun ignoreMediaStoreCover(): Boolean
 
 }
 

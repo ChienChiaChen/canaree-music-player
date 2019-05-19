@@ -56,7 +56,6 @@ internal class RecentlyAddedDataSource @Inject constructor(
             MediaId.playableItem(parentId, id),
             title,
             artist,
-            image,
             true
         )
     }

@@ -27,9 +27,8 @@ dependencies {
     implementation librariesUtils.fuzzywuzzy
     implementation librariesUtils.gson
 
-    implementation librariesUtils.optional
     implementation librariesNetwork.retrofit
-    implementation librariesNetwork.retrofitRx
+    implementation librariesNetwork.retrofitCoroutines
     implementation librariesNetwork.retrofitGson
     implementation librariesNetwork.retrofitInterceptor
     implementation librariesNetwork.okHttp

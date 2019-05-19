@@ -15,10 +15,10 @@ import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import javax.inject.Inject
 
 class FolderPopupListener @Inject constructor(
-        private val navigator: Navigator,
-        getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-        addToPlaylistUseCase: AddToPlaylistUseCase,
-        private val appShortcuts: AppShortcuts
+    private val navigator: Navigator,
+    getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
+    addToPlaylistUseCase: AddToPlaylistUseCase,
+    private val appShortcuts: AppShortcuts
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, false) {
 
@@ -57,7 +57,7 @@ class FolderPopupListener @Inject constructor(
             R.id.viewArtist -> viewArtist(navigator, MediaId.artistId(song!!.artistId))
             R.id.share -> share(activity, song!!)
             R.id.setRingtone -> setRingtone(navigator, getMediaId(), song!!)
-            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), folder.title, folder.image)
+            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), folder.title)
         }
 
 

@@ -26,13 +26,16 @@ abstract class BaseWidget : AbsWidgetApp() {
         private var IS_PLAYING = false
     }
 
-    @Inject internal lateinit var musicPrefsUseCase: MusicPreferencesGateway
-    @Inject internal lateinit var widgetClasses: WidgetClasses
-    @Inject internal lateinit var classes: Classes
+    @Inject
+    internal lateinit var musicPrefsUseCase: MusicPreferencesGateway
+    @Inject
+    internal lateinit var widgetClasses: WidgetClasses
+    @Inject
+    internal lateinit var classes: Classes
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        if (intent.action == "mobi.intuitit.android.hpp.ACTION_READY"){
+        if (intent.action == "mobi.intuitit.android.hpp.ACTION_READY") {
             val appWidgetManager = context.getSystemService(Context.APPWIDGET_SERVICE) as AppWidgetManager
             for (clazz in widgetClasses.get()) {
                 val ids = context.getAppWidgetsIdsFor(clazz)
@@ -44,13 +47,16 @@ abstract class BaseWidget : AbsWidgetApp() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         val remoteViews = RemoteViews(context.packageName, layoutId)
 
-        val playPauseIcon = if (IS_PLAYING){
+        val playPauseIcon = if (IS_PLAYING) {
             ContextCompat.getDrawable(context, R.drawable.vd_pause_big)!!
         } else ContextCompat.getDrawable(context, R.drawable.vd_play_big)!!
 
         remoteViews.setImageViewBitmap(R.id.play, playPauseIcon.toBitmap())
 
-        remoteViews.setOnClickPendingIntent(R.id.previous, buildPendingIntent(context, MusicConstants.ACTION_SKIP_PREVIOUS))
+        remoteViews.setOnClickPendingIntent(
+            R.id.previous,
+            buildPendingIntent(context, MusicConstants.ACTION_SKIP_PREVIOUS)
+        )
         remoteViews.setOnClickPendingIntent(R.id.play, buildPendingIntent(context, MusicConstants.ACTION_PLAY_PAUSE))
         remoteViews.setOnClickPendingIntent(R.id.next, buildPendingIntent(context, MusicConstants.ACTION_SKIP_NEXT))
         remoteViews.setOnClickPendingIntent(R.id.cover, buildContentIntent(context))
@@ -64,13 +70,16 @@ abstract class BaseWidget : AbsWidgetApp() {
 
         val remoteViews = RemoteViews(context.packageName, layoutId)
 
-        val playPauseIcon = if (state.isPlaying){
+        val playPauseIcon = if (state.isPlaying) {
             ContextCompat.getDrawable(context, R.drawable.vd_pause_big)!!
         } else ContextCompat.getDrawable(context, R.drawable.vd_play_big)!!
 
         remoteViews.setImageViewBitmap(R.id.play, playPauseIcon.toBitmap())
 
-        remoteViews.setOnClickPendingIntent(R.id.previous, buildPendingIntent(context, MusicConstants.ACTION_SKIP_PREVIOUS))
+        remoteViews.setOnClickPendingIntent(
+            R.id.previous,
+            buildPendingIntent(context, MusicConstants.ACTION_SKIP_PREVIOUS)
+        )
         remoteViews.setOnClickPendingIntent(R.id.play, buildPendingIntent(context, MusicConstants.ACTION_PLAY_PAUSE))
         remoteViews.setOnClickPendingIntent(R.id.next, buildPendingIntent(context, MusicConstants.ACTION_SKIP_NEXT))
         remoteViews.setOnClickPendingIntent(R.id.cover, buildContentIntent(context))
@@ -87,9 +96,9 @@ abstract class BaseWidget : AbsWidgetApp() {
         val nextVisibility = if (showNext) View.VISIBLE else View.INVISIBLE
 
         val previousPendingIntent = if (showPrevious) buildPendingIntent(context, MusicConstants.ACTION_SKIP_PREVIOUS)
-            else null
+        else null
         val nextPendingIntent = if (showNext) buildPendingIntent(context, MusicConstants.ACTION_SKIP_NEXT)
-            else null
+        else null
 
         remoteViews.setViewVisibility(R.id.previous, previousVisibility)
         remoteViews.setViewVisibility(R.id.next, nextVisibility)
@@ -108,27 +117,34 @@ abstract class BaseWidget : AbsWidgetApp() {
     private fun buildContentIntent(context: Context): PendingIntent {
         val intent = Intent(context, classes.mainActivity())
         intent.action = PendingIntents.ACTION_CONTENT_VIEW
-        return PendingIntent.getActivity(context, 0,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(
+            context, 0,
+            intent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
-    protected fun setMediaButtonColors(remoteViews: RemoteViews, color: Int){
+    protected fun setMediaButtonColors(remoteViews: RemoteViews, color: Int) {
         remoteViews.setInt(R.id.previous, "setColorFilter", color)
         remoteViews.setInt(R.id.play, "setColorFilter", color)
         remoteViews.setInt(R.id.next, "setColorFilter", color)
     }
 
-    protected fun updateTextColor(remoteViews: RemoteViews, palette: ImageProcessorResult){
+    protected fun updateTextColor(remoteViews: RemoteViews, palette: ImageProcessorResult) {
         remoteViews.setTextColor(R.id.title, palette.primaryTextColor)
         remoteViews.setTextColor(R.id.subtitle, palette.secondaryTextColor)
     }
 
-    protected abstract val layoutId : Int
+    protected abstract val layoutId: Int
 
-    override fun onSizeChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, size: WidgetSize) {
+    override fun onSizeChanged(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        size: WidgetSize
+    ) {
         val remoteViews = RemoteViews(context.packageName, layoutId)
 
-        if (size.minHeight > 100){
+        if (size.minHeight > 100) {
             remoteViews.setInt(R.id.title, "setMaxLines", Int.MAX_VALUE)
             remoteViews.setInt(R.id.subtitle, "setMaxLines", 2)
 
@@ -141,22 +157,21 @@ abstract class BaseWidget : AbsWidgetApp() {
 
     private fun LastMetadata.safeMap(context: Context): LastMetadata {
         val title = if (this.title.isBlank()) context.getString(R.string.common_placeholder_title) else this.title
-        val subtitle = if (this.subtitle.isBlank()) context.getString(R.string.common_placeholder_artist) else this.subtitle
+        val subtitle =
+            if (this.subtitle.isBlank()) context.getString(R.string.common_placeholder_artist) else this.subtitle
 
         return LastMetadata(
-                title,
-                subtitle,
-                this.image,
-                this.id
+            title,
+            subtitle,
+            this.id
         )
     }
 
     private fun LastMetadata.toWidgetMetadata(): WidgetMetadata {
-        return dev.olog.msc.appwidgets.WidgetMetadata(
-                this.id,
-                this.title,
-                this.subtitle,
-                this.image
+        return WidgetMetadata(
+            this.id,
+            this.title,
+            this.subtitle
         )
     }
 

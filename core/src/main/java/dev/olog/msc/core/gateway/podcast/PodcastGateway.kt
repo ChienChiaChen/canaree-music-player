@@ -1,5 +1,6 @@
 package dev.olog.msc.core.gateway.podcast
 
+import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.gateway.base.BaseGateway
 import io.reactivex.Observable
@@ -8,7 +9,7 @@ interface PodcastGateway : BaseGateway<Podcast, Long> {
 
     fun getAllUnfiltered(): Observable<List<Podcast>>
 
-    fun getByAlbumId(albumId: Long): Observable<Podcast>
+    fun getByAlbumId(albumId: Long): ItemRequest<Podcast>
 
     fun deleteSingle(podcastId: Long)
     fun deleteGroup(podcastList: List<Podcast>)

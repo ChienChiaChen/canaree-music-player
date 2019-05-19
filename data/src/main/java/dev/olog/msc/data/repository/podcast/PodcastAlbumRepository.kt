@@ -9,7 +9,6 @@ import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
-import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.data.db.AppDatabase
@@ -22,40 +21,16 @@ import dev.olog.msc.data.repository.queries.AlbumQueries
 import dev.olog.msc.data.repository.util.ContentObserverFlow
 import dev.olog.msc.data.repository.util.queryCountRow
 import dev.olog.msc.data.repository.util.queryFirstColumn
-import dev.olog.msc.imageprovider.ImagesFolderUtils
 import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
 internal class PodcastAlbumRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     appDatabase: AppDatabase,
-    private val usedImageGateway: UsedImageGateway,
     private val prefsGateway: AppPreferencesGateway,
     private val contentObserverFlow: ContentObserverFlow
 
 ) : PodcastAlbumGateway {
-
-    companion object {
-        internal fun updateImages(
-            context: Context,
-            list: List<PodcastAlbum>,
-            usedImageGateway: UsedImageGateway
-        ): List<PodcastAlbum> {
-            val allForAlbum = usedImageGateway.getAllForAlbums()
-            if (allForAlbum.isEmpty()) {
-                return list
-            }
-
-            return list.map { album ->
-                val image =
-                    allForAlbum.firstOrNull { it.id == album.id }?.image ?: ImagesFolderUtils.forAlbum(
-                        context,
-                        album.id
-                    )
-                album.copy(image = image)
-            }
-        }
-    }
 
     private val contentResolver = context.contentResolver
     private val queries = AlbumQueries(prefsGateway, true, contentResolver)
@@ -66,7 +41,7 @@ internal class PodcastAlbumRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
             cursorMapper = { it.toPodcastAlbum() },
-            listMapper = { updateImages(context, it, usedImageGateway) },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -77,7 +52,7 @@ internal class PodcastAlbumRepository @Inject constructor(
         return ItemRequestImpl(
             cursorFactory = { queries.getById(param) },
             cursorMapper = { it.toPodcastAlbum() },
-            itemMapper = { updateImages(context, listOf(it), usedImageGateway).first() },
+            itemMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -94,9 +69,8 @@ internal class PodcastAlbumRepository @Inject constructor(
             cursorMapper = { it.toPodcastAlbum() },
             listMapper = { list, _ ->
                 val lastPlayed = lastPlayedDao.getAll(maxAllowed)
-                val existing = updateImages(context, list, usedImageGateway)
                 lastPlayed.asSequence()
-                    .mapNotNull { last -> existing.firstOrNull { it.id == last.id } }
+                    .mapNotNull { last -> list.firstOrNull { it.id == last.id } }
                     .take(maxAllowed)
                     .toList()
             },
@@ -115,7 +89,7 @@ internal class PodcastAlbumRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getRecentlyAdded(it) },
             cursorMapper = { it.toPodcastAlbum() },
-            listMapper = { updateImages(context, it, usedImageGateway) },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -126,9 +100,7 @@ internal class PodcastAlbumRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getSongList(param, it) },
             cursorMapper = { it.toPodcast() },
-            listMapper = {
-                PodcastRepository.adjustImages(context, it)
-            },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -143,7 +115,7 @@ internal class PodcastAlbumRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getSiblings(mediaId.categoryId, it) },
             cursorMapper = { it.toPodcastAlbum() },
-            listMapper = { updateImages(context, it, usedImageGateway) },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI

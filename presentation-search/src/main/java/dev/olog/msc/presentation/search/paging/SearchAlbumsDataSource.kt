@@ -65,8 +65,7 @@ class SearchAlbumsDataSource @Inject constructor(
             R.layout.item_search_album,
             MediaId.albumId(id),
             title,
-            artist,
-            image
+            artist
         )
     }
 
@@ -75,8 +74,7 @@ class SearchAlbumsDataSource @Inject constructor(
             R.layout.item_search_album,
             MediaId.podcastAlbumId(id),
             title,
-            artist,
-            image
+            artist
         )
     }
 

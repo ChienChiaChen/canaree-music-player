@@ -55,15 +55,14 @@ internal class PodcastPlaylistRepository @Inject constructor(
         return PodcastPlaylist(
             this.id,
             this.name,
-            this.size,
-            ""
+            this.size
         )
     }
 
     private val autoPlaylistTitles = resources.getStringArray(prefsKeys.autoPlaylist())
 
     private fun createAutoPlaylist(id: Long, title: String): PodcastPlaylist {
-        return PodcastPlaylist(id, title, 0, "")
+        return PodcastPlaylist(id, title, 0)
     }
 
     override fun getAllAutoPlaylists(): List<PodcastPlaylist> {
@@ -126,9 +125,7 @@ internal class PodcastPlaylistRepository @Inject constructor(
             return PageRequestImpl(
                 cursorFactory = { trackQueries.getByLastAdded(it) },
                 cursorMapper = { it.toPodcast() },
-                listMapper = {
-                    PodcastRepository.adjustImages(context, it)
-                },
+                listMapper = null,
                 contentResolver = contentResolver,
                 contentObserverFlow = contentObserverFlow,
                 mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -144,11 +141,10 @@ internal class PodcastPlaylistRepository @Inject constructor(
                 },
                 cursorMapper = { it.toPodcast() },
                 listMapper = { list, request ->
-                    val existing = PodcastRepository.adjustImages(context, list)
                     val page = request.page // TODO add filter
                     val favoritesIds = favoriteGateway.getAll(page.limit, page.offset)
                     favoritesIds.asSequence()
-                        .mapNotNull { fav -> existing.first { it.id == fav } }
+                        .mapNotNull { fav -> list.first { it.id == fav } }
                         .toList()
                 },
                 contentResolver = contentResolver,
@@ -165,11 +161,10 @@ internal class PodcastPlaylistRepository @Inject constructor(
                 },
                 cursorMapper = { it.toPodcast() },
                 listMapper = { list, request ->
-                    val existing = PodcastRepository.adjustImages(context, list)
                     val page = request.page // TODO add filter
                     val historyIds = historyDao.getAll(page.limit, page.offset)
                     historyIds.asSequence()
-                        .mapNotNull { hist -> existing.first { it.id == hist.songId } to hist }
+                        .mapNotNull { hist -> list.first { it.id == hist.songId } to hist }
                         .map {
                             it.first.copy(
                                 trackNumber = it.second.id,
@@ -192,12 +187,11 @@ internal class PodcastPlaylistRepository @Inject constructor(
             },
             cursorMapper = { it.toPodcast() },
             listMapper = { list, request ->
-                val existing = PodcastRepository.adjustImages(context, list)
                 val page = request.page // TODO add filter
                 podcastPlaylistDao.getPlaylistTracks(param, page.offset, page.limit)
                     .asSequence()
                     .mapNotNull { podcast ->
-                        existing.first { it.id == podcast.podcastId }
+                        list.first { it.id == podcast.podcastId }
                             .copy(trackNumber = podcast.idInPlaylist.toInt())
                     }
                     .toList()

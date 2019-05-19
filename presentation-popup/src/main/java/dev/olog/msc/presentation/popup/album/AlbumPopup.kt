@@ -10,15 +10,15 @@ import dev.olog.msc.presentation.popup.R
 import dev.olog.msc.shared.TrackUtils
 
 class AlbumPopup(
-        view: View,
-        album: Album,
-        song: Song?,
-        listener: AbsPopupListener
+    view: View,
+    album: Album,
+    song: Song?,
+    listener: AbsPopupListener
 
-) : AbsPopup(view)  {
+) : AbsPopup(view) {
 
     init {
-        if (song == null){
+        if (song == null) {
             inflate(R.menu.dialog_album)
         } else {
             inflate(R.menu.dialog_song)
@@ -28,14 +28,14 @@ class AlbumPopup(
 
         setOnMenuItemClickListener(listener)
 
-        if (song == null){
-            if (album.artist == TrackUtils.UNKNOWN){
+        if (song == null) {
+            if (album.artist == TrackUtils.UNKNOWN_ARTIST) {
                 menu.removeItem(R.id.viewArtist)
             }
         } else {
             menu.removeItem(R.id.viewAlbum)
 
-            if (song.artist == TrackUtils.UNKNOWN){
+            if (song.artist == TrackUtils.UNKNOWN_ARTIST) {
                 menu.removeItem(R.id.viewArtist)
             }
         }

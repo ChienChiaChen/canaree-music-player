@@ -13,7 +13,7 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import dev.olog.msc.imageprovider.CoverUtils
-import dev.olog.msc.imageprovider.GlideApp
+import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.widgets.SwipeableView
 import dev.olog.msc.presentation.splash.R

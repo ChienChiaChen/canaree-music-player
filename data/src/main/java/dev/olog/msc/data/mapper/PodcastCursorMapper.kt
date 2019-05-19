@@ -31,12 +31,11 @@ internal fun Cursor.toPodcast(): Podcast {
 
     return Podcast(
         id, artistId, albumId, title, artist, albumArtist, album,
-        "",
         duration, dateAdded, path, disc, track
     )
 }
 
-internal fun Cursor.toUneditedPodcast(image: String): Podcast {
+internal fun Cursor.toUneditedPodcast(): Podcast {
     val id = getLong(BaseColumns._ID)
     val artistId = getLong(MediaStore.Audio.AudioColumns.ARTIST_ID)
     val albumId = getLong(MediaStore.Audio.AudioColumns.ALBUM_ID)
@@ -56,7 +55,7 @@ internal fun Cursor.toUneditedPodcast(image: String): Podcast {
 
     return Podcast(
         id, artistId, albumId, title, artist, albumArtist, album,
-        image, duration, dateAdded, path, disc, track
+        duration, dateAdded, path, disc, track
     )
 }
 
@@ -67,9 +66,7 @@ internal fun Cursor.toPodcastAlbum(): PodcastAlbum {
         getString(Columns.ALBUM),
         getString(Columns.ARTIST),
         getString(Columns.ALBUM_ARTIST),
-        "",
-        getInt(Columns.N_SONGS),
-        false // TODo
+        getInt(Columns.N_SONGS)
     )
 }
 
@@ -79,7 +76,6 @@ internal fun Cursor.toPodcastArtist(): PodcastArtist {
         getString(Columns.ARTIST),
         getString(Columns.ALBUM_ARTIST),
         getInt(Columns.N_SONGS),
-        getInt(Columns.N_ALBUMS),
-        ""
+        getInt(Columns.N_ALBUMS)
     )
 }

@@ -1,6 +1,5 @@
 package dev.olog.msc.apilastfm.data
 
-import com.github.dmstocking.optional.java.util.Optional
 import dev.olog.msc.apilastfm.LastFmService
 import dev.olog.msc.apilastfm.annotation.Proxy
 import dev.olog.msc.apilastfm.mapper.LastFmNulls
@@ -11,85 +10,85 @@ import dev.olog.msc.core.entity.track.Album
 import dev.olog.msc.core.gateway.track.AlbumGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmAlbumEntity
-import io.reactivex.Single
-import kotlinx.coroutines.runBlocking
+import dev.olog.msc.shared.utils.assertBackgroundThread
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class LastFmRepoAlbum @Inject constructor(
-        appDatabase: AppDatabase,
-        @Proxy private val lastFmService: LastFmService,
-        private val albumGateway: AlbumGateway
+    appDatabase: AppDatabase,
+    @Proxy private val lastFmService: LastFmService,
+    private val albumGateway: AlbumGateway
 
 ) {
 
     private val dao = appDatabase.lastFmDao()
 
-    fun shouldFetch(albumId: Long): Single<Boolean> {
-        return Single.fromCallable { dao.getAlbum(albumId) == null }
+    suspend fun shouldFetch(albumId: Long): Boolean {
+        assertBackgroundThread()
+        return dao.getAlbum(albumId) == null
     }
 
-    fun get(albumId: Long): Single<Optional<LastFmAlbum?>> = runBlocking{
+    suspend fun get(albumId: Long): LastFmAlbum? {
+        assertBackgroundThread()
+
         val cachedValue = getFromCache(albumId)
-        TODO()
-//        val fetch = Single.just(albumGateway.getByParam(albumId))
-//                .flatMap {
-//                    if (it.hasSameNameAsFolder){
-//                        Single.error(Exception("image not downloadable"))
-//                    } else {
-//                        Single.just(it)
-//                    }
-//                }
-//                .flatMap { fetch(it) }
-//                .map { Optional.of(it) }
-//
-//        cachedValue.onErrorResumeNext(fetch)
-//                .subscribeOn(Schedulers.io())
+        if (cachedValue != null){
+            return cachedValue
+        }
+
+        val album = albumGateway.getByParam(albumId).getItem() ?: return null
+        if (album.hasSameNameAsFolder){
+            return null
+        }
+        return fetch(album)
     }
 
-    private fun getFromCache(albumId: Long): Single<Optional<LastFmAlbum?>> {
-        return Single.fromCallable { Optional.ofNullable(dao.getAlbum(albumId)) }
-                .map {
-                    if (it.isPresent){
-                        Optional.of(it.get()!!.toDomain())
-                    } else throw NoSuchElementException()
-                }
+    private suspend fun getFromCache(albumId: Long): LastFmAlbum? {
+        val album = dao.getAlbum(albumId)
+        return album?.toDomain()
     }
 
-    private fun fetch(album: Album): Single<LastFmAlbum> {
+    private suspend fun fetch(album: Album): LastFmAlbum {
+        assertBackgroundThread()
+
         val albumId = album.id
 
-        return lastFmService.getAlbumInfo(album.title, album.artist)
-                .map { it.toDomain(albumId) }
-                .doOnSuccess { cache(it) }
-                .onErrorResumeNext { lastFmService.searchAlbum(album.title)
-                        .map { it.toDomain(albumId, album.artist) }
-                        .flatMap { result -> lastFmService.getAlbumInfo(result.title, result.artist)
-                                .map { it.toDomain(albumId) }
-                                .onErrorReturnItem(result)
-                        }
-                        .doOnSuccess { cache(it) }
-                        .onErrorResumeNext {
-                            if (it is NoSuchElementException){
-                                Single.fromCallable { cacheEmpty(albumId) }
-                                        .map { it.toDomain() }
-                            } else Single.error(it)
-                        }
-                }
+        try {
+            val albumInfo = lastFmService.getAlbumInfoAsync(album.title, album.artist).await().toDomain(albumId)
+            return cacheAsync(albumInfo).await().toDomain()
+        } catch (ex: Exception){
+            try {
+                var searchedAlbum = lastFmService.searchAlbumAsync(album.title).await().toDomain(albumId, album.artist)
+                try {
+                    searchedAlbum = lastFmService.getAlbumInfoAsync(searchedAlbum.title, searchedAlbum.artist).await().toDomain(albumId)
+                } catch (ignored: Exception){}
+                return cacheAsync(searchedAlbum).await().toDomain()
+            } catch (ex: Exception){
+                return cacheEmptyAsync(albumId).await().toDomain()
+            }
+
+        }
     }
 
-    private fun cache(model: LastFmAlbum): LastFmAlbumEntity {
+    private suspend fun cacheAsync(model: LastFmAlbum): Deferred<LastFmAlbumEntity> = GlobalScope.async {
+        assertBackgroundThread()
         val entity = model.toModel()
         dao.insertAlbum(entity)
-        return entity
+        entity
     }
 
-    private fun cacheEmpty(albumId: Long): LastFmAlbumEntity{
+    private suspend fun cacheEmptyAsync(albumId: Long): Deferred<LastFmAlbumEntity> = GlobalScope.async {
+        assertBackgroundThread()
         val entity = LastFmNulls.createNullAlbum(albumId)
         dao.insertAlbum(entity)
-        return entity
+        entity
     }
 
-    fun delete(albumId: Long) {
+    suspend fun delete(albumId: Long) = GlobalScope.launch {
+        assertBackgroundThread()
         dao.deleteAlbum(albumId)
     }
 

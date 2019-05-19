@@ -9,7 +9,6 @@ import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Genre
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.GenreGateway
 import dev.olog.msc.core.gateway.track.SongGateway
@@ -32,7 +31,6 @@ internal class GenreRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     private val prefsGateway: AppPreferencesGateway,
     appDatabase: AppDatabase,
-    private val usedImageGateway: UsedImageGateway,
     private val contentObserverFlow: ContentObserverFlow,
     private val songGateway: SongGateway
 
@@ -46,7 +44,7 @@ internal class GenreRepository @Inject constructor(
     override fun getAll(): DataRequest<Genre> {
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
-            cursorMapper = { it.toGenre(context) },
+            cursorMapper = { it.toGenre() },
             listMapper = { genreList ->
                 genreList.map { genre ->
                     // get the size for every genre
@@ -64,7 +62,7 @@ internal class GenreRepository @Inject constructor(
     override fun getByParam(param: Long): ItemRequestImpl<Genre> {
         return ItemRequestImpl(
             cursorFactory = { queries.getById(param) },
-            cursorMapper = { it.toGenre(context) },
+            cursorMapper = { it.toGenre() },
             itemMapper = { genre ->
                 // get the size for every genre
                 val sizeQueryCursor = queries.countGenreSize(genre.id)
@@ -81,10 +79,7 @@ internal class GenreRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getSongList(param, it) },
             cursorMapper = { it.toSong() },
-            listMapper = {
-                val result = SongRepository.adjustImages(context, it)
-                SongRepository.updateImages(result, usedImageGateway)
-            },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Genres.Members.getContentUri("external", param)
@@ -99,10 +94,7 @@ internal class GenreRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getRecentlyAddedSongs(mediaId.categoryId, it) },
             cursorMapper = { it.toSong() },
-            listMapper = {
-                val result = SongRepository.adjustImages(context, it)
-                SongRepository.updateImages(result, usedImageGateway)
-            },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Genres.Members.getContentUri("external", mediaId.categoryId)
@@ -116,7 +108,7 @@ internal class GenreRepository @Inject constructor(
     override fun getSiblings(mediaId: MediaId): DataRequest<Genre> {
         return PageRequestImpl(
             cursorFactory = { queries.getSiblings(mediaId.categoryId, it) },
-            cursorMapper = { it.toGenre(context) },
+            cursorMapper = { it.toGenre() },
             listMapper = { genreList ->
                 genreList.map { genre ->
                     // get the size for every playlist
@@ -139,7 +131,7 @@ internal class GenreRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getRelatedArtists(mediaId.categoryId, it) },
             cursorMapper = { it.toArtist() },
-            listMapper = { ArtistRepository.updateImages(it, usedImageGateway) },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Genres.Members.getContentUri("external", mediaId.categoryId)
@@ -168,11 +160,9 @@ internal class GenreRepository @Inject constructor(
             },
             cursorMapper = { it.toSong() },
             listMapper = { list, _ ->
-                val result = SongRepository.adjustImages(context, list)
-                val existing = SongRepository.updateImages(result, usedImageGateway)
                 val mostPlayed = mostPlayedDao.query(mediaId.categoryId, maxAllowed)
                 mostPlayed.asSequence()
-                    .mapNotNull { mostPlayed -> existing.firstOrNull { it.id == mostPlayed.songId } }
+                    .mapNotNull { mostPlayed -> list.firstOrNull { it.id == mostPlayed.songId } }
                     .take(maxAllowed)
                     .toList()
             },

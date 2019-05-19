@@ -18,8 +18,8 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
-import dev.olog.msc.imageprovider.GlideApp
 import dev.olog.msc.imageprovider.ImagesFolderUtils
+import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.interfaces.HasBilling

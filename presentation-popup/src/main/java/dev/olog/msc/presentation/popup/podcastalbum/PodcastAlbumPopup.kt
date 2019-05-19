@@ -29,13 +29,13 @@ class PodcastAlbumPopup(
         setOnMenuItemClickListener(listener)
 
         if (song == null){
-            if (album.artist == TrackUtils.UNKNOWN){
+            if (album.artist == TrackUtils.UNKNOWN_ARTIST){
                 menu.removeItem(R.id.viewArtist)
             }
         } else {
             menu.removeItem(R.id.viewAlbum)
 
-            if (song.artist == TrackUtils.UNKNOWN){
+            if (song.artist == TrackUtils.UNKNOWN_ALBUM){
                 menu.removeItem(R.id.viewArtist)
             }
         }

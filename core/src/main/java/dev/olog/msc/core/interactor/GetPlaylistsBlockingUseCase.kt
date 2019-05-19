@@ -17,7 +17,7 @@ class GetPlaylistsBlockingUseCase @Inject internal constructor(
     fun execute(type: PlaylistType): List<Playlist> {
         if (type == PlaylistType.PODCAST) {
             return podcastPlaylistgateway.getPlaylistsBlocking()
-                .map { Playlist(it.id, it.title, it.size, it.image) }
+                .map { Playlist(it.id, it.title, it.size) }
         }
         return playlistGateway.getAll().getAll(Filter.NO_FILTER)
     }

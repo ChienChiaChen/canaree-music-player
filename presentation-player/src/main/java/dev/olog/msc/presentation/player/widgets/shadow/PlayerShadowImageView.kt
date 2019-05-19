@@ -16,18 +16,17 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.Target
 import dev.olog.msc.imageprovider.CoverUtils
-import dev.olog.msc.imageprovider.GlideApp
+import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.utils.getMediaId
 import dev.olog.msc.presentation.base.widgets.image.view.PlayerImageView
-import dev.olog.msc.presentation.base.widgets.image.view.toPlayerImage
 import dev.olog.msc.presentation.player.R
 import dev.olog.msc.presentation.player.widgets.shadow.PlayerShadowImageView.Companion.DOWNSCALE_FACTOR
 import dev.olog.msc.shared.extensions.dpToPx
 import kotlin.properties.Delegates
 
 class PlayerShadowImageView @JvmOverloads constructor(
-        context: Context,
-        attr: AttributeSet? = null
+    context: Context,
+    attr: AttributeSet? = null
 
 ) : PlayerImageView(context, attr) {
 
@@ -48,7 +47,7 @@ class PlayerShadowImageView @JvmOverloads constructor(
     var shadowColor = DEFAULT_COLOR
 
     init {
-        if (!isInEditMode){
+        if (!isInEditMode) {
             BlurShadow.init(context.applicationContext)
             cropToPadding = false
             super.setScaleType(ScaleType.CENTER_CROP)
@@ -61,24 +60,22 @@ class PlayerShadowImageView @JvmOverloads constructor(
         }
     }
 
-    override fun loadImage(metadata: MediaMetadataCompat){
+    override fun loadImage(metadata: MediaMetadataCompat) {
         val mediaId = metadata.getMediaId()
-
-        val model = metadata.toPlayerImage()
 
         GlideApp.with(context).clear(this)
 
         GlideApp.with(context)
-                .load(model)
-                .placeholder(CoverUtils.getGradient(context, mediaId))
-                .priority(Priority.IMMEDIATE)
-                .override(Target.SIZE_ORIGINAL)
+            .load(mediaId)
+            .placeholder(CoverUtils.getGradient(context, mediaId))
+            .priority(Priority.IMMEDIATE)
+            .override(Target.SIZE_ORIGINAL)
 
-                .into(Ripple(this))
+            .into(Ripple(this))
     }
 
     override fun setImageBitmap(bm: Bitmap?) {
-        if (!isInEditMode){
+        if (!isInEditMode) {
             setBlurShadow { super.setImageDrawable(BitmapDrawable(resources, bm)) }
         } else {
             super.setImageBitmap(bm)
@@ -86,7 +83,7 @@ class PlayerShadowImageView @JvmOverloads constructor(
     }
 
     override fun setImageResource(resId: Int) {
-        if (!isInEditMode){
+        if (!isInEditMode) {
             setBlurShadow { super.setImageDrawable(ContextCompat.getDrawable(context, resId)) }
         } else {
             super.setImageResource(resId)
@@ -112,7 +109,7 @@ class PlayerShadowImageView @JvmOverloads constructor(
     }
 
     override fun setImageDrawable(drawable: Drawable?) {
-        if (!isInEditMode){
+        if (!isInEditMode) {
             setBlurShadow { super.setImageDrawable(drawable) }
         } else {
             super.setImageDrawable(drawable)
@@ -146,11 +143,14 @@ class PlayerShadowImageView @JvmOverloads constructor(
         radius *= 2 * radiusOffset
         val blur = BlurShadow.blur(this, width, height - context.dpToPx(TOP_OFFSET), radius)
         //brightness -255..255 -25 is default
-        val colorMatrix = ColorMatrix(floatArrayOf(
+        val colorMatrix = ColorMatrix(
+            floatArrayOf(
                 1f, 0f, 0f, 0f, BRIGHTNESS,
                 0f, 1f, 0f, 0f, BRIGHTNESS,
                 0f, 0f, 1f, 0f, BRIGHTNESS,
-                0f, 0f, 0f, 1f, 0f)).apply { setSaturation(SATURATION) }
+                0f, 0f, 0f, 1f, 0f
+            )
+        ).apply { setSaturation(SATURATION) }
 
         background = BitmapDrawable(resources, blur).apply {
             this.colorFilter = ColorMatrixColorFilter(colorMatrix)
@@ -178,7 +178,7 @@ object BlurShadow {
 
     fun blur(view: ImageView, width: Int, height: Int, radius: Float): Bitmap? {
         val src = getBitmapForView(view, DOWNSCALE_FACTOR, width, height)
-                ?: return null
+            ?: return null
         val input = Allocation.createFromBitmap(renderScript, src)
         val output = Allocation.createTyped(renderScript, input.type)
         val script = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
@@ -193,9 +193,10 @@ object BlurShadow {
 
     private fun getBitmapForView(view: ImageView, downscaleFactor: Float, width: Int, height: Int): Bitmap? {
         val bitmap = Bitmap.createBitmap(
-                (width * downscaleFactor).toInt(),
-                (height * downscaleFactor).toInt(),
-                Bitmap.Config.ARGB_8888)
+            (width * downscaleFactor).toInt(),
+            (height * downscaleFactor).toInt(),
+            Bitmap.Config.ARGB_8888
+        )
 
         val canvas = Canvas(bitmap)
         val matrix = Matrix()

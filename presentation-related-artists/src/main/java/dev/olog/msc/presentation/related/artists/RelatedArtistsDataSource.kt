@@ -68,8 +68,7 @@ internal class RelatedArtistsDataSource @Inject constructor(
             R.layout.item_related_artist,
             MediaId.artistId(id),
             this.name,
-            "$albums$songs",
-            this.image
+            "$albums$songs"
         )
     }
 

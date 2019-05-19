@@ -81,8 +81,8 @@ ext {
     stetho = '1.5.1'
     custom_tabs = '2.0.0'
     gson = '2.8.5'
-    optional = '1.2'
     retrofit = '2.5.0'
+    retrofit_coroutines = '0.9.2'
     ok_http = '3.14.0'
     billing = '1.2.2'
     last_fm_binding = '0.1.2'
@@ -148,7 +148,7 @@ ext {
 
     librariesNetwork = [
             retrofit           : "com.squareup.retrofit2:retrofit:$retrofit",
-            retrofitRx         : "com.squareup.retrofit2:adapter-rxjava2:$retrofit",
+            retrofitCoroutines : "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofit_coroutines",
             retrofitGson       : "com.squareup.retrofit2:converter-gson:$retrofit",
             retrofitInterceptor: "com.squareup.okhttp3:logging-interceptor:$ok_http",
             okHttp             : "com.squareup.okhttp3:okhttp:$ok_http"
@@ -203,7 +203,6 @@ ext {
             aesCrypto : "com.github.tozny:java-aes-crypto:$aes_crypto",
             customTabs: "saschpe.android:customtabs:$custom_tabs",
             gson      : "com.google.code.gson:gson:$gson",
-            optional  : "com.github.dmstocking:support-optional:$optional",
             billing   : "com.android.billingclient:billing:$billing",
             lastFm    : "de.u-mass:lastfm-java:$last_fm_binding",
     ]

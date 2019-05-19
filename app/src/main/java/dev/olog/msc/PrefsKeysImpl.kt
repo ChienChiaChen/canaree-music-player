@@ -21,7 +21,6 @@ class PrefsKeysImpl @Inject constructor(): PrefsKeys {
     override fun visibleDetailSections(): Int = R.string.prefs_detail_sections_key
     override fun playerControlsVisibility(): Int = R.string.prefs_player_controls_visibility_key
     override fun showLockscreenArtwork(): Int = R.string.prefs_lockscreen_artwork_key
-    override fun ignoreMediaStoreCover(): Int = R.string.prefs_ignore_media_store_cover_key
     override fun adaptiveColors(): Int = R.string.prefs_adaptive_colors_key
     override fun showPodcast(): Int = R.string.prefs_show_podcasts_key
     override fun showNewAlbumsArtists(): Int = R.string.prefs_show_new_albums_artists_key
@@ -36,6 +35,12 @@ class PrefsKeysImpl @Inject constructor(): PrefsKeys {
     override fun darkMode(): Int = R.string.prefs_accent_dark_key
     override fun showFolderAsTreeView(): Int = R.string.prefs_folder_tree_view_key
     override fun usedEqualizer(): Int = R.string.prefs_used_equalizer_key
+
+    override fun autoDownloadImageNever(): Int = R.string.prefs_auto_download_images_entry_value_never
+
+    override fun autoDownloadImageWifiOnly(): Int = R.string.prefs_auto_download_images_entry_value_wifi
+
+    override fun autoDownloadImageAlways(): Int = R.string.prefs_auto_download_images_entry_value_always
 
     override fun autoPlaylist(): Int = R.array.common_auto_playlists
 

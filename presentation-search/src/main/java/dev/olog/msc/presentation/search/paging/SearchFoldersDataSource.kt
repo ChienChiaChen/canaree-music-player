@@ -57,8 +57,7 @@ class SearchFoldersDataSource @Inject constructor(
             R.layout.item_search_album,
             MediaId.folderId(path),
             title,
-            null,
-            image
+            null
         )
     }
 

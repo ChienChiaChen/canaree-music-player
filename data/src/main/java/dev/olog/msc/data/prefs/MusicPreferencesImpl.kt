@@ -29,7 +29,6 @@ private const val SKIP_NEXT = "$TAG.skip.next"
 
 private const val LAST_TITLE = "$TAG.last.title"
 private const val LAST_SUBTITLE = "$TAG.last.subtitle"
-private const val LAST_IMAGE = "$TAG.last.image"
 private const val LAST_ID = "$TAG.last.id"
 
 private const val PLAYBACK_SPEED = "$TAG.playback_speed"
@@ -106,7 +105,6 @@ internal class MusicPreferencesImpl @Inject constructor(
         return LastMetadata(
             preferences.getString(LAST_TITLE, "")!!,
             preferences.getString(LAST_SUBTITLE, "")!!,
-            preferences.getString(LAST_IMAGE, "")!!,
             preferences.getLong(LAST_ID, -1)
         )
     }
@@ -114,9 +112,9 @@ internal class MusicPreferencesImpl @Inject constructor(
     override fun setLastMetadata(metadata: LastMetadata) {
         val (title, subtitle, image) = metadata
         preferences.edit {
+            putLong(LAST_ID, metadata.id)
             putString(LAST_TITLE, title)
             putString(LAST_SUBTITLE, subtitle)
-            putString(LAST_IMAGE, image)
         }
     }
 

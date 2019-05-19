@@ -311,7 +311,7 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         newState: SlidingUpPanelLayout.PanelState
     ) {
         if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
-            if (viewModel.showLyricsTutorialIfNeverShown()){
+            if (viewModel.showLyricsTutorialIfNeverShown()) {
                 lyrics?.let { Tutorial.lyrics(it) }
             }
         } else {
@@ -327,7 +327,6 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
             MediaId.fromString(description.mediaId!!),
             description.title!!.toString(),
             description.subtitle!!.toString(),
-            description.mediaUri!!.toString(),
             isPlayable = true,
             trackNumber = "${this.queueId}"
         )

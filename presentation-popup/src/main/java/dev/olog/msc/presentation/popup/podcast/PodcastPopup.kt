@@ -22,10 +22,10 @@ class PodcastPopup(
 
         setOnMenuItemClickListener(listener)
 
-        if (podcast.artist == TrackUtils.UNKNOWN){
+        if (podcast.artist == TrackUtils.UNKNOWN_ARTIST){
             menu.removeItem(R.id.viewArtist)
         }
-        if (podcast.album == TrackUtils.UNKNOWN){
+        if (podcast.album == TrackUtils.UNKNOWN_ALBUM){
             menu.removeItem(R.id.viewAlbum)
         }
     }

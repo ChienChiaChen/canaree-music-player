@@ -14,7 +14,6 @@ interface PrefsKeys {
     fun visibleDetailSections(): Int
     fun playerControlsVisibility(): Int
     fun showLockscreenArtwork(): Int
-    fun ignoreMediaStoreCover(): Int
     fun adaptiveColors(): Int
     fun showPodcast(): Int
     fun showNewAlbumsArtists(): Int
@@ -28,6 +27,10 @@ interface PrefsKeys {
     fun playerAppearance(): Int
     fun darkMode(): Int
     fun usedEqualizer(): Int
+
+    fun autoDownloadImageNever(): Int
+    fun autoDownloadImageWifiOnly(): Int
+    fun autoDownloadImageAlways(): Int
 
     fun showFolderAsTreeView(): Int
 

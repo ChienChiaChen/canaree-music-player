@@ -5,7 +5,6 @@ dependencies {
     implementation librariesCore.rxJava
     implementation librariesCore.rxKotlin
     implementation librariesCore.dagger
-    implementation librariesUtils.optional
 
     implementation librariesCore.coroutines
     implementation librariesCore.coroutinesRx

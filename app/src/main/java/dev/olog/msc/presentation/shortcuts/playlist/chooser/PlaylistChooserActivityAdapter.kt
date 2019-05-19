@@ -13,8 +13,8 @@ import dev.olog.msc.shared.ui.ThemedDialog
 import javax.inject.Inject
 
 class PlaylistChooserActivityAdapter @Inject constructor(
-        private val activity: FragmentActivity,
-        private var appShortcuts: AppShortcuts
+    private val activity: FragmentActivity,
+    private var appShortcuts: AppShortcuts
 
 ) : AbsAdapter<DisplayableItem>(activity.lifecycle) {
 
@@ -26,14 +26,14 @@ class PlaylistChooserActivityAdapter @Inject constructor(
 
     private fun askConfirmation(item: DisplayableItem) {
         ThemedDialog.builder(activity)
-                .setTitle(R.string.playlist_chooser_dialog_title)
-                .setMessage(activity.getString(R.string.playlist_chooser_dialog_message, item.title))
-                .setPositiveButton(R.string.common_ok) { _, _ ->
-                    appShortcuts.addDetailShortcut(item.mediaId, item.title, item.image)
-                    activity.finish()
-                }
+            .setTitle(R.string.playlist_chooser_dialog_title)
+            .setMessage(activity.getString(R.string.playlist_chooser_dialog_message, item.title))
+            .setPositiveButton(R.string.common_ok) { _, _ ->
+                appShortcuts.addDetailShortcut(item.mediaId, item.title)
+                activity.finish()
+            }
             .setNegativeButton(R.string.common_no, null)
-                .show()
+            .show()
     }
 
     override fun bind(binding: ViewDataBinding, item: DisplayableItem, position: Int) {

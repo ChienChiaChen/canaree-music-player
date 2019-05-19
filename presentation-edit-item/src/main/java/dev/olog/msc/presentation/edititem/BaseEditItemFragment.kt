@@ -9,12 +9,10 @@ import android.net.Uri
 import android.widget.ImageView
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
-import androidx.core.net.toUri
 import com.bumptech.glide.Priority
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.CoverUtils
-import dev.olog.msc.imageprovider.GlideApp
-import dev.olog.msc.imageprovider.ImageModel
-import dev.olog.msc.imageprovider.ImagesFolderUtils
+import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.bottom.sheet.BaseBottomSheetFragment
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.ctx
@@ -38,30 +36,30 @@ abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
         hideLoader()
     }
 
-    protected fun setImage(model: ImageModel){
+    protected fun setImage(mediaId: MediaId) {
         val image = view!!.findViewById<ImageView>(R.id.cover)
 
         GlideApp.with(ctx).clear(image)
 
-        val img = model.image
-        val load: Any = if (ImagesFolderUtils.isChoosedImage(img)){
-            img.toUri()
-        } else model
+//        val img = model.image
+//        val load: Any = if (ImagesFolderUtils.isChoosedImage(img)){
+//            img.toUri()
+//        } else model TODO
 
         GlideApp.with(ctx)
-                .load(load)
-                .placeholder(CoverUtils.getGradient(ctx, model.mediaId))
-                .override(500)
-                .priority(Priority.IMMEDIATE)
-                .into(image)
+            .load(mediaId)
+            .placeholder(CoverUtils.getGradient(ctx, mediaId))
+            .override(500)
+            .priority(Priority.IMMEDIATE)
+            .into(image)
     }
 
 
-    protected fun showLoader(@StringRes resId: Int){
+    protected fun showLoader(@StringRes resId: Int) {
         showLoader(getString(resId))
     }
 
-    protected fun showLoader(message: String){
+    protected fun showLoader(message: String) {
         progressDialog = ProgressDialog.show(context, "", message, true)
         progressDialog?.setCancelable(true)
         progressDialog?.setCanceledOnTouchOutside(true)
@@ -71,29 +69,31 @@ abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
         }
     }
 
-    protected fun hideLoader(){
+    protected fun hideLoader() {
         progressDialog?.dismiss()
         progressDialog = null
     }
 
-    protected fun changeImage(){
+    protected fun changeImage() {
         ThemedDialog.builder(ctx)
-                .setItems(R.array.edit_item_image_dialog) { _, which ->
-                    when (which){
-                        0 -> openImagePicker()
-                        1 -> restoreImage()
-                        2 -> noImage()
-                    }
+            .setItems(R.array.edit_item_image_dialog) { _, which ->
+                when (which) {
+                    0 -> openImagePicker()
+                    1 -> restoreImage()
+                    2 -> noImage()
                 }
-                .show()
+            }
+            .show()
     }
 
-    private fun openImagePicker(){
+    private fun openImagePicker() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
-        this.startActivityForResult(Intent.createChooser(intent, getString(R.string.edit_song_change_album_art)),
-                PICK_IMAGE_CODE)
+        this.startActivityForResult(
+            Intent.createChooser(intent, getString(R.string.edit_song_change_album_art)),
+            PICK_IMAGE_CODE
+        )
     }
 
     protected abstract fun restoreImage()
@@ -101,7 +101,7 @@ abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
     protected abstract fun noImage()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == PICK_IMAGE_CODE){
+        if (requestCode == PICK_IMAGE_CODE) {
             data?.let { onImagePicked(it.data) }
         }
     }

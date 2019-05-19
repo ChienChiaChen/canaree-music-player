@@ -13,6 +13,10 @@ import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.fragment.BaseDialogFragment
 import dev.olog.msc.presentation.preferences.R
 import dev.olog.msc.shared.ui.ThemedDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LastFmCredentialsFragment : BaseDialogFragment() {
@@ -54,8 +58,12 @@ class LastFmCredentialsFragment : BaseDialogFragment() {
                     userName.text.toString(),
                     password.text.toString()
             )
-            val disp = updateLastFmUserCredentials.execute(user)
-                    .subscribe({ dismiss() }, Throwable::printStackTrace)
+            GlobalScope.launch { // TODO move to viewmodel
+                updateLastFmUserCredentials.execute(user)
+                withContext(Dispatchers.Main){
+                    dismiss()
+                }
+            }
         }
 
         return dialog

@@ -6,13 +6,12 @@ import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
-import org.jaudiotagger.tag.TagOptionSingleton
 import javax.inject.Inject
 
 class EditArtistFragmentViewModel @Inject constructor(
-        private val presenter: EditArtistFragmentPresenter
+    private val presenter: EditArtistFragmentPresenter
 
-) : ViewModel(){
+) : ViewModel() {
 
     private val songList = MutableLiveData<List<Song>>()
 
@@ -25,24 +24,26 @@ class EditArtistFragmentViewModel @Inject constructor(
         TagOptionSingleton.getInstance().isAndroid = true
 
         artistDisposable = presenter.observeArtist()
-                .subscribe({
-                    this.displayedArtist.postValue(it)
-                }, Throwable::printStackTrace)
+            .subscribe({
+                this.displayedArtist.postValue(it)
+            }, Throwable::printStackTrace)
 
         songListDisposable = presenter.getSongList()
-                .subscribe({
-                    songList.postValue(it)
-                }, Throwable::printStackTrace)
+            .subscribe({
+                songList.postValue(it)
+            }, Throwable::printStackTrace)
     }
 
-    fun updateImage(image: String?){
-        val oldValue = displayedArtist.value!!
-        val newValue = oldValue.copy(image = image)
-        displayedArtist.postValue(newValue)
+    fun updateImage(image: String?) {
+        TODO()
+//        val oldValue = displayedArtist.value!!
+//        val newValue = oldValue.copy(image = image)
+//        displayedArtist.postValue(newValue)
     }
 
     fun getNewImage(): String? {
-        return displayedArtist.value!!.image
+//        return displayedArtist.value!!.image
+        return TODO()
 
     }
 
@@ -54,7 +55,6 @@ class EditArtistFragmentViewModel @Inject constructor(
 
     fun observeData(): LiveData<DisplayableArtist> = displayedArtist
     fun observeSongList(): LiveData<List<Song>> = songList
-
 
 
 }

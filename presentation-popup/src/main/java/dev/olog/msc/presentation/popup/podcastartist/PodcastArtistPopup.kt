@@ -31,7 +31,7 @@ class PodcastArtistPopup (
         if (song != null){
             menu.removeItem(R.id.viewArtist)
 
-            if (song.album == TrackUtils.UNKNOWN){
+            if (song.album == TrackUtils.UNKNOWN_ALBUM){
                 menu.removeItem(R.id.viewAlbum)
             }
         }

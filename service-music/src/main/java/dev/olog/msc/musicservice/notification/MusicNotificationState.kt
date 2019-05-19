@@ -4,19 +4,18 @@ import android.support.v4.media.session.PlaybackStateCompat
 import dev.olog.msc.musicservice.model.MediaEntity
 import java.util.concurrent.TimeUnit
 
-internal data class MusicNotificationState (
-        var id: Long = -1,
-        var title: String = "",
-        var artist: String = "",
-        var album: String = "",
-        var image: String = "",
-        var isPlaying: Boolean = false,
-        var bookmark: Long = -1,
-        var duration: Long = -1,
-        var isFavorite: Boolean = false
+internal data class MusicNotificationState(
+    var id: Long = -1,
+    var title: String = "",
+    var artist: String = "",
+    var album: String = "",
+    var isPlaying: Boolean = false,
+    var bookmark: Long = -1,
+    var duration: Long = -1,
+    var isFavorite: Boolean = false
 ) {
 
-    private fun isValidState(): Boolean{
+    private fun isValidState(): Boolean {
         return id != -1L &&
                 title.isNotBlank() &&
                 artist.isNotBlank() &&
@@ -31,7 +30,6 @@ internal data class MusicNotificationState (
         this.title = metadata.title
         this.artist = metadata.artist
         this.album = metadata.album
-        this.image = metadata.image
         this.duration = metadata.duration
         return isValidState()
     }
@@ -51,11 +49,10 @@ internal data class MusicNotificationState (
         return this.id != metadata.id ||
                 this.title != metadata.title ||
                 this.artist != metadata.artist ||
-                this.album != metadata.album ||
-                this.image != metadata.image
+                this.album != metadata.album
     }
 
-    internal fun isDifferentState(state: PlaybackStateCompat): Boolean{
+    internal fun isDifferentState(state: PlaybackStateCompat): Boolean {
         val isPlaying = state.state == PlaybackStateCompat.STATE_PLAYING
         val bookmark = TimeUnit.MILLISECONDS.toSeconds(state.position)
         return this.isPlaying != isPlaying ||

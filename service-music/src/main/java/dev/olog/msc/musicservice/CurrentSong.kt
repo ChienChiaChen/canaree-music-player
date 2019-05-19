@@ -120,7 +120,7 @@ internal class CurrentSong @Inject constructor(
 
     private fun saveLastMetadata(entity: MediaEntity) {
         assertBackgroundThread()
-        musicPreferencesUseCase.setLastMetadata(LastMetadata(entity.title, entity.artist, entity.image, entity.id))
+        musicPreferencesUseCase.setLastMetadata(LastMetadata(entity.title, entity.artist, entity.id))
     }
 
 }

@@ -16,10 +16,10 @@ import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import javax.inject.Inject
 
 class PodcastAlbumPopupListener @Inject constructor(
-        private val navigator: Navigator,
-        getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-        addToPlaylistUseCase: AddToPlaylistUseCase,
-        private val appShortcuts: AppShortcuts
+    private val navigator: Navigator,
+    getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
+    addToPlaylistUseCase: AddToPlaylistUseCase,
+    private val appShortcuts: AppShortcuts
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, true) {
 
@@ -57,7 +57,7 @@ class PodcastAlbumPopupListener @Inject constructor(
             R.id.viewAlbum -> viewAlbum(navigator, MediaId.podcastAlbumId(podcast!!.albumId))
             R.id.viewInfo -> viewInfo(navigator, getMediaId())
             R.id.share -> share(activity, podcast!!.toSong())
-            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), album.title, album.image)
+            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), album.title)
         }
 
         return true

@@ -31,7 +31,7 @@ internal fun Cursor.toSong(): Song {
 
     return Song(
         id, artistId, albumId, title, artist, albumArtist, album,
-        "", duration, dateAdded, path, disc, track
+        duration, dateAdded, path, disc, track
     )
 }
 
@@ -54,12 +54,12 @@ internal fun Cursor.toPlaylistSong(): Song {
     val duration = getLong(MediaStore.Audio.AudioColumns.DURATION)
     val dateAdded = getLong(MediaStore.MediaColumns.DATE_ADDED)
 
-    val track = getInt(Columns.N_TRACK)
+//    val track = getInt(Columns.N_TRACK)
     val disc = getInt(Columns.N_DISC)
 
     return Song(
         id, artistId, albumId, title, artist, albumArtist, album,
-        "", duration, dateAdded, path, disc,
+        duration, dateAdded, path, disc,
         getInt(MediaStore.Audio.Playlists.Members._ID)
     )
 }
@@ -85,15 +85,6 @@ internal fun Cursor.toUneditedSong(image: String): Song {
 
     return Song(
         id, artistId, albumId, title, artist, albumArtist, album,
-        image, duration, dateAdded, path, disc, track
+        duration, dateAdded, path, disc, track
     )
 }
-
-//internal fun adjustAlbum(album: String, folder: String): String {
-//    val hasUnknownAlbum = album == folder
-//    return if (hasUnknownAlbum) {
-//        AppConstants.UNKNOWN
-//    } else {
-//        album
-//    }
-//}

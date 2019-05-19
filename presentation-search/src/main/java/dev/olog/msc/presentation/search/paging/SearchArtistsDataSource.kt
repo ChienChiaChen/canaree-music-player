@@ -58,8 +58,7 @@ class SearchArtistsDataSource @Inject constructor(
             R.layout.item_search_artist,
             MediaId.artistId(id),
             name,
-            null,
-            image
+            null
         )
     }
 
@@ -68,8 +67,7 @@ class SearchArtistsDataSource @Inject constructor(
             R.layout.item_search_artist,
             MediaId.podcastArtistId(id),
             name,
-            null,
-            image
+            null
         )
     }
 

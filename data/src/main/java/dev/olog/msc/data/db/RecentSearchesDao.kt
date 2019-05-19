@@ -162,9 +162,6 @@ internal abstract class RecentSearchesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     internal abstract suspend fun insertImpl(recent: RecentSearchesEntity)
 
-    @Delete
-    internal abstract suspend fun deleteImpl(recentSearch: RecentSearchesEntity)
-
     @Query("DELETE FROM recent_searches WHERE dataType = :dataType AND itemId = :itemId")
     internal abstract suspend fun deleteImpl(dataType: Int, itemId: Long)
 
@@ -276,49 +273,49 @@ internal abstract class RecentSearchesDao {
     private fun searchSongMapper(recentSearch: RecentSearchesEntity, song: Song): SearchResult {
         return SearchResult(
             MediaId.songId(song.id), recentSearch.dataType,
-            song.title, song.image
+            song.title
         )
     }
 
     private fun searchAlbumMapper(recentSearch: RecentSearchesEntity, album: Album): SearchResult {
         return SearchResult(
             MediaId.albumId(album.id), recentSearch.dataType,
-            album.title, album.image
+            album.title
         )
     }
 
     private fun searchArtistMapper(recentSearch: RecentSearchesEntity, artist: Artist): SearchResult {
         return SearchResult(
             MediaId.artistId(artist.id), recentSearch.dataType,
-            artist.name, artist.image
+            artist.name
         )
     }
 
     private fun searchPlaylistMapper(recentSearch: RecentSearchesEntity, playlist: Playlist): SearchResult {
         return SearchResult(
             MediaId.playlistId(playlist.id), recentSearch.dataType,
-            playlist.title, playlist.image
+            playlist.title
         )
     }
 
     private fun searchGenreMapper(recentSearch: RecentSearchesEntity, genre: Genre): SearchResult {
         return SearchResult(
             MediaId.genreId(genre.id), recentSearch.dataType,
-            genre.name, genre.image
+            genre.name
         )
     }
 
     private fun searchFolderMapper(recentSearch: RecentSearchesEntity, folder: Folder): SearchResult {
         return SearchResult(
             MediaId.folderId(folder.path), recentSearch.dataType,
-            folder.title, folder.image
+            folder.title
         )
     }
 
     private fun searchPodcastMapper(recentSearch: RecentSearchesEntity, podcast: Podcast): SearchResult {
         return SearchResult(
             MediaId.podcastId(podcast.id), recentSearch.dataType,
-            podcast.title, podcast.image
+            podcast.title
         )
     }
 
@@ -328,21 +325,21 @@ internal abstract class RecentSearchesDao {
     ): SearchResult {
         return SearchResult(
             MediaId.podcastPlaylistId(playlist.id), recentSearch.dataType,
-            playlist.title, playlist.image
+            playlist.title
         )
     }
 
     private fun searchPodcastAlbumMapper(recentSearch: RecentSearchesEntity, album: PodcastAlbum): SearchResult {
         return SearchResult(
             MediaId.podcastAlbumId(album.id), recentSearch.dataType,
-            album.title, album.image
+            album.title
         )
     }
 
     private fun searchPodcastArtistMapper(recentSearch: RecentSearchesEntity, artist: PodcastArtist): SearchResult {
         return SearchResult(
             MediaId.podcastArtistId(artist.id), recentSearch.dataType,
-            artist.name, artist.image
+            artist.name
         )
     }
 

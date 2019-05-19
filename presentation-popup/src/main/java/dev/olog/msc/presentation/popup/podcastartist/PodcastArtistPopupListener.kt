@@ -16,24 +16,24 @@ import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import javax.inject.Inject
 
 class PodcastArtistPopupListener @Inject constructor(
-        private val navigator: Navigator,
-        getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-        addToPlaylistUseCase: AddToPlaylistUseCase,
-        private val appShortcuts: AppShortcuts
+    private val navigator: Navigator,
+    getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
+    addToPlaylistUseCase: AddToPlaylistUseCase,
+    private val appShortcuts: AppShortcuts
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, true) {
 
     private lateinit var artist: PodcastArtist
     private var podcast: Podcast? = null
 
-    fun setData(artist: PodcastArtist, podcast: Podcast?): PodcastArtistPopupListener{
+    fun setData(artist: PodcastArtist, podcast: Podcast?): PodcastArtistPopupListener {
         this.artist = artist
         this.podcast = podcast
         return this
     }
 
     private fun getMediaId(): MediaId {
-        if (podcast != null){
+        if (podcast != null) {
             return MediaId.playableItem(MediaId.podcastArtistId(artist.id), podcast!!.id)
         } else {
             return MediaId.podcastArtistId(artist.id)
@@ -45,7 +45,7 @@ class PodcastArtistPopupListener @Inject constructor(
 
         onPlaylistSubItemClick(activity, itemId, getMediaId(), artist.songs, artist.name)
 
-        when (itemId){
+        when (itemId) {
             AbsPopup.NEW_PLAYLIST_ID -> toCreatePlaylist()
             R.id.play -> playFromMediaId()
             R.id.playShuffle -> playShuffle()
@@ -57,39 +57,39 @@ class PodcastArtistPopupListener @Inject constructor(
             R.id.viewAlbum -> viewAlbum(navigator, MediaId.podcastAlbumId(podcast!!.albumId))
             R.id.viewArtist -> viewArtist(navigator, MediaId.podcastArtistId(podcast!!.artistId))
             R.id.share -> share(activity, podcast!!.toSong())
-            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), artist.name, artist.image)
+            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), artist.name)
         }
 
 
         return true
     }
 
-    private fun toCreatePlaylist(){
-        if (podcast == null){
+    private fun toCreatePlaylist() {
+        if (podcast == null) {
             navigator.toCreatePlaylistDialog(activity, getMediaId(), artist.songs, artist.name)
         } else {
             navigator.toCreatePlaylistDialog(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
-    private fun playFromMediaId(){
+    private fun playFromMediaId() {
         (activity as MediaProvider).playFromMediaId(getMediaId())
     }
 
-    private fun playShuffle(){
+    private fun playShuffle() {
         (activity as MediaProvider).shuffle(getMediaId())
     }
 
-    private fun playLater(){
-        if (podcast == null){
+    private fun playLater() {
+        if (podcast == null) {
             navigator.toPlayLater(activity, getMediaId(), artist.songs, artist.name)
         } else {
             navigator.toPlayLater(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
-    private fun playNext(){
-        if (podcast == null){
+    private fun playNext() {
+        if (podcast == null) {
             navigator.toPlayNext(activity, getMediaId(), artist.songs, artist.name)
         } else {
             navigator.toPlayNext(activity, getMediaId(), -1, podcast!!.title)
@@ -97,17 +97,16 @@ class PodcastArtistPopupListener @Inject constructor(
     }
 
 
-
-    private fun addToFavorite(){
-        if (podcast == null){
+    private fun addToFavorite() {
+        if (podcast == null) {
             navigator.toAddToFavoriteDialog(activity, getMediaId(), artist.songs, artist.name)
         } else {
             navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, podcast!!.title)
         }
     }
 
-    private fun delete(){
-        if (podcast == null){
+    private fun delete() {
+        if (podcast == null) {
             navigator.toDeleteDialog(activity, getMediaId(), artist.songs, artist.name)
         } else {
             navigator.toDeleteDialog(activity, getMediaId(), -1, podcast!!.title)

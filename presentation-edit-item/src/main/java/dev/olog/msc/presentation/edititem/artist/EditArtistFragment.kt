@@ -6,7 +6,6 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.edititem.*
 import dev.olog.msc.shared.extensions.lazyFast
@@ -25,15 +24,18 @@ class EditArtistFragment : BaseEditItemFragment() {
         @JvmStatic
         fun newInstance(mediaId: MediaId): EditArtistFragment {
             return EditArtistFragment().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString())
+                ARGUMENTS_MEDIA_ID to mediaId.toString()
+            )
         }
     }
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by lazyFast { viewModelProvider<EditArtistFragmentViewModel>(viewModelFactory) }
     private val editItemViewModel by lazyFast { activity!!.viewModelProvider<EditItemViewModel>(viewModelFactory) }
 
-    @Inject lateinit var mediaId: MediaId
+    @Inject
+    lateinit var mediaId: MediaId
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -43,42 +45,45 @@ class EditArtistFragment : BaseEditItemFragment() {
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         RxTextView.afterTextChangeEvents(view.artist)
-                .map { it.view().text.toString() }
-                .map { it.isNotBlank() }
-                .asLiveData()
-                .subscribe(viewLifecycleOwner, view.okButton::setEnabled)
+            .map { it.view().text.toString() }
+            .map { it.isNotBlank() }
+            .asLiveData()
+            .subscribe(viewLifecycleOwner, view.okButton::setEnabled)
 
         viewModel.observeSongList()
-                .subscribe(viewLifecycleOwner) {
-                    val size = it.size
-                    val text = resources.getQuantityString(
-                            R.plurals.edit_item_xx_tracks_will_be_updated, size, size)
-                    albumsUpdated.text =  text
-                }
+            .subscribe(viewLifecycleOwner) {
+                val size = it.size
+                val text = resources.getQuantityString(
+                    R.plurals.edit_item_xx_tracks_will_be_updated, size, size
+                )
+                albumsUpdated.text = text
+            }
 
         viewModel.observeData()
-                .subscribe(viewLifecycleOwner) {
-                    artist.setText(it.title)
-                    albumArtist.setText(it.albumArtist)
-                    val model = ImageModel(MediaId.artistId(it.id), it.image ?: "")
-                    setImage(model)
-                }
+            .subscribe(viewLifecycleOwner) {
+                artist.setText(it.title)
+                albumArtist.setText(it.albumArtist)
+                setImage(MediaId.artistId(it.id))
+            }
     }
 
     override fun onResume() {
         super.onResume()
         okButton.setOnClickListener {
-            val result = editItemViewModel.updateArtist(UpdateArtistInfo(
+            val result = editItemViewModel.updateArtist(
+                UpdateArtistInfo(
                     mediaId,
                     artist.extractText().trim(),
                     albumArtist.extractText().trim(),
                     viewModel.getNewImage()
-            ))
+                )
+            )
 
-            when (result){
+            when (result) {
                 UpdateResult.OK -> dismiss()
                 UpdateResult.EMPTY_TITLE -> ctx.toast(R.string.edit_artist_invalid_title)
-                else -> {}
+                else -> {
+                }
             }
         }
         cancelButton.setOnClickListener { dismiss() }

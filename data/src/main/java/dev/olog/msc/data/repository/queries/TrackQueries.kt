@@ -68,7 +68,7 @@ internal open class TrackQueries constructor(
                 $trackNumberProjection as ${Columns.N_TRACK},
                 $DATE_ADDED, $IS_PODCAST
             FROM $EXTERNAL_CONTENT_URI
-            WHERE $ALBUM_ID = ? AND ${defaultSelection()}}
+            WHERE $ALBUM_ID = ? AND ${defaultSelection()}
         """
 
         return contentResolver.querySql(query, selectionArgs = arrayOf(albumId.toString()))

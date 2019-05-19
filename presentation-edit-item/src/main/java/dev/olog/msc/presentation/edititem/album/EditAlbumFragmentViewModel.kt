@@ -6,15 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
-import org.jaudiotagger.tag.TagOptionSingleton
 import javax.inject.Inject
 
 class EditAlbumFragmentViewModel @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val presenter: EditAlbumFragmentPresenter
+    @ApplicationContext private val context: Context,
+    private val presenter: EditAlbumFragmentPresenter
 
 ) : ViewModel() {
 
@@ -29,31 +27,33 @@ class EditAlbumFragmentViewModel @Inject constructor(
         TagOptionSingleton.getInstance().isAndroid = true
 
         albumDisposable = presenter.observeAlbum()
-                .subscribe({
-                    displayedAlbum.postValue(it)
-                }, Throwable::printStackTrace)
+            .subscribe({
+                displayedAlbum.postValue(it)
+            }, Throwable::printStackTrace)
 
         songListDisposable = presenter.getSongList()
-                .subscribe({
-                    songListLiveData.postValue(it)
-                }, Throwable::printStackTrace)
+            .subscribe({
+                songListLiveData.postValue(it)
+            }, Throwable::printStackTrace)
     }
 
-    fun updateImage(image: String){
-        val oldValue = displayedAlbum.value!!
-        val newValue = oldValue.copy(image = image)
-        displayedAlbum.postValue(newValue)
+    fun updateImage(image: String) {
+        TODO()
+//        val oldValue = displayedAlbum.value!!
+//        val newValue = oldValue.copy(image = image)
+//        displayedAlbum.postValue(newValue)
     }
 
     fun getNewImage(): String? {
-        val albumId = getAlbum().id
-        val original = ImagesFolderUtils.forAlbum(context, albumId)
-        val current = displayedAlbum.value!!.image
-        if (original == current){
-            return null
-        } else {
-            return current
-        }
+        TODO()
+//        val albumId = getAlbum().id
+//        val original = ImagesFolderUtils.forAlbum(context, albumId) // TODO retrieve image from mediametadateretriever
+//        val current = displayedAlbum.value!!.image
+//        if (original == current){
+//            return null
+//        } else {
+//            return current
+//        }
     }
 
     fun getAlbum(): DisplayableAlbum = presenter.getAlbum()
@@ -61,7 +61,6 @@ class EditAlbumFragmentViewModel @Inject constructor(
     fun observeData(): LiveData<DisplayableAlbum> = displayedAlbum
 
     fun observeSongList(): LiveData<List<Song>> = songListLiveData
-
 
 
     override fun onCleared() {

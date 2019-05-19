@@ -9,19 +9,16 @@ import android.provider.BaseColumns
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
-import androidx.core.util.getOrDefault
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.data.request.DataRequest
 import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.data.entity.custom.ItemRequestImpl
 import dev.olog.msc.data.entity.custom.PageRequestImpl
 import dev.olog.msc.data.mapper.toSong
 import dev.olog.msc.data.repository.queries.TrackQueries
-import dev.olog.msc.data.repository.util.CommonQuery
 import dev.olog.msc.data.repository.util.ContentObserverFlow
 import dev.olog.msc.data.repository.util.queryAll
 import dev.olog.msc.data.repository.util.queryMaybe
@@ -36,33 +33,9 @@ import javax.inject.Inject
 internal class SongRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     prefsGateway: AppPreferencesGateway,
-    private val usedImageGateway: UsedImageGateway,
     private val contentObserverFlow: ContentObserverFlow
 
 ) : SongGateway {
-
-    companion object {
-        @JvmStatic
-        internal fun updateImages(list: List<Song>, usedImageGateway: UsedImageGateway): List<Song> {
-            val allForTracks = usedImageGateway.getAllForTracks()
-            val allForAlbums = usedImageGateway.getAllForAlbums()
-            if (allForTracks.isEmpty() && allForAlbums.isEmpty()) {
-                return list
-            }
-            return list.map { song ->
-                val image = allForTracks.firstOrNull { it.id == song.id }?.image // search for track image
-                    ?: allForAlbums.firstOrNull { it.id == song.albumId }?.image  // search for track album image
-                    ?: song.image // use default
-                song.copy(image = image)
-            }
-        }
-
-        @JvmStatic
-        internal fun adjustImages(context: Context, original: List<Song>): List<Song> {
-            val images = CommonQuery.searchForImages(context)
-            return original.map { it.copy(image = images.getOrDefault(it.albumId.toInt(), it.image)) }
-        }
-    }
 
     private val contentResolver = context.contentResolver
     private val queries = TrackQueries(prefsGateway, false, contentResolver)
@@ -71,10 +44,7 @@ internal class SongRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
             cursorMapper = { it.toSong() },
-            listMapper = {
-                val result = adjustImages(context, it)
-                updateImages(result, usedImageGateway)
-            },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -85,24 +55,18 @@ internal class SongRepository @Inject constructor(
         return ItemRequestImpl(
             { queries.getById(param) },
             { it.toSong() },
-            {
-                val result = adjustImages(context, listOf(it))
-                updateImages(result, usedImageGateway).first()
-            },
+            null,
             contentResolver,
             contentObserverFlow,
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         )
     }
 
-    override suspend fun getByAlbumId(albumId: Long): ItemRequest<Song> {
+    override fun getByAlbumId(albumId: Long): ItemRequest<Song> {
         return ItemRequestImpl(
             cursorFactory = { queries.getByAlbumId(albumId) },
             cursorMapper = { it.toSong() },
-            itemMapper = {
-                val result = adjustImages(context, listOf(it))
-                updateImages(result, usedImageGateway).first()
-            },
+            itemMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -115,10 +79,7 @@ internal class SongRepository @Inject constructor(
     override suspend fun getByUri(uri: String): Song? {
         val trackId = getByUriInternal(Uri.parse(uri))?.toLong() ?: return null
         val cursor = queries.getById(trackId, true)
-        return contentResolver.queryMaybe(cursor, { it.toSong() }, {
-            val result = adjustImages(context, listOf(it))
-            updateImages(result, usedImageGateway).first()
-        })
+        return contentResolver.queryMaybe(cursor, { it.toSong() }, null)
     }
 
     @SuppressLint("Recycle")

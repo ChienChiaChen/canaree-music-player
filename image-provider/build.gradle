@@ -4,7 +4,9 @@ apply from: '../base_module.gradle'
 
 dependencies {
     implementation project(':core')
+    implementation project(':shared')
     implementation project(':shared-ui-components')
+    implementation project(':jaudiotagger')
 
     implementation librariesAndroidX.coreKtx
 

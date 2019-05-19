@@ -16,8 +16,7 @@ import androidx.core.content.ContextCompat
 import dagger.Lazy
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.imageprovider.ImageModel
-import dev.olog.msc.imageprovider.getBitmap
+import dev.olog.msc.imageprovider.glide.getBitmap
 import dev.olog.msc.musicservice.R
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
@@ -90,7 +89,7 @@ internal open class NotificationImpl21 @Inject constructor(
 
         val spannableTitle = SpannableString(title)
         spannableTitle.setSpan(StyleSpan(Typeface.BOLD), 0, title.length, 0)
-        updateMetadataImpl(state.id, spannableTitle, artist, album, state.image)
+        updateMetadataImpl(state.id, spannableTitle, artist, album)
         updateState(state.isPlaying, state.bookmark - state.duration)
         updateFavorite(state.isFavorite)
 
@@ -123,13 +122,11 @@ internal open class NotificationImpl21 @Inject constructor(
         id: Long,
         title: SpannableString,
         artist: String,
-        album: String,
-        image: String
+        album: String
     ) {
         assertBackgroundThread()
 
-        val model = ImageModel(MediaId.songId(id), image)
-        val bitmap = service.getBitmap(model, size = INotification.IMAGE_SIZE)
+        val bitmap = service.getBitmap(MediaId.songId(id), size = INotification.IMAGE_SIZE)
         builder.setLargeIcon(bitmap)
             .setContentTitle(title)
             .setContentText(artist)

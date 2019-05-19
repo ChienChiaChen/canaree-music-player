@@ -27,8 +27,9 @@ internal class PlayingQueueRepository @Inject constructor(
     override fun getAll(page: Page): List<PlayingQueueSong> {
         assertBackgroundThread()
         val allSongs = songGateway.getAll().getAll(Filter.NO_FILTER)
-        val playingQueue = playingQueueDao.getAllAsSongs(allSongs, podcastGateway.getAll().getAll(Filter.NO_FILTER), page)
-        if (playingQueue.isNotEmpty()){
+        val playingQueue =
+            playingQueueDao.getAllAsSongs(allSongs, podcastGateway.getAll().getAll(Filter.NO_FILTER), page)
+        if (playingQueue.isNotEmpty()) {
             return playingQueue
         }
         return allSongs.mapIndexed { index, song -> song.toPlayingQueueSong(index) }
@@ -66,22 +67,21 @@ internal class PlayingQueueRepository @Inject constructor(
 
     private fun Song.toPlayingQueueSong(progressive: Int): PlayingQueueSong {
         return PlayingQueueSong(
-                this.id,
-                progressive,
-                MediaId.songId(this.id),
-                this.artistId,
-                this.albumId,
-                this.title,
-                this.artist,
-                this.albumArtist,
-                this.album,
-                this.image,
-                this.duration,
-                this.dateAdded,
-                this.path,
-                this.discNumber,
-                this.trackNumber,
-                false
+            this.id,
+            progressive,
+            MediaId.songId(this.id),
+            this.artistId,
+            this.albumId,
+            this.title,
+            this.artist,
+            this.albumArtist,
+            this.album,
+            this.duration,
+            this.dateAdded,
+            this.path,
+            this.discNumber,
+            this.trackNumber,
+            false
         )
     }
 

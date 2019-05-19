@@ -12,10 +12,10 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class EditArtistFragmentPresenter @Inject constructor(
-        private val mediaId: MediaId,
-        private val getArtistUseCase: GetArtistUseCase,
-        private val getPodcastArtistUseCase: GetPodcastArtistUseCase,
-        private val getSongListByParamUseCase: GetSongListChunkByParamUseCase
+    private val mediaId: MediaId,
+    private val getArtistUseCase: GetArtistUseCase,
+    private val getPodcastArtistUseCase: GetPodcastArtistUseCase,
+    private val getSongListByParamUseCase: GetSongListChunkByParamUseCase
 
 ) {
 
@@ -23,13 +23,13 @@ class EditArtistFragmentPresenter @Inject constructor(
     lateinit var songList: List<Song>
 
     fun observeArtist(): Single<DisplayableArtist> {
-        if (mediaId.isPodcastArtist){
+        if (mediaId.isPodcastArtist) {
             return getPodcastArtistInternal()
         }
         return getArtistInternal()
     }
 
-    private fun getArtistInternal(): Single<DisplayableArtist> = runBlocking{
+    private fun getArtistInternal(): Single<DisplayableArtist> = runBlocking {
         TODO()
 //        getArtistUseCase.execute(mediaId).asObservable()
 //                .firstOrError()
@@ -37,7 +37,7 @@ class EditArtistFragmentPresenter @Inject constructor(
 //                .doOnSuccess { originalArtist = it }
     }
 
-    private fun getPodcastArtistInternal(): Single<DisplayableArtist> = runBlocking{
+    private fun getPodcastArtistInternal(): Single<DisplayableArtist> = runBlocking {
         TODO()
 //        getPodcastArtistUseCase.execute(mediaId).asObservable()
 //                .firstOrError()
@@ -56,19 +56,17 @@ class EditArtistFragmentPresenter @Inject constructor(
 
     private fun Artist.toDisplayableArtist(): DisplayableArtist {
         return DisplayableArtist(
-                this.id,
-                this.name,
-                this.albumArtist,
-                this.image
+            this.id,
+            this.name,
+            this.albumArtist
         )
     }
 
     private fun PodcastArtist.toDisplayableArtist(): DisplayableArtist {
         return DisplayableArtist(
-                this.id,
-                this.name,
-                this.albumArtist,
-                this.image
+            this.id,
+            this.name,
+            this.albumArtist
         )
     }
 

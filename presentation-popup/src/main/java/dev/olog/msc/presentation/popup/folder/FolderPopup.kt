@@ -31,10 +31,10 @@ class FolderPopup (
         setOnMenuItemClickListener(listener)
 
         if (song != null){
-            if (song.artist == TrackUtils.UNKNOWN){
+            if (song.artist == TrackUtils.UNKNOWN_ARTIST){
                 menu.removeItem(R.id.viewArtist)
             }
-            if (song.album == TrackUtils.UNKNOWN){
+            if (song.album == TrackUtils.UNKNOWN_ALBUM){
                 menu.removeItem(R.id.viewAlbum)
             }
         }

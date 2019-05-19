@@ -18,7 +18,6 @@ import dev.olog.msc.floatingwindowservice.api.Content
 import dev.olog.msc.floatingwindowservice.music.service.MusicServiceBinder
 import dev.olog.msc.floatingwindowservice.music.service.MusicServiceMetadata
 import dev.olog.msc.imageprovider.CoverUtils
-import dev.olog.msc.imageprovider.ImageModel
 import dev.olog.msc.offlinelyrics.EditLyricsDialog
 import dev.olog.msc.offlinelyrics.NoScrollTouchListener
 import dev.olog.msc.offlinelyrics.OfflineLyricsSyncAdjustementDialog
@@ -37,18 +36,18 @@ import io.reactivex.rxkotlin.addTo
 import java.util.concurrent.TimeUnit
 
 internal class OfflineLyricsContent(
-        lifecycle: Lifecycle,
-        private val context: Context,
-        private val musicServiceBinder: MusicServiceBinder,
-        private val presenter: OfflineLyricsContentPresenter
+    lifecycle: Lifecycle,
+    private val context: Context,
+    private val musicServiceBinder: MusicServiceBinder,
+    private val presenter: OfflineLyricsContentPresenter
 
 ) : Content, DefaultLifecycleObserver {
 
     private val subscriptions = CompositeDisposable()
-    private var updateDisposable : Disposable? = null
+    private var updateDisposable: Disposable? = null
     private var paletteDisposable: Disposable? = null
 
-    val content : View = LayoutInflater.from(context).inflate(R.layout.content_offline_lyrics, null)
+    val content: View = LayoutInflater.from(context).inflate(R.layout.content_offline_lyrics, null)
 
     private val header = content.findViewById<TextView>(R.id.header)
     private val subHeader = content.findViewById<TextView>(R.id.subHeader)
@@ -66,33 +65,33 @@ internal class OfflineLyricsContent(
         lifecycle.addObserver(this)
 
         musicServiceBinder.onMetadataChanged
-                .subscribe({
-                    presenter.updateCurrentTrackId(it.id)
-                    loadImage(it, it.image)
-                    header.text = it.title
-                    subHeader.text = it.artist
-                    updateProgressBarMax(it.duration)
-                }, Throwable::printStackTrace)
-                .addTo(subscriptions)
+            .subscribe({
+                presenter.updateCurrentTrackId(it.id)
+                loadImage(it)
+                header.text = it.title
+                subHeader.text = it.artist
+                updateProgressBarMax(it.duration)
+            }, Throwable::printStackTrace)
+            .addTo(subscriptions)
 
         musicServiceBinder.onStateChanged()
-                .subscribe({
-                    handleSeekBarState(it.isPlaying(), it.playbackSpeed)
-                }, Throwable::printStackTrace)
-                .addTo(subscriptions)
+            .subscribe({
+                handleSeekBarState(it.isPlaying(), it.playbackSpeed)
+            }, Throwable::printStackTrace)
+            .addTo(subscriptions)
 
         musicServiceBinder.onBookmarkChangedLiveData
-                .subscribe({ seekBar.progress = it.toInt() }, Throwable::printStackTrace)
-                .addTo(subscriptions)
+            .subscribe({ seekBar.progress = it.toInt() }, Throwable::printStackTrace)
+            .addTo(subscriptions)
 
         presenter.observeLyrics()
-                .map { presenter.transformLyrics(context, seekBar.progress, it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    emptyState.toggleVisibility(it.isEmpty(), true)
-                    lyricsText.setText(it)
-                }, Throwable::printStackTrace)
-                .addTo(subscriptions)
+            .map { presenter.transformLyrics(context, seekBar.progress, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                emptyState.toggleVisibility(it.isEmpty(), true)
+                lyricsText.setText(it)
+            }, Throwable::printStackTrace)
+            .addTo(subscriptions)
 
         setupSeekBar()
     }
@@ -103,18 +102,21 @@ internal class OfflineLyricsContent(
         presenter.onDestroy()
     }
 
-    private fun loadImage(metadata: MusicServiceMetadata, image: ImageModel){
+    private fun loadImage(metadata: MusicServiceMetadata) {
+        val mediaId = metadata.mediaId
         Glide.with(context).clear(this.image)
 
-        val drawable = CoverUtils.getGradient(context, if (metadata.isPodcast) MediaId.podcastId(metadata.id)
-                        else MediaId.songId(metadata.id))
+        val drawable = CoverUtils.getGradient(
+            context, if (metadata.isPodcast) MediaId.podcastId(metadata.id)
+            else MediaId.songId(metadata.id)
+        )
 
         Glide.with(context)
-                .load(image) // TODO is loading image?
-                .placeholder(drawable)
-                .priority(Priority.IMMEDIATE)
-                .override(500)
-                .into(this.image)
+            .load(mediaId) // TODO is loading image?
+            .placeholder(drawable)
+            .priority(Priority.IMMEDIATE)
+            .override(500)
+            .into(this.image)
     }
 
     override fun getView(): View = content
@@ -137,12 +139,12 @@ internal class OfflineLyricsContent(
         scrollView.setOnTouchListener(NoScrollTouchListener(context) { musicServiceBinder.playPause() })
 
         paletteDisposable = image.observePaletteColors()
-                .map { it.accent }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    edit.animateBackgroundColor(it)
-                    subHeader.animateTextColor(it)
-                }, Throwable::printStackTrace)
+            .map { it.accent }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                edit.animateBackgroundColor(it)
+                subHeader.animateTextColor(it)
+            }, Throwable::printStackTrace)
     }
 
     override fun onHidden() {
@@ -154,7 +156,7 @@ internal class OfflineLyricsContent(
         scrollView.setOnTouchListener(null)
     }
 
-    private fun handleSeekBarState(isPlaying: Boolean, speed: Float){
+    private fun handleSeekBarState(isPlaying: Boolean, speed: Float) {
         updateDisposable.unsubscribe()
         if (isPlaying) {
             resumeSeekBar(speed)
@@ -165,13 +167,16 @@ internal class OfflineLyricsContent(
         seekBar.max = max.toInt()
     }
 
-    private fun resumeSeekBar(speed: Float){
+    private fun resumeSeekBar(speed: Float) {
         updateDisposable = Observable.interval(MusicConstants.PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS)
-                .subscribe({ seekBar.incrementProgressBy((MusicConstants.PROGRESS_BAR_INTERVAL * speed).toInt()) }, Throwable::printStackTrace)
+            .subscribe(
+                { seekBar.incrementProgressBy((MusicConstants.PROGRESS_BAR_INTERVAL * speed).toInt()) },
+                Throwable::printStackTrace
+            )
     }
 
-    private fun setupSeekBar(){
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+    private fun setupSeekBar() {
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
             }

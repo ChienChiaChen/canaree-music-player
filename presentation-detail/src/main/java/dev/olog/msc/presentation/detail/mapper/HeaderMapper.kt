@@ -16,8 +16,7 @@ internal fun Folder.toHeaderItem(resources: Resources, listSize: Int): Displayab
         R.layout.item_detail_item_image,
         MediaId.folderId(path),
         title,
-        subtitle = resources.getQuantityString(R.plurals.common_plurals_song, listSize, listSize).toLowerCase(),
-        image = image
+        subtitle = resources.getQuantityString(R.plurals.common_plurals_song, listSize, listSize).toLowerCase()
     )
 
 }
@@ -33,8 +32,7 @@ internal fun Playlist.toHeaderItem(resources: Resources, listSize: Int): Display
         R.layout.item_detail_item_image,
         MediaId.playlistId(this.id),
         title,
-        finalListSize,
-        image = image
+        finalListSize
     )
 
 }
@@ -45,8 +43,7 @@ internal fun Album.toHeaderItem(): DisplayableItem {
         R.layout.item_detail_item_image,
         MediaId.albumId(this.id),
         title,
-        this.artist,
-        image = image
+        this.artist
     )
 }
 
@@ -64,8 +61,7 @@ internal fun Artist.toHeaderItem(resources: Resources, songListSize: Int, albumL
         R.layout.item_detail_item_image,
         MediaId.artistId(this.id),
         name,
-        "$albums$songs".toLowerCase(),
-        image = image
+        "$albums$songs".toLowerCase()
     )
 }
 
@@ -75,8 +71,7 @@ internal fun Genre.toHeaderItem(resources: Resources, listSize: Int): Displayabl
         R.layout.item_detail_item_image,
         MediaId.genreId(this.id),
         name,
-        resources.getQuantityString(R.plurals.common_plurals_song, listSize, listSize).toLowerCase(),
-        image = image
+        resources.getQuantityString(R.plurals.common_plurals_song, listSize, listSize).toLowerCase()
     )
 }
 
@@ -92,8 +87,7 @@ internal fun PodcastPlaylist.toHeaderItem(resources: Resources, listSize: Int): 
         R.layout.item_detail_item_image,
         MediaId.podcastPlaylistId(this.id),
         title,
-        finalListSize,
-        image = image
+        finalListSize
     )
 
 }
@@ -104,8 +98,7 @@ internal fun PodcastAlbum.toHeaderItem(): DisplayableItem {
         R.layout.item_detail_item_image,
         MediaId.podcastAlbumId(this.id),
         title,
-        this.artist,
-        image = image
+        this.artist
     )
 }
 
@@ -123,7 +116,6 @@ internal fun PodcastArtist.toHeaderItem(resources: Resources, songListSize: Int,
         R.layout.item_detail_item_image,
         MediaId.podcastArtistId(this.id),
         name,
-        "$albums$songs".toLowerCase(),
-        image = image
+        "$albums$songs".toLowerCase()
     )
 }

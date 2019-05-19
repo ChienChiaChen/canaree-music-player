@@ -52,8 +52,7 @@ class BlacklistFragmentViewModel @Inject constructor(
             R.layout.dialog_blacklist_item,
             MediaId.folderId(this.path),
             this.title,
-            this.path,
-            this.image
+            this.path
         )
     }
 

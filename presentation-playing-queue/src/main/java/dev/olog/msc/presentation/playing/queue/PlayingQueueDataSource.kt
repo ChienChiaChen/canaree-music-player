@@ -67,7 +67,6 @@ internal class PlayingQueueDataSource @Inject constructor(
             MediaId.songId(this.idInPlaylist.toLong()),
             title,
             artist,
-            image,
             positionInList,
             position == currentItemIndex
         )

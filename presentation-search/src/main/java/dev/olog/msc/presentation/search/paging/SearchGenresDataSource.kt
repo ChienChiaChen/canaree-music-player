@@ -58,8 +58,7 @@ class SearchGenresDataSource @Inject constructor(
             R.layout.item_search_artist,
             MediaId.artistId(id),
             name,
-            null,
-            image
+            null
         )
     }
 
@@ -68,8 +67,7 @@ class SearchGenresDataSource @Inject constructor(
             R.layout.item_search_album,
             MediaId.genreId(id),
             name,
-            null,
-            image
+            null
         )
     }
 

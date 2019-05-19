@@ -91,6 +91,7 @@ internal class ArtistQueries constructor(
                 $artistProjection as ${Columns.ARTIST},
                 $albumProjection as ${Columns.ALBUM},
                 $albumArtistProjection,
+                $folderProjection as ${Columns.FOLDER},
                 count(*) as ${Columns.N_SONGS}
             FROM $EXTERNAL_CONTENT_URI
             WHERE $ARTIST_ID = ? AND ${defaultSelection()} $filter

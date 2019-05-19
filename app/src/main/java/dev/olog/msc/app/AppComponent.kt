@@ -13,7 +13,6 @@ import dev.olog.msc.data.di.PreferenceModule
 import dev.olog.msc.data.di.RepositoryHelperModule
 import dev.olog.msc.data.di.RepositoryModule
 import dev.olog.msc.floatingwindowservice.di.FloatingWindowServiceInjector
-import dev.olog.msc.imagecreation.ImageCreationInjector
 import dev.olog.msc.musicservice.di.EqualizerModule
 import dev.olog.msc.musicservice.di.MusicServiceInjector
 import dev.olog.msc.presentation.ViewModelModule
@@ -40,8 +39,6 @@ import javax.inject.Singleton
         NavigatorModule::class,
         WidgetBindingModule::class,
         ViewModelModule::class,
-
-        ImageCreationInjector::class,
 
 //        // music service
         MusicServiceInjector::class,

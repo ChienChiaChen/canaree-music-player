@@ -14,14 +14,13 @@ import dev.olog.msc.shared.utils.TextUtils
 internal fun Artist.toRelatedArtist(resources: Resources): DisplayableItem {
     val songs = DisplayableItem.handleSongListSize(resources, songs)
     var albums = DisplayableItem.handleAlbumListSize(resources, albums)
-    if (albums.isNotBlank()) albums+= TextUtils.MIDDLE_DOT_SPACED
+    if (albums.isNotBlank()) albums += TextUtils.MIDDLE_DOT_SPACED
 
     return DisplayableItem(
         R.layout.item_detail_related_artist,
         MediaId.artistId(this.id),
         this.name,
-        albums + songs,
-        this.image
+        albums + songs
     )
 }
 
@@ -54,7 +53,6 @@ internal fun Song.toDetailDisplayableItem(parentId: MediaId, sortType: SortType)
         MediaId.playableItem(parentId, id),
         this.title,
         subtitle,
-        this.image,
         true,
         track
     )
@@ -66,7 +64,6 @@ internal fun Song.toMostPlayedDetailDisplayableItem(parentId: MediaId): Displaya
         MediaId.playableItem(parentId, id),
         this.title,
         this.artist,
-        this.image,
         true
     )
 }
@@ -77,7 +74,6 @@ internal fun Song.toRecentDetailDisplayableItem(parentId: MediaId): DisplayableI
         MediaId.playableItem(parentId, id),
         this.title,
         this.artist,
-        this.image,
         true
     )
 }

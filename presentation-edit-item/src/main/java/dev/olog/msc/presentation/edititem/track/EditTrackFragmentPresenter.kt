@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.edititem.track
 
-import com.github.dmstocking.optional.java.util.Optional
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.core.entity.podcast.Podcast
@@ -9,29 +8,25 @@ import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.interactor.item.GetPodcastUseCase
 import dev.olog.msc.core.interactor.item.GetUneditedSongUseCase
 import dev.olog.msc.core.interactor.last.fm.GetLastFmTrackUseCase
-import dev.olog.msc.core.interactor.last.fm.LastFmTrackRequest
 import dev.olog.msc.presentation.edititem.DisplayableSong
-import dev.olog.msc.presentation.edititem.utils.get
 import io.reactivex.Single
 import kotlinx.coroutines.runBlocking
-import org.jaudiotagger.audio.AudioFileIO
-import org.jaudiotagger.tag.FieldKey
 import java.io.File
 import javax.inject.Inject
 
 class EditTrackFragmentPresenter @Inject constructor(
-        private val mediaId: MediaId,
-        private val getSongUseCase: GetUneditedSongUseCase,
-        private val getPodcastUseCase: GetPodcastUseCase,
-        private val getLastFmTrackUseCase: GetLastFmTrackUseCase,
-        private val usedImageGateway: UsedImageGateway
+    private val mediaId: MediaId,
+    private val getSongUseCase: GetUneditedSongUseCase,
+    private val getPodcastUseCase: GetPodcastUseCase,
+    private val getLastFmTrackUseCase: GetLastFmTrackUseCase,
+    private val usedImageGateway: UsedImageGateway
 
 ) {
 
-    private lateinit var originalSong : DisplayableSong
+    private lateinit var originalSong: DisplayableSong
 
     fun observeSong(): Single<DisplayableSong> {
-        if (mediaId.isPodcast){
+        if (mediaId.isPodcast) {
             return observePodcastInternal()
         }
         return observeSongInternal()
@@ -54,7 +49,7 @@ class EditTrackFragmentPresenter @Inject constructor(
 //                }
     }
 
-    private fun observePodcastInternal(): Single<DisplayableSong> = runBlocking{
+    private fun observePodcastInternal(): Single<DisplayableSong> = runBlocking {
         TODO()
 //        getPodcastUseCase.execute(mediaId).asObservable()
 //                .firstOrError()
@@ -71,10 +66,11 @@ class EditTrackFragmentPresenter @Inject constructor(
 //                }
     }
 
-    fun fetchData(): Single<Optional<LastFmTrack?>> {
-        return getLastFmTrackUseCase.execute(
-                LastFmTrackRequest(originalSong.id, originalSong.title, originalSong.artist, originalSong.album)
-        )
+    fun fetchData(): LastFmTrack? {
+        TODO()
+//        return getLastFmTrackUseCase.execute(
+//                LastFmTrackRequest(originalSong.id, originalSong.title, originalSong.artist, originalSong.album)
+//        )
     }
 
     fun getSong(): DisplayableSong = originalSong
@@ -86,23 +82,22 @@ class EditTrackFragmentPresenter @Inject constructor(
         val tag = audioFile.tagOrCreateAndSetDefault
 
         return DisplayableSong(
-                this.id,
-                this.artistId,
-                this.albumId,
-                this.title,
-                tag.get(FieldKey.ARTIST),
-                tag.get(FieldKey.ALBUM_ARTIST),
-                album,
-                tag.get(FieldKey.GENRE),
-                tag.get(FieldKey.YEAR),
-                tag.get(FieldKey.DISC_NO),
-                tag.get(FieldKey.TRACK),
-                this.image,
-                this.path,
-                audioHeader.bitRate + " kb/s",
-                audioHeader.format,
-                audioHeader.sampleRate + " Hz",
-                false
+            this.id,
+            this.artistId,
+            this.albumId,
+            this.title,
+            tag.get(FieldKey.ARTIST),
+            tag.get(FieldKey.ALBUM_ARTIST),
+            album,
+            tag.get(FieldKey.GENRE),
+            tag.get(FieldKey.YEAR),
+            tag.get(FieldKey.DISC_NO),
+            tag.get(FieldKey.TRACK),
+            this.path,
+            audioHeader.bitRate + " kb/s",
+            audioHeader.format,
+            audioHeader.sampleRate + " Hz",
+            false
         )
     }
 
@@ -113,23 +108,22 @@ class EditTrackFragmentPresenter @Inject constructor(
         val tag = audioFile.tagOrCreateAndSetDefault
 
         return DisplayableSong(
-                this.id,
-                this.artistId,
-                this.albumId,
-                this.title,
-                tag.get(FieldKey.ARTIST),
-                tag.get(FieldKey.ALBUM_ARTIST),
-                album,
-                tag.get(FieldKey.GENRE),
-                tag.get(FieldKey.YEAR),
-                tag.get(FieldKey.DISC_NO),
-                tag.get(FieldKey.TRACK),
-                this.image,
-                this.path,
-                audioHeader.bitRate + " kb/s",
-                audioHeader.format,
-                audioHeader.sampleRate + " Hz",
-                true
+            this.id,
+            this.artistId,
+            this.albumId,
+            this.title,
+            tag.get(FieldKey.ARTIST),
+            tag.get(FieldKey.ALBUM_ARTIST),
+            album,
+            tag.get(FieldKey.GENRE),
+            tag.get(FieldKey.YEAR),
+            tag.get(FieldKey.DISC_NO),
+            tag.get(FieldKey.TRACK),
+            this.path,
+            audioHeader.bitRate + " kb/s",
+            audioHeader.format,
+            audioHeader.sampleRate + " Hz",
+            true
         )
     }
 

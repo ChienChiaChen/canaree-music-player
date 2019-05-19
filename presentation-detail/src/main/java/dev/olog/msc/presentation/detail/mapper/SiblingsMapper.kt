@@ -16,8 +16,7 @@ internal fun Folder.toDetailDisplayableItem(resources: Resources): DisplayableIt
         R.layout.item_detail_album,
         MediaId.folderId(path),
         title,
-        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase(),
-        this.image
+        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase()
     )
 }
 
@@ -26,8 +25,7 @@ internal fun Playlist.toDetailDisplayableItem(resources: Resources): Displayable
         R.layout.item_detail_album,
         MediaId.playlistId(id),
         title,
-        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase(),
-        this.image
+        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase()
     )
 }
 
@@ -36,8 +34,7 @@ internal fun Album.toDetailDisplayableItem(resources: Resources): DisplayableIte
         R.layout.item_detail_album,
         MediaId.albumId(id),
         title,
-        resources.getQuantityString(R.plurals.common_plurals_song, this.songs, this.songs).toLowerCase(),
-        image
+        resources.getQuantityString(R.plurals.common_plurals_song, this.songs, this.songs).toLowerCase()
     )
 }
 
@@ -46,8 +43,7 @@ internal fun Genre.toDetailDisplayableItem(resources: Resources): DisplayableIte
         R.layout.item_detail_album,
         MediaId.genreId(id),
         name,
-        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase(),
-        this.image
+        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase()
     )
 }
 
@@ -56,8 +52,7 @@ internal fun PodcastPlaylist.toDetailDisplayableItem(resources: Resources): Disp
         R.layout.item_detail_album,
         MediaId.podcastPlaylistId(id),
         title,
-        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase(),
-        this.image
+        resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase()
     )
 }
 
@@ -66,7 +61,6 @@ internal fun PodcastAlbum.toDetailDisplayableItem(resources: Resources): Display
         R.layout.item_detail_album,
         MediaId.podcastAlbumId(id),
         title,
-        resources.getQuantityString(R.plurals.common_plurals_song, this.songs, this.songs).toLowerCase(),
-        image
+        resources.getQuantityString(R.plurals.common_plurals_song, this.songs, this.songs).toLowerCase()
     )
 }

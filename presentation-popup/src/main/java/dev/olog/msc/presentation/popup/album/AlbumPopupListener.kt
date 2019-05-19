@@ -15,24 +15,24 @@ import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import javax.inject.Inject
 
 class AlbumPopupListener @Inject constructor(
-        private val navigator: Navigator,
-        getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-        addToPlaylistUseCase: AddToPlaylistUseCase,
-        private val appShortcuts: AppShortcuts
+    private val navigator: Navigator,
+    getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
+    addToPlaylistUseCase: AddToPlaylistUseCase,
+    private val appShortcuts: AppShortcuts
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, false) {
 
     private lateinit var album: Album
     private var song: Song? = null
 
-    fun setData(album: Album, song: Song?): AlbumPopupListener{
+    fun setData(album: Album, song: Song?): AlbumPopupListener {
         this.album = album
         this.song = song
         return this
     }
 
     private fun getMediaId(): MediaId {
-        if (song != null){
+        if (song != null) {
             return MediaId.playableItem(MediaId.albumId(album.id), song!!.id)
         } else {
             return MediaId.albumId(album.id)
@@ -44,7 +44,7 @@ class AlbumPopupListener @Inject constructor(
 
         onPlaylistSubItemClick(activity, itemId, getMediaId(), album.songs, album.title)
 
-        when (itemId){
+        when (itemId) {
             AbsPopup.NEW_PLAYLIST_ID -> toCreatePlaylist()
             R.id.play -> playFromMediaId()
             R.id.playShuffle -> playShuffle()
@@ -57,38 +57,38 @@ class AlbumPopupListener @Inject constructor(
             R.id.viewInfo -> viewInfo(navigator, getMediaId())
             R.id.share -> share(activity, song!!)
             R.id.setRingtone -> setRingtone(navigator, getMediaId(), song!!)
-            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), album.title, album.image)
+            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), album.title)
         }
 
         return true
     }
 
-    private fun toCreatePlaylist(){
-        if (song == null){
+    private fun toCreatePlaylist() {
+        if (song == null) {
             navigator.toCreatePlaylistDialog(activity, getMediaId(), album.songs, album.title)
         } else {
             navigator.toCreatePlaylistDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 
-    private fun playFromMediaId(){
+    private fun playFromMediaId() {
         (activity as MediaProvider).playFromMediaId(getMediaId())
     }
 
-    private fun playShuffle(){
+    private fun playShuffle() {
         (activity as MediaProvider).shuffle(getMediaId())
     }
 
-    private fun playLater(){
-        if (song == null){
+    private fun playLater() {
+        if (song == null) {
             navigator.toPlayLater(activity, getMediaId(), album.songs, album.title)
         } else {
             navigator.toPlayLater(activity, getMediaId(), -1, song!!.title)
         }
     }
 
-    private fun playNext(){
-        if (song == null){
+    private fun playNext() {
+        if (song == null) {
             navigator.toPlayNext(activity, getMediaId(), album.songs, album.title)
         } else {
             navigator.toPlayNext(activity, getMediaId(), -1, song!!.title)
@@ -96,23 +96,23 @@ class AlbumPopupListener @Inject constructor(
     }
 
 
-    private fun addToFavorite(){
-        if (song == null){
+    private fun addToFavorite() {
+        if (song == null) {
             navigator.toAddToFavoriteDialog(activity, getMediaId(), album.songs, album.title)
         } else {
             navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 
-    private fun delete(){
-        if (song == null){
+    private fun delete() {
+        if (song == null) {
             navigator.toDeleteDialog(activity, getMediaId(), album.songs, album.title)
         } else {
             navigator.toDeleteDialog(activity, getMediaId(), -1, song!!.title)
         }
     }
 
-    private fun viewArtist(){
+    private fun viewArtist() {
         navigator.toDetailFragment(activity, MediaId.artistId(album.artistId))
     }
 

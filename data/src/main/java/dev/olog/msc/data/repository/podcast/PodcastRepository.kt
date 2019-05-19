@@ -4,7 +4,6 @@ import android.content.Context
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.util.Log
-import androidx.core.util.getOrDefault
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.data.request.DataRequest
 import dev.olog.msc.core.entity.data.request.ItemRequest
@@ -17,7 +16,6 @@ import dev.olog.msc.data.entity.custom.ItemRequestImpl
 import dev.olog.msc.data.entity.custom.PageRequestImpl
 import dev.olog.msc.data.mapper.toPodcast
 import dev.olog.msc.data.repository.queries.TrackQueries
-import dev.olog.msc.data.repository.util.CommonQuery
 import dev.olog.msc.data.repository.util.ContentObserverFlow
 import dev.olog.msc.data.repository.util.queryAll
 import dev.olog.msc.shared.utils.assertBackgroundThread
@@ -33,14 +31,6 @@ internal class PodcastRepository @Inject constructor(
 
 ) : PodcastGateway {
 
-    companion object {
-        internal fun adjustImages(context: Context, original: List<Podcast>): List<Podcast> {
-            // TODO check if update images if missing
-            val images = CommonQuery.searchForImages(context)
-            return original.map { it.copy(image = images.getOrDefault(it.albumId.toInt(), it.image)) }
-        }
-    }
-
     private val contentResolver = context.contentResolver
     private val queries = TrackQueries(prefsGateway, true, contentResolver)
 
@@ -50,9 +40,7 @@ internal class PodcastRepository @Inject constructor(
         return PageRequestImpl(
             cursorFactory = { queries.getAll(it) },
             cursorMapper = { it.toPodcast() },
-            listMapper = {
-                adjustImages(context, it)
-            },
+            listMapper = null,
             contentResolver = contentResolver,
             contentObserverFlow = contentObserverFlow,
             mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -61,19 +49,24 @@ internal class PodcastRepository @Inject constructor(
 
     override fun getByParam(param: Long): ItemRequest<Podcast> {
         return ItemRequestImpl(
-            { queries.getById(param) },
-            { it.toPodcast() },
-            { adjustImages(context, listOf(it)).first() },
-            contentResolver,
-            contentObserverFlow,
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+            cursorFactory = { queries.getById(param) },
+            cursorMapper = { it.toPodcast() },
+            itemMapper = null,
+            contentResolver = contentResolver,
+            contentObserverFlow = contentObserverFlow,
+            mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         )
     }
 
-    override fun getByAlbumId(albumId: Long): Observable<Podcast> {
-        return TODO()
-//        querySingle("${MediaStore.Audio.Media.ALBUM_ID} = ?", arrayOf(albumId.toString()))
-//            .asObservable()
+    override fun getByAlbumId(albumId: Long): ItemRequest<Podcast> {
+        return ItemRequestImpl(
+            cursorFactory = { queries.getByAlbumId(albumId) },
+            cursorMapper = { it.toPodcast() },
+            itemMapper = null,
+            contentResolver = contentResolver,
+            contentObserverFlow = contentObserverFlow,
+            mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        )
     }
 
     override fun getUneditedByParam(podcastId: Long): Observable<Podcast> {

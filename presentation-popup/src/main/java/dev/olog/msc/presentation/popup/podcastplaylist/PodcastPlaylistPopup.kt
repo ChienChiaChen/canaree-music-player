@@ -48,10 +48,10 @@ class PodcastPlaylistPopup(
                 menu.removeItem(R.id.clear)
             }
         } else {
-            if (song.artist == TrackUtils.UNKNOWN){
+            if (song.artist == TrackUtils.UNKNOWN_ARTIST){
                 menu.removeItem(R.id.viewArtist)
             }
-            if (song.album == TrackUtils.UNKNOWN){
+            if (song.album == TrackUtils.UNKNOWN_ALBUM){
                 menu.removeItem(R.id.viewAlbum)
             }
             if (playlist.id == PlaylistGateway.FAVORITE_LIST_ID){

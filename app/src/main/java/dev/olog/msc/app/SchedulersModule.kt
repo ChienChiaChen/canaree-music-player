@@ -37,12 +37,12 @@ abstract class SchedulersModule {
 
 class ComputationDispatch @Inject constructor(): ComputationDispatcher {
     override val worker: CoroutineContext
-        get() = Dispatchers.Default
+        get() = Dispatchers.Default // TODO make a custom pool??
 }
 
 class IODispatch @Inject constructor(): IoDispatcher{
     override val worker: CoroutineContext
-        get() = Dispatchers.Default
+        get() = Dispatchers.IO
 }
 
 class ComputationSchedulers @Inject constructor(): ComputationScheduler {
