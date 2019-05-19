@@ -19,7 +19,6 @@ import dev.olog.msc.shared.WidgetConstants
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.distinct
 import javax.inject.Inject
 
 internal class MediaSessionQueue @Inject constructor(
@@ -32,18 +31,17 @@ internal class MediaSessionQueue @Inject constructor(
 
 ) : DefaultLifecycleObserver, CoroutineScope by CustomScope() {
 
-    private val channel = Channel<MediaSessionQueueModel<MediaEntity>>()
+    private val channel = Channel<MediaSessionQueueModel<MediaEntity>>(Channel.CONFLATED)
 
     init {
         lifecycle.addObserver(this)
 
         launch {
-            for (item in channel.distinct()) {
-                if (!item.immediate) { // TODO check if still need
-                    delay(1000)
+            for (item in channel) {
+                if (!item.immediate) {
+                    delay(500)
                 }
                 yield()
-
                 persistMiniQueue(item.queue)
                 val queueItemList = item.queue.map { it.toQueueItem() }
 
