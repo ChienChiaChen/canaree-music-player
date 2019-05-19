@@ -31,10 +31,11 @@
             android:supportsRtl="false"
             android:theme="@style/AppTheme"
             android:name=".app.App"
-            tools:ignore="GoogleAppIndexingWarning"
+            tools:ignore="GoogleAppIndexingWarning,HardcodedDebugMode"
             android:usesCleartextTraffic="true"
             tools:targetApi="m"
-            tools:replace="android:supportsRtl">
+            tools:replace="android:supportsRtl"
+            android:debuggable="false">
 
         <!--main activity-->
         <activity

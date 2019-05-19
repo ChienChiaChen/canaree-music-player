@@ -7,7 +7,7 @@ import dev.olog.msc.core.coroutines.merge
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
-import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.track.ArtistGateway
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.paging.BaseDataSource
@@ -26,7 +26,7 @@ internal class ArtistDataSource @Inject constructor(
     @ActivityLifecycle lifecycle: Lifecycle,
     private val resources: Resources,
     private val gateway: ArtistGateway,
-    prefsGateway: AppPreferencesGateway,
+    prefsGateway: SortPreferencesGateway,
     private val displayableHeaders: TabFragmentHeaders
 ) : BaseDataSource<DisplayableItem>() {
 

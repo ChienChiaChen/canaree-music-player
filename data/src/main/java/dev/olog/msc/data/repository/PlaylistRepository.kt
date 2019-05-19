@@ -14,6 +14,7 @@ import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGatewayHelper
 import dev.olog.msc.core.gateway.track.SongGateway
@@ -40,13 +41,14 @@ internal class PlaylistRepository @Inject constructor(
     private val prefsGateway: AppPreferencesGateway,
     prefsKeys: PrefsKeys,
     private val contentObserverFlow: ContentObserverFlow,
-    private val songGateway: SongGateway
+    private val songGateway: SongGateway,
+    sortGateway: SortPreferencesGateway
 
 ) : PlaylistGateway, PlaylistGatewayHelper by helper {
 
     private val contentResolver = context.contentResolver
-    private val queries = PlaylistQueries(prefsGateway, contentResolver)
-    private val trackQueries = TrackQueries(prefsGateway, false, contentResolver)
+    private val queries = PlaylistQueries(prefsGateway, sortGateway, contentResolver)
+    private val trackQueries = TrackQueries(sortGateway, prefsGateway, false, contentResolver)
 
     private val resources = context.resources
 

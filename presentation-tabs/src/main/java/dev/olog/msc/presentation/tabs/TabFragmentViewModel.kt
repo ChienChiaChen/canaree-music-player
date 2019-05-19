@@ -8,7 +8,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.LibrarySortType
-import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.tabs.paging.last.played.LastPlayedAlbumDataSourceFactory
 import dev.olog.msc.presentation.tabs.paging.last.played.LastPlayedArtistDataSourceFactory
@@ -27,7 +27,7 @@ import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 internal class TabFragmentViewModel @Inject constructor(
-    private val appPreferencesUseCase: AppPreferencesGateway,
+    private val sortPrefs: SortPreferencesGateway,
     // tracks
     private val folderDataSource: FolderDataSourceFactory,
     private val playlistDataSource: PlaylistDataSourceFactory,
@@ -93,11 +93,11 @@ internal class TabFragmentViewModel @Inject constructor(
     }
 
     fun getAllTracksSortOrder(): LibrarySortType {
-        return appPreferencesUseCase.getAllTracksSortOrder()
+        return sortPrefs.getAllTracksSortOrder()
     }
 
     fun getAllAlbumsSortOrder(): LibrarySortType {
-        return appPreferencesUseCase.getAllAlbumsSortOrder()
+        return sortPrefs.getAllAlbumsSortOrder()
     }
 
     override fun onCleared() {

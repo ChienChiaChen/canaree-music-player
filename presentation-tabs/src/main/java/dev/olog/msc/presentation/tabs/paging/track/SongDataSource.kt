@@ -6,7 +6,7 @@ import dev.olog.msc.core.coroutines.merge
 import dev.olog.msc.core.dagger.qualifier.ActivityLifecycle
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
-import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.paging.BaseDataSource
@@ -24,7 +24,7 @@ import javax.inject.Provider
 internal class SongDataSource @Inject constructor(
     @ActivityLifecycle lifecycle: Lifecycle,
     gateway: SongGateway,
-    prefsGateway: AppPreferencesGateway,
+    prefsGateway: SortPreferencesGateway,
     private val displayableHeaders: TabFragmentHeaders
 ) : BaseDataSource<DisplayableItem>() {
 

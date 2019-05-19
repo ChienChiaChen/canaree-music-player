@@ -10,11 +10,13 @@ import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 
 internal class GenreQueries(
     prefsGateway: AppPreferencesGateway,
+    sortGateway: SortPreferencesGateway,
     private val contentResolver: ContentResolver
-) : BaseQueries(prefsGateway, false) {
+) : BaseQueries(prefsGateway, sortGateway, false) {
 
     fun getAll(request: Request?): Cursor {
         val (filter, bindParams) = createFilter(request?.filter, removeLeadingAnd = true, overrideTitleColumn = NAME)
@@ -49,7 +51,7 @@ internal class GenreQueries(
         return contentResolver.querySql(query, arrayOf(genreId.toString()))
     }
 
-    fun getSongList(genreId: Long, request: Request?): Cursor{
+    fun getSongList(genreId: Long, request: Request?): Cursor {
         val (filter, bindParams) = createFilter(request?.filter)
 
         val query = """
@@ -70,7 +72,7 @@ internal class GenreQueries(
         return contentResolver.querySql(query, bindParams)
     }
 
-    fun getSongListDuration(genreId: Long, filterRequest: Filter?): Cursor{
+    fun getSongListDuration(genreId: Long, filterRequest: Filter?): Cursor {
         val (filter, bindParams) = createFilter(
             filterRequest,
             overrideArtistColumn = ARTIST,
@@ -151,7 +153,7 @@ internal class GenreQueries(
         return contentResolver.querySql(query)
     }
 
-    private fun defaultSelection(): String{
+    private fun defaultSelection(): String {
         return "${isPodcast()} AND ${notBlacklisted()}"
     }
 

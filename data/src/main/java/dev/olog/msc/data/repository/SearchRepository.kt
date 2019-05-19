@@ -9,6 +9,7 @@ import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.SearchGateway
 import dev.olog.msc.core.gateway.SearchGateway.SearchRequest
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.data.entity.custom.PageRequestImpl
 import dev.olog.msc.data.mapper.toPodcast
 import dev.olog.msc.data.mapper.toSong
@@ -22,11 +23,12 @@ import javax.inject.Inject
 internal class SearchRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     private val contentObserverFlow: ContentObserverFlow,
-    prefsGateway: AppPreferencesGateway
+    prefsGateway: AppPreferencesGateway,
+    sortGateway: SortPreferencesGateway
 ) : SearchGateway {
 
     private val contentResolver = context.contentResolver
-    private val searchQueries = SearchQueries(prefsGateway, contentResolver)
+    private val searchQueries = SearchQueries(prefsGateway, sortGateway, contentResolver)
 
     override fun searchSongsAndPocastsBy(request: SearchRequest): DataRequest<Song> {
         assertBackgroundThread()

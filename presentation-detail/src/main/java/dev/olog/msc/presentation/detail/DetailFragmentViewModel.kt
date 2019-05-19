@@ -9,7 +9,7 @@ import androidx.paging.PagedList
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.interactor.sort.SetSortOrderRequestModel
@@ -37,7 +37,7 @@ internal class DetailFragmentViewModel @Inject constructor(
     recentlyAddedDataSource: RecentlyAddedDataSourceFactory,
     private val relatedArtistsSource: RelatedArtistsSourceFactory,
     private val setSortOrderUseCase: SetSortOrderUseCase,
-    private val prefsGateway: AppPreferencesGateway,
+    private val prefsGateway: SortPreferencesGateway,
     private val tutorialPreferenceUseCase: TutorialPreferenceGateway,
     private val observeDetailSortDataUseCase: ObserveDetailSortDataUseCase,
     private val getDetailSortDataUseCase: GetDetailSortDataUseCase,
@@ -114,24 +114,25 @@ internal class DetailFragmentViewModel @Inject constructor(
         }
     }
 
-    fun moveItemInPlaylist(headersCount: Int, itemToMove: List<Pair<Int, Int>>) = viewModelScope.launch(Dispatchers.Default) {
-        mediaId.assertPlaylist()
-        val playlistId = mediaId.resolveId
-        val type = if (mediaId.isPodcastPlaylist) PlaylistType.PODCAST else PlaylistType.TRACK
-        for ((from, to) in itemToMove) {
-            moveItemInPlaylistUseCase.execute(
-                MoveItemInPlaylistUseCase.Input(
-                    playlistId,
-                    from - headersCount,
-                    to - headersCount,
-                    type
+    fun moveItemInPlaylist(headersCount: Int, itemToMove: List<Pair<Int, Int>>) =
+        viewModelScope.launch(Dispatchers.Default) {
+            mediaId.assertPlaylist()
+            val playlistId = mediaId.resolveId
+            val type = if (mediaId.isPodcastPlaylist) PlaylistType.PODCAST else PlaylistType.TRACK
+            for ((from, to) in itemToMove) {
+                moveItemInPlaylistUseCase.execute(
+                    MoveItemInPlaylistUseCase.Input(
+                        playlistId,
+                        from - headersCount,
+                        to - headersCount,
+                        type
+                    )
                 )
-            )
+            }
+            withContext(Dispatchers.Main) {
+                detailDataSource.invalidate()
+            }
         }
-        withContext(Dispatchers.Main) {
-            detailDataSource.invalidate()
-        }
-    }
 
     fun removeFromPlaylist(item: DisplayableItem) = viewModelScope.launch(Dispatchers.Default) {
         mediaId.assertPlaylist()

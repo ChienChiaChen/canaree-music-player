@@ -11,6 +11,7 @@ import dev.olog.msc.core.entity.track.Album
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.track.ArtistGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.custom.ItemRequestImpl
@@ -29,12 +30,13 @@ internal class ArtistRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     appDatabase: AppDatabase,
     private val prefsGateway: AppPreferencesGateway,
-    private val contentObserverFlow: ContentObserverFlow
+    private val contentObserverFlow: ContentObserverFlow,
+    sortGateway: SortPreferencesGateway
 
 ) : ArtistGateway {
 
     private val contentResolver = context.contentResolver
-    private val queries = ArtistQueries(prefsGateway, false, contentResolver)
+    private val queries = ArtistQueries(prefsGateway, sortGateway, false, contentResolver)
 
     private val lastPlayedDao = appDatabase.lastPlayedArtistDao()
 

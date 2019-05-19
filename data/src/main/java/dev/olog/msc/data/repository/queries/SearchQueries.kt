@@ -10,13 +10,16 @@ import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.SearchGateway.By
 import dev.olog.msc.core.gateway.SearchGateway.SearchRequest
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import javax.inject.Inject
 
 class SearchQueries @Inject constructor(
     prefsGateway: AppPreferencesGateway,
+    sortGateway: SortPreferencesGateway,
     private val contentResolver: ContentResolver
 ) : BaseQueries(
     prefsGateway,
+    sortGateway,
     false // not considered
 ) {
 
@@ -96,9 +99,11 @@ class SearchQueries @Inject constructor(
 
         if (columns.contains(By.NO_FILTER)) {
             By.values().filter { it != By.NO_FILTER }
-                .forEach { check(!columns.contains(it)) {
-                       "Provide or By.NO_FILTER or one of the others. Current $columns"
-                } }
+                .forEach {
+                    check(!columns.contains(it)) {
+                        "Provide or By.NO_FILTER or one of the others. Current $columns"
+                    }
+                }
         }
 
         if (!columns.contains(By.NO_FILTER) && word.isNotBlank()) {

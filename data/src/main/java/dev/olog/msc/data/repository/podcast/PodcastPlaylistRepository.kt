@@ -17,6 +17,7 @@ import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.PodcastPlaylistEntity
 import dev.olog.msc.data.entity.PodcastPlaylistTrackEntity
@@ -41,7 +42,8 @@ internal class PodcastPlaylistRepository @Inject constructor(
     private val favoriteGateway: FavoriteGateway,
     prefsKeys: PrefsKeys,
     prefsGateway: AppPreferencesGateway,
-    private val contentObserverFlow: ContentObserverFlow
+    private val contentObserverFlow: ContentObserverFlow,
+    sortGateway: SortPreferencesGateway
 
 ) : PodcastPlaylistGateway {
 
@@ -49,7 +51,7 @@ internal class PodcastPlaylistRepository @Inject constructor(
     private val historyDao = appDatabase.historyDao()
 
     private val contentResolver = context.contentResolver
-    private val trackQueries = TrackQueries(prefsGateway, true, contentResolver)
+    private val trackQueries = TrackQueries(sortGateway, prefsGateway, true, contentResolver)
 
     private fun PodcastPlaylistEntity.toDomain(): PodcastPlaylist {
         return PodcastPlaylist(

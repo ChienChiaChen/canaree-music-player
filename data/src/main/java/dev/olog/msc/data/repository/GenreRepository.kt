@@ -10,6 +10,7 @@ import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Genre
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.track.GenreGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.data.db.AppDatabase
@@ -32,12 +33,13 @@ internal class GenreRepository @Inject constructor(
     private val prefsGateway: AppPreferencesGateway,
     appDatabase: AppDatabase,
     private val contentObserverFlow: ContentObserverFlow,
-    private val songGateway: SongGateway
+    private val songGateway: SongGateway,
+    sortGateway: SortPreferencesGateway
 
 ) : GenreGateway {
 
     private val contentResolver = context.contentResolver
-    private val queries = GenreQueries(prefsGateway, contentResolver)
+    private val queries = GenreQueries(prefsGateway, sortGateway, contentResolver)
 
     private val mostPlayedDao = appDatabase.genreMostPlayedDao()
 

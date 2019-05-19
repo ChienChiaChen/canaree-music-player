@@ -14,6 +14,7 @@ import dev.olog.msc.core.entity.data.request.DataRequest
 import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.data.entity.custom.ItemRequestImpl
 import dev.olog.msc.data.entity.custom.PageRequestImpl
@@ -33,12 +34,13 @@ import javax.inject.Inject
 internal class SongRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     prefsGateway: AppPreferencesGateway,
-    private val contentObserverFlow: ContentObserverFlow
+    private val contentObserverFlow: ContentObserverFlow,
+    sortGateway: SortPreferencesGateway
 
 ) : SongGateway {
 
     private val contentResolver = context.contentResolver
-    private val queries = TrackQueries(prefsGateway, false, contentResolver)
+    private val queries = TrackQueries(sortGateway, prefsGateway, false, contentResolver)
 
     override fun getAll(): DataRequest<Song> {
         return PageRequestImpl(

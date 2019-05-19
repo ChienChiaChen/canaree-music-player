@@ -11,6 +11,7 @@ import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.custom.ItemRequestImpl
 import dev.olog.msc.data.entity.custom.PageRequestDao
@@ -28,12 +29,13 @@ internal class PodcastAlbumRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     appDatabase: AppDatabase,
     private val prefsGateway: AppPreferencesGateway,
-    private val contentObserverFlow: ContentObserverFlow
+    private val contentObserverFlow: ContentObserverFlow,
+    sortGateway: SortPreferencesGateway
 
 ) : PodcastAlbumGateway {
 
     private val contentResolver = context.contentResolver
-    private val queries = AlbumQueries(prefsGateway, true, contentResolver)
+    private val queries = AlbumQueries(prefsGateway, sortGateway, true, contentResolver)
 
     private val lastPlayedDao = appDatabase.lastPlayedPodcastAlbumDao()
 

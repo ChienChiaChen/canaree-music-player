@@ -3,7 +3,6 @@ apply from: '../base_module.gradle'
 
 dependencies {
     implementation project(':core')
-    implementation project(':image-provider')
     implementation project(':shared')
 
     implementation librariesAndroidX.coreKtx

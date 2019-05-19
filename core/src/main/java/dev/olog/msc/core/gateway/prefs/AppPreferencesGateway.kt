@@ -10,7 +10,7 @@ import io.reactivex.Observable
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
-interface AppPreferencesGateway : Sorting {
+interface AppPreferencesGateway {
 
     fun getLastBottomViewPage(): Int
     fun setLastBottomViewPage(page: Int)
@@ -70,7 +70,7 @@ interface AppPreferencesGateway : Sorting {
 
 }
 
-interface Sorting {
+interface SortPreferencesGateway {
 
     fun getAllTracksSortOrder(): LibrarySortType
     fun getAllAlbumsSortOrder(): LibrarySortType

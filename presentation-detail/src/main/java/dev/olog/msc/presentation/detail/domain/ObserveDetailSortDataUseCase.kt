@@ -6,7 +6,7 @@ import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.coroutines.ObservableFlowWithParam
 import dev.olog.msc.core.coroutines.combineLatest
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.presentation.detail.sort.DetailSort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class ObserveDetailSortDataUseCase @Inject constructor(
     scheduler: IoDispatcher,
-    private val prefsGateway: AppPreferencesGateway
+    private val prefsGateway: SortPreferencesGateway
 
 ) : ObservableFlowWithParam<DetailSort, MediaId>(scheduler) {
 

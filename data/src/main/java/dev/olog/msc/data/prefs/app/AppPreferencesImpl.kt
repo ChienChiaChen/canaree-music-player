@@ -11,7 +11,7 @@ import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.core.gateway.prefs.Sorting
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.shared.extensions.asFlowable
 import dev.olog.msc.shared.extensions.safeGetCanonicalPath
 import io.reactivex.Completable
@@ -29,7 +29,7 @@ internal class AppPreferencesImpl @Inject constructor(
     private val prefsKeys: PrefsKeys
 
 ) : AppPreferencesGateway,
-    Sorting by AppSortingImpl(preferences, rxPreferences) {
+    SortPreferencesGateway by AppSortingImpl(preferences, rxPreferences) {
 
     companion object {
         private const val TAG = "AppPreferencesDataStoreImpl"

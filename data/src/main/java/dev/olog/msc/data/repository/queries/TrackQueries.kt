@@ -8,12 +8,14 @@ import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 
-internal open class TrackQueries constructor(
+open class TrackQueries constructor(
+    sortGateway: SortPreferencesGateway,
     prefsGateway: AppPreferencesGateway,
     isPodcast: Boolean,
     private val contentResolver: ContentResolver
-) : BaseQueries(prefsGateway, isPodcast) {
+) : BaseQueries(prefsGateway, sortGateway, isPodcast) {
 
     fun getAll(request: Request?): Cursor {
         val (filter, bindParams) = createFilter(request?.filter)
@@ -112,7 +114,7 @@ internal open class TrackQueries constructor(
     }
 
     private fun defaultSelection(includeAll: Boolean = false): String {
-        if (includeAll){
+        if (includeAll) {
             return notBlacklisted()
         }
         return "${isPodcast()} AND ${notBlacklisted()}"
@@ -123,7 +125,7 @@ internal open class TrackQueries constructor(
             return "lower($TITLE) COLLATE UNICODE"
         }
 
-        val (type, arranging) = prefsGateway.getAllTracksSortOrder()
+        val (type, arranging) = sortGateway.getAllTracksSortOrder()
         var sort = when (type) {
             SortType.TITLE -> "lower($TITLE)"
             SortType.ARTIST -> "lower(${Columns.ARTIST})"
@@ -133,12 +135,12 @@ internal open class TrackQueries constructor(
             SortType.RECENTLY_ADDED -> DATE_ADDED
             else -> "lower($TITLE)"
         }
-        if (arranging == SortArranging.ASCENDING && type == SortType.RECENTLY_ADDED){
+        if (arranging == SortArranging.ASCENDING && type == SortType.RECENTLY_ADDED) {
             // recently added works in reverse
             sort += " DESC"
         }
         if (arranging == SortArranging.DESCENDING) {
-            if (type == SortType.RECENTLY_ADDED){
+            if (type == SortType.RECENTLY_ADDED) {
                 // recently added works in reverse
                 sort += " ASC"
             } else {

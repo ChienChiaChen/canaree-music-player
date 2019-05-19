@@ -10,6 +10,7 @@ import dev.olog.msc.core.entity.data.request.ItemRequest
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.PodcastPositionEntity
 import dev.olog.msc.data.entity.custom.ItemRequestImpl
@@ -27,12 +28,13 @@ internal class PodcastRepository @Inject constructor(
     appDatabase: AppDatabase,
     @ApplicationContext private val context: Context,
     prefsGateway: AppPreferencesGateway,
-    private val contentObserverFlow: ContentObserverFlow
+    private val contentObserverFlow: ContentObserverFlow,
+    sortGateway: SortPreferencesGateway
 
 ) : PodcastGateway {
 
     private val contentResolver = context.contentResolver
-    private val queries = TrackQueries(prefsGateway, true, contentResolver)
+    private val queries = TrackQueries(sortGateway, prefsGateway, true, contentResolver)
 
     private val podcastPositionDao = appDatabase.podcastPositionDao()
 

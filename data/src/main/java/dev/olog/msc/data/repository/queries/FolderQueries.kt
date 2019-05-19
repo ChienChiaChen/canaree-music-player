@@ -8,11 +8,13 @@ import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 
 internal class FolderQueries(
     prefsGateway: AppPreferencesGateway,
+    sortGateway: SortPreferencesGateway,
     private val contentResolver: ContentResolver
-) : BaseQueries(prefsGateway, false) {
+) : BaseQueries(prefsGateway, sortGateway,false) {
 
 
     fun getAll(request: Request?): Cursor {

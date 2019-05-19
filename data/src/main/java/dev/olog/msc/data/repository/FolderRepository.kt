@@ -11,6 +11,7 @@ import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.track.FolderGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.data.db.AppDatabase
@@ -33,12 +34,13 @@ internal class FolderRepository @Inject constructor(
     private val contentObserverFlow: ContentObserverFlow,
     appDatabase: AppDatabase,
     private val prefsGateway: AppPreferencesGateway,
-    private val songGateway: SongGateway
+    private val songGateway: SongGateway,
+    sortGateway: SortPreferencesGateway
 
 ) : FolderGateway {
 
     private val contentResolver = context.contentResolver
-    private val queries = FolderQueries(prefsGateway, contentResolver)
+    private val queries = FolderQueries(prefsGateway, sortGateway, contentResolver)
 
     private val mostPlayedDao = appDatabase.folderMostPlayedDao()
 

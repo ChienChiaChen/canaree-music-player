@@ -6,18 +6,19 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.core.gateway.prefs.Sorting
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.shared.extensions.asFlowable
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.rxkotlin.Observables
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.flow.asFlow
+import javax.inject.Inject
 
-internal class AppSortingImpl(
+internal class AppSortingImpl @Inject constructor(
     private val preferences: SharedPreferences,
     private val rxPreferences: RxSharedPreferences
 
-) : Sorting {
+) : SortPreferencesGateway {
 
     companion object {
         private const val TAG = "AppPreferencesDataStoreImpl"

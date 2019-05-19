@@ -10,12 +10,14 @@ import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 
 internal class AlbumQueries constructor(
     prefsGateway: AppPreferencesGateway,
+    sortGateway: SortPreferencesGateway,
     isPodcast: Boolean,
     private val contentResolver: ContentResolver
-) : BaseQueries(prefsGateway, isPodcast) {
+) : BaseQueries(prefsGateway, sortGateway, isPodcast) {
 
     fun getAll(request: Request?): Cursor {
         val (filter, bindParams) = createFilter(request?.filter)
@@ -169,7 +171,7 @@ internal class AlbumQueries constructor(
             return "lower(${Columns.ALBUM}) COLLATE UNICODE"
         }
 
-        val (type, arranging) = prefsGateway.getAllAlbumsSortOrder()
+        val (type, arranging) = sortGateway.getAllAlbumsSortOrder()
         var sort = when (type) {
             SortType.ALBUM -> "lower(${Columns.ALBUM})"
             SortType.ARTIST -> "lower(${Columns.ARTIST})"

@@ -3,12 +3,12 @@ package dev.olog.msc.presentation.detail.domain
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.presentation.detail.sort.DetailSort
 import javax.inject.Inject
 
 class GetDetailSortDataUseCase @Inject constructor(
-    private val prefsGateway: AppPreferencesGateway
+    private val prefsGateway: SortPreferencesGateway
 
 ) {
 

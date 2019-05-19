@@ -11,7 +11,7 @@ import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.navigator.IPopupNavigator
 import dev.olog.msc.presentation.navigator.Navigator
@@ -25,7 +25,7 @@ private const val SAVE_AS_PLAYLIST_ID = -12345
 class MainPopupDialog @Inject constructor(
         private val activityNavigator: Navigator,
         private val navigator: IPopupNavigator,
-        private val gateway: AppPreferencesGateway
+        private val gateway: SortPreferencesGateway
 
 ){
 

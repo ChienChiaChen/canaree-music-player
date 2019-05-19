@@ -8,12 +8,14 @@ import dev.olog.msc.core.entity.data.request.Page
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.shared.TrackUtils
 import java.util.concurrent.TimeUnit
 
 
 abstract class BaseQueries(
     protected val prefsGateway: AppPreferencesGateway,
+    protected val sortGateway: SortPreferencesGateway,
     protected val isPodcast: Boolean
 ) {
 
@@ -131,7 +133,7 @@ abstract class BaseQueries(
     protected fun songListSortOrder(category: MediaIdCategory, default: String): String {
 
         val type = getSortType(category)
-        val arranging = prefsGateway.getSortArranging()
+        val arranging = sortGateway.getSortArranging()
         var sort = when (type) {
             SortType.TITLE -> "lower($TITLE)"
             SortType.ARTIST -> "lower(${Columns.ARTIST})"
@@ -168,11 +170,11 @@ abstract class BaseQueries(
 
     private fun getSortType(category: MediaIdCategory): SortType {
         return when (category) {
-            MediaIdCategory.FOLDERS -> prefsGateway.getFolderSortOrder()
-            MediaIdCategory.PLAYLISTS -> prefsGateway.getPlaylistSortOrder()
-            MediaIdCategory.ALBUMS -> prefsGateway.getAlbumSortOrder()
-            MediaIdCategory.ARTISTS -> prefsGateway.getArtistSortOrder()
-            MediaIdCategory.GENRES -> prefsGateway.getGenreSortOrder()
+            MediaIdCategory.FOLDERS -> sortGateway.getFolderSortOrder()
+            MediaIdCategory.PLAYLISTS -> sortGateway.getPlaylistSortOrder()
+            MediaIdCategory.ALBUMS -> sortGateway.getAlbumSortOrder()
+            MediaIdCategory.ARTISTS -> sortGateway.getArtistSortOrder()
+            MediaIdCategory.GENRES -> sortGateway.getGenreSortOrder()
             else -> throw IllegalArgumentException("invalid category $category")
         }
     }
