@@ -9,7 +9,6 @@ import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.shared.TrackUtils
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
 
@@ -72,13 +71,13 @@ abstract class BaseQueries(
                 Filter.By.TITLE -> {
                     if (overrideTitleColumn != null) {
                         conditions.add("$overrideTitleColumn LIKE ?")
-                        breakRequest =true
+                        breakRequest = true
                     } else {
                         conditions.add("$TITLE LIKE ?")
                     }
                 }
                 Filter.By.ARTIST -> {
-                    if (overrideArtistColumn != null){
+                    if (overrideArtistColumn != null) {
                         conditions.add("$overrideArtistColumn LIKE ?")
                     } else {
                         conditions.add("${Columns.ARTIST} LIKE ?")
@@ -86,14 +85,14 @@ abstract class BaseQueries(
 
                 }
                 Filter.By.ALBUM -> {
-                    if (overrideAlbumColumn != null){
+                    if (overrideAlbumColumn != null) {
                         conditions.add("$overrideAlbumColumn LIKE ?")
                     } else {
                         conditions.add("${Columns.ALBUM} LIKE ?")
                     }
                 }
             }
-            if (breakRequest){
+            if (breakRequest) {
                 break
             }
         }
@@ -129,7 +128,7 @@ abstract class BaseQueries(
         return "$folderProjection NOT IN (${blackListed.joinToString()})"
     }
 
-    protected fun songListSortOrder(category: MediaIdCategory, default: String): String = runBlocking {
+    protected fun songListSortOrder(category: MediaIdCategory, default: String): String {
 
         val type = getSortType(category)
         val arranging = prefsGateway.getSortArranging()
@@ -146,7 +145,7 @@ abstract class BaseQueries(
         }
 
         if (type == SortType.CUSTOM) {
-            return@runBlocking sort
+            return sort
         }
 
         sort += " COLLATE UNICODE "
@@ -164,7 +163,7 @@ abstract class BaseQueries(
             }
 
         }
-        return@runBlocking sort
+        return sort
     }
 
     private fun getSortType(category: MediaIdCategory): SortType {

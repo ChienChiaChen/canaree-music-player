@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
+import org.jaudiotagger.tag.TagOptionSingleton
 import javax.inject.Inject
 
 class EditArtistFragmentViewModel @Inject constructor(

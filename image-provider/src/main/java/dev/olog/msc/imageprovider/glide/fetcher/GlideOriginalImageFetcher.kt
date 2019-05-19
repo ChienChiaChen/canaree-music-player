@@ -8,6 +8,10 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import kotlinx.coroutines.*
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
+import org.jaudiotagger.audio.mp3.MP3File
+import org.jaudiotagger.tag.TagException
 import java.io.*
 
 private val FALLBACKS = arrayOf("cover.jpg", "album.jpg", "folder.jpg", "cover.png", "album.png", "folder.png")

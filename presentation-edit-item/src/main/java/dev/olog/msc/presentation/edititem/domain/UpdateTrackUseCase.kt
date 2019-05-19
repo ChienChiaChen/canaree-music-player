@@ -6,6 +6,8 @@ import dev.olog.msc.core.coroutines.ComputationDispatcher
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.presentation.edititem.utils.notifyItemChanged
+import org.jaudiotagger.audio.AudioFileIO
+import org.jaudiotagger.tag.FieldKey
 import java.io.File
 import javax.inject.Inject
 

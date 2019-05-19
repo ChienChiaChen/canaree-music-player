@@ -7,6 +7,8 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.shared.extensions.toast
 import io.reactivex.disposables.CompositeDisposable
+import org.jaudiotagger.audio.exceptions.CannotReadException
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 import java.io.FileNotFoundException
 import javax.inject.Inject
 

@@ -9,6 +9,7 @@ import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import com.bumptech.glide.signature.ObjectKey
+import org.jaudiotagger.audio.AudioFileIO
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.InputStream

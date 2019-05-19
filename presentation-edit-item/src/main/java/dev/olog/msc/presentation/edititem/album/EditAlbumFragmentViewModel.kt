@@ -8,6 +8,7 @@ import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
+import org.jaudiotagger.tag.TagOptionSingleton
 import javax.inject.Inject
 
 class EditAlbumFragmentViewModel @Inject constructor(

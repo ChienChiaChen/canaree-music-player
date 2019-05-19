@@ -9,6 +9,7 @@ import dev.olog.msc.presentation.edititem.DisplayableSong
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.utils.NetworkUtils
 import io.reactivex.disposables.Disposable
+import org.jaudiotagger.tag.TagOptionSingleton
 import javax.inject.Inject
 
 class EditTrackFragmentViewModel @Inject constructor(
