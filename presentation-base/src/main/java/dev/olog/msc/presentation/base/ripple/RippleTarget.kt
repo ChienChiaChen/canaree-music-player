@@ -24,6 +24,7 @@ class RippleTarget(
 ) : DrawableImageViewTarget(view), CoroutineScope by CustomScope() {
 
     private val imageView = WeakReference(view)
+    private var job: Job? = null
 
     init {
         if (isLeaf && view is ForegroundImageView) {
@@ -35,13 +36,19 @@ class RippleTarget(
         super.onResourceReady(drawable, transition)
 
         if (!isLeaf && imageView.get() is ForegroundImageView) {
-            GlobalScope.launch {
+            job?.cancel()
+            job = GlobalScope.launch {
                 withTimeout(500) { generateRipple(drawable) }
             }
         }
     }
 
-    private suspend fun generateRipple(drawable: Drawable){
+    override fun onStop() {
+        super.onStop()
+        job?.cancel()
+    }
+
+    private suspend fun generateRipple(drawable: Drawable) {
         val bitmap = drawable.getBitmap() ?: return
         yield()
         val palette = generatePalette(bitmap)
