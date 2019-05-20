@@ -34,34 +34,10 @@ class LicensesFragmentPresenter (private val context: Context) {
             "RxJava", "https://github.com/ReactiveX/RxJava",
             apache())
 
-    private val RX_ANDROID = LicenseModel(
-            R.layout.item_license,
-            MediaId.headerId("rxAndroid"),
-            "RxAndroid", "https://github.com/ReactiveX/RxAndroid",
-            apache())
-
-    private val RX_BINDING = LicenseModel(
-            R.layout.item_license,
-            MediaId.headerId("rxBinding"),
-            "RxBinding", "https://github.com/JakeWharton/RxBinding",
-            apache())
-
     private val RX_PREFERENCES = LicenseModel(
             R.layout.item_license,
             MediaId.headerId("rxPreferences"),
             "Rx Preferences", "https://github.com/f2prateek/rx-preferences",
-            apache())
-
-    private val RX_LINT = LicenseModel(
-            R.layout.item_license,
-            MediaId.headerId("rxLint"),
-            "rxlint", "https://bitbucket.org/littlerobots/rxlint",
-            apache())
-
-    private val SQL_BRITE = LicenseModel(
-            R.layout.item_license,
-            MediaId.headerId("sqlbrite"),
-            "sqlbrite", "https://github.com/square/sqlbrite",
             apache())
 
     private val SLIDING_PANEL = LicenseModel(
@@ -100,12 +76,6 @@ class LicensesFragmentPresenter (private val context: Context) {
             "ScrollHmsPicker", "https://github.com/DeweyReed/ScrollHmsPicker",
             mit())
 
-    private val ANDROID_KTX = LicenseModel(
-            R.layout.item_license,
-            MediaId.headerId("android ktx"),
-            "Android KTX", "https://github.com/android/android-ktx",
-            apache())
-
     private val FUZZY_WUZZY = LicenseModel(
             R.layout.item_license,
             MediaId.headerId("fuzzywuzzy"),
@@ -135,13 +105,6 @@ class LicensesFragmentPresenter (private val context: Context) {
             MediaId.headerId("jaudiotagger"),
             "JAudiotagger", "http://www.jthink.net/jaudiotagger/",
             jAudioTagger()
-    )
-
-    private val OPTIONAL = LicenseModel(
-            R.layout.item_license,
-            MediaId.headerId("optional"),
-            "support-optional", "https://github.com/dmstocking/support-optional",
-            apache()
     )
 
     private val TAP_TARGET_VIEW = LicenseModel(
@@ -186,13 +149,6 @@ class LicensesFragmentPresenter (private val context: Context) {
             apache()
     )
 
-    private val TRACEUR = LicenseModel(
-            R.layout.item_license,
-            MediaId.headerId("traceur"),
-            "Traceur", "https://github.com/T-Spoon/Traceur",
-            apache()
-    )
-
     private val LIBAVCODEC = LicenseModel(
             R.layout.item_license,
             MediaId.headerId("libavcodec"),
@@ -219,31 +175,24 @@ class LicensesFragmentPresenter (private val context: Context) {
             ANDROID_SUPPORT_LIBRARIES,
             DAGGER,
             RX_JAVA,
-            RX_ANDROID,
             RX_PREFERENCES,
-            RX_BINDING,
-            RX_LINT,
-            SQL_BRITE,
             SLIDING_PANEL,
             EXO_PLAYER,
             HOVER,
             LOTTIE,
             GLIDE,
             BETTER_PICKERS,
-            ANDROID_KTX,
             FUZZY_WUZZY,
             GSON,
             RETROFIT,
             OK_HTTP,
             J_AUDIO_TAGGER,
-            OPTIONAL,
             TAP_TARGET_VIEW,
             AES_CRYPTO,
             LAST_FM_BINDING,
             CUSTOM_TABS,
             LEAK_CANARY,
             MATERIAL_DIALOGS,
-            TRACEUR,
             LIBAVCODEC,
             LIBAVRESAMPLE,
             LIBAVUTIL

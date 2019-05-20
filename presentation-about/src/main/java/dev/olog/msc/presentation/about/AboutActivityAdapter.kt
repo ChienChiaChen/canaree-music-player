@@ -27,7 +27,7 @@ class AboutActivityAdapter(
                 AboutActivityPresenter.RATE_ID -> navigator.toMarket(activity)
                 AboutActivityPresenter.PRIVACY_POLICY -> navigator.toPrivacyPolicy(activity)
                 AboutActivityPresenter.BUY_PRO -> presenter.buyPro()
-                AboutActivityPresenter.COMMUNITY -> navigator.joinCommunity(activity)
+//                AboutActivityPresenter.COMMUNITY -> navigator.joinCommunity(activity)
                 AboutActivityPresenter.BETA -> navigator.joinBeta(activity)
             }
         }

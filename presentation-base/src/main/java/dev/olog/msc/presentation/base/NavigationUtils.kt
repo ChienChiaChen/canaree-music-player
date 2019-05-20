@@ -6,7 +6,7 @@ import android.net.Uri
 import dev.olog.msc.shared.extensions.toast
 
 fun openPlayStore(activity: Activity){
-    val uri = Uri.parse("market://details?id=${activity.packageName}")
+    val uri = Uri.parse("market://details?id=dev.olog.msc")
     val intent = Intent(Intent.ACTION_VIEW, uri)
     intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
             Intent.FLAG_ACTIVITY_NEW_DOCUMENT or

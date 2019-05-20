@@ -2,8 +2,8 @@ package dev.olog.msc.presentation.about.licenses
 
 import android.text.method.LinkMovementMethod
 import androidx.databinding.ViewDataBinding
+import dev.olog.msc.presentation.about.BR
 import dev.olog.msc.presentation.about.databinding.ItemLicenseBinding
-import dev.olog.msc.presentation.base.BR
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.base.adapter.SimpleAdapter
 import kotlinx.android.synthetic.main.item_license.view.*

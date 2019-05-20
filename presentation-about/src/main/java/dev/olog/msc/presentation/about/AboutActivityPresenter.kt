@@ -19,7 +19,7 @@ class AboutActivityPresenter(
     companion object {
         val AUTHOR_ID = MediaId.headerId("author id")
         val THIRD_SW_ID = MediaId.headerId("third sw")
-        val COMMUNITY = MediaId.headerId("community")
+//        val COMMUNITY = MediaId.headerId("community")
         val BETA = MediaId.headerId("beta")
         val SPECIAL_THANKS_ID = MediaId.headerId("special thanks to")
         val RATE_ID = MediaId.headerId("rate")
@@ -32,7 +32,7 @@ class AboutActivityPresenter(
             DisplayableItem(R.layout.item_about, AUTHOR_ID, context.getString(R.string.about_author), "Eugeniu Olog"),
             DisplayableItem(R.layout.item_about, MediaId.headerId("version id"), context.getString(R.string.about_version), BuildConfig.VERSION_NAME),
 
-            DisplayableItem(R.layout.item_about, COMMUNITY, context.getString(R.string.about_join_community), context.getString(R.string.about_join_community_description)),
+//            DisplayableItem(R.layout.item_about, COMMUNITY, context.getString(R.string.about_join_community), context.getString(R.string.about_join_community_description)),
             DisplayableItem(R.layout.item_about, BETA, context.getString(R.string.about_beta), context.getString(R.string.about_beta_description)),
             DisplayableItem(R.layout.item_about, RATE_ID, context.getString(R.string.about_support_rate), context.getString(R.string.about_support_rate_description)),
             DisplayableItem(R.layout.item_about, PRIVACY_POLICY, context.getString(R.string.about_privacy_policy), context.getString(R.string.about_privacy_policy_description)),
