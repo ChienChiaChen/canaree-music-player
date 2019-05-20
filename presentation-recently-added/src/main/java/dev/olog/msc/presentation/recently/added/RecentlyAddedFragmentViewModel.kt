@@ -15,7 +15,7 @@ import javax.inject.Inject
 internal class RecentlyAddedFragmentViewModel @Inject constructor(
     mediaId: MediaId,
     observeItemTitleUseCase: ObserveItemTitleUseCase,
-    recentlyAddedDataSource: RecentlyAddedDataSourceFactory
+    private val recentlyAddedDataSource: RecentlyAddedDataSourceFactory
 
 ) : ViewModel() {
 
@@ -37,6 +37,7 @@ internal class RecentlyAddedFragmentViewModel @Inject constructor(
 
     override fun onCleared() {
         viewModelScope.cancel()
+        recentlyAddedDataSource.onDetach()
     }
 
 }

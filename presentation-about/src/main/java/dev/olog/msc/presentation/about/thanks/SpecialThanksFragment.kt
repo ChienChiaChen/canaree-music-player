@@ -30,15 +30,15 @@ class SpecialThanksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(context)
-        val adapter = SpecialThanksFragmentAdapter(lifecycle)
+        val adapter = SpecialThanksFragmentAdapter()
         view.list.adapter = adapter
         view.list.layoutManager = layoutManager
         view.list.setHasFixedSize(true)
 
         Single.just(presenter.data)
-                .toFlowable()
-                .asLiveData()
-                .subscribe(viewLifecycleOwner, adapter::updateDataSet)
+            .toFlowable()
+            .asLiveData()
+            .subscribe(viewLifecycleOwner, adapter::updateDataSet)
     }
 
     override fun onResume() {

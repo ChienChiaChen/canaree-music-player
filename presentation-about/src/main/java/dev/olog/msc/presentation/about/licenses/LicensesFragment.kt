@@ -15,7 +15,7 @@ import io.reactivex.Single
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.fragment_licenses.view.*
 
-class LicensesFragment : Fragment(){
+class LicensesFragment : Fragment() {
 
     companion object {
         const val TAG = "LicensesFragment"
@@ -27,15 +27,15 @@ class LicensesFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val presenter = LicensesFragmentPresenter(act.applicationContext)
-        val adapter = LicensesFragmentAdapter(lifecycle)
+        val adapter = LicensesFragmentAdapter()
 
         view.list.adapter = adapter
         view.list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
         Single.just(presenter.data)
-                .toFlowable()
-                .asLiveData()
-                .subscribe(viewLifecycleOwner, adapter::updateDataSet)
+            .toFlowable()
+            .asLiveData()
+            .subscribe(viewLifecycleOwner, adapter::updateDataSet)
     }
 
     override fun onResume() {

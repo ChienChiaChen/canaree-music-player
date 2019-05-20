@@ -8,17 +8,15 @@ import android.webkit.WebView
 import android.widget.ProgressBar
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.floatingwindowservice.api.Content
 import kotlin.properties.Delegates
 
 internal abstract class WebViewContent(
-        lifecycle: Lifecycle,
-        context: Context,
-        @LayoutRes layoutRes: Int
+    context: Context,
+    @LayoutRes layoutRes: Int
 
-) : Content, DefaultLifecycleObserver {
+) : Content(), DefaultLifecycleObserver {
 
     var item by Delegates.observable("", { _, _, new ->
         webView.clearHistory()
@@ -26,7 +24,7 @@ internal abstract class WebViewContent(
         webView.loadUrl(getUrl(new))
     })
 
-    val content : View = LayoutInflater.from(context).inflate(layoutRes, null)
+    val content: View = LayoutInflater.from(context).inflate(layoutRes, null)
 
     private val webView = content.findViewById<WebView>(R.id.webView)
     private val progressBar = content.findViewById<ProgressBar>(R.id.progressBar)
@@ -35,16 +33,15 @@ internal abstract class WebViewContent(
     private val refresh = content.findViewById<View>(R.id.refresh)
 
     init {
-        lifecycle.addObserver(this)
         webView.settings.javaScriptEnabled = true // enable yt content
         try {
-            webView.webChromeClient = object : WebChromeClient(){
+            webView.webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView?, newProgress: Int) {
                     progressBar.progress = newProgress
                     progressBar.visibility = if (newProgress == 100) View.GONE else View.VISIBLE
                 }
             }
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
             // chrome may not be installed
         }
@@ -59,16 +56,22 @@ internal abstract class WebViewContent(
     override fun isFullscreen(): Boolean = true
 
     override fun onShown() {
+        super.onShown()
         back.setOnClickListener {
-            if (webView.canGoBack()) { webView.goBack() }
+            if (webView.canGoBack()) {
+                webView.goBack()
+            }
         }
         next.setOnClickListener {
-            if (webView.canGoForward()) { webView.goForward() }
+            if (webView.canGoForward()) {
+                webView.goForward()
+            }
         }
         refresh.setOnClickListener { webView.reload() }
     }
 
     override fun onHidden() {
+        super.onHidden()
         back.setOnClickListener(null)
         next.setOnClickListener(null)
         refresh.setOnClickListener(null)

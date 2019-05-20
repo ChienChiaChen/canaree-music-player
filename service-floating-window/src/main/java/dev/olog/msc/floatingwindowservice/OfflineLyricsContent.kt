@@ -7,9 +7,7 @@ import android.widget.ImageButton
 import android.widget.ScrollView
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -36,16 +34,14 @@ import io.reactivex.rxkotlin.addTo
 import java.util.concurrent.TimeUnit
 
 internal class OfflineLyricsContent(
-    lifecycle: Lifecycle,
     private val context: Context,
     private val musicServiceBinder: MusicServiceBinder,
     private val presenter: OfflineLyricsContentPresenter
 
-) : Content, DefaultLifecycleObserver {
+) : Content() {
 
     private val subscriptions = CompositeDisposable()
     private var updateDisposable: Disposable? = null
-    private var paletteDisposable: Disposable? = null
 
     val content: View = LayoutInflater.from(context).inflate(R.layout.content_offline_lyrics, null)
 
@@ -61,8 +57,49 @@ internal class OfflineLyricsContent(
     private val fakePrev = content.findViewById<View>(R.id.fakePrev)
     private val scrollView = content.findViewById<ScrollView>(R.id.scrollBar)
 
-    init {
-        lifecycle.addObserver(this)
+    private fun loadImage(metadata: MusicServiceMetadata) {
+        val mediaId = metadata.mediaId
+        Glide.with(context).clear(this.image)
+
+        val drawable = CoverUtils.getGradient(
+            context, if (metadata.isPodcast) MediaId.podcastId(metadata.id)
+            else MediaId.songId(metadata.id)
+        )
+
+        Glide.with(context)
+            .load(mediaId) // TODO is loading image?
+            .placeholder(drawable)
+            .priority(Priority.IMMEDIATE)
+            .override(500)
+            .into(this.image)
+    }
+
+    override fun getView(): View = content
+
+    override fun isFullscreen(): Boolean = true
+
+    override fun onShown() {
+        super.onShown()
+        edit.setOnClickListener {
+            EditLyricsDialog.showForService(context, presenter.getOriginalLyrics()) { newLyrics ->
+                presenter.updateLyrics(newLyrics)
+            }
+        }
+        sync.setOnClickListener {
+            OfflineLyricsSyncAdjustementDialog.showForService(context, presenter.getSyncAdjustement()) {
+                presenter.updateSyncAdjustement(it)
+            }
+        }
+        fakeNext.setOnTouchListener(NoScrollTouchListener(context) { musicServiceBinder.skipToNext() })
+        fakePrev.setOnTouchListener(NoScrollTouchListener(context) { musicServiceBinder.skipToPrevious() })
+        scrollView.setOnTouchListener(NoScrollTouchListener(context) { musicServiceBinder.playPause() })
+
+        image.observePaletteColors()
+            .observe(this, Observer { palette ->
+                val accent = palette.accent
+                edit.animateBackgroundColor(accent)
+                subHeader.animateTextColor(accent)
+            })
 
         musicServiceBinder.onMetadataChanged
             .subscribe({
@@ -96,64 +133,17 @@ internal class OfflineLyricsContent(
         setupSeekBar()
     }
 
-    override fun onDestroy(owner: LifecycleOwner) {
-        subscriptions.clear()
-        updateDisposable.unsubscribe()
-        presenter.onDestroy()
-    }
-
-    private fun loadImage(metadata: MusicServiceMetadata) {
-        val mediaId = metadata.mediaId
-        Glide.with(context).clear(this.image)
-
-        val drawable = CoverUtils.getGradient(
-            context, if (metadata.isPodcast) MediaId.podcastId(metadata.id)
-            else MediaId.songId(metadata.id)
-        )
-
-        Glide.with(context)
-            .load(mediaId) // TODO is loading image?
-            .placeholder(drawable)
-            .priority(Priority.IMMEDIATE)
-            .override(500)
-            .into(this.image)
-    }
-
-    override fun getView(): View = content
-
-    override fun isFullscreen(): Boolean = true
-
-    override fun onShown() {
-        edit.setOnClickListener {
-            EditLyricsDialog.showForService(context, presenter.getOriginalLyrics()) { newLyrics ->
-                presenter.updateLyrics(newLyrics)
-            }
-        }
-        sync.setOnClickListener {
-            OfflineLyricsSyncAdjustementDialog.showForService(context, presenter.getSyncAdjustement()) {
-                presenter.updateSyncAdjustement(it)
-            }
-        }
-        fakeNext.setOnTouchListener(NoScrollTouchListener(context) { musicServiceBinder.skipToNext() })
-        fakePrev.setOnTouchListener(NoScrollTouchListener(context) { musicServiceBinder.skipToPrevious() })
-        scrollView.setOnTouchListener(NoScrollTouchListener(context) { musicServiceBinder.playPause() })
-
-        paletteDisposable = image.observePaletteColors()
-            .map { it.accent }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                edit.animateBackgroundColor(it)
-                subHeader.animateTextColor(it)
-            }, Throwable::printStackTrace)
-    }
-
     override fun onHidden() {
-        paletteDisposable.unsubscribe()
+        super.onHidden()
         edit.setOnClickListener(null)
         sync.setOnClickListener(null)
         fakeNext.setOnTouchListener(null)
         fakePrev.setOnTouchListener(null)
         scrollView.setOnTouchListener(null)
+
+        subscriptions.clear()
+        updateDisposable.unsubscribe()
+        presenter.onDestroy()
     }
 
     private fun handleSeekBarState(isPlaying: Boolean, speed: Float) {

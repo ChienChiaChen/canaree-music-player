@@ -3,27 +3,25 @@ package dev.olog.msc.presentation.about
 import android.content.res.ColorStateList
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
-import dev.olog.msc.presentation.base.adapter.AbsAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.extensions.setOnClickListener
+import dev.olog.msc.presentation.base.adapter.SimpleAdapter
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.NavigatorAbout
 import dev.olog.msc.shared.ui.extensions.colorAccent
 import kotlinx.android.synthetic.main.item_about.view.*
 
 
-class AboutActivityAdapter (
-        lifecycle: Lifecycle,
-        private val navigator: NavigatorAbout,
-        private val presenter: AboutActivityPresenter
+class AboutActivityAdapter(
+    private val navigator: NavigatorAbout,
+    private val presenter: AboutActivityPresenter
 
-) : AbsAdapter<DisplayableItem>(lifecycle) {
+) : SimpleAdapter<DisplayableItem>() {
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
-        viewHolder.setOnClickListener(controller) { item, _, _ ->
+        viewHolder.itemView.setOnClickListener {
+            val item = data[viewHolder.adapterPosition]
             val activity = viewHolder.itemView.context as FragmentActivity
-            when (item.mediaId){
+            when (item.mediaId) {
                 AboutActivityPresenter.THIRD_SW_ID -> navigator.toLicensesFragment(activity)
                 AboutActivityPresenter.SPECIAL_THANKS_ID -> navigator.toSpecialThanksFragment(activity)
                 AboutActivityPresenter.RATE_ID -> navigator.toMarket(activity)
@@ -36,7 +34,7 @@ class AboutActivityAdapter (
     }
 
     override fun bind(binding: ViewDataBinding, item: DisplayableItem, position: Int) {
-        if (item.mediaId == AboutActivityPresenter.BUY_PRO){
+        if (item.mediaId == AboutActivityPresenter.BUY_PRO) {
             val view = binding.root
             view.title.setTextColor(ColorStateList.valueOf(view.context.colorAccent()))
         }

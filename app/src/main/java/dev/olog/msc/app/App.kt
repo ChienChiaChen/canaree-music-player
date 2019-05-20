@@ -5,6 +5,7 @@ import android.app.AlarmManager
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceManager
+import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import dev.olog.msc.BuildConfig
@@ -99,7 +100,7 @@ class App : ThemedApp() {
 
         if (BuildConfig.DEBUG) {
 //            Traceur.enableLogging()
-//            LeakCanary.install(this)
+            LeakCanary.install(this)
 //            Stetho.initializeWithDefaults(this)
         }
     }

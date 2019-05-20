@@ -21,12 +21,12 @@ interface MusicPreferencesGateway {
     fun setShuffleMode(shuffleMode: Int)
 
     fun setSkipToPreviousVisibility(visible: Boolean)
-    fun observeSkipToPreviousVisibility(): Observable<Boolean>
+    fun observeSkipToPreviousVisibility(): Flow<Boolean>
 
     fun setSkipToNextVisibility(visible: Boolean)
-    fun observeSkipToNextVisibility(): Observable<Boolean>
+    fun observeSkipToNextVisibility(): Flow<Boolean>
 
-    fun isMidnightMode() : Observable<Boolean>
+    fun isMidnightMode(): Observable<Boolean>
 
     fun getLastMetadata(): LastMetadata
     fun setLastMetadata(metadata: LastMetadata)

@@ -97,7 +97,6 @@ internal class QueueManager @Inject constructor(
     }
 
     override suspend fun getPlayingSong(): PlayerMediaEntity {
-        assertBackgroundThread()
         val mediaEntity = queueImpl.getCurrentSong()!!
         val bookmark = getPodcastBookmarkOrDefault(mediaEntity)
         return mediaEntity.toPlayerMediaEntity(queueImpl.currentPositionInQueue(), bookmark)

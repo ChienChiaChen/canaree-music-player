@@ -102,6 +102,26 @@ internal class TabFragmentViewModel @Inject constructor(
 
     override fun onCleared() {
         viewModelScope.cancel()
+        // track
+        folderDataSource.onDetach()
+        playlistDataSource.onDetach()
+        songDataSource.onDetach()
+        albumDataSource.onDetach()
+        artistDataSource.onDetach()
+        genreDataSource.onDetach()
+        lastPlayedArtistDataSource.onDetach()
+        lastPlayedAlbumDataSource.onDetach()
+        recentlyAddedArtistDataSource.onDetach()
+        recentlyAddedAlbumDataSource.onDetach()
+        // podcast
+        podcastPlaylistDataSource.onDetach()
+        podcastDataSource.onDetach()
+        podcastAlbumDataSource.onDetach()
+        podcastArtistDataSource.onDetach()
+        lastPlayedPodcastArtistDataSource.onDetach()
+        lastPlayedPodcastAlbumDataSource.onDetach()
+        recentlyAddedPodcastArtistDataSource.onDetach()
+        recentlyAddedPodcastAlbumDataSource.onDetach()
     }
 
 }

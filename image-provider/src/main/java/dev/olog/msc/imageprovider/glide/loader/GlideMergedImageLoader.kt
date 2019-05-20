@@ -11,7 +11,6 @@ import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.FolderGateway
 import dev.olog.msc.core.gateway.track.GenreGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
-import dev.olog.msc.imageprovider.creator.utils.isLowMemoryDevice
 import dev.olog.msc.imageprovider.glide.fetcher.GlideMergedImageFetcher
 import java.io.InputStream
 
@@ -34,7 +33,7 @@ class GlideMergedImageLoader(
         height: Int,
         options: Options
     ): ModelLoader.LoadData<InputStream>? {
-        if (isLowMemoryDevice(context) || !prefsGateway.canAutoCreateImages()) {
+        if (!prefsGateway.canAutoCreateImages()) {
             // skip
             return uriLoader.buildLoadData(Uri.EMPTY, width, height, options)
         }

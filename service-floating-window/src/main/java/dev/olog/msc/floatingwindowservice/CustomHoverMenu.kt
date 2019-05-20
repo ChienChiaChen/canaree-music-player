@@ -31,9 +31,9 @@ internal class CustomHoverMenu @Inject constructor(
     private val lyricsColors = intArrayOf(0xFFf79f32.toInt(), 0xFFfcca1c.toInt())
     private val offlineLyricsColors = intArrayOf(0xFFa3ffaa.toInt(), 0xFF1bffbc.toInt())
 
-    private val lyricsContent = LyricsContent(lifecycle, context, musicServiceBinder)
-    private val videoContent = VideoContent(lifecycle, context)
-    private val offlineLyricsContent = OfflineLyricsContent(lifecycle, context, musicServiceBinder, offlineLyricsContentPresenter)
+    private val lyricsContent = LyricsContent(context, musicServiceBinder)
+    private val videoContent = VideoContent(context)
+    private val offlineLyricsContent = OfflineLyricsContent(context, musicServiceBinder, offlineLyricsContentPresenter)
 
     private val subscriptions = CompositeDisposable()
 

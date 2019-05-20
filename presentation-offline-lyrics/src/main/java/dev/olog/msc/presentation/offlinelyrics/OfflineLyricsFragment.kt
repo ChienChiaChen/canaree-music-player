@@ -63,8 +63,6 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
         }
 
         mediaProvider.onMetadataChanged()
-                .observeOn(AndroidSchedulers.mainThread())
-                .asLiveData()
                 .subscribe(viewLifecycleOwner) {
                     presenter.updateCurrentTrackId(it.getId())
                     presenter.updateCurrentMetadata(it.getTitle().toString(), it.getArtist().toString())
@@ -86,7 +84,6 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
 
         mediaProvider.onStateChanged()
                 .filter { it.state == PlaybackState.STATE_PLAYING || it.state == PlaybackState.STATE_PAUSED }
-                .asLiveData()
                 .subscribe(viewLifecycleOwner) {
                     val isPlaying = it.state == PlaybackState.STATE_PLAYING
                     seekBar.progress = it.position.toInt()
@@ -95,8 +92,6 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
 
         view.image.observePaletteColors()
                 .map { it.accent }
-                .observeOn(AndroidSchedulers.mainThread())
-                .asLiveData()
                 .subscribe(viewLifecycleOwner) { accent ->
                     subHeader.animateTextColor(accent)
                     edit.animateBackgroundColor(accent)

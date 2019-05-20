@@ -95,6 +95,11 @@ internal class SearchFragmentViewModel @Inject constructor(
 
     override fun onCleared() {
         viewModelScope.cancel()
+        searchDataSource.onDetach()
+        searchArtistsDataSource.onDetach()
+        searchAlbumsDataSource.onDetach()
+        searchFoldersDataSource.onDetach()
+        searchPlaylistsDataSource.onDetach()
     }
 
 }

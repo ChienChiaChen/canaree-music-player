@@ -1,11 +1,9 @@
 package dev.olog.msc.presentation.search.paging
 
 import android.content.Context
-import androidx.lifecycle.Lifecycle
 import androidx.paging.DataSource
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.core.entity.SearchResult
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
@@ -16,19 +14,17 @@ import dev.olog.msc.core.gateway.RecentSearchesGateway
 import dev.olog.msc.core.gateway.track.*
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.paging.BaseDataSource
+import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.search.R
 import dev.olog.msc.presentation.search.SearchFragmentHeaders
 import dev.olog.msc.shared.RecentSearchesTypes
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Provider
 
 // TODO show songs and podcast ??
 internal class SearchDataSource @Inject constructor(
-    @FragmentLifecycle lifecycle: Lifecycle,
     @ApplicationContext private val context: Context,
     private val songGateway: SongGateway,
     private val albumGateway: AlbumGateway,
@@ -42,9 +38,8 @@ internal class SearchDataSource @Inject constructor(
 
     var filterBy: String = ""
 
-    init {
+    override fun onAttach() {
         launch {
-            withContext(Dispatchers.Main) { lifecycle.addObserver(this@SearchDataSource) }
             songGateway.getAll().observeNotification()
                 .collect { invalidate() }
         }
@@ -168,11 +163,10 @@ internal class SearchDataSource @Inject constructor(
 }
 
 internal class SearchDataSourceFactory @Inject constructor(
-    private val dataSourceProvider: Provider<SearchDataSource>
-) : DataSource.Factory<Int, DisplayableItem>() {
+    dataSourceProvider: Provider<SearchDataSource>
+) : BaseDataSourceFactory<DisplayableItem, SearchDataSource>(dataSourceProvider) {
 
     private var filterBy: String = ""
-    private var dataSource: SearchDataSource? = null
 
     fun updateFilterBy(filterBy: String) {
         if (this.filterBy != filterBy) {
@@ -182,10 +176,11 @@ internal class SearchDataSourceFactory @Inject constructor(
     }
 
     override fun create(): DataSource<Int, DisplayableItem> {
-        val dataSource = dataSourceProvider.get()
-        this.dataSource = dataSource
-        dataSource.filterBy = filterBy
-        return dataSource
+        dataSource?.onDetach()
+        dataSource = dataSourceProvider.get()
+        dataSource!!.onAttach()
+        dataSource!!.filterBy = this.filterBy
+        return dataSource!!
     }
 
     fun invalidate() {

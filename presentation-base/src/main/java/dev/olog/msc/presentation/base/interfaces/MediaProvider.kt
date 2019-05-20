@@ -4,20 +4,20 @@ import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.lifecycle.LiveData
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
-import io.reactivex.Observable
 
 interface MediaProvider {
 
-    fun onMetadataChanged(): Observable<MediaMetadataCompat>
-    fun onStateChanged(): Observable<PlaybackStateCompat>
-    fun onRepeatModeChanged(): Observable<Int>
-    fun onShuffleModeChanged(): Observable<Int>
-    fun onQueueChanged(): Observable<List<MediaSessionCompat.QueueItem>>
-    fun onQueueTitleChanged(): Observable<String>
-    fun onExtrasChanged(): Observable<Bundle>
+    fun onMetadataChanged(): LiveData<MediaMetadataCompat>
+    fun onStateChanged(): LiveData<PlaybackStateCompat>
+    fun onRepeatModeChanged(): LiveData<Int>
+    fun onShuffleModeChanged(): LiveData<Int>
+    fun onQueueChanged(): LiveData<List<MediaSessionCompat.QueueItem>>
+    fun onQueueTitleChanged(): LiveData<String>
+    fun onExtrasChanged(): LiveData<Bundle>
 
     fun playFromMediaId(mediaId: MediaId, sortType: SortType? = null, sortArranging: SortArranging? = null)
     fun playMostPlayed(mediaId: MediaId)

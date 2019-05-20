@@ -7,8 +7,8 @@ import dev.olog.msc.offlinelyrics.domain.ObserveOfflineLyricsUseCase
 import javax.inject.Inject
 
 internal class OfflineLyricsContentPresenter @Inject constructor(
-        appPreferencesUseCase: AppPreferencesGateway,
-        observeUseCase: ObserveOfflineLyricsUseCase,
-        insertUseCase: InsertOfflineLyricsUseCase
+    appPreferencesUseCase: AppPreferencesGateway,
+    observeUseCase: ObserveOfflineLyricsUseCase,
+    insertUseCase: InsertOfflineLyricsUseCase
 
 ) : BaseOfflineLyricsPresenter(appPreferencesUseCase, observeUseCase, insertUseCase)

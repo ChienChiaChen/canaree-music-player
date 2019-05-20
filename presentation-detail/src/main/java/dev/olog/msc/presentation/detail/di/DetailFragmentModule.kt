@@ -5,7 +5,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel
@@ -18,10 +17,6 @@ class DetailFragmentModule(private val fragment: DetailFragment) {
         val mediaId = fragment.arguments!!.getString(DetailFragment.ARGUMENTS_MEDIA_ID)
         return MediaId.fromString(mediaId)
     }
-
-    @Provides
-    @FragmentLifecycle
-    internal fun provideLifecycle() = fragment.lifecycle
 
     @Module
     companion object {

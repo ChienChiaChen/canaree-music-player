@@ -1,10 +1,8 @@
 package dev.olog.msc.presentation.detail.paging
 
 import android.content.res.Resources
-import androidx.lifecycle.Lifecycle
 import androidx.paging.DataSource
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.entity.data.request.with
@@ -17,17 +15,15 @@ import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.interactor.GetSiblingsUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.paging.BaseDataSource
+import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.detail.mapper.toDetailDisplayableItem
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Provider
 
 internal class SiblingsDataSource @Inject constructor(
-    @FragmentLifecycle lifecycle: Lifecycle,
     private val resources: Resources,
     private val mediaId: MediaId,
     private val siblingsUseCase: GetSiblingsUseCase
@@ -36,9 +32,8 @@ internal class SiblingsDataSource @Inject constructor(
 
     private val chunked by lazy { siblingsUseCase.getData(mediaId) }
 
-    init {
+    override fun onAttach() {
         launch {
-            withContext(Dispatchers.Main) { lifecycle.addObserver(this@SiblingsDataSource) }
             if (canLoadData) {
                 chunked.observeNotification()
                     .take(1)
@@ -85,11 +80,10 @@ internal class SiblingsDataSource @Inject constructor(
 }
 
 internal class SiblingsDataSourceFactory @Inject constructor(
-    private val dataSourceProvider: Provider<SiblingsDataSource>
-) : DataSource.Factory<Int, DisplayableItem>() {
+    dataSourceProvider: Provider<SiblingsDataSource>
+) : BaseDataSourceFactory<DisplayableItem, SiblingsDataSource>(dataSourceProvider) {
 
     private var filterBy: String = ""
-    private var dataSource: SiblingsDataSource? = null
 
     fun updateFilterBy(filterBy: String) {
         if (this.filterBy != filterBy) {
@@ -99,9 +93,10 @@ internal class SiblingsDataSourceFactory @Inject constructor(
     }
 
     override fun create(): DataSource<Int, DisplayableItem> {
-        val dataSource = dataSourceProvider.get()
-        this.dataSource = dataSource
-        dataSource.filterBy = filterBy
-        return dataSource
+        dataSource?.onDetach()
+        dataSource = dataSourceProvider.get()
+        dataSource!!.onAttach()
+        dataSource!!.filterBy = this.filterBy
+        return dataSource!!
     }
 }

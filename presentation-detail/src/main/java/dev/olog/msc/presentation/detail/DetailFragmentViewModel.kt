@@ -33,8 +33,8 @@ internal class DetailFragmentViewModel @Inject constructor(
     val mediaId: MediaId,
     private val detailDataSource: DetailDataSourceFactory,
     private val siblingsDataSource: SiblingsDataSourceFactory,
-    mostPlayedDataSource: MostPlayedDataSourceFactory,
-    recentlyAddedDataSource: RecentlyAddedDataSourceFactory,
+    private val mostPlayedDataSource: MostPlayedDataSourceFactory,
+    private val recentlyAddedDataSource: RecentlyAddedDataSourceFactory,
     private val relatedArtistsSource: RelatedArtistsSourceFactory,
     private val setSortOrderUseCase: SetSortOrderUseCase,
     private val prefsGateway: SortPreferencesGateway,
@@ -95,6 +95,11 @@ internal class DetailFragmentViewModel @Inject constructor(
 
     override fun onCleared() {
         viewModelScope.cancel()
+        detailDataSource.onDetach()
+        siblingsDataSource.onDetach()
+        mostPlayedDataSource.onDetach()
+        recentlyAddedDataSource.onDetach()
+        relatedArtistsSource.onDetach()
     }
 
     fun getDetailSort(action: (DetailSort) -> Unit) = viewModelScope.launch(Dispatchers.Default) {

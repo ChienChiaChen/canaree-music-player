@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 internal class PlayingQueueFragmentViewModel @Inject constructor(
     private val musicPreferencesUseCase: MusicPreferencesGateway,
-    dataSourceFactory: PlayingQueueDataSourceFactory
+    private val dataSourceFactory: PlayingQueueDataSourceFactory
 
 ) : ViewModel() {
 
@@ -28,4 +28,9 @@ internal class PlayingQueueFragmentViewModel @Inject constructor(
             .build()
         data = LivePagedListBuilder(dataSourceFactory, config).build()
     }
+
+    override fun onCleared() {
+        dataSourceFactory.onDetach()
+    }
+
 }

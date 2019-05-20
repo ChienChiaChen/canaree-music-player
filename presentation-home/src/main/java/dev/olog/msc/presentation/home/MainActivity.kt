@@ -28,12 +28,19 @@ import dev.olog.msc.shared.utils.clamp
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
+enum class LayoutType {
+    FULL,
+    NO_PLAYER
+}
 
 class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     companion object {
         private const val SPLASH_REQUEST_CODE = 0
     }
+
+    // for debug purposes
+    private val layoutType = LayoutType.FULL
 
     @Inject
     lateinit var presenter: MainActivityPresenter
@@ -54,7 +61,11 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        if (layoutType == LayoutType.FULL){
+            setContentView(R.layout.activity_main)
+        } else {
+            setContentView(R.layout.activity_main_no_player)
+        }
 
         slidingPanel.panelHeight = dimen(R.dimen.sliding_panel_peek) + dimen(R.dimen.bottom_navigation_height)
 

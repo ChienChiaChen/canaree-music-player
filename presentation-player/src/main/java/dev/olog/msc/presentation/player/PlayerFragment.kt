@@ -1,7 +1,6 @@
 package dev.olog.msc.presentation.player
 
 import android.os.Bundle
-import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -10,26 +9,27 @@ import androidx.core.math.MathUtils
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.presentation.base.ImageViews
+import dev.olog.msc.presentation.base.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
-import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.theme.player.theme.isBigImage
 import dev.olog.msc.presentation.base.theme.player.theme.isClean
 import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
 import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.base.widgets.SwipeableView
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.extensions.*
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
+import dev.olog.msc.shared.ui.theme.HasPlayerTheme
 import dev.olog.msc.shared.ui.theme.ImageShape
 import dev.olog.msc.shared.utils.isMarshmallow
 import io.reactivex.Observable
@@ -44,7 +44,9 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 
-class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
+class PlayerFragment : BaseFragment(),
+    SlidingUpPanelLayout.PanelSlideListener,
+    OnStartDragListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -62,10 +64,18 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
 
     private var lyricsDisposable: Disposable? = null
 
+    private var itemTouchHelper : ItemTouchHelper? = null
+
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         val adapter = PlayerFragmentAdapter(
-            lifecycle, activity as MediaProvider,
-            navigator, viewModel, presenter
+            viewLifecycleOwner.lifecycle,
+            activity as MediaProvider,
+            navigator, viewModel, presenter,
+            IPlayerAppearanceDelegate.get(
+                ctx.applicationContext as HasPlayerTheme,
+                viewModel
+            ),
+            this
         )
 
         layoutManager = LinearLayoutManager(context)
@@ -73,9 +83,8 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         view.list.layoutManager = layoutManager
         view.list.isNestedScrollingEnabled = false
         val callback = TouchHelperAdapterCallback(adapter, ItemTouchHelper.RIGHT/* or ItemTouchHelper.LEFT*/)
-        val touchHelper = ItemTouchHelper(callback)
-        touchHelper.attachToRecyclerView(view.list)
-        adapter.touchHelper = touchHelper
+        itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper!!.attachToRecyclerView(view.list)
 
         val statusBarAlpha = if (!isMarshmallow()) 1f else 0f
         view.statusBar?.alpha = statusBarAlpha
@@ -91,27 +100,12 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
 
         mediaProvider.onQueueChanged()
             .distinctUntilChanged()
-            .mapToList { it.toDisplayableItem() }
-            .map { queue ->
-                if (!context.isMini()) {
-                    val copy = queue.toMutableList()
-                    if (copy.size > PlayingQueueGateway.MINI_QUEUE_SIZE - 1) {
-                        copy.add(viewModel.footerLoadMore)
-                    }
-                    copy.add(0, viewModel.playerControls())
-                    copy
-                } else {
-                    listOf(viewModel.playerControls())
-                }
-            }
-            .asLiveData()
-            .subscribe(viewLifecycleOwner, viewModel::updateQueue)
+            .subscribe(viewLifecycleOwner) { viewModel.updateQueue(ctx, it) }
 
         viewModel.observeMiniQueue()
             .subscribe(viewLifecycleOwner, adapter::updateDataSet)
 
         mediaProvider.onStateChanged()
-            .asLiveData()
             .subscribe(viewLifecycleOwner) {
                 val bookmark = it.extractBookmark()
                 viewModel.updateProgress(bookmark)
@@ -125,11 +119,9 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         if (act.isLandscape && !context.isFullscreen() && !context.isMini()) {
 
             mediaProvider.onMetadataChanged()
-                .asLiveData()
                 .subscribe(viewLifecycleOwner) { bigCover?.loadImage(it) }
 
             mediaProvider.onStateChanged()
-                .asLiveData()
                 .subscribe(viewLifecycleOwner) { state ->
                     if (state.isPlaying() || state.isPaused()) {
                         if (context.isClean()) {
@@ -142,11 +134,9 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
                 }
 
             mediaProvider.onRepeatModeChanged()
-                .asLiveData()
                 .subscribe(viewLifecycleOwner) { repeat?.cycle(it) }
 
             mediaProvider.onShuffleModeChanged()
-                .asLiveData()
                 .subscribe(viewLifecycleOwner) { shuffle?.cycle(it) }
 
             mediaProvider.onStateChanged()
@@ -156,7 +146,6 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
                             state == PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS
                 }
                 .map { state -> state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT }
-                .asLiveData()
                 .subscribe(viewLifecycleOwner, this::animateSkipTo)
 
             mediaProvider.onStateChanged()
@@ -166,7 +155,6 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
                     it == PlaybackStateCompat.STATE_PLAYING ||
                             it == PlaybackStateCompat.STATE_PAUSED
                 }.distinctUntilChanged()
-                .asLiveData()
                 .subscribe(viewLifecycleOwner) { state ->
                     println("on new state $state")
                     if (state == PlaybackStateCompat.STATE_PLAYING) {
@@ -200,27 +188,28 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
                     next.toggleVisibility(it, true)
                 }
 
-            viewModel.skipToNextVisibility.asLiveData()
+            viewModel.skipToNextVisibility
                 .subscribe(viewLifecycleOwner) { next?.updateVisibility(it) }
 
-            viewModel.skipToPreviousVisibility.asLiveData()
+            viewModel.skipToPreviousVisibility
                 .subscribe(viewLifecycleOwner) { previous?.updateVisibility(it) }
 
             view.bigCover?.observeProcessorColors()
-                ?.asLiveData()
                 ?.subscribe(viewLifecycleOwner, viewModel::updateProcessorColors)
             view.bigCover?.observePaletteColors()
-                ?.asLiveData()
                 ?.subscribe(viewLifecycleOwner, viewModel::updatePaletteColors)
 
             viewModel.observePaletteColors()
-                .map { it.accent }
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) { accent ->
+                .subscribe(viewLifecycleOwner) { palette ->
+                    val accent = palette.accent
                     shuffle.updateSelectedColor(accent)
                     repeat.updateSelectedColor(accent)
                 }
         }
+    }
+
+    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+        itemTouchHelper?.startDrag(viewHolder)
     }
 
     private fun animateSkipTo(toNext: Boolean) {
@@ -317,19 +306,6 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
         } else {
             lyricsDisposable.unsubscribe()
         }
-    }
-
-    private fun MediaSessionCompat.QueueItem.toDisplayableItem(): DisplayableItem {
-        val description = this.description
-
-        return DisplayableItem(
-            R.layout.item_mini_queue,
-            MediaId.fromString(description.mediaId!!),
-            description.title!!.toString(),
-            description.subtitle!!.toString(),
-            isPlayable = true,
-            trackNumber = "${this.queueId}"
-        )
     }
 
     override fun provideLayoutId(): Int {

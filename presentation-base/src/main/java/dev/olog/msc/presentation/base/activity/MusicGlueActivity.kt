@@ -11,10 +11,12 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
+import androidx.lifecycle.LiveData
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
+import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.media.MediaServiceCallback
 import dev.olog.msc.presentation.base.media.MusicServiceConnection
@@ -22,9 +24,7 @@ import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.MusicServiceConnectionState
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
@@ -38,13 +38,13 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
     private val publisher = BehaviorSubject.createDefault(MusicServiceConnectionState.NONE)
     private var connectionDisposable: Disposable? = null
 
-    internal val metadataPublisher = BehaviorSubject.create<MediaMetadataCompat>()
-    internal val statePublisher = BehaviorSubject.create<PlaybackStateCompat>()
-    internal val repeatModePublisher = BehaviorSubject.create<Int>()
-    internal val shuffleModePublisher = BehaviorSubject.create<Int>()
-    internal val queuePublisher = BehaviorSubject.createDefault(mutableListOf<MediaSessionCompat.QueueItem>())
-    internal val queueTitlePublisher = BehaviorSubject.create<String>()
-    internal val extrasPublisher = BehaviorSubject.create<Bundle>()
+    internal val metadataPublisher = liveDataOf<MediaMetadataCompat>()
+    internal val statePublisher = liveDataOf<PlaybackStateCompat>()
+    internal val repeatModePublisher = liveDataOf<Int>()
+    internal val shuffleModePublisher = liveDataOf<Int>()
+    internal val queuePublisher = liveDataOf<List<MediaSessionCompat.QueueItem>>()
+    internal val queueTitlePublisher = liveDataOf<String>()
+    internal val extrasPublisher = liveDataOf<Bundle>()
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,29 +119,19 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
         publisher.onNext(state)
     }
 
-    override fun onMetadataChanged(): Observable<MediaMetadataCompat> {
-        return metadataPublisher.observeOn(Schedulers.computation())
-    }
+    override fun onMetadataChanged(): LiveData<MediaMetadataCompat> = metadataPublisher
 
-    override fun onStateChanged(): Observable<PlaybackStateCompat> {
-        return statePublisher.observeOn(Schedulers.computation())
-    }
+    override fun onStateChanged(): LiveData<PlaybackStateCompat> = statePublisher
 
-    override fun onRepeatModeChanged(): Observable<Int> {
-        return repeatModePublisher.observeOn(Schedulers.computation())
-    }
+    override fun onRepeatModeChanged(): LiveData<Int> = repeatModePublisher
 
-    override fun onShuffleModeChanged(): Observable<Int> {
-        return shuffleModePublisher.observeOn(Schedulers.computation())
-    }
+    override fun onShuffleModeChanged(): LiveData<Int> = shuffleModePublisher
 
-    override fun onQueueTitleChanged(): Observable<String> {
-        return queueTitlePublisher
-    }
+    override fun onQueueTitleChanged(): LiveData<String> = queueTitlePublisher
 
-    override fun onExtrasChanged(): Observable<Bundle> {
-        return extrasPublisher.observeOn(Schedulers.computation())
-    }
+    override fun onExtrasChanged(): LiveData<Bundle> = extrasPublisher
+
+    override fun onQueueChanged(): LiveData<List<MediaSessionCompat.QueueItem>> = queuePublisher
 
     private fun getTransportControls(): MediaControllerCompat.TransportControls? {
         val mediaController = MediaControllerCompat.getMediaController(this)
@@ -219,12 +209,6 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
     override fun togglePlayerFavorite() {
         getTransportControls()?.setRating(RatingCompat.newHeartRating(false))
 
-    }
-
-    override fun onQueueChanged(): Observable<List<MediaSessionCompat.QueueItem>> {
-        return queuePublisher
-                .observeOn(Schedulers.computation())
-                .map { it.toList() }
     }
 
     override fun swap(from: Int, to: Int) {

@@ -36,6 +36,11 @@ open class AdaptiveColorImageView @JvmOverloads constructor(
         }
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        presenter.onDetach()
+    }
+
     fun observeProcessorColors() = presenter.observeProcessorColors()
     fun observePaletteColors() = presenter.observePalette()
 

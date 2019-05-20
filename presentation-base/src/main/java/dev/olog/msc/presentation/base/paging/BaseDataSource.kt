@@ -1,8 +1,6 @@
 package dev.olog.msc.presentation.base.paging
 
 import androidx.annotation.CallSuper
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.paging.PositionalDataSource
 import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.entity.data.request.Filter
@@ -17,12 +15,19 @@ import kotlin.math.abs
  */
 abstract class BaseDataSource<PresentationModel> :
     PositionalDataSource<PresentationModel>(),
-    DefaultLifecycleObserver,
     CoroutineScope by CustomScope() {
 
-    override fun onDestroy(owner: LifecycleOwner) {
+    abstract fun onAttach()
+
+    fun onDetach(){
         cancel()
     }
+
+    override fun invalidate() {
+        onDetach()
+        super.invalidate()
+    }
+
 
     private val headers = mutableListOf<PresentationModel>()
     private var footers = listOf<PresentationModel>()

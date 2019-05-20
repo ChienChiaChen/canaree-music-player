@@ -5,6 +5,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import androidx.core.math.MathUtils
+import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxbinding2.view.RxView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.presentation.base.extensions.*
@@ -18,10 +19,10 @@ import dev.olog.msc.presentation.base.utils.isPodcast
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_mini_player.*
@@ -29,14 +30,17 @@ import kotlinx.android.synthetic.main.fragment_mini_player.view.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener{
+class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
 
     companion object {
         private const val TAG = "MiniPlayerFragment"
         private const val BUNDLE_IS_VISIBLE = "$TAG.BUNDLE_IS_VISIBLE"
     }
 
-    @Inject lateinit var presenter: MiniPlayerFragmentPresenter
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+
+    private val presenter by lazyFast { viewModelProvider<MiniPlayerFragmentViewModel>(factory) }
 
     private var seekBarDisposable: Disposable? = null
 
@@ -53,79 +57,74 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
         view.coverWrapper.toggleVisibility(context.isMini(), true)
 
         media.onMetadataChanged()
-                .observeOn(AndroidSchedulers.mainThread())
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) {
-                    title.text = it.getTitle()
-                    presenter.startShowingLeftTime(it.isPodcast(), it.getDuration())
-                    if (!it.isPodcast()){
-                        artist.text = it.getArtist()
-                    }
-                    updateProgressBarMax(it.getDuration())
-                    updateImage(it)
+            .subscribe(viewLifecycleOwner) {
+                title.text = it.getTitle()
+                presenter.startShowingLeftTime(it.isPodcast(), it.getDuration())
+                if (!it.isPodcast()) {
+                    artist.text = it.getArtist()
                 }
+                updateProgressBarMax(it.getDuration())
+                updateImage(it)
+            }
 
         presenter.observeProgress
-                .map { resources.getQuantityString(R.plurals.mini_player_time_left, it.toInt(), it) }
-                .filter { text -> view.artist.text != text } // TODO check
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) {
-                    artist.text = it
-                }
+            .map { resources.getQuantityString(R.plurals.mini_player_time_left, it.toInt(), it) }
+            .filter { text -> view.artist.text != text }
+            .subscribe(viewLifecycleOwner) {
+                artist.text = it
+            }
 
         media.onStateChanged()
-                .filter { it.isPlaying()|| it.isPaused() }
-                .distinctUntilChanged()
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) {
-                    updateProgressBarProgress(it.position)
-                    handleProgressBar(it.isPlaying(), it.playbackSpeed)
-                }
+            .filter { it.isPlaying() || it.isPaused() }
+            .distinctUntilChanged()
+            .subscribe(viewLifecycleOwner) {
+                updateProgressBarProgress(it.position)
+                handleProgressBar(it.isPlaying(), it.playbackSpeed)
+            }
 
         media.onStateChanged()
-                .map { it.state }
-                .filter { it == PlaybackStateCompat.STATE_PLAYING ||
-                        it == PlaybackStateCompat.STATE_PAUSED
-                }.distinctUntilChanged()
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) { state ->
+            .map { it.state }
+            .filter { it == PlaybackStateCompat.STATE_PLAYING || it == PlaybackStateCompat.STATE_PAUSED }
+            .distinctUntilChanged()
+            .subscribe(viewLifecycleOwner) { state ->
 
-                    if (state == PlaybackStateCompat.STATE_PLAYING){
-                        playAnimation(true)
-                    } else {
-                        pauseAnimation(true)
-                    }
+                if (state == PlaybackStateCompat.STATE_PLAYING) {
+                    playAnimation(true)
+                } else {
+                    pauseAnimation(true)
                 }
+            }
 
         media.onStateChanged()
-                .map { it.state }
-                .filter { state -> state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT ||
-                        state == PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS }
-                .map { state -> state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT }
-                .asLiveData()
-                .subscribe(viewLifecycleOwner, this::animateSkipTo)
+            .map { it.state }
+            .filter { state ->
+                state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT ||
+                        state == PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS
+            }
+            .map { state -> state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT }
+            .subscribe(viewLifecycleOwner, this::animateSkipTo)
 
         RxView.clicks(view.next)
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) { media.skipToNext() }
+            .asLiveData()
+            .subscribe(viewLifecycleOwner) { media.skipToNext() }
 
         RxView.clicks(view.playPause)
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) { media.playPause() }
+            .asLiveData()
+            .subscribe(viewLifecycleOwner) { media.playPause() }
 
         RxView.clicks(view.previous)
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) { media.skipToPrevious() }
+            .asLiveData()
+            .subscribe(viewLifecycleOwner) { media.skipToPrevious() }
 
         presenter.skipToNextVisibility
-                .subscribe(viewLifecycleOwner) {
-                    view.next.updateVisibility(it)
-                }
+            .subscribe(viewLifecycleOwner) {
+                view.next.updateVisibility(it)
+            }
 
         presenter.skipToPreviousVisibility
-                .subscribe(viewLifecycleOwner) {
-                    view.previous.updateVisibility(it)
-                }
+            .subscribe(viewLifecycleOwner) {
+                view.previous.updateVisibility(it)
+            }
     }
 
     override fun onResume() {
@@ -177,8 +176,8 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
         view!!.progressBar.max = max.toInt()
     }
 
-    private fun updateImage(metadata: MediaMetadataCompat){
-        if (!context.isMini()){
+    private fun updateImage(metadata: MediaMetadataCompat) {
+        if (!context.isMini()) {
             return
         }
         bigCover.loadImage(metadata)
@@ -193,11 +192,11 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
 
     private fun resumeProgressBar(speed: Float) {
         seekBarDisposable = Observable
-                .interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS, Schedulers.computation())
-                .subscribe({
-                    progressBar.incrementProgressBy((PROGRESS_BAR_INTERVAL * speed).toInt())
-                    presenter.updateProgress((progressBar.progress + (PROGRESS_BAR_INTERVAL * speed)).toLong())
-                }, Throwable::printStackTrace)
+            .interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS, Schedulers.computation())
+            .subscribe({
+                progressBar.incrementProgressBy((PROGRESS_BAR_INTERVAL * speed).toInt())
+                presenter.updateProgress((progressBar.progress + (PROGRESS_BAR_INTERVAL * speed)).toLong())
+            }, Throwable::printStackTrace)
     }
 
 
@@ -206,7 +205,11 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
         view?.toggleVisibility(slideOffset <= .8f, true)
     }
 
-    override fun onPanelStateChanged(panel: View?, previousState: SlidingUpPanelLayout.PanelState?, newState: SlidingUpPanelLayout.PanelState?) {
+    override fun onPanelStateChanged(
+        panel: View?,
+        previousState: SlidingUpPanelLayout.PanelState?,
+        newState: SlidingUpPanelLayout.PanelState?
+    ) {
     }
 
     override fun provideLayoutId(): Int = R.layout.fragment_mini_player

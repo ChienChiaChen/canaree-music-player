@@ -18,7 +18,7 @@ import javax.inject.Inject
 internal class RelatedArtistFragmentViewModel @Inject constructor(
     private val mediaId: MediaId,
     observeItemTitleUseCase: ObserveItemTitleUseCase,
-    relatedArtistsDataSource: RelatedArtistsDataSourceFactory
+    private val relatedArtistsDataSource: RelatedArtistsDataSourceFactory
 
 ) : ViewModel() {
 
@@ -45,6 +45,7 @@ internal class RelatedArtistFragmentViewModel @Inject constructor(
 
     override fun onCleared() {
         viewModelScope.cancel()
+        relatedArtistsDataSource.onDetach()
     }
 
 }

@@ -1,12 +1,10 @@
 package dev.olog.msc.presentation.related.artists.di
 
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.related.artists.RelatedArtistFragment
 import dev.olog.msc.presentation.related.artists.RelatedArtistFragmentViewModel
@@ -15,10 +13,6 @@ import dev.olog.msc.presentation.related.artists.RelatedArtistFragmentViewModel
 class RelatedArtistFragmentModule(
     private val fragment: RelatedArtistFragment
 ) {
-
-    @Provides
-    @FragmentLifecycle
-    internal fun lifecycle(): Lifecycle = fragment.lifecycle
 
     @Provides
     internal fun provideMediaId(): MediaId {

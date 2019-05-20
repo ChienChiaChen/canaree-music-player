@@ -2,13 +2,11 @@ package dev.olog.msc.presentation.detail.paging
 
 import android.content.Context
 import android.content.res.Resources
-import androidx.lifecycle.Lifecycle
 import androidx.paging.DataSource
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.coroutines.merge
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.entity.data.request.with
@@ -26,6 +24,7 @@ import dev.olog.msc.core.interactor.played.GetMostPlayedSongsUseCase
 import dev.olog.msc.core.interactor.played.GetRecentlyAddedSongsUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.paging.BaseDataSource
+import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.detail.DetailFragmentHeaders
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.RECENTLY_ADDED_VISIBLE_PAGES
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.RELATED_ARTISTS_TO_SEE
@@ -37,18 +36,15 @@ import dev.olog.msc.presentation.detail.mapper.toDetailDisplayableItem
 import dev.olog.msc.presentation.detail.mapper.toHeaderItem
 import dev.olog.msc.shared.ui.TimeUtils
 import dev.olog.msc.shared.utils.TextUtils
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Provider
 
 internal class DetailDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
-    @FragmentLifecycle lifecycle: Lifecycle,
     private val mediaId: MediaId,
     private val resources: Resources,
     private val displayableHeaders: DetailFragmentHeaders,
@@ -74,9 +70,8 @@ internal class DetailDataSource @Inject constructor(
 
     private val chunked = songListByParamUseCase.execute(mediaId)
 
-    init {
+    override fun onAttach() {
         launch {
-            withContext(Dispatchers.Main) { lifecycle.addObserver(this@DetailDataSource) }
             // TODO check if has to observe sort
             chunked.observeNotification()
                 .merge(observeSortUseCase.execute(mediaId).drop(1))
@@ -215,11 +210,10 @@ internal class DetailDataSource @Inject constructor(
 }
 
 internal class DetailDataSourceFactory @Inject constructor(
-    private val dataSourceProvider: Provider<DetailDataSource>
-) : DataSource.Factory<Int, DisplayableItem>() {
+    dataSourceProvider: Provider<DetailDataSource>
+) : BaseDataSourceFactory<DisplayableItem, DetailDataSource>(dataSourceProvider) {
 
     private var filterBy: String = ""
-    private var dataSource: DetailDataSource? = null
 
     fun updateFilterBy(filterBy: String) {
         if (this.filterBy != filterBy) {
@@ -229,10 +223,11 @@ internal class DetailDataSourceFactory @Inject constructor(
     }
 
     override fun create(): DataSource<Int, DisplayableItem> {
-        val dataSource = dataSourceProvider.get()
-        this.dataSource = dataSource
-        dataSource.filterBy = filterBy
-        return dataSource
+        dataSource?.onDetach()
+        dataSource = dataSourceProvider.get()
+        dataSource!!.onAttach()
+        dataSource!!.filterBy = this.filterBy
+        return dataSource!!
     }
 
     fun invalidate() {

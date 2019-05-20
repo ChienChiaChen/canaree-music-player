@@ -2,26 +2,24 @@ package dev.olog.msc.presentation.tabs.foldertree
 
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
-import dev.olog.msc.core.dagger.qualifier.FragmentLifecycle
-import dev.olog.msc.presentation.base.adapter.AbsAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.extensions.setOnClickListener
-import dev.olog.msc.presentation.base.extensions.setOnLongClickListener
+import dev.olog.msc.presentation.base.adapter.ObservableAdapter
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 
 class FolderTreeFragmentAdapter(
-        @FragmentLifecycle lifecycle: Lifecycle,
-        private val viewModel: FolderTreeFragmentViewModel,
-        private val navigator: Navigator
+    lifecycle: Lifecycle,
+    private val viewModel: FolderTreeFragmentViewModel,
+    private val navigator: Navigator
 
-) : AbsAdapter<DisplayableFile>(lifecycle) {
+) : ObservableAdapter<DisplayableFile>(lifecycle) {
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
         when (viewType) {
             R.layout.item_folder_tree_directory,
             R.layout.item_folder_tree_track -> {
-                viewHolder.setOnClickListener(controller) { item, _, _ ->
+                viewHolder.itemView.setOnClickListener {
+                    val item = getItem(viewHolder.adapterPosition)
                     when {
                         item.mediaId == FolderTreeFragmentViewModel.BACK_HEADER_ID -> viewModel.goBack()
                         item.isFile() && item.asFile().isDirectory -> viewModel.nextFolder(item.asFile())
@@ -34,15 +32,17 @@ class FolderTreeFragmentAdapter(
                         }
                     }
                 }
-                viewHolder.setOnLongClickListener(controller) { item, _, view ->
+                viewHolder.itemView.setOnLongClickListener { view ->
+                    val item = getItem(viewHolder.adapterPosition)
                     if (item.mediaId == FolderTreeFragmentViewModel.BACK_HEADER_ID) {
-                        return@setOnLongClickListener
+                        return@setOnLongClickListener false
                     }
                     if (!item.asFile().isDirectory) {
                         viewModel.createMediaId(item)?.let { mediaId ->
                             navigator.toDialog(mediaId, view)
                         }
                     }
+                    return@setOnLongClickListener true
                 }
             }
         }

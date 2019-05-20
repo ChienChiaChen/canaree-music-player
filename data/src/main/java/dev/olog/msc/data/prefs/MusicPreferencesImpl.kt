@@ -83,16 +83,20 @@ internal class MusicPreferencesImpl @Inject constructor(
         preferences.edit { putBoolean(SKIP_PREVIOUS, visible) }
     }
 
-    override fun observeSkipToPreviousVisibility(): Observable<Boolean> {
+    override fun observeSkipToPreviousVisibility(): Flow<Boolean> {
         return rxPreferences.getBoolean(SKIP_PREVIOUS, true).asObservable()
+            .asFlowable()
+            .asFlow()
     }
 
     override fun setSkipToNextVisibility(visible: Boolean) {
         preferences.edit { putBoolean(SKIP_NEXT, visible) }
     }
 
-    override fun observeSkipToNextVisibility(): Observable<Boolean> {
+    override fun observeSkipToNextVisibility(): Flow<Boolean> {
         return rxPreferences.getBoolean(SKIP_NEXT, true).asObservable()
+            .asFlowable()
+            .asFlow()
     }
 
     override fun isMidnightMode(): Observable<Boolean> {

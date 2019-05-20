@@ -100,6 +100,7 @@ class CreatePlaylistViewModel @Inject constructor(
 
     override fun onCleared() {
         viewModelScope.cancel()
+        dataSource.onDetach()
     }
 
 }

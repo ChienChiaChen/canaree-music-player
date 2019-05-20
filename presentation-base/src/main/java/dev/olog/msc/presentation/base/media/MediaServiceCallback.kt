@@ -8,40 +8,36 @@ import android.support.v4.media.session.PlaybackStateCompat
 import dev.olog.msc.presentation.base.activity.MusicGlueActivity
 
 class MediaServiceCallback(
-        private val activity: MusicGlueActivity
+    private val activity: MusicGlueActivity
 
 ) : MediaControllerCompat.Callback() {
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-        metadata?.let { activity.metadataPublisher.onNext(it) }
+        activity.metadataPublisher.value = metadata
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-        state?.let { activity.statePublisher.onNext(it) }
+        activity.statePublisher.postValue(state)
     }
 
     override fun onRepeatModeChanged(repeatMode: Int) {
-        activity.repeatModePublisher.onNext(repeatMode)
+        activity.repeatModePublisher.value = repeatMode
     }
 
     override fun onShuffleModeChanged(shuffleMode: Int) {
-        activity.shuffleModePublisher.onNext(shuffleMode)
+        activity.shuffleModePublisher.value = shuffleMode
     }
 
     override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
-        queue?.let { activity.queuePublisher.onNext(it) }
+        activity.queuePublisher.value = queue
     }
 
     override fun onQueueTitleChanged(title: CharSequence?) {
-        title?.let {
-            activity.queueTitlePublisher.onNext(it.toString())
-        }
+        activity.queueTitlePublisher.value = title.toString()
     }
 
     override fun onExtrasChanged(extras: Bundle?) {
-        extras?.let {
-            activity.extrasPublisher.onNext(extras)
-        }
+        activity.extrasPublisher.value = extras
     }
 
 }
