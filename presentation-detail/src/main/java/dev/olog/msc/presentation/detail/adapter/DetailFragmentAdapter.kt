@@ -24,7 +24,6 @@ import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.*
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.NESTED_SPAN_COUNT
-import dev.olog.msc.presentation.detail.paging.DiffCallbackDetail
 import dev.olog.msc.presentation.detail.sort.DetailSortDialog
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.toast

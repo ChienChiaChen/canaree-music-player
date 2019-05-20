@@ -20,7 +20,6 @@ internal data class MusicNotificationState(
                 title.isNotBlank() &&
                 artist.isNotBlank() &&
                 album.isNotBlank() &&
-//                image.isNotBlank() &&
                 bookmark != -1L &&
                 duration != -1L
     }

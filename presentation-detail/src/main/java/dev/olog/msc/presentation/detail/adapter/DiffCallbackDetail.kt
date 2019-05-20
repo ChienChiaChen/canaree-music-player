@@ -1,4 +1,4 @@
-package dev.olog.msc.presentation.detail.paging
+package dev.olog.msc.presentation.detail.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import dev.olog.msc.presentation.base.model.DisplayableItem

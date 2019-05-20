@@ -45,24 +45,9 @@ internal class PlayingQueueRepository @Inject constructor(
         playingQueueDao.insert(list)
     }
 
-    override suspend fun observeMiniQueue(page: Page): Flow<List<PlayingQueueSong>> {
-        return playingQueueDao.observeMiniQueue(songGateway, podcastGateway, page)
-            .distinctUntilChanged()
-    }
-
-    override suspend fun getMiniQueue(page: Page): List<PlayingQueueSong> {
-        assertBackgroundThread()
-        return playingQueueDao.getMiniQueue(songGateway, podcastGateway, page)
-    }
-
     override suspend fun observeAll(page: Page): Flow<List<PlayingQueueSong>> {
         return playingQueueDao.obsereveAllAsSongs(songGateway, podcastGateway, page)
             .distinctUntilChanged()
-    }
-
-    override suspend fun updateMiniQueue(tracksId: List<Pair<Int, Long>>) {
-        assertBackgroundThread()
-        playingQueueDao.updateMiniQueue(tracksId)
     }
 
     private fun Song.toPlayingQueueSong(progressive: Int): PlayingQueueSong {

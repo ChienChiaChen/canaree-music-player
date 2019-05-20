@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.detail.mapper
 
 import android.content.res.Resources
+import androidx.core.os.bundleOf
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.entity.track.Artist
@@ -58,13 +59,14 @@ internal fun Song.toDetailDisplayableItem(parentId: MediaId, sortType: SortType)
     )
 }
 
-internal fun Song.toMostPlayedDetailDisplayableItem(parentId: MediaId): DisplayableItem {
+internal fun Song.toMostPlayedDetailDisplayableItem(parentId: MediaId, position: Int): DisplayableItem {
     return DisplayableItem(
         R.layout.item_detail_song_most_played,
         MediaId.playableItem(parentId, id),
         this.title,
         this.artist,
-        true
+        true,
+        extra = bundleOf("position" to position)
     )
 }
 

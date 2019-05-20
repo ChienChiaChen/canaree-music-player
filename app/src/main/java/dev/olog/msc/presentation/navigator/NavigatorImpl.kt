@@ -39,8 +39,6 @@ import dev.olog.msc.presentation.recently.added.RecentlyAddedFragment
 import dev.olog.msc.presentation.related.artists.RelatedArtistFragment
 import dev.olog.msc.presentation.search.SearchFragment
 import dev.olog.msc.presentation.splash.SplashActivity
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
@@ -62,8 +60,6 @@ class NavigatorImpl @Inject internal constructor(
     }
 
     private var lastRequest: Long = -1
-
-    private var popupDisposable: Disposable? = null
 
     override fun toFirstAccess(activity: FragmentActivity, requestCode: Int) {
         val intent = Intent(activity, SplashActivity::class.java)
@@ -291,9 +287,7 @@ class NavigatorImpl @Inject internal constructor(
 
     override fun toDialog(mediaId: MediaId, anchor: View) {
         if (allowed()) {
-            popupDisposable.unsubscribe()
-            popupDisposable = popupFactory.create(anchor, mediaId)
-                .subscribe({ it.show() }, Throwable::printStackTrace)
+            popupFactory.show(anchor, mediaId)
         }
     }
 

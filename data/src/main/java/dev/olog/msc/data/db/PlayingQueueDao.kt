@@ -14,7 +14,6 @@ import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.track.SongGateway
-import dev.olog.msc.data.entity.MiniQueueEntity
 import dev.olog.msc.data.entity.PlayingQueueEntity
 import io.reactivex.Flowable
 import kotlinx.coroutines.flow.Flow
@@ -55,107 +54,8 @@ abstract class PlayingQueueDao {
     @Query("DELETE FROM playing_queue")
     internal abstract suspend fun deleteAllImpl()
 
-    @Query(
-        """
-        SELECT *
-        FROM mini_queue
-        ORDER BY timeAdded
-        LIMIT :limit
-        OFFSET :offset
-    """
-    )
-    internal abstract fun observeMiniQueueImpl(offset: Int, limit: Int): Flowable<List<MiniQueueEntity>>
-
-    @Query(
-        """
-        SELECT *
-        FROM mini_queue
-        ORDER BY timeAdded
-        LIMIT :limit
-        OFFSET :offset
-    """
-    )
-    internal abstract fun getMiniQueueImpl(offset: Int, limit: Int): List<MiniQueueEntity>
-
     @Insert
     internal abstract fun insertAllImpl(list: List<PlayingQueueEntity>)
-
-    @Query("DELETE FROM mini_queue")
-    internal abstract suspend fun deleteMiniQueueImpl()
-
-    @Insert
-    internal abstract suspend fun insertMiniQueueImpl(list: List<MiniQueueEntity>)
-
-    internal open fun getMiniQueue(songGateway: SongGateway, podcastGateway: PodcastGateway, page: Page)
-            : List<PlayingQueueSong> {
-        val miniQueueEntities = getMiniQueueImpl(offset = page.offset, limit = page.limit)
-        val result = mutableListOf<PlayingQueueSong>()
-
-        val songList = songGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
-        val podcastList = podcastGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
-
-        for (item in miniQueueEntities) {
-            var song: Any? = songList.firstOrNull { it.id == item.id }
-            if (song == null) {
-                song = podcastList.firstOrNull { it.id == item.id }
-            }
-            if (song == null) {
-                continue
-            }
-
-            val itemToAdd = if (song is Song) {
-                song.toPlayingQueueSong(item.idInPlaylist, MediaIdCategory.SONGS.toString(), "")
-            } else if (song is Podcast) {
-                song.toPlayingQueueSong(item.idInPlaylist, MediaIdCategory.SONGS.toString(), "")
-            } else {
-                throw IllegalArgumentException("must be song or podcast, passed $song")
-            }
-            result.add(itemToAdd)
-        }
-
-        return result
-    }
-
-    internal open suspend fun observeMiniQueue(songGateway: SongGateway, podcastGateway: PodcastGateway, page: Page)
-            : Flow<List<PlayingQueueSong>> {
-
-
-        return observeMiniQueueImpl(offset = page.offset, limit = page.limit)
-            .asFlow()
-            .map { miniQueueEntities ->
-                val result = mutableListOf<PlayingQueueSong>()
-
-                val songList = songGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
-                val podcastList = podcastGateway.getAll().getPage(Request(Page.NO_PAGING, Filter.NO_FILTER))
-
-                for (item in miniQueueEntities) {
-                    var song: Any? = songList.firstOrNull { it.id == item.id }
-                    if (song == null) {
-                        song = podcastList.firstOrNull { it.id == item.id }
-                    }
-                    if (song == null) {
-                        continue
-                    }
-
-                    val itemToAdd = if (song is Song) {
-                        song.toPlayingQueueSong(item.idInPlaylist, MediaIdCategory.SONGS.toString(), "")
-                    } else if (song is Podcast) {
-                        song.toPlayingQueueSong(item.idInPlaylist, MediaIdCategory.SONGS.toString(), "")
-                    } else {
-                        throw IllegalArgumentException("must be song or podcast, passed $song")
-                    }
-                    result.add(itemToAdd)
-                }
-
-                result
-            }
-    }
-
-    @Transaction
-    internal open suspend fun updateMiniQueue(list: List<Pair<Int, Long>>) {
-        deleteMiniQueueImpl()
-        insertMiniQueueImpl(list.map { MiniQueueEntity(it.first, it.second, System.nanoTime()) })
-    }
 
     internal fun obsereveAllAsSongs(songGateway: SongGateway, podcastGateway: PodcastGateway, page: Page)
             : Flow<List<PlayingQueueSong>> {

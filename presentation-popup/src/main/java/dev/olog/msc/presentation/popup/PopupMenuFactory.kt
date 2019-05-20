@@ -1,12 +1,27 @@
 package dev.olog.msc.presentation.popup
 
 import android.view.View
-import android.widget.PopupMenu
+import androidx.appcompat.widget.PopupMenu
+import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.item.*
-import io.reactivex.Single
-import kotlinx.coroutines.runBlocking
+import dev.olog.msc.presentation.popup.album.AlbumPopup
+import dev.olog.msc.presentation.popup.artist.ArtistPopup
+import dev.olog.msc.presentation.popup.folder.FolderPopup
+import dev.olog.msc.presentation.popup.genre.GenrePopup
+import dev.olog.msc.presentation.popup.playlist.PlaylistPopup
+import dev.olog.msc.presentation.popup.podcast.PodcastPopup
+import dev.olog.msc.presentation.popup.podcastalbum.PodcastAlbumPopup
+import dev.olog.msc.presentation.popup.podcastartist.PodcastArtistPopup
+import dev.olog.msc.presentation.popup.podcastplaylist.PodcastPlaylistPopup
+import dev.olog.msc.presentation.popup.song.SongPopup
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PopupMenuFactory @Inject constructor(
@@ -24,9 +39,9 @@ class PopupMenuFactory @Inject constructor(
 
 ) {
 
-    fun create(view: View, mediaId: MediaId): Single<PopupMenu> {
+    fun show(view: View, mediaId: MediaId) = GlobalScope.launch {
         val category = mediaId.category
-        return when (category) {
+        val popup: PopupMenu? = when (category) {
             MediaIdCategory.FOLDERS -> getFolderPopup(view, mediaId)
             MediaIdCategory.PLAYLISTS -> getPlaylistPopup(view, mediaId)
             MediaIdCategory.SONGS -> getSongPopup(view, mediaId)
@@ -39,188 +54,107 @@ class PopupMenuFactory @Inject constructor(
             MediaIdCategory.PODCASTS_ARTISTS -> getPodcastArtistPopup(view, mediaId)
             else -> throw IllegalArgumentException("invalid category $category")
         }
+        withContext(Dispatchers.Main) {
+            popup?.show()
+        }
     }
 
-    private fun getFolderPopup(view: View, mediaId: MediaId): Single<PopupMenu> = runBlocking {
-        TODO()
-//        val activity = view.context as FragmentActivity
-//        getFolderUseCase.execute(mediaId).asObservable().firstOrError()
-//            .flatMap { folder ->
-//                if (mediaId.isLeaf) {
-//                    runBlocking { getSongUseCase.execute(mediaId) }
-//                        .asObservable().firstOrError()
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .map { FolderPopup(view, folder, it, listenerFactory.folder(activity, folder, it)) }
-//                } else {
-//                    Single.just(FolderPopup(view, folder, null, listenerFactory.folder(activity, folder, null)))
-//                        .subscribeOn(AndroidSchedulers.mainThread())
-//                }
-//            } as Single<PopupMenu>
+    private suspend fun getFolderPopup(view: View, mediaId: MediaId): PopupMenu? {
+        val activity = view.context as FragmentActivity
+        val folder = getFolderUseCase.execute(mediaId).getItem() ?: return null
+        var song: Song? = null
+        if (mediaId.isLeaf) {
+            song = getSongUseCase.execute(mediaId).getItem()
+        }
+        return FolderPopup(view, folder, song, listenerFactory.folder(activity, folder, song))
     }
 
-    private fun getPlaylistPopup(view: View, mediaId: MediaId): Single<PopupMenu> = runBlocking {
-        TODO()
-//        val activity = view.context as FragmentActivity
-//        getPlaylistUseCase.execute(mediaId).asObservable().firstOrError()
-//            .flatMap { playlist ->
-//                if (mediaId.isLeaf) {
-//                    runBlocking { getSongUseCase.execute(mediaId) }.asObservable().firstOrError()
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .map { PlaylistPopup(view, playlist, it, listenerFactory.playlist(activity, playlist, it)) }
-//                } else {
-//                    Single.just(PlaylistPopup(view, playlist, null, listenerFactory.playlist(activity, playlist, null)))
-//                        .subscribeOn(AndroidSchedulers.mainThread())
-//                }
-//            } as Single<PopupMenu>
+    private suspend fun getPlaylistPopup(view: View, mediaId: MediaId): PopupMenu? {
+        val activity = view.context as FragmentActivity
+        val playlist = getPlaylistUseCase.execute(mediaId).getItem() ?: return null
+        var song: Song? = null
+        if (mediaId.isLeaf) {
+            song = getSongUseCase.execute(mediaId).getItem()
+        }
+        return PlaylistPopup(view, playlist, song, listenerFactory.playlist(activity, playlist, song))
     }
 
-    private fun getSongPopup(view: View, mediaId: MediaId): Single<PopupMenu> = runBlocking {
-        TODO()
-//        val activity = view.context as FragmentActivity
-//        getSongUseCase.execute(mediaId).asObservable().firstOrError()
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .map { SongPopup(view, it, listenerFactory.song(activity, it)) } as Single<PopupMenu>
+    private suspend fun getSongPopup(view: View, mediaId: MediaId): PopupMenu? {
+        val activity = view.context as FragmentActivity
+        val song = getSongUseCase.execute(mediaId).getItem() ?: return null
+        return SongPopup(view, song, listenerFactory.song(activity, song))
 
     }
 
-    private fun getAlbumPopup(view: View, mediaId: MediaId): Single<PopupMenu> = runBlocking {
-        TODO()
-//        val activity = view.context as FragmentActivity
-//        getAlbumUseCase.execute(mediaId).asObservable().firstOrError()
-//            .flatMap { album ->
-//                if (mediaId.isLeaf) {
-//                    runBlocking { getSongUseCase.execute(mediaId) }.asObservable().firstOrError()
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .map { AlbumPopup(view, album, it, listenerFactory.album(activity, album, it)) }
-//                } else {
-//                    Single.just(AlbumPopup(view, album, null, listenerFactory.album(activity, album, null)))
-//                        .subscribeOn(AndroidSchedulers.mainThread())
-//                }
-//            }as Single<PopupMenu>
+    private suspend fun getAlbumPopup(view: View, mediaId: MediaId): PopupMenu? {
+        val activity = view.context as FragmentActivity
+        val album = getAlbumUseCase.execute(mediaId).getItem() ?: return null
+        var song: Song? = null
+        if (mediaId.isLeaf) {
+            song = getSongUseCase.execute(mediaId).getItem()
+        }
+        return AlbumPopup(view, album, song, listenerFactory.album(activity, album, song))
     }
 
-    private fun getArtistPopup(view: View, mediaId: MediaId): Single<PopupMenu> = runBlocking {
-        TODO()
-//        val activity = view.context as FragmentActivity
-//        getArtistUseCase.execute(mediaId).asObservable().firstOrError()
-//            .flatMap { artist ->
-//                if (mediaId.isLeaf) {
-//                    runBlocking { getSongUseCase.execute(mediaId) }.asObservable().firstOrError()
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .map { ArtistPopup(view, artist, it, listenerFactory.artist(activity, artist, it)) }
-//                } else {
-//                    Single.just(ArtistPopup(view, artist, null, listenerFactory.artist(activity, artist, null)))
-//                        .subscribeOn(AndroidSchedulers.mainThread())
-//                }
-//            }as Single<PopupMenu>
+    private suspend fun getArtistPopup(view: View, mediaId: MediaId): PopupMenu? {
+        val activity = view.context as FragmentActivity
+        val artist = getArtistUseCase.execute(mediaId).getItem() ?: return null
+        var song: Song? = null
+        if (mediaId.isLeaf) {
+            song = getSongUseCase.execute(mediaId).getItem()
+        }
+        return ArtistPopup(view, artist, song, listenerFactory.artist(activity, artist, song))
     }
 
-    private fun getGenrePopup(view: View, mediaId: MediaId): Single<PopupMenu> = runBlocking {
-        TODO()
-//        val activity = view.context as FragmentActivity
-//        getGenreUseCase.execute(mediaId).asObservable().firstOrError()
-//            .flatMap { genre ->
-//                if (mediaId.isLeaf) {
-//                    runBlocking { getSongUseCase.execute(mediaId) }.asObservable().firstOrError()
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .map { GenrePopup(view, genre, it, listenerFactory.genre(activity, genre, it)) }
-//                } else {
-//                    Single.just(GenrePopup(view, genre, null, listenerFactory.genre(activity, genre, null)))
-//                        .subscribeOn(AndroidSchedulers.mainThread())
-//                }
-//            }as Single<PopupMenu>
+    private suspend fun getGenrePopup(view: View, mediaId: MediaId): PopupMenu? {
+        val activity = view.context as FragmentActivity
+        val genre = getGenreUseCase.execute(mediaId).getItem() ?: return null
+        var song: Song? = null
+        if (mediaId.isLeaf) {
+            song = getSongUseCase.execute(mediaId).getItem()
+        }
+        return GenrePopup(view, genre, song, listenerFactory.genre(activity, genre, song))
     }
 
-    private fun getPodcastPopup(view: View, mediaId: MediaId): Single<PopupMenu> = runBlocking {
-        TODO()
-//        val activity = view.context as FragmentActivity
-//        runBlocking { getPodcastUseCase.execute(mediaId) }
-//            .asObservable().firstOrError()
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .map { PodcastPopup(view, it, listenerFactory.podcast(activity, it)) } as Single<PopupMenu>
+    private suspend fun getPodcastPopup(view: View, mediaId: MediaId): PopupMenu? {
+        val activity = view.context as FragmentActivity
+        val podcast = getPodcastUseCase.execute(mediaId).getItem() ?: return null
+        return PodcastPopup(view, podcast, listenerFactory.podcast(activity, podcast))
     }
 
-    private fun getPodcastPlaylistPopup(view: View, mediaId: MediaId): Single<PopupMenu> = runBlocking {
-        TODO()
-//        val activity = view.context as FragmentActivity
-//        getPodcastPlaylistUseCase.execute(mediaId).asObservable().firstOrError()
-//            .flatMap { playlist ->
-//                if (mediaId.isLeaf) {
-//                    runBlocking { getPodcastUseCase.execute(mediaId) }.asObservable().firstOrError()
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .map {
-//                            PodcastPlaylistPopup(
-//                                view,
-//                                playlist,
-//                                it,
-//                                listenerFactory.podcastPlaylist(activity, playlist, it)
-//                            )
-//                        }
-//                } else {
-//                    Single.just(
-//                        PodcastPlaylistPopup(
-//                            view,
-//                            playlist,
-//                            null,
-//                            listenerFactory.podcastPlaylist(activity, playlist, null)
-//                        )
-//                    )
-//                        .subscribeOn(AndroidSchedulers.mainThread())
-//                }
-//            }as Single<PopupMenu>
+    private suspend fun getPodcastPlaylistPopup(view: View, mediaId: MediaId): PopupMenu? {
+        val activity = view.context as FragmentActivity
+        val playlist = getPodcastPlaylistUseCase.execute(mediaId).getItem() ?: return null
+        var podcast: Podcast? = null
+        if (mediaId.isLeaf) {
+            podcast = getPodcastUseCase.execute(mediaId).getItem()
+        }
+        return PodcastPlaylistPopup(
+            view,
+            playlist,
+            podcast,
+            listenerFactory.podcastPlaylist(activity, playlist, podcast)
+        )
     }
 
-    private fun getPodcastAlbumPopup(view: View, mediaId: MediaId): Single<PopupMenu> = runBlocking {
-        TODO()
-//        val activity = view.context as FragmentActivity
-//        getPodcastAlbumUseCase.execute(mediaId).asObservable().firstOrError()
-//            .flatMap { album ->
-//                if (mediaId.isLeaf) {
-//                    runBlocking { getPodcastUseCase.execute(mediaId) }.asObservable().firstOrError()
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .map { PodcastAlbumPopup(view, album, it, listenerFactory.podcastAlbum(activity, album, it)) }
-//                } else {
-//                    Single.just(
-//                        PodcastAlbumPopup(
-//                            view,
-//                            album,
-//                            null,
-//                            listenerFactory.podcastAlbum(activity, album, null)
-//                        )
-//                    )
-//                        .subscribeOn(AndroidSchedulers.mainThread())
-//                }
-//            }as Single<PopupMenu>
+    private suspend fun getPodcastAlbumPopup(view: View, mediaId: MediaId): PopupMenu? {
+        val activity = view.context as FragmentActivity
+        val album = getPodcastAlbumUseCase.execute(mediaId).getItem() ?: return null
+        var podcast: Podcast? = null
+        if (mediaId.isLeaf) {
+            podcast = getPodcastUseCase.execute(mediaId).getItem()
+        }
+        return PodcastAlbumPopup(view, album, podcast, listenerFactory.podcastAlbum(activity, album, podcast))
     }
 
-    private fun getPodcastArtistPopup(view: View, mediaId: MediaId): Single<PopupMenu> = runBlocking {
-        TODO()
-//        val activity = view.context as FragmentActivity
-//        getPodcastArtistUseCase.execute(mediaId).asObservable().firstOrError()
-//            .flatMap { artist ->
-//                if (mediaId.isLeaf) {
-//                    runBlocking { getPodcastUseCase.execute(mediaId) }.asObservable().firstOrError()
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .map {
-//                            PodcastArtistPopup(
-//                                view,
-//                                artist,
-//                                it,
-//                                listenerFactory.podcastArtist(activity, artist, it)
-//                            )
-//                        }
-//                } else {
-//                    Single.just(
-//                        PodcastArtistPopup(
-//                            view,
-//                            artist,
-//                            null,
-//                            listenerFactory.podcastArtist(activity, artist, null)
-//                        )
-//                    )
-//                        .subscribeOn(AndroidSchedulers.mainThread())
-//                }
-//            }as Single<PopupMenu>
+    private suspend fun getPodcastArtistPopup(view: View, mediaId: MediaId): PopupMenu? {
+        val activity = view.context as FragmentActivity
+        val artist = getPodcastArtistUseCase.execute(mediaId).getItem() ?: return null
+        var podcast: Podcast? = null
+        if (mediaId.isLeaf) {
+            podcast = getPodcastUseCase.execute(mediaId).getItem()
+        }
+        return PodcastArtistPopup(view, artist, podcast, listenerFactory.podcastArtist(activity, artist, podcast))
     }
 
 }

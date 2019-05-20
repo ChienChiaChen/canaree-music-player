@@ -3,6 +3,7 @@ package dev.olog.msc.presentation.detail.paging
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.played.GetMostPlayedSongsUseCase
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.paging.BaseDataSource
@@ -46,7 +47,7 @@ internal class MostPlayedDataSource @Inject constructor(
 
     override fun loadInternal(request: Request): List<DisplayableItem> {
         return chunked.getPage(request)
-            .map { it.toMostPlayedDetailDisplayableItem(mediaId) }
+            .mapIndexed { index: Int, song: Song -> song.toMostPlayedDetailDisplayableItem(mediaId, index) }
     }
 }
 

@@ -7,12 +7,12 @@ import android.text.style.StyleSpan
 import android.view.Gravity
 import android.view.Menu
 import android.view.View
-import android.widget.PopupMenu
+import androidx.appcompat.widget.PopupMenu
 
 import dev.olog.msc.core.entity.track.Playlist
 
 abstract class AbsPopup(
-        view: View
+    view: View
 
 ) : PopupMenu(view.context, view, Gravity.END or Gravity.BOTTOM) {
 
@@ -26,7 +26,7 @@ abstract class AbsPopup(
 //        }
     }
 
-    fun addPlaylistChooser(context: Context, playlists: List<Playlist>){
+    fun addPlaylistChooser(context: Context, playlists: List<Playlist>) {
         val addToPlaylistMenuItem = menu.findItem(R.id.addToPlaylist)
         val addToPlaylistSubMenu = addToPlaylistMenuItem.subMenu
 

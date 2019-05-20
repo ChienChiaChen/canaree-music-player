@@ -18,8 +18,4 @@ interface PlayingQueueGateway {
     // mediaId, trackId, idInPlaylist
     suspend fun update(list: List<Triple<MediaId, Long, Int>>)
 
-    suspend fun observeMiniQueue(page: Page): Flow<List<PlayingQueueSong>>
-    suspend fun getMiniQueue(page: Page): List<PlayingQueueSong>
-    suspend fun updateMiniQueue(tracksId: List<Pair<Int, Long>>)
-
 }

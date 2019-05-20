@@ -13,7 +13,6 @@ import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
-import dev.olog.msc.core.gateway.PlayingQueueGateway
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.shared.WidgetConstants
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
@@ -26,7 +25,6 @@ internal class MediaSessionQueue @Inject constructor(
     @ServiceLifecycle lifecycle: Lifecycle,
     mediaSession: MediaSessionCompat,
     private val playerState: PlayerState,
-    private val playingQueueGateway: PlayingQueueGateway,
     private val widgetClasses: WidgetClasses
 
 ) : DefaultLifecycleObserver, CoroutineScope by CustomScope() {
@@ -42,9 +40,8 @@ internal class MediaSessionQueue @Inject constructor(
                     delay(500)
                 }
                 yield()
-                persistMiniQueue(item.queue)
                 val queueItemList = item.queue.map { it.toQueueItem() }
-
+                yield()
                 withContext(Dispatchers.Main) {
                     notifyWidgets()
                     mediaSession.setQueue(queueItemList)
@@ -60,10 +57,6 @@ internal class MediaSessionQueue @Inject constructor(
 
     fun onNext(list: MediaSessionQueueModel<MediaEntity>) = launch {
         channel.send(list)
-    }
-
-    private suspend fun persistMiniQueue(tracks: List<MediaEntity>) {
-        playingQueueGateway.updateMiniQueue(tracks.map { it.idInPlaylist to it.id })
     }
 
     private fun notifyWidgets() {
