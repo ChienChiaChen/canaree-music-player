@@ -4,8 +4,8 @@ import android.content.Context
 import dev.olog.msc.shared.extensions.configuration
 
 class BaseSpanSizeLookup(
-        context: Context,
-        private val isPortrait: Boolean
+    context: Context,
+    private val isPortrait: Boolean
 
 ) : AbsSpanSizeLookup() {
 

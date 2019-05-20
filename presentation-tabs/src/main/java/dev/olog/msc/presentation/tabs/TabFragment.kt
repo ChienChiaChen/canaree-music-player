@@ -53,6 +53,7 @@ class TabFragment : BaseFragment() {
 
     private val adapter by lazyFast {
         TabFragmentAdapter(
+            category,
             navigator, lastArtistsAdapter, lastAlbumsAdapter,
             newAlbumsAdapter, newArtistsAdapter, viewModel,
             act as MediaProvider

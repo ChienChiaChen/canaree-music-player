@@ -4,6 +4,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.base.adapter.DiffCallbackDisplayableItem
@@ -19,6 +20,7 @@ import dev.olog.msc.presentation.tabs.R
 import dev.olog.msc.presentation.tabs.TabFragmentViewModel
 
 internal class TabFragmentAdapter(
+    private val mediaIdCategory: MediaIdCategory,
     private val navigator: Navigator,
     private val lastPlayedArtistsAdapter: TabFragmentLastPlayedArtistsAdapter?,
     private val lastPlayedAlbumsAdapter: TabFragmentLastPlayedAlbumsAdapter?,
@@ -28,6 +30,14 @@ internal class TabFragmentAdapter(
     private val mediaProvider: MediaProvider
 
 ) : BasePagedAdapter<DisplayableItem>(DiffCallbackDisplayableItem) {
+
+    override val placeholder: Int
+        get() {
+            if (mediaIdCategory == MediaIdCategory.SONGS || mediaIdCategory == MediaIdCategory.PODCASTS){
+                return super.placeholder
+            }
+            return R.layout.item_placeholder_album
+        }
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
         when (viewType) {

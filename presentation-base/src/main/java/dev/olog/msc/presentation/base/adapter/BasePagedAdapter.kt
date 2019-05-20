@@ -14,7 +14,7 @@ abstract class BasePagedAdapter<Model : BaseModel>(diffCallback: DiffUtil.ItemCa
     PagedListAdapter<Model, DataBoundViewHolder>(diffCallback) {
 
 
-    open val placeholder : Int = R.layout.item_placeholder
+    open val placeholder: Int = R.layout.item_placeholder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBoundViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -44,10 +44,6 @@ abstract class BasePagedAdapter<Model : BaseModel>(diffCallback: DiffUtil.ItemCa
 
     override fun getItemViewType(position: Int): Int {
         return getItem(position)?.type ?: placeholder
-    }
-
-    fun elementAt(position: Int): Model? {
-        return currentList?.get(position)
     }
 
     protected abstract fun bind(binding: ViewDataBinding, item: Model, position: Int)
