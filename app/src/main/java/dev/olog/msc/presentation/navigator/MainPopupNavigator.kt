@@ -4,11 +4,13 @@ import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.preference.PreferenceManager
 import androidx.fragment.app.FragmentActivity
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.presentation.about.AboutActivity
 import dev.olog.msc.presentation.base.ActivityCodes
 import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.debug.DebugConfigurationActivity
+import dev.olog.msc.presentation.dialogs.playlist.NewPlaylistDialog
 import dev.olog.msc.presentation.equalizer.EqualizerFragment
 import dev.olog.msc.presentation.preferences.PreferencesActivity
 import dev.olog.msc.presentation.sleeptimer.SleepTimerPickerDialogBuilder
@@ -63,6 +65,16 @@ class MainPopupNavigator @Inject constructor(
     override fun toSleepTimer(activity: FragmentActivity) {
         SleepTimerPickerDialogBuilder(activity, activity.supportFragmentManager)
                 .show()
+    }
+
+    override fun toCreatePlaylistDialog(
+        activity: FragmentActivity,
+        mediaId: MediaId,
+        listSize: Int,
+        itemTitle: String
+    ) {
+        val fragment = NewPlaylistDialog.newInstance(mediaId, listSize, itemTitle)
+        fragment.show(activity.supportFragmentManager, NewPlaylistDialog.TAG)
     }
 
 }

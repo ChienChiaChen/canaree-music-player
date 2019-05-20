@@ -178,10 +178,13 @@ class AlbumQueries constructor(
             SortType.ALBUM_ARTIST -> "lower(${Columns.ALBUM_ARTIST})"
             else -> "lower(${Columns.ALBUM})"
         }
+
+        sort += " COLLATE UNICODE "
+
         if (arranging == SortArranging.DESCENDING) {
             sort += " DESC"
         }
-        return "$sort COLLATE UNICODE"
+        return sort
     }
 
 }

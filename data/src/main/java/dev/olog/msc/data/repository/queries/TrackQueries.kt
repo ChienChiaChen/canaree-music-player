@@ -135,6 +135,9 @@ open class TrackQueries constructor(
             SortType.RECENTLY_ADDED -> DATE_ADDED
             else -> "lower($TITLE)"
         }
+
+        sort += " COLLATE UNICODE "
+
         if (arranging == SortArranging.ASCENDING && type == SortType.RECENTLY_ADDED) {
             // recently added works in reverse
             sort += " DESC"
@@ -148,6 +151,6 @@ open class TrackQueries constructor(
             }
 
         }
-        return "$sort COLLATE UNICODE"
+        return sort
     }
 }

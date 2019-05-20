@@ -22,7 +22,6 @@ class DataBoundViewHolder(val binding: ViewDataBinding)
     }
 
     fun onDisappear() {
-        lifecycleRegistry.currentState = Lifecycle.State.STARTED
         lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
     }
 
