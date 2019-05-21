@@ -70,7 +70,7 @@ internal class LastFmRepoTrack @Inject constructor(
             return cacheAsync(trackInfo).await().toDomain()
         } catch (ex: Exception) {
             try {
-                var trackInfo = lastFmService.getTrackInfoAsync(trackTitle, trackArtist).await().toDomain(trackId)
+                var trackInfo = lastFmService.searchTrackAsync(trackTitle, trackArtist).await().toDomain(trackId)
                 try {
                     trackInfo = lastFmService.getTrackInfoAsync(trackInfo.title, trackInfo.artist).await().toDomain(trackId)
                 } catch (ignored: Exception) {
