@@ -27,7 +27,6 @@ suspend fun Context.getCachedBitmap(
         .load(placeholder.toBitmap())
         .override(size)
         .extend(extension)
-        .onlyRetrieveFromCache(true)
 
     GlideApp.with(this)
         .asBitmap()

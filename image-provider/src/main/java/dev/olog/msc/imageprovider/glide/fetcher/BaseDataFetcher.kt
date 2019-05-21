@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong
  * Class that uses a 'global' counter to delay the image request for an image.
  * Because LastFm allows 5 request per second for every IP
  */
-abstract class BaseRxDataFetcher(
+abstract class BaseDataFetcher(
     private val context: Context,
     private val prefsKeys: PrefsKeys
 
@@ -38,7 +38,7 @@ abstract class BaseRxDataFetcher(
 
     override fun getDataClass(): Class<InputStream> = InputStream::class.java
 
-    override fun getDataSource(): DataSource = DataSource.REMOTE
+    override fun getDataSource(): DataSource = DataSource.LOCAL
 
     override fun cleanup() {
         unsubscribe()

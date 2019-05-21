@@ -56,10 +56,8 @@ class AudioFileCoverFetcher(
             retriever.setDataSource(model.filePath)
             val picture = retriever.embeddedPicture ?: AudioFileIO.read(File(model.filePath))
                 .tagOrCreateAndSetDefault.firstArtwork.binaryData
-            if (picture != null) {
-                stream = ByteArrayInputStream(picture)
-                callback.onDataReady(stream)
-            }
+            stream = ByteArrayInputStream(picture)
+            callback.onDataReady(stream)
         } catch (ex: Exception) {
             callback.onLoadFailed(ex)
         } finally {

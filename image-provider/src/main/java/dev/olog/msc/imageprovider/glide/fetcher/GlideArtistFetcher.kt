@@ -18,7 +18,7 @@ class GlideArtistFetcher(
     private val lastFmGateway: LastFmGateway,
     prefsKeys: PrefsKeys
 
-) : BaseRxDataFetcher(context, prefsKeys) {
+) : BaseDataFetcher(context, prefsKeys) {
 
     private val id = mediaId.resolveId
 
