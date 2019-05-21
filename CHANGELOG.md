@@ -1,6 +1,9 @@
 # Release notes
 ## 3.0.0
 - changed dark mode implementation in order to follow Android Q requisites
+- removed landscape mode
+- rewritten repositories
+- moving from rx to coroutines
 
 ## 2.1.1
 - fixed all tracks sort order by date

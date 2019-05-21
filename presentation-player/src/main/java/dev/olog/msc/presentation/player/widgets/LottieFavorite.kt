@@ -4,7 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import com.airbnb.lottie.LottieAnimationView
 import dev.olog.msc.core.entity.favorite.FavoriteEnum
+import dev.olog.msc.presentation.base.theme.player.theme.isClean
 import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
+import dev.olog.msc.presentation.player.R
 
 class LottieFavorite @JvmOverloads constructor(
         context: Context,
@@ -12,14 +14,15 @@ class LottieFavorite @JvmOverloads constructor(
 
 ) : LottieAnimationView(context, attrs) {
 
-    private var state : FavoriteEnum? = null
+    private var state: FavoriteEnum? = null
 
     init {
         var useWhiteIcon = context.isFullscreen()
-//        useWhiteIcon = useWhiteIcon || context.isDark()
+        val isDark = context.resources.getBoolean(R.bool.is_dark_mode)
+        useWhiteIcon = useWhiteIcon || isDark
         val icon = when {
-//            context.isClean() && context.isWhite() -> "favorite_gray" TODO set in res as string
-//            useWhiteIcon -> "favorite_white"
+            context.isClean() && !isDark -> "favorite_gray"
+            useWhiteIcon -> "favorite_white"
             else -> "favorite"
         }
         setAnimation("$icon.json")
@@ -47,13 +50,13 @@ class LottieFavorite @JvmOverloads constructor(
         }
     }
 
-    fun onNextState(favoriteEnum: FavoriteEnum){
-        if (this.state == favoriteEnum){
+    fun onNextState(favoriteEnum: FavoriteEnum) {
+        if (this.state == favoriteEnum) {
             return
         }
         this.state = favoriteEnum
 
-        when (favoriteEnum){
+        when (favoriteEnum) {
             FavoriteEnum.FAVORITE -> toggleFavorite(true)
             FavoriteEnum.NOT_FAVORITE -> toggleFavorite(false)
             FavoriteEnum.ANIMATE_TO_FAVORITE -> {

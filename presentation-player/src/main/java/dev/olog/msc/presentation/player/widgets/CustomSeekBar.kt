@@ -7,25 +7,34 @@ import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.core.content.ContextCompat
 import dev.olog.msc.presentation.player.R
 
-class CustomSeekBar @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null
+class CustomSeekBar : AppCompatSeekBar {
 
-): AppCompatSeekBar(context, attrs) {
+    constructor(context: Context?) : super(context) {
+        init()
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        init()
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        init()
+    }
+
 
     private var isTouched = false
 
-    private var listener: SeekBar.OnSeekBarChangeListener? = null
+    private var listener: OnSeekBarChangeListener? = null
 
-    init {
+    private fun init() {
         progressDrawable = ContextCompat.getDrawable(context, R.drawable.seek_bar_progress)
     }
 
     fun setListener(onProgressChanged: (Int) -> Unit,
                     onStartTouch: (Int) -> Unit,
-                    onStopTouch: (Int) -> Unit){
+                    onStopTouch: (Int) -> Unit) {
 
-        listener = object : SeekBar.OnSeekBarChangeListener {
+        listener = object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 onProgressChanged(progress)
             }
@@ -47,7 +56,9 @@ class CustomSeekBar @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        setOnSeekBarChangeListener(listener)
+        if (!isInEditMode) {
+            setOnSeekBarChangeListener(listener)
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -56,17 +67,16 @@ class CustomSeekBar @JvmOverloads constructor(
     }
 
     override fun setProgress(progress: Int) {
-        if (!isTouched){
+        if (!isTouched) {
             super.setProgress(progress)
         }
     }
 
     override fun setProgress(progress: Int, animate: Boolean) {
-        if (!isTouched){
+        if (!isTouched) {
             super.setProgress(progress, animate)
         }
     }
-
 
 
 }

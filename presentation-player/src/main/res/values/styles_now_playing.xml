@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="NowPlaying">
-        <item name="android:textSize">@dimen/player_now_playing_size</item>
-        <item name="android:fontFamily">@font/roboto_slab_bold</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    <style name="NowPlaying" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/roboto_black</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:alpha">.4</item>
     </style>
 

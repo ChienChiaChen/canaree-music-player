@@ -23,6 +23,6 @@
         android:focusable="false"
         android:clickable="false"
         android:layout_marginTop="80dp"
-        android:fontFamily="@font/roboto_slab_bold"/>
+        app:fontFamily="@font/roboto_black"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
