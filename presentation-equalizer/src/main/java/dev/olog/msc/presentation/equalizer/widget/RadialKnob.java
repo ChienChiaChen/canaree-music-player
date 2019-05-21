@@ -34,7 +34,13 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PathMeasure;
+import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -42,11 +48,11 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
-import dev.olog.msc.presentation.base.theme.dark.mode.DarkModeExtensionKt;
+
 import dev.olog.msc.presentation.equalizer.R;
 import dev.olog.msc.shared.ui.extensions.ContextExtensionsKt;
 
@@ -110,10 +116,11 @@ public class RadialKnob extends View {
         super(context, attrs, defStyle);
 
         Resources res = getResources();
-        mHighlightColor = ContextExtensionsKt.colorAccent(getContext());
+        mHighlightColor = ContextExtensionsKt.colorSecondary(getContext());
         mBackgroundArcColor = ColorUtils.setAlphaComponent(mHighlightColor, (int) (255 * 0.5));
         mBackgroundArcColorDisabled = res.getColor(R.color.radial_knob_arc_bg_disabled);
-        dividerColor = DarkModeExtensionKt.isDark(context) ? Color.WHITE : ContextCompat.getColor(getContext(),  R.color.dark_grey);
+//        dividerColor = DarkModeExtensionKt.isDark(context) ? Color.WHITE : ContextCompat.getColor(getContext(),  R.color.dark_grey); TODO color from res
+        dividerColor = Color.WHITE;
 
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
@@ -169,7 +176,7 @@ public class RadialKnob extends View {
 
     @NonNull
     private OnTouchListener onKnobTouchListener = (v, event) -> {
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 getParent().requestDisallowInterceptTouchEvent(true);
                 resize(true);

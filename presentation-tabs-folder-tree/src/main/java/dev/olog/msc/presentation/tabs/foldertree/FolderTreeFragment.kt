@@ -2,22 +2,17 @@ package dev.olog.msc.presentation.tabs.foldertree
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.presentation.base.extensions.asLiveData
-import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
-import dev.olog.msc.presentation.base.theme.dark.mode.isDark
-import dev.olog.msc.presentation.base.theme.dark.mode.isGrayMode
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.foldertree.widgets.BreadCrumbLayout
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.safeGetCanonicalFile
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import dev.olog.msc.shared.ui.extensions.windowBackground
 import kotlinx.android.synthetic.main.fragment_folder_tree.*
 import kotlinx.android.synthetic.main.fragment_folder_tree.view.*
 import javax.inject.Inject
@@ -46,12 +41,8 @@ class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback,
         view.fastScroller.attachRecyclerView(view.list)
         view.fastScroller.showBubble(false)
 
-        if (context.isDark()){
-            view.bread_crumbs.setBackgroundColor(ctx.windowBackground())
-        }
-        if (context.isGrayMode()){
-            view.bread_crumbs.setBackgroundColor(ContextCompat.getColor(ctx, R.color.toolbar))
-        }
+
+//            view.bread_crumbs.setBackgroundColor(ctx.colorSurface()) TODO check color on dark mode
 
         viewModel.observeFileName()
                 .subscribe(viewLifecycleOwner) {

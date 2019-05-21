@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.RxTextView
-import dev.olog.msc.core.Classes
-import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.adapter.SetupNestedList
 import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
@@ -44,9 +42,6 @@ class SearchFragment : BaseFragment(), SetupNestedList {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by lazyFast { viewModelProvider<SearchFragmentViewModel>(viewModelFactory) }
 
-    @Inject
-    lateinit var classes: Classes
-
     private lateinit var layoutManager: LinearLayoutManager
 
     @Inject
@@ -65,7 +60,7 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         val fragmentManager = activity?.supportFragmentManager
         act.fragmentTransaction {
             fragmentManager?.findFragmentByTag(FragmentTags.DETAIL)?.let { show(it) }
-                ?: fragmentManager!!.findFragmentByTag(FragmentTags.CATEGORIES)?.let { show(it) }
+                    ?: fragmentManager!!.findFragmentByTag(FragmentTags.CATEGORIES)?.let { show(it) }
             setReorderingAllowed(true)
         }
         super.onDetach()
@@ -89,45 +84,27 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         viewModel.genreData.subscribe(viewLifecycleOwner, genreAdapter::submitList)
 
         RxTextView.afterTextChangeEvents(view.editText)
-            .debounceFirst(250, TimeUnit.MILLISECONDS)
-            .map { it.editable()!!.toString() }
-            .filter { it.isBlank() || it.trim().length >= 2 }
-            .distinctUntilChanged()
-            .asLiveData()
-            .subscribe(viewLifecycleOwner) {
-                view.clear.toggleVisibility(it.isNotEmpty(), true)
-                viewModel.updateFilter(it)
-            }
+                .debounceFirst(250, TimeUnit.MILLISECONDS)
+                .map { it.editable()!!.toString() }
+                .filter { it.isBlank() || it.trim().length >= 2 }
+                .distinctUntilChanged()
+                .asLiveData()
+                .subscribe(viewLifecycleOwner) {
+                    viewModel.updateFilter(it)
+                }
     }
 
     override fun onResume() {
         super.onResume()
         act.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-        clear.setOnClickListener { editText.setText("") }
         keyboard.setOnClickListener { ImeUtils.showIme(editText) }
-        didYouMean.setOnClickListener { editText.setText(didYouMean.text.toString()) }
-
-        floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
-        more.setOnClickListener {
-            try {
-                navigator.toMainPopup(requireActivity(), it, null)
-            } catch (ex: Throwable) {
-                ex.printStackTrace()
-            }
-        }
-
         adapter.registerAdapterDataObserver(mainDataObserver)
     }
 
     override fun onPause() {
         super.onPause()
         act.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
-        clear.setOnClickListener(null)
         keyboard.setOnClickListener(null)
-        didYouMean.setOnClickListener(null)
-        floatingWindow.setOnClickListener(null)
-        more.setOnClickListener(null)
-
         adapter.unregisterAdapterDataObserver(mainDataObserver)
     }
 
@@ -153,8 +130,8 @@ class SearchFragment : BaseFragment(), SetupNestedList {
 
     private fun setupHorizontalList(list: RecyclerView, adapter: RecyclerView.Adapter<*>) {
         val layoutManager = LinearLayoutManager(
-            list.context,
-            LinearLayoutManager.HORIZONTAL, false
+                list.context,
+                LinearLayoutManager.HORIZONTAL, false
         )
         list.layoutManager = layoutManager
         list.adapter = adapter
@@ -211,11 +188,6 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         }
 
     }
-
-    private fun startServiceOrRequestOverlayPermission() {
-        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, classes.floatingWindowService())
-    }
-
 
     override fun onStop() {
         super.onStop()

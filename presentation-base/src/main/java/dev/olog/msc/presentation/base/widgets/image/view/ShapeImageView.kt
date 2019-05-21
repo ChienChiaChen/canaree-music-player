@@ -39,7 +39,9 @@ class ShapeImageView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        getMask()?.let { canvas.drawBitmap(it, 0f, 0f, paint) }
+        if (!isInEditMode){
+            getMask()?.let { canvas.drawBitmap(it, 0f, 0f, paint) }
+        }
     }
 
     private fun getMask(): Bitmap? {

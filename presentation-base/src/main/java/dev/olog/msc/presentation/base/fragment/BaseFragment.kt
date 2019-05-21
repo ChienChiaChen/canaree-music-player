@@ -10,13 +10,13 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.support.DaggerFragment
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
-import dev.olog.msc.shared.extensions.isPortrait
 import javax.inject.Inject
 
 abstract class BaseFragment : DaggerFragment() {
 
     // workaround to avoid duplicated classes
-    @Inject internal lateinit var songGateway: SongGateway
+    @Inject
+    internal lateinit var songGateway: SongGateway
 
     @CallSuper
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -32,10 +32,6 @@ abstract class BaseFragment : DaggerFragment() {
 
     fun getSlidingPanel(): SlidingUpPanelLayout? {
         return (activity as HasSlidingPanel).getSlidingPanel()
-    }
-
-    protected fun isPortrait() : Boolean {
-        return context != null && context!!.isPortrait
     }
 
 }

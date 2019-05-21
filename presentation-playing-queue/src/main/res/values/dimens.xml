@@ -4,5 +4,5 @@
     <dimen name="playing_queue_margin_vertical">8dp</dimen>
 
     <dimen name="item_margin_horizontal">8dp</dimen>
-    <dimen name="toolbar_now_playing_padding_start">32dp</dimen>
+    <dimen name="header_padding_start">24dp</dimen>
 </resources>

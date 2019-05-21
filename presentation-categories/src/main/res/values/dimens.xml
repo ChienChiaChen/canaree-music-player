@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="toolbar_now_playing_padding_start">32dp</dimen>
+    <dimen name="header_padding_start">24dp</dimen>
 </resources>

@@ -9,11 +9,10 @@ import androidx.core.content.ContextCompat
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.shared.ui.extensions.tint
-import dev.olog.msc.shared.ui.theme.HasDarkMode
 
 object CoverUtils {
 
-    private val COLORS = listOf (
+    private val COLORS = listOf(
             intArrayOf(0xff_00_c9_ff.toInt(), 0xff_92_fe_9d.toInt()),
             intArrayOf(0xff_f5_4e_a2.toInt(), 0xff_ff_76_76.toInt()),
             intArrayOf(0xff_17_ea_d9.toInt(), 0xff_92_fe_9d.toInt()),
@@ -54,13 +53,16 @@ object CoverUtils {
 
         val icon = drawable.getDrawable(1) as Drawable
 
-        if ((context.applicationContext as HasDarkMode).isDark()){
-            icon.tint(0xFF_88898c.toInt())
-            gradient.colors = intArrayOf(0xff_282828.toInt(), 0xff_282828.toInt())
-        } else {
-            icon.tint(0xFF_26_26_26.toInt())
+        val iconColorOverride = ContextCompat.getColor(context, R.color.icon_override)
+        icon.tint(iconColorOverride)
+        val gradientColorOverride = ContextCompat.getColor(context, R.color.gradient_override)
+        if (gradientColorOverride == 0) {
+            // use custom color for light theme
             val pos = (position) % COLORS.size
             gradient.colors = COLORS[Math.abs(pos)]
+        } else {
+            // use light color for dark theme
+            gradient.colors = intArrayOf(gradientColorOverride, gradientColorOverride)
         }
 
         return drawable

@@ -27,7 +27,7 @@ public class ColorUtil {
 
     public static int getAccentColor(Context context, Palette palette) {
         int color = palette.getVibrantColor(palette.getMutedColor(
-                ContextExtensionsKt.colorAccent(context)
+                ContextExtensionsKt.colorSecondary(context)
         ));
         return shiftBackgroundColorForLightText(color);
     }

@@ -15,7 +15,6 @@ import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
-import dev.olog.msc.presentation.base.theme.dark.mode.isWhite
 import dev.olog.msc.presentation.base.utils.getArtist
 import dev.olog.msc.presentation.base.utils.getDuration
 import dev.olog.msc.presentation.base.utils.getId
@@ -153,7 +152,8 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
     }
 
     private fun searchLyrics(){
-        val toolbarColor = if (context.isWhite()) R.color.toolbar else R.color.theme_dark_toolbar
+//        val toolbarColor = if (context.isWhite()) R.color.toolbar else R.color.theme_dark_toolbar TODO set color in res
+        val toolbarColor = R.color.toolbar
         val customTabIntent = CustomTabsIntent.Builder()
                 .enableUrlBarHiding()
                 .setToolbarColor(ContextCompat.getColor(ctx, toolbarColor))

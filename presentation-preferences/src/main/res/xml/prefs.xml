@@ -79,8 +79,8 @@
         <ListPreference
             android:title="@string/prefs_dark_mode_title"
             android:summary="%s"
-            android:key="@string/prefs_dark_mode_key"
-            android:defaultValue="@string/prefs_dark_mode_entry_value_white"
+            android:key="@string/prefs_dark_mode_2_key"
+            android:defaultValue="@string/prefs_dark_mode_2_value_follow_system"
             android:entryValues="@array/prefs_dark_mode_entry_values"
             android:entries="@array/prefs_dark_mode_entries" />
 

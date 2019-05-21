@@ -16,10 +16,10 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class Immersive @Inject constructor(
-    @ApplicationContext private val context: Context,
-    @ProcessLifecycle lifecycle: Lifecycle,
-    private val prefs: SharedPreferences,
-    rxPrefs: RxSharedPreferences
+        @ApplicationContext private val context: Context,
+        @ProcessLifecycle lifecycle: Lifecycle,
+        private val prefs: SharedPreferences,
+        private val rxPrefs: RxSharedPreferences
 ) : DefaultLifecycleObserver, IImmersive {
 
     private var disposable: Disposable? = null
@@ -29,34 +29,37 @@ class Immersive @Inject constructor(
 
     init {
         lifecycle.addObserver(this)
+    }
+
+    override fun onStart(owner: LifecycleOwner) {
         setInitialValue()
         disposable = rxPrefs.getBoolean(
-            context.getString(R.string.prefs_immersive_key),
-            false
+                context.getString(R.string.prefs_immersive_key),
+                false
         )
-            .asObservable()
-            .subscribeOn(Schedulers.io())
-            .skip(1) // skip initial emission
-            .subscribe({
-                onThemeChanged(it)
-                currentActivity?.recreate()
-            }, Throwable::printStackTrace)
+                .asObservable()
+                .subscribeOn(Schedulers.io())
+                .skip(1) // skip initial emission
+                .subscribe({
+                    onThemeChanged(it)
+                    currentActivity?.recreate()
+                }, Throwable::printStackTrace)
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        disposable.unsubscribe()
     }
 
     private fun setInitialValue() {
         val initialValue = prefs.getBoolean(
-            context.getString(R.string.prefs_immersive_key),
-            false
+                context.getString(R.string.prefs_immersive_key),
+                false
         )
         onThemeChanged(initialValue)
     }
 
     private fun onThemeChanged(enabled: Boolean) {
         isEnabled = enabled
-    }
-
-    override fun onDestroy(owner: LifecycleOwner) {
-        disposable.unsubscribe()
     }
 
     override fun setCurrentActivity(activity: Activity?) {

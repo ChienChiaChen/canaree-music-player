@@ -10,10 +10,10 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="Headline5" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="fontFamily">@font/roboto_slab_bold</item>
-        <item name="android:textSize">@dimen/main_toolbar_text_size</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    <style name="HeaderHeadline" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/roboto_black</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+
     </style>
 
     <style name="Headline6">

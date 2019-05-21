@@ -1,7 +1,6 @@
 package dev.olog.msc.presentation.sleeptimer
 
 import android.content.DialogInterface
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,9 +11,7 @@ import android.view.Window
 import android.widget.Button
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import com.google.android.material.card.MaterialCardView
 import dev.olog.msc.presentation.base.fragment.BaseDialogFragment
-import dev.olog.msc.presentation.base.theme.dark.mode.isDark
 
 open class ScrollHmsPickerDialog : BaseDialogFragment() {
     interface HmsPickHandler {
@@ -26,9 +23,11 @@ open class ScrollHmsPickerDialog : BaseDialogFragment() {
     @ColorRes
     var colorNormal: Int = android.R.color.darker_gray
     @ColorRes
-    var colorSelected: Int = if (context.isDark()) R.color.accent_secondary else R.color.accent
+    var colorSelected: Int = R.color.defaultColorAccent
+    //    @ColorRes
+//    var colorBackground: Int = if (context.isDark()) R.color.dark_dialog_background else android.R.color.white TODO get color from res
     @ColorRes
-    var colorBackground: Int = if (context.isDark()) R.color.dark_dialog_background else android.R.color.white
+    var colorBackground: Int = R.color.dark_dialog_background
     var dismissListener: DialogInterface.OnDismissListener? = null
     var pickListener: HmsPickHandler? = null
 
@@ -41,11 +40,11 @@ open class ScrollHmsPickerDialog : BaseDialogFragment() {
             picker.setColorNormal(colorNormal)
             picker.setColorSelected(colorSelected)
         }
-        if (context.isDark()){
-            val background = ContextCompat.getColor(view.context, R.color.theme_dark_background)
-            (view as MaterialCardView).backgroundTintList = ColorStateList.valueOf(background)
-            hmsPicker.backgroundTintList = ColorStateList.valueOf(background)
-        }
+//        if (context.isDark()) { TODO color from res
+//            val background = ContextCompat.getColor(view.context, R.color.theme_dark_background)
+//            (view as MaterialCardView).backgroundTintList = ColorStateList.valueOf(background)
+//            hmsPicker.backgroundTintList = ColorStateList.valueOf(background)
+//        }
         val textColor = ContextCompat.getColor(view.context, colorSelected)
         view.findViewById<Button>(R.id.button_cancel).apply {
             setTextColor(textColor)

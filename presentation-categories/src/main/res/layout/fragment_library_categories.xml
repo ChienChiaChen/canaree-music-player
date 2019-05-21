@@ -9,17 +9,17 @@
         android:id="@+id/statusBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?android:attr/colorPrimaryDark"
         android:elevation="@dimen/toolbar_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_height="24dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="@dimen/toolbar"
-        android:background="?android:attr/colorPrimary"
+        android:background="?colorPrimary"
         android:elevation="@dimen/toolbar_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,39 +29,39 @@
             android:id="@+id/header"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/toolbar_now_playing_padding_start"
+            android:layout_marginStart="@dimen/header_padding_start"
             android:gravity="center"
             android:text="@string/category_header"
+            android:textAppearance="@style/HeaderHeadline"
             app:layout_constraintBottom_toBottomOf="@+id/more"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/more"
-            android:textAppearance="@style/Headline5"/>
+            app:layout_constraintTop_toTopOf="@+id/more" />
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/more"
-            android:layout_width="@dimen/common_icon_size"
+            style="@style/MainButton"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:elevation="@dimen/toolbar_elevation"
             android:focusable="true"
             android:src="@drawable/vd_more"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/floatingWindow"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/more"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="@dimen/common_icon_size"
+            style="@style/MainButton"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:elevation="@dimen/toolbar_elevation"
-            android:src="@drawable/vd_search_text"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:src="@drawable/vd_search_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toStartOf="@+id/more"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -69,12 +69,12 @@
         android:id="@+id/tabLayout"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:background="?android:attr/colorPrimary"
         android:elevation="@dimen/toolbar_elevation"
+        android:requiresFadingEdge="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:requiresFadingEdge="horizontal">
+        app:tabBackground="?colorPrimary">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

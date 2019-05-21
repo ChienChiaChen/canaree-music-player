@@ -4,4 +4,7 @@
     <color name="placeholder_image_tint">@android:color/white</color>
     <color name="placeholder_background">#222326</color>
 
+    <color name="icon_override">#262626</color>
+    <color name="gradient_override">@android:color/transparent</color>
+
 </resources>

@@ -31,13 +31,10 @@ class GlideMergedImageFetcher(
     override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) {
         GlobalScope.launch(Dispatchers.IO) {
             withTimeout(2000) {
-                val inputStream: InputStream?
-                if (mediaId.isFolder) {
-                    inputStream = makeFolderImage(mediaId.categoryValue)
-                } else if (mediaId.isGenre) {
-                    inputStream = makeGenreImage(mediaId.categoryId)
-                } else {
-                    inputStream = makePlaylistImage(mediaId.categoryId)
+                val inputStream = when {
+                    mediaId.isFolder -> makeFolderImage(mediaId.categoryValue)
+                    mediaId.isGenre -> makeGenreImage(mediaId.categoryId)
+                    else -> makePlaylistImage(mediaId.categoryId)
                 }
                 callback.onDataReady(inputStream)
             }

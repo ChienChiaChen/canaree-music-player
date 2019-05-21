@@ -42,7 +42,7 @@ inline fun View.toggleSelected(){
     this.isSelected = !this.isSelected
 }
 
-fun View.windowBackground(): Int {
+fun View.colorSurface(): Int {
     return context.themeAttributeToColor(android.R.attr.windowBackground)
 }
 

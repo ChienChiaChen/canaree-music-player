@@ -79,8 +79,7 @@
             android:layout_height="@dimen/bottom_navigation_height"
             app:menu="@menu/drawer"
             android:layout_gravity="bottom"
-            app:elevation="0dp"
-            app:itemIconSize="22dp" />
+            app:backgroundTint="?colorPrimary"/>
 
     </LinearLayout>
 

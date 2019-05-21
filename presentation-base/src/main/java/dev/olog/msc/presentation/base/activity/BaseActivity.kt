@@ -3,7 +3,6 @@ package dev.olog.msc.presentation.base.activity
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
-import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import dagger.android.AndroidInjection
@@ -11,12 +10,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import dev.olog.msc.core.PrefsKeys
-import dev.olog.msc.presentation.base.R
 import dev.olog.msc.presentation.base.extensions.setLightStatusBar
-import dev.olog.msc.presentation.base.theme.dark.mode.isBlackMode
-import dev.olog.msc.presentation.base.theme.dark.mode.isDarkMode
-import dev.olog.msc.presentation.base.theme.dark.mode.isGrayMode
-import dev.olog.msc.presentation.base.theme.dark.mode.isWhiteMode
 import dev.olog.msc.shared.ui.theme.HasImmersive
 import javax.inject.Inject
 
@@ -32,20 +26,10 @@ abstract class BaseActivity : AppCompatActivity(),
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
-//        setTheme(getActivityTheme())
         AndroidInjection.inject(this)
         themeAccentColor(this, theme, prefsKeys)
         super.onCreate(savedInstanceState)
         window.setLightStatusBar()
-    }
-
-    @StyleRes
-    private fun getActivityTheme(): Int = when {
-        isWhiteMode() -> R.style.AppThemeWhite
-        isGrayMode() -> R.style.AppThemeGray
-        isDarkMode() -> R.style.AppThemeDark
-        isBlackMode() -> R.style.AppThemeBlack
-        else -> throw IllegalStateException("invalid theme")
     }
 
     @Suppress("UNCHECKED_CAST")

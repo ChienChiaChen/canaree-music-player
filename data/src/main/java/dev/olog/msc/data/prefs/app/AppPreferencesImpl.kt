@@ -327,8 +327,7 @@ internal class AppPreferencesImpl @Inject constructor(
 
     private fun setDefaultAccentColor() {
         preferences.edit {
-            putInt(context.getString(prefsKeys.colorAccentLightMode()), prefsKeys.defaultColorAccentLightMode())
-            putInt(context.getString(prefsKeys.defaultColorAccentDarkMode()), prefsKeys.defaultColorAccentDarkMode())
+            putInt(context.getString(prefsKeys.colorAccent()), prefsKeys.defaultColorAccent())
         }
     }
 

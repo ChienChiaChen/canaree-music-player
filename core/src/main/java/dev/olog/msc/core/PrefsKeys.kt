@@ -3,8 +3,7 @@ package dev.olog.msc.core
 interface PrefsKeys {
     fun defaultBottomNavigationPage(): Int
     fun defaultDetailSections(): List<Int>
-    fun defaultColorAccentLightMode(): Int
-    fun defaultColorAccentDarkMode(): Int
+    fun defaultColorAccent(): Int
     fun defaultQuickAction(): Int
     fun defaultAutoDownloadImages(): Int
     fun defaultPlayerAppearance(): Int
@@ -18,8 +17,7 @@ interface PrefsKeys {
     fun showPodcast(): Int
     fun showNewAlbumsArtists(): Int
     fun showRecentAlbumsArtists(): Int
-    fun colorAccentLightMode(): Int
-    fun colorAccentDarkMode(): Int
+    fun colorAccent(): Int
     fun autoCreateImages(): Int
     fun autoDownloadImages(): Int
     fun showFoldersAsTree(): Int

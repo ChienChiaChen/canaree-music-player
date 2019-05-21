@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MaterialAppTheme" parent="BaseMaterialTheme">
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
+
+    <style name="MainButton" parent="MaterialImageButton">
+
+    </style>
+
+</resources>

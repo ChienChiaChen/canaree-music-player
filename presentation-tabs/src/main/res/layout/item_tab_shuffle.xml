@@ -16,7 +16,7 @@
             android:paddingEnd="@dimen/tab_margin_end"
             android:paddingBottom="4dp">
 
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/img"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

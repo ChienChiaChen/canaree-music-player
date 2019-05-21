@@ -18,6 +18,7 @@ dependencies {
     implementation librariesCore.lifecycleJava8
 
     implementation librariesAndroidX.coreKtx
+    implementation librariesAndroidX.material
     implementation librariesCore.rxAndroid
 
     implementation librariesUi.glide

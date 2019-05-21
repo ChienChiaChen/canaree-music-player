@@ -7,9 +7,8 @@ import dev.olog.msc.presentation.tabs.R
 import dev.olog.msc.shared.extensions.configuration
 
 class ArtistSpanSizeLookup(
-    context: Context,
-    private val isPortrait: Boolean,
-    private val adapter: BasePagedAdapter<DisplayableItem>
+        context: Context,
+        private val adapter: BasePagedAdapter<DisplayableItem>
 
 ) : AbsSpanSizeLookup() {
 
@@ -24,7 +23,7 @@ class ArtistSpanSizeLookup(
             R.layout.item_tab_new_artist_horizontal_list -> return spanCount
         }
 
-        var span = if (isPortrait) 3 else 4
+        var span = 3
 
         if (isTablet) {
             span++

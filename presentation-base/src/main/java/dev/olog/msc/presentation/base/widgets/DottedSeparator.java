@@ -2,14 +2,14 @@ package dev.olog.msc.presentation.base.widgets;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
-import androidx.annotation.Nullable;
-import dev.olog.msc.presentation.base.R;
-import dev.olog.msc.presentation.base.theme.dark.mode.DarkModeExtensionKt;
 
-// TODO consumes too much memory only for drawing a dotted separator
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
+import dev.olog.msc.presentation.base.R;
+
 public class DottedSeparator extends View {
 
     public DottedSeparator(Context context) {
@@ -24,12 +24,7 @@ public class DottedSeparator extends View {
         super(context, attrs, defStyleAttr);
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         setBackgroundResource(R.drawable.dotted_line);
-        if (DarkModeExtensionKt.isDark(context)){
-            setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-            setAlpha(.2f);
-        } else {
-            setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
-            setAlpha(.1f);
-        }
+        int color = ContextCompat.getColor(context, R.color.dotted_line);
+        setBackgroundTintList(ColorStateList.valueOf(color));
     }
 }

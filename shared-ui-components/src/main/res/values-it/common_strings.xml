@@ -34,6 +34,7 @@
         <item quantity="one">%d cartella</item>
         <item quantity="other">%d cartelle</item>
     </plurals>
+    <string name="common_queue">Coda</string>
     <string name="common_folder">Cartella</string>
     <string name="common_title">Titolo</string>
     <string name="common_track">Brano</string>

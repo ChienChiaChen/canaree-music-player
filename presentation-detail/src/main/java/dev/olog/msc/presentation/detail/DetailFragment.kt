@@ -17,14 +17,11 @@ import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.CanChangeStatusBarColor
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
-import dev.olog.msc.presentation.base.theme.dark.mode.isDark
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.debounceFirst
-import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.ui.extensions.setVisible
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
@@ -33,9 +30,9 @@ import javax.inject.Inject
 import kotlin.properties.Delegates
 
 class DetailFragment : BaseFragment(),
-    CanChangeStatusBarColor,
-    SetupNestedList,
-    OnStartDragListener {
+        CanChangeStatusBarColor,
+        SetupNestedList,
+        OnStartDragListener {
 
     companion object {
         const val TAG = "DetailFragment"
@@ -44,7 +41,7 @@ class DetailFragment : BaseFragment(),
         @JvmStatic
         fun newInstance(mediaId: MediaId): DetailFragment {
             return DetailFragment().withArguments(
-                ARGUMENTS_MEDIA_ID to mediaId.toString()
+                    ARGUMENTS_MEDIA_ID to mediaId.toString()
             )
         }
     }
@@ -89,8 +86,8 @@ class DetailFragment : BaseFragment(),
 
     private fun setupHorizontalListAsGrid(list: RecyclerView, adapter: BasePagedAdapter<*>) {
         val layoutManager = GridLayoutManager(
-            list.context, DetailFragmentViewModel.NESTED_SPAN_COUNT,
-            GridLayoutManager.HORIZONTAL, false
+                list.context, DetailFragmentViewModel.NESTED_SPAN_COUNT,
+                GridLayoutManager.HORIZONTAL, false
         )
         list.layoutManager = layoutManager
         list.adapter = adapter
@@ -130,28 +127,26 @@ class DetailFragment : BaseFragment(),
         view.fastScroller.attachRecyclerView(view.list)
         view.fastScroller.showBubble(false)
 
-        view.cover?.setVisible()
-
         viewModel.data
-            .subscribe(viewLifecycleOwner) {
-                adapter.submitList(it)
-                //                        if (ctx.isLandscape){
+                .subscribe(viewLifecycleOwner) {
+                    adapter.submitList(it)
+                    //                        if (ctx.isLandscape){
 //                            // header in list is not used in landscape
 //                            copy[DetailFragmentDataType.HEADER]!!.clear()
 //                        }
-            }
+                }
 
         viewModel.mostPlayed
-            .subscribe(viewLifecycleOwner, mostPlayedAdapter::submitList)
+                .subscribe(viewLifecycleOwner, mostPlayedAdapter::submitList)
 
         viewModel.recentlyAdded
-            .subscribe(viewLifecycleOwner, recentlyAddedAdapter::submitList)
+                .subscribe(viewLifecycleOwner, recentlyAddedAdapter::submitList)
 //
         viewModel.relatedArtists
-            .subscribe(viewLifecycleOwner, relatedArtistAdapter::submitList)
+                .subscribe(viewLifecycleOwner, relatedArtistAdapter::submitList)
 //
         viewModel.siblings
-            .subscribe(viewLifecycleOwner, albumsAdapter::submitList)
+                .subscribe(viewLifecycleOwner, albumsAdapter::submitList)
 
 //        viewModel.itemLiveData.subscribe(viewLifecycleOwner) { item ->
 //            if (item.isNotEmpty()){
@@ -164,23 +159,21 @@ class DetailFragment : BaseFragment(),
 //        }
 
         RxTextView.afterTextChangeEvents(view.editText)
-            .map { it.view().text.toString() }
-            .filter { it.isBlank() || it.trim().length >= 2 }
-            .debounceFirst(250, TimeUnit.MILLISECONDS)
-            .distinctUntilChanged()
-            .asLiveData()
-            .subscribe(viewLifecycleOwner) { text ->
-                val isEmpty = text.isEmpty()
-                view.clear.toggleVisibility(!isEmpty, true)
-                viewModel.updateFilter(text)
-            }
+                .map { it.view().text.toString() }
+                .filter { it.isBlank() || it.trim().length >= 2 }
+                .debounceFirst(250, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .asLiveData()
+                .subscribe(viewLifecycleOwner) { text ->
+                    val isEmpty = text.isEmpty()
+                    view.clear.toggleVisibility(!isEmpty, true)
+                    viewModel.updateFilter(text)
+                }
     }
 
     override fun onResume() {
         super.onResume()
-        if (ctx.isPortrait) {
-            list.addOnScrollListener(recyclerOnScrollListener)
-        }
+        list.addOnScrollListener(recyclerOnScrollListener)
         back.setOnClickListener { act.onBackPressed() }
         more.setOnClickListener { navigator.toDialog(viewModel.mediaId, more) }
         filter.setOnClickListener {
@@ -191,9 +184,7 @@ class DetailFragment : BaseFragment(),
 
     override fun onPause() {
         super.onPause()
-        if (ctx.isPortrait) {
-            list.removeOnScrollListener(recyclerOnScrollListener)
-        }
+        list.removeOnScrollListener(recyclerOnScrollListener)
         back.setOnClickListener(null)
         more.setOnClickListener(null)
         filter.setOnClickListener(null)
@@ -221,7 +212,8 @@ class DetailFragment : BaseFragment(),
     }
 
     private fun setLightStatusBar() {
-        if (context.isDark()) {
+        val isDarkMode = resources.getBoolean(R.bool.is_dark_mode)
+        if (isDarkMode){
             return
         }
 

@@ -25,7 +25,7 @@ class RelatedArtistFragment : BaseFragment() {
 
         fun newInstance(mediaId: MediaId): RelatedArtistFragment {
             return RelatedArtistFragment().withArguments(
-                ARGUMENTS_MEDIA_ID to mediaId.toString()
+                    ARGUMENTS_MEDIA_ID to mediaId.toString()
             )
         }
     }
@@ -40,12 +40,11 @@ class RelatedArtistFragment : BaseFragment() {
     private val adapter by lazy { RelatedArtistFragmentAdapter(navigator) }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
-        view.list.layoutManager = GridLayoutManager(context!!, if (isPortrait()) 2 else 3)
+        view.list.layoutManager = GridLayoutManager(context!!, 2)
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
 
-        viewModel.data
-            .subscribe(viewLifecycleOwner, adapter::submitList)
+        viewModel.data.subscribe(viewLifecycleOwner, adapter::submitList)
 
         viewModel.observeTitle().subscribe(viewLifecycleOwner) { itemTitle ->
             val headersArray = resources.getStringArray(R.array.related_artists_header)

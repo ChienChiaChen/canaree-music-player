@@ -7,7 +7,7 @@ import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.base.adapter.SimpleAdapter
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.NavigatorAbout
-import dev.olog.msc.shared.ui.extensions.colorAccent
+import dev.olog.msc.shared.ui.extensions.colorSecondary
 import kotlinx.android.synthetic.main.item_about.view.*
 
 
@@ -36,7 +36,7 @@ class AboutActivityAdapter(
     override fun bind(binding: ViewDataBinding, item: DisplayableItem, position: Int) {
         if (item.mediaId == AboutActivityPresenter.BUY_PRO) {
             val view = binding.root
-            view.title.setTextColor(ColorStateList.valueOf(view.context.colorAccent()))
+            view.title.setTextColor(ColorStateList.valueOf(view.context.colorSecondary()))
         }
         binding.setVariable(BR.item, item)
     }

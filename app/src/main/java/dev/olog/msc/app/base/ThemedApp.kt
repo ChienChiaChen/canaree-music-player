@@ -6,17 +6,16 @@ import android.os.Bundle
 import dev.olog.msc.presentation.base.theme.dark.mode.IDarkMode
 import dev.olog.msc.presentation.base.theme.immersive.IImmersive
 import dev.olog.msc.presentation.base.theme.player.theme.IPlayerTheme
-import dev.olog.msc.shared.ui.theme.HasDarkMode
 import dev.olog.msc.shared.ui.theme.HasImmersive
 import dev.olog.msc.shared.ui.theme.HasPlayerTheme
 import javax.inject.Inject
 
 abstract class ThemedApp : BaseApp(),
-    HasDarkMode,
-    HasPlayerTheme,
-    HasImmersive,
-    Application.ActivityLifecycleCallbacks {
+        HasPlayerTheme,
+        HasImmersive,
+        Application.ActivityLifecycleCallbacks {
 
+    @Suppress("unused")
     @Inject
     lateinit var darkMode: IDarkMode
     @Inject
@@ -24,28 +23,10 @@ abstract class ThemedApp : BaseApp(),
     @Inject
     lateinit var immersive: IImmersive
 
-    override fun isWhiteMode(): Boolean {
-        return darkMode.isWhiteMode()
-    }
-
-    override fun isGrayMode(): Boolean {
-        return darkMode.isGrayMode()
-    }
-
-    override fun isDarkMode(): Boolean {
-        return darkMode.isDarkMode()
-    }
-
-    override fun isBlackMode(): Boolean {
-        return darkMode.isBlackMode()
-    }
-
     override fun onActivityStarted(activity: Activity?) {
-        darkMode.setCurrentActivity(activity)
     }
 
     override fun onActivityStopped(activity: Activity?) {
-        darkMode.setCurrentActivity(activity)
     }
 
     override fun isDefault(): Boolean {

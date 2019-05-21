@@ -1,49 +1,48 @@
 package dev.olog.msc.shared.ui.imageview
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.ViewPropertyAnimator
 import androidx.annotation.Keep
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
-import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.ui.R
 import dev.olog.msc.shared.ui.extensions.getAnimatedVectorDrawable
-import dev.olog.msc.shared.ui.extensions.textColorTertiary
-import dev.olog.msc.shared.ui.theme.HasDarkMode
-import dev.olog.msc.shared.ui.theme.HasPlayerTheme
 
 @Keep
-class AnimatedImageView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null
+class AnimatedImageView : AppCompatImageButton {
 
-) : AppCompatImageButton(context, attrs, 0) {
 
-    private val avd: AnimatedVectorDrawableCompat
+    private lateinit var avd: AnimatedVectorDrawableCompat
     private val animator: ViewPropertyAnimator = animate()
 
-    init {
-        if ((context.applicationContext as HasDarkMode).isDark()){
-            setColorFilter(0xFF_FFFFFF.toInt())
-        }
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        initialize(attrs)
+    }
 
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        initialize(attrs)
+    }
+
+    private fun initialize(attrs: AttributeSet?) {
+//        if ((context.applicationContext as HasDarkMode).isDark()) {
+//            setColorFilter(0xFF_FFFFFF.toInt())
+//        }
+//
         val a = context.theme.obtainStyledAttributes(
-                attrs, R.styleable.AnimatedImageView, 0, 0)
+            attrs, R.styleable.AnimatedImageView, 0, 0
+        )
 
         val resId = a.getResourceId(R.styleable.AnimatedImageView_avd, -1)
         avd = context.getAnimatedVectorDrawable(resId)
         setImageDrawable(avd)
         a.recycle()
-    }
 
-    fun setDefaultColor(){
-        setColorFilter(getDefaultColor())
-    }
-
-    fun useLightImage(){
-        setColorFilter(0xFF_F5F5F5.toInt())
+//        when {
+//            context.isPortrait && (context.applicationContext as HasPlayerTheme).isClean() && !(context.applicationContext as HasDarkMode).isDark() -> 0xFF_8d91a6.toInt()
+//            (context.applicationContext as HasPlayerTheme).isFullscreen() || (context.applicationContext as HasDarkMode).isDark() -> Color.WHITE
+//            else -> context.textColorTertiary()
+//        } TODO
     }
 
     fun playAnimation() {
@@ -60,14 +59,6 @@ class AnimatedImageView @JvmOverloads constructor(
 
         animator.cancel()
         animator.alpha(if (show) 1f else 0f)
-    }
-
-    private fun getDefaultColor(): Int{
-        return when {
-            context.isPortrait && (context.applicationContext as HasPlayerTheme).isClean() && !(context.applicationContext as HasDarkMode).isDark() -> 0xFF_8d91a6.toInt()
-            (context.applicationContext as HasPlayerTheme).isFullscreen() || (context.applicationContext as HasDarkMode).isDark() -> Color.WHITE
-            else -> context.textColorTertiary()
-        }
     }
 
 }

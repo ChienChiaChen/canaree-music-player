@@ -82,6 +82,9 @@
     <string name="common_search">Search</string>
     <string name="common_hide">Hide</string>
 
+    <string name="common_queue">Queue</string>
+
+
     <string name="common_shape_square">Square</string>
     <string name="common_shape_rounded">Round square</string>
 

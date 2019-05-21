@@ -5,15 +5,13 @@ import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.tabs.R
 import dev.olog.msc.shared.extensions.configuration
-import dev.olog.msc.shared.extensions.isPortrait
 
 class AlbumSpanSizeLookup(
-    context: Context,
-    private val adapter: BasePagedAdapter<DisplayableItem>
+        context: Context,
+        private val adapter: BasePagedAdapter<DisplayableItem>
 
 ) : AbsSpanSizeLookup() {
 
-    private val isPortrait = context.isPortrait
     private val smallestWidthDip = context.configuration.smallestScreenWidthDp
     private val isTablet = smallestWidthDip >= 600
 
@@ -26,11 +24,11 @@ class AlbumSpanSizeLookup(
         }
 //
         if (isTablet) {
-            val span = if (isPortrait) 4 else 5
+            val span = 4
             return spanCount / span
         }
 
-        return if (isPortrait) spanCount / 2 else spanCount / 4
+        return spanCount / 2
     }
 
 }

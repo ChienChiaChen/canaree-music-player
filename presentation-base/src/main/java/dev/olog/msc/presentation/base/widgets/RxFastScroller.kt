@@ -19,9 +19,8 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import dev.olog.msc.presentation.base.R
-import dev.olog.msc.presentation.base.theme.dark.mode.isDark
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.shared.ui.extensions.colorAccent
+import dev.olog.msc.shared.ui.extensions.colorSecondary
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
@@ -49,7 +48,7 @@ class RxFastScroller @JvmOverloads constructor(
     init {
         layout(context, attrs)
         if (attrs == null){
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
         } else {
             layoutParams = generateLayoutParams(attrs)
         }
@@ -76,8 +75,9 @@ class RxFastScroller @JvmOverloads constructor(
 
             if (typedArray != null) {
                 try {
-                    bubbleColor = context.colorAccent()
-                    handleColor = if (context.isDark()) Color.WHITE else ContextCompat.getColor(context, R.color.dark_grey)
+                    bubbleColor = context.colorSecondary()
+//                    handleColor = if (context.isDark()) Color.WHITE else ContextCompat.getColor(context, R.color.dark_grey)
+                    handleColor = Color.WHITE // TODO get color from res
                     textColor = typedArray.getColor(R.styleable.FastScroller_bubbleTextColor, textColor)
                     hideScrollbar = typedArray.getBoolean(R.styleable.FastScroller_hideScrollbar, true)
                 } finally {
@@ -147,7 +147,7 @@ class RxFastScroller @JvmOverloads constructor(
     private var showBubble = false
 
     override fun setLayoutParams(params: ViewGroup.LayoutParams) {
-        params.width = LinearLayout.LayoutParams.WRAP_CONTENT
+        params.width = LayoutParams.WRAP_CONTENT
         super.setLayoutParams(params)
     }
 

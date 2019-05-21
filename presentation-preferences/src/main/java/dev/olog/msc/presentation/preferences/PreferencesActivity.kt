@@ -15,7 +15,6 @@ import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.presentation.base.activity.ThemedActivity
 import dev.olog.msc.presentation.base.extensions.setLightStatusBar
 import dev.olog.msc.presentation.base.interfaces.HasBilling
-import dev.olog.msc.presentation.base.theme.dark.mode.*
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.ui.theme.HasImmersive
 import kotlinx.android.synthetic.main.activity_preferences.*
@@ -33,7 +32,6 @@ class PreferencesActivity : DaggerAppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
-        setTheme(getActivityTheme())
         themeAccentColor(this, theme, prefsKeys)
         super.onCreate(savedInstanceState)
         window.setLightStatusBar()
@@ -54,17 +52,9 @@ class PreferencesActivity : DaggerAppCompatActivity(),
         back.setOnClickListener(null)
     }
 
-    private fun getActivityTheme() = when {
-        isWhiteMode() -> R.style.AppThemeWhite
-        isGrayMode() -> R.style.AppThemeGray
-        isDarkMode() -> R.style.AppThemeDark
-        isBlackMode() -> R.style.AppThemeBlack
-        else -> throw IllegalStateException("invalid theme")
-    }
-
     override fun invoke(dialog: MaterialDialog, color: Int) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val key = getString(if (isWhite()) R.string.prefs_accent_light_key else R.string.prefs_accent_dark_key)
+        val key = getString(R.string.prefs_color_accent_key)
         prefs.edit {
             putInt(key, color)
         }

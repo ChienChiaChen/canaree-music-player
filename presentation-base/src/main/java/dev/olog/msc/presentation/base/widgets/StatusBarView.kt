@@ -6,8 +6,8 @@ import android.view.View
 import dev.olog.msc.presentation.base.extensions.hasNotch
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.dip
-import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.ui.R
+import dev.olog.msc.shared.ui.extensions.colorPrimary
 import dev.olog.msc.shared.ui.theme.HasImmersive
 
 /**
@@ -23,19 +23,29 @@ class StatusBarView @JvmOverloads constructor(
     private val statusBarHeightPlusNotch = context.dip(48)
     private var hasNotch = false
 
+    init {
+        setBackgroundColor(context.colorPrimary())
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        hasNotch = this.hasNotch() && context.isPortrait
+        if (!isInEditMode) {
+            hasNotch = this.hasNotch()
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val height = when {
-            (context.applicationContext as HasImmersive).isEnabled() -> 0
-            hasNotch -> statusBarHeightPlusNotch
-            else -> defaultStatusBarHeight
-        }
+        if (!isInEditMode) {
+            val height = when {
+                (context.applicationContext as HasImmersive).isEnabled() -> 0
+                hasNotch -> statusBarHeightPlusNotch
+                else -> defaultStatusBarHeight
+            }
 
-        setMeasuredDimension(widthMeasureSpec, height)
+            setMeasuredDimension(widthMeasureSpec, height)
+        } else {
+            super.onMeasure(widthMeasureSpec, defaultStatusBarHeight)
+        }
     }
 
 }

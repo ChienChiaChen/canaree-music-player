@@ -8,6 +8,7 @@ import android.util.TypedValue
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+import com.google.android.material.R as materialR
 
 inline fun Context.getAnimatedVectorDrawable (@DrawableRes id: Int): AnimatedVectorDrawableCompat {
     return AnimatedVectorDrawableCompat.create(this, id)!!
@@ -16,10 +17,6 @@ inline fun Context.getAnimatedVectorDrawable (@DrawableRes id: Int): AnimatedVec
 // Used to tint buttons
 inline fun Context.textColorTertiary(): Int {
     return this.themeAttributeToColor(android.R.attr.textColorTertiary)
-}
-
-inline fun Context.colorAccent(): Int {
-    return themeAttributeToColor(android.R.attr.colorAccent)
 }
 
 inline fun Context.colorAccentId(): Int {
@@ -34,8 +31,24 @@ inline fun Context.textColorSecondary(): Int {
     return themeAttributeToColor(android.R.attr.textColorSecondary)
 }
 
-inline fun Context.windowBackground(): Int {
-    return themeAttributeToColor(android.R.attr.windowBackground)
+inline fun Context.colorPrimary(): Int {
+    return themeAttributeToColor(materialR.attr.colorPrimary)
+}
+
+inline fun Context.colorPrimaryVariant(): Int {
+    return themeAttributeToColor(materialR.attr.colorPrimaryVariant)
+}
+
+inline fun Context.colorSecondary(): Int {
+    return themeAttributeToColor(materialR.attr.colorSecondary)
+}
+
+inline fun Context.colorSurface(): Int {
+    return themeAttributeToColor(materialR.attr.colorSurface)
+}
+
+inline fun Context.colorControlNormal(): Int {
+    return themeAttributeToColor(materialR.attr.colorControlNormal)
 }
 
 fun Context.themeAttributeToColor(themeAttributeId: Int, fallbackColor: Int = Color.WHITE): Int {

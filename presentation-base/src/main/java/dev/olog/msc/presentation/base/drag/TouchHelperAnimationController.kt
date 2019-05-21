@@ -8,6 +8,8 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import dev.olog.msc.presentation.base.R
 import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.ui.extensions.colorControlNormal
+import dev.olog.msc.shared.ui.extensions.colorPrimaryVariant
 import dev.olog.msc.shared.ui.extensions.setVisible
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlin.math.hypot
@@ -44,9 +46,18 @@ class TouchHelperAnimationController {
         val delete = viewHolder.itemView.findViewById<ImageView>(R.id.deleteIcon)
         val playNext = viewHolder.itemView.findViewById<ImageView>(R.id.playNextIcon)
         val background = viewHolder.itemView.findViewById<View>(R.id.background)
-        delete?.setColorFilter(Color.BLACK)
-        playNext?.setColorFilter(Color.BLACK)
-        background?.setBackgroundColor(0xFF_e2e3e7.toInt())
+        delete?.let {
+            val buttonColor = it.context.colorControlNormal()
+            it.setColorFilter(buttonColor)
+        }
+        playNext?.let {
+            val buttonColor = it.context.colorControlNormal()
+            it.setColorFilter(buttonColor)
+        }
+        background?.let {
+            val backgroundColor = it.context.colorPrimaryVariant()
+            it.setBackgroundColor(backgroundColor)
+        }
         delete?.toggleVisibility(dx > 0, false)
         playNext?.toggleVisibility(dx < 0, false)
     }

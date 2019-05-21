@@ -3,20 +3,26 @@ package dev.olog.msc.presentation.base.widgets;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import dev.olog.msc.presentation.base.R;
-import dev.olog.msc.shared.ui.extensions.ContextExtensionsKt;
-import dev.olog.msc.shared.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
+
+import dev.olog.msc.presentation.base.R;
+import dev.olog.msc.shared.ui.extensions.ContextExtensionsKt;
+import dev.olog.msc.shared.utils.TextUtils;
 
 public class WaveSideBarView extends View {
 
@@ -118,7 +124,7 @@ public class WaveSideBarView extends View {
         mSelectedLetterPaint.setAntiAlias(true);
         mSelectedLetterPaint.setTextSize(mTextSize);
         mSelectedLetterPaint.setTextAlign(Paint.Align.CENTER);
-        mSelectedLetterPaint.setColor(ContextCompat.getColor(context, R.color.item_selected));
+        mSelectedLetterPaint.setColor(ContextExtensionsKt.colorSecondary(context));
         mSelectedLetterPaint.setTypeface(Typeface.DEFAULT_BOLD);
         mSelectedLetterPaint.setTextSize(res.getDimensionPixelSize(R.dimen.side_view_selected_text_size));
 

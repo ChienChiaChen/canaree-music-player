@@ -1,21 +1,15 @@
 package dev.olog.msc.presentation.player.widgets
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
-import dev.olog.msc.presentation.base.theme.dark.mode.isDark
-import dev.olog.msc.presentation.base.theme.player.theme.isClean
-import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
 import dev.olog.msc.presentation.player.R
-import dev.olog.msc.shared.extensions.isPortrait
-import dev.olog.msc.shared.ui.extensions.colorAccent
+import dev.olog.msc.shared.ui.extensions.colorSecondary
 import dev.olog.msc.shared.ui.extensions.getAnimatedVectorDrawable
-import dev.olog.msc.shared.ui.extensions.textColorSecondary
 import dev.olog.msc.shared.ui.extensions.textColorTertiary
 
 class ShuffleButton @JvmOverloads constructor(
@@ -29,7 +23,7 @@ class ShuffleButton @JvmOverloads constructor(
 
     init {
         setImageResource(R.drawable.vd_shuffle)
-        enabledColor = context.colorAccent()
+        enabledColor = context.colorSecondary()
         setColorFilter(getDefaultColor())
     }
 
@@ -77,12 +71,12 @@ class ShuffleButton @JvmOverloads constructor(
 
     private fun getDefaultColor(): Int {
         return when {
-            context.isPortrait && context.isClean() && !context.isDark() -> 0xFF_8d91a6.toInt()
-            context.isFullscreen() -> Color.WHITE
-            context.isDark() -> {
-                alpha = .7f
-                context.textColorSecondary()
-            }
+//            context.isClean() && !context.isDark() -> 0xFF_8d91a6.toInt() // TODO get color from res
+//            context.isFullscreen() -> Color.WHITE
+//            context.isDark() -> {
+//                alpha = .7f
+//                context.textColorSecondary()
+//            }
             else -> context.textColorTertiary()
         }
     }

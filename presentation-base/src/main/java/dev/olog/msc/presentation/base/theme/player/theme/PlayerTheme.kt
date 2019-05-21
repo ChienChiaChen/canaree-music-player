@@ -15,10 +15,10 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class PlayerTheme @Inject constructor(
-    @ApplicationContext private val context: Context,
-    @ProcessLifecycle lifecycle: Lifecycle,
-    private val prefs: SharedPreferences,
-    rxPrefs: RxSharedPreferences
+        @ApplicationContext private val context: Context,
+        @ProcessLifecycle lifecycle: Lifecycle,
+        private val prefs: SharedPreferences,
+        private val rxPrefs: RxSharedPreferences
 ) : DefaultLifecycleObserver, IPlayerTheme {
 
     private var disposable: Disposable? = null
@@ -26,24 +26,32 @@ class PlayerTheme @Inject constructor(
 
     init {
         lifecycle.addObserver(this)
+
+    }
+
+    override fun onStart(owner: LifecycleOwner) {
         setInitialValue()
         disposable = rxPrefs.getString(
-            context.getString(R.string.prefs_appearance_key),
-            context.getString(R.string.prefs_appearance_entry_value_default)
+                context.getString(R.string.prefs_appearance_key),
+                context.getString(R.string.prefs_appearance_entry_value_default)
         )
-            .asObservable()
-            .subscribeOn(Schedulers.io())
-            .skip(1) // skip initial emission
-            .subscribe({
-                onThemeChanged(it)
-            }, Throwable::printStackTrace)
+                .asObservable()
+                .subscribeOn(Schedulers.io())
+                .skip(1) // skip initial emission
+                .subscribe({
+                    onThemeChanged(it)
+                }, Throwable::printStackTrace)
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        disposable.unsubscribe()
     }
 
     private fun setInitialValue() {
         val initialTheme = prefs.getString(
-            context.getString(R.string.prefs_appearance_key),
-            context.getString(R.string.prefs_appearance_entry_value_default)
-        )
+                context.getString(R.string.prefs_appearance_key),
+                context.getString(R.string.prefs_appearance_entry_value_default)
+        )!!
         onThemeChanged(initialTheme)
     }
 
@@ -58,10 +66,6 @@ class PlayerTheme @Inject constructor(
             context.getString(R.string.prefs_appearance_entry_value_mini) -> PlayerThemeEnum.MINI
             else -> throw IllegalStateException("invalid theme=$theme")
         }
-    }
-
-    override fun onDestroy(owner: LifecycleOwner) {
-        disposable.unsubscribe()
     }
 
     override fun isDefault(): Boolean {

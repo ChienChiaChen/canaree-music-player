@@ -20,14 +20,14 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:gravity="center"
-            android:textAppearance="@style/Headline5"/>
+            android:textAppearance="@style/HeaderHeadline"/>
 
         <TextView
             android:id="@+id/url"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="16dp"
             android:text="@{licenseModel.url}"
-            android:textColor="@color/item_selected"
+            android:textColor="?colorSecondary"
             tools:text="https://github.com/google/dagger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

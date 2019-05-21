@@ -1,9 +1,10 @@
 package dev.olog.msc.presentation.base.extensions
 
+import android.content.Context
 import android.graphics.Color
 import android.view.View
 import android.view.Window
-import dev.olog.msc.presentation.base.theme.dark.mode.isDark
+import dev.olog.msc.presentation.base.R
 import dev.olog.msc.shared.ui.theme.HasImmersive
 import dev.olog.msc.shared.utils.isMarshmallow
 import dev.olog.msc.shared.utils.isOreo
@@ -21,7 +22,7 @@ fun Window.setLightStatusBar(){
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     }
 
-    if (isMarshmallow() && !context.isDark()){
+    if (isMarshmallow() && !isDarkMode(context)){
         flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         if (isOreo()){
@@ -46,9 +47,13 @@ fun Window.removeLightStatusBar(){
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     }
 
-    if (isOreo() && !context.isDark()){
+    if (isOreo() && !isDarkMode(context)){
         flags = flags or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         navigationBarColor = Color.WHITE
     }
     decorView.systemUiVisibility = flags
+}
+
+private fun isDarkMode(context: Context): Boolean{
+    return context.resources.getBoolean(R.bool.is_dark_mode)
 }

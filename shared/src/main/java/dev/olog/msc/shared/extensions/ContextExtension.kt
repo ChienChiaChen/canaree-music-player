@@ -8,14 +8,9 @@ import android.util.TypedValue
 import android.widget.Toast
 import androidx.annotation.DimenRes
 
-inline val Context.isPortrait: Boolean
-    get() = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-
-inline val Context.isLandscape: Boolean
-    get() = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-
 //returns dip(dp) dimension value in pixels
 inline fun Context.dip(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+
 inline fun Context.dip(value: Float): Int = (value * resources.displayMetrics.density).toInt()
 inline fun Context.dipf(value: Int): Float = (value * resources.displayMetrics.density)
 

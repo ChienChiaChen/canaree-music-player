@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <attr name="miniPlayerColor" format="reference|color"/>
-
+    <bool name="is_dark_mode">false</bool>
 </resources>

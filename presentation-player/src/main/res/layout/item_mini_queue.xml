@@ -12,7 +12,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#e2e3e7">
+        android:background="?colorPrimaryVariant">
 
         <View
             android:id="@+id/background"
@@ -21,7 +21,7 @@
             tools:background="@android:color/holo_red_light"
             android:visibility="invisible"/>
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/deleteIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,14 +29,13 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"/>
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/playNextIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/vd_playlist_add"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="16dp"
-            tools:tint="@color/dark_grey"/>
+            android:layout_marginEnd="16dp" />
 
         <FrameLayout
             android:id="@+id/content"
@@ -44,7 +43,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/mini_queue_margin_start"
             android:paddingEnd="@dimen/mini_queue_margin_end"
-            android:background="?android:windowBackground">
+            android:background="?colorPrimary">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/root"

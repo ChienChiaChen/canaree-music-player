@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.View
-import dev.olog.msc.shared.ui.extensions.windowBackground
+import dev.olog.msc.shared.ui.extensions.colorSurface
 
 class SideBarFade @JvmOverloads constructor(
         context: Context,
@@ -14,7 +14,7 @@ class SideBarFade @JvmOverloads constructor(
 
     init {
         val gradient = background as GradientDrawable
-        gradient.colors = intArrayOf(Color.TRANSPARENT, windowBackground())
+        gradient.colors = intArrayOf(Color.TRANSPARENT, colorSurface())
     }
 
 }

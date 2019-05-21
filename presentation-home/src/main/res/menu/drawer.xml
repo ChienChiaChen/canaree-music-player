@@ -18,7 +18,7 @@
 
         <item
             android:id="@+id/navigation_queue"
-            android:title="Playging queue"
+            android:title="@string/common_queue"
             android:icon="@drawable/vd_playing_queue"/>
 
     </group>

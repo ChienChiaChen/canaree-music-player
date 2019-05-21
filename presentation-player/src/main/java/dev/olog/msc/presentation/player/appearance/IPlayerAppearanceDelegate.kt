@@ -101,9 +101,6 @@ class AppearanceSpotify(private val viewModel: PlayerFragmentViewModel) : IPlaye
 class AppearanceFullscreen(private val viewModel: PlayerFragmentViewModel) : IPlayerAppearanceDelegate {
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
         val view = viewHolder.itemView
-        view.playPause.useLightImage()
-        view.next.useLightImage()
-        view.previous.useLightImage()
 
         viewModel.observePaletteColors()
             .subscribe(viewHolder) { palette ->

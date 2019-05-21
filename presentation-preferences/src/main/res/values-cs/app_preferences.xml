@@ -62,11 +62,10 @@
   <string name="prefs_appearance_big_image">Režim velkého obrázku</string>
   <string name="prefs_appearance_clean">Čisté</string>
   <!--dark mode-->
-  <string name="prefs_dark_mode_title">Motiv</string>
-  <string name="prefs_dark_mode_white">Bílý motiv</string>
-  <string name="prefs_dark_mode_gray">Téměř bílý motiv</string>
-  <string name="prefs_dark_mode_dark">Tmavý motiv</string>
-  <string name="prefs_dark_mode_black">Černý motiv</string>
+  <string name="prefs_dark_mode_title">Tmavý režim</string>
+  <string name="prefs_dark_mode_follow_system">Následovat systém</string>
+  <string name="prefs_dark_mode_light">Světlo</string>
+  <string name="prefs_dark_mode_dark">Temný</string>
   <!--notch support-->
   <!--delete cached images-->
   <!--last fm credentials-->

@@ -5,22 +5,19 @@ import androidx.recyclerview.widget.GridLayoutManager
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.tabs.adapters.TabFragmentAdapter
 import dev.olog.msc.presentation.tabs.lookup.*
-import dev.olog.msc.shared.extensions.isPortrait
 
 internal object LayoutManagerFactory {
 
     private fun createSpanSize(context: Context, category: MediaIdCategory, adapter: TabFragmentAdapter): AbsSpanSizeLookup {
-        val isPortrait = context.isPortrait
-
-        return when (category){
+        return when (category) {
             MediaIdCategory.PLAYLISTS,
-            MediaIdCategory.PODCASTS_PLAYLIST -> PlaylistSpanSizeLookup(context, isPortrait)
+            MediaIdCategory.PODCASTS_PLAYLIST -> PlaylistSpanSizeLookup(context)
             MediaIdCategory.ALBUMS,
             MediaIdCategory.PODCASTS_ALBUMS -> AlbumSpanSizeLookup(context, adapter)
             MediaIdCategory.ARTISTS,
-            MediaIdCategory.PODCASTS_ARTISTS -> ArtistSpanSizeLookup(context, isPortrait, adapter)
+            MediaIdCategory.PODCASTS_ARTISTS -> ArtistSpanSizeLookup(context, adapter)
             MediaIdCategory.SONGS, MediaIdCategory.PODCASTS -> SongSpanSizeLookup()
-            else -> BaseSpanSizeLookup(context, isPortrait)
+            else -> BaseSpanSizeLookup(context)
         }
     }
 

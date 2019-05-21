@@ -2,21 +2,22 @@ package dev.olog.msc.presentation.shortcuts.playlist.chooser
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import dev.olog.msc.R
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.presentation.base.activity.BaseActivity
-import dev.olog.msc.presentation.base.extensions.asLiveData
 import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
-import dev.olog.msc.shared.extensions.isPortrait
 import dev.olog.msc.shared.extensions.lazyFast
 import kotlinx.android.synthetic.main.activity_playlist_chooser.*
 import javax.inject.Inject
 
 class PlaylistChooserActivity : BaseActivity() {
 
-    @Inject lateinit var factory: ViewModelProvider.Factory
-    @Inject lateinit var appShortcuts: AppShortcuts
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+    @Inject
+    lateinit var appShortcuts: AppShortcuts
 
     private val viewModel by lazyFast { viewModelProvider<PlaylistChooserActivityViewModel>(factory) }
     private val adapter by lazyFast { PlaylistChooserActivityAdapter(this, appShortcuts) }
@@ -29,7 +30,7 @@ class PlaylistChooserActivity : BaseActivity() {
                 .subscribe(this, adapter::updateDataSet)
 
         list.adapter = adapter
-        list.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, if (isPortrait) 2 else 3)
+        list.layoutManager = GridLayoutManager(this, 2)
     }
 
     override fun onResume() {

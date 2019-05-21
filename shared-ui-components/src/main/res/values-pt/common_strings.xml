@@ -39,6 +39,7 @@
         <item quantity="one">%d pasta</item>
         <item quantity="other">%d pastas</item>
     </plurals>
+    <string name="common_queue">Fila</string>
     <string name="common_folder">Pasta</string>
     <string name="common_playlist">Lista de reprodução</string>
     <string name="common_title">Título</string>

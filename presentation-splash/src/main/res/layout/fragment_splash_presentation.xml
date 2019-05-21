@@ -26,11 +26,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center"
-        android:text="@string/app_name"
+        android:text="Canaree"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/main_toolbar_text_size"
-        android:textColor="?android:textColorPrimary"
-        android:textStyle="bold" />
+        android:textAppearance="@style/HeaderHeadline" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

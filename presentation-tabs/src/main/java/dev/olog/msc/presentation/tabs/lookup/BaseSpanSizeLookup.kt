@@ -4,8 +4,7 @@ import android.content.Context
 import dev.olog.msc.shared.extensions.configuration
 
 class BaseSpanSizeLookup(
-    context: Context,
-    private val isPortrait: Boolean
+        context: Context
 
 ) : AbsSpanSizeLookup() {
 
@@ -13,7 +12,7 @@ class BaseSpanSizeLookup(
     private val isTablet = smallestWidthDip >= 600
 
     override fun getSpanSize(position: Int): Int {
-        var span = if (isPortrait) 3 else 4
+        var span = 3
 
         if (isTablet) {
             span++

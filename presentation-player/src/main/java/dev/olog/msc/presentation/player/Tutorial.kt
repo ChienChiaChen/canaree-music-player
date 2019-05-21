@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.view.View
 import androidx.core.content.ContextCompat
-import dev.olog.msc.shared.ui.extensions.colorAccent
-import dev.olog.msc.shared.ui.extensions.windowBackground
+import dev.olog.msc.shared.ui.extensions.colorSecondary
+import dev.olog.msc.shared.ui.extensions.colorSurface
 import dev.olog.msc.taptargetview.TapTarget
 import dev.olog.msc.taptargetview.TapTargetView
 
@@ -21,8 +21,8 @@ object Tutorial {
     }
 
     private fun TapTarget.tint(context: Context): TapTarget {
-        val accentColor = context.colorAccent()
-        val backgroundColor = context.windowBackground()
+        val accentColor = context.colorSecondary()
+        val backgroundColor = context.colorSurface()
 
         return this.tintTarget(true)
                 .outerCircleColorInt(accentColor)
