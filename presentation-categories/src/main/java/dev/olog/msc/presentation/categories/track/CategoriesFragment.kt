@@ -58,6 +58,7 @@ class CategoriesFragment : BaseFragment() {
         view.pagerEmptyState.toggleVisibility(pagerAdapter.isEmpty(), true)
 
         if (BuildConfig.DEBUG){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) // TODO move to preferences
             view.header.setOnClickListener {
                 val current = AppCompatDelegate.getDefaultNightMode()
                 if (current == AppCompatDelegate.MODE_NIGHT_NO){
