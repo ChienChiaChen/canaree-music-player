@@ -2,12 +2,14 @@ package dev.olog.msc.presentation.categories.track
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.fragment.BaseFragment
+import dev.olog.msc.presentation.categories.BuildConfig
 import dev.olog.msc.presentation.categories.R
 import dev.olog.msc.presentation.categories.Tutorial
 import dev.olog.msc.presentation.navigator.Navigator
@@ -54,6 +56,18 @@ class CategoriesFragment : BaseFragment() {
         view.viewPager.offscreenPageLimit = 3
 
         view.pagerEmptyState.toggleVisibility(pagerAdapter.isEmpty(), true)
+
+        if (BuildConfig.DEBUG){
+            view.header.setOnClickListener {
+                val current = AppCompatDelegate.getDefaultNightMode()
+                if (current == AppCompatDelegate.MODE_NIGHT_NO){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+                activity?.recreate()
+            }
+        }
     }
 
     override fun onResume() {

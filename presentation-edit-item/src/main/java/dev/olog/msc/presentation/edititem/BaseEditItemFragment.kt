@@ -25,7 +25,7 @@ abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
 
     private var progressDialog: ProgressDialog? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         Permissions.requestReadStorage(act)
     }
@@ -47,11 +47,11 @@ abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
 //        } else model TODO
 
         GlideApp.with(ctx)
-            .load(mediaId)
-            .placeholder(CoverUtils.getGradient(ctx, mediaId))
-            .override(500)
-            .priority(Priority.IMMEDIATE)
-            .into(image)
+                .load(mediaId)
+                .placeholder(CoverUtils.getGradient(ctx, mediaId))
+                .override(500)
+                .priority(Priority.IMMEDIATE)
+                .into(image)
     }
 
 
@@ -76,14 +76,14 @@ abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
 
     protected fun changeImage() {
         ThemedDialog.builder(ctx)
-            .setItems(R.array.edit_item_image_dialog) { _, which ->
-                when (which) {
-                    0 -> openImagePicker()
-                    1 -> restoreImage()
-                    2 -> noImage()
+                .setItems(R.array.edit_item_image_dialog) { _, which ->
+                    when (which) {
+                        0 -> openImagePicker()
+                        1 -> restoreImage()
+                        2 -> noImage()
+                    }
                 }
-            }
-            .show()
+                .show()
     }
 
     private fun openImagePicker() {
@@ -91,8 +91,8 @@ abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
         this.startActivityForResult(
-            Intent.createChooser(intent, getString(R.string.edit_song_change_album_art)),
-            PICK_IMAGE_CODE
+                Intent.createChooser(intent, getString(R.string.edit_song_change_album_art)),
+                PICK_IMAGE_CODE
         )
     }
 

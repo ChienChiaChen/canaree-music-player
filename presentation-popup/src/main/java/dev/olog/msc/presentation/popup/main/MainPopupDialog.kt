@@ -4,7 +4,7 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.PopupMenu
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory

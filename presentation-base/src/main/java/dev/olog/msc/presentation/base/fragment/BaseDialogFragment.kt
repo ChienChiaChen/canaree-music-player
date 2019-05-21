@@ -8,7 +8,7 @@ import dagger.android.support.AndroidSupportInjection
 abstract class BaseDialogFragment : DialogFragment() {
 
     @CallSuper
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }

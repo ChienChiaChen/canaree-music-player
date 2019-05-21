@@ -32,7 +32,7 @@ abstract class BaseActivity : AppCompatActivity(),
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(getActivityTheme())
+//        setTheme(getActivityTheme())
         AndroidInjection.inject(this)
         themeAccentColor(this, theme, prefsKeys)
         super.onCreate(savedInstanceState)

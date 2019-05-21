@@ -15,7 +15,7 @@ import dev.olog.msc.shared.extensions.lazyFast
 class CategoriesViewPager(
         private val context: Context,
         fragmentManager: FragmentManager,
-        private val categories : List<LibraryCategoryBehavior>,
+        private val categories: List<LibraryCategoryBehavior>,
         private val gateway: AppPreferencesGateway
 
 ) : FragmentStatePagerAdapter(fragmentManager) {
@@ -25,20 +25,16 @@ class CategoriesViewPager(
     fun getCategoryAtPosition(position: Int): MediaIdCategory? {
         try {
             return categories[position].category
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             return null
         }
     }
 
-    override fun getItem(position: Int): Fragment? {
-        try {
-            val category = categories[position].category
-            return if (category == MediaIdCategory.FOLDERS && showFolderAsHierarchy){
-                FolderTreeFragment.newInstance()
-            } else TabFragment.newInstance(category)
-        } catch (ex: Exception){
-            return null
-        }
+    override fun getItem(position: Int): Fragment {
+        val category = categories[position].category
+        return if (category == MediaIdCategory.FOLDERS && showFolderAsHierarchy) {
+            FolderTreeFragment.newInstance()
+        } else TabFragment.newInstance(category)
     }
 
     override fun getCount(): Int = categories.size

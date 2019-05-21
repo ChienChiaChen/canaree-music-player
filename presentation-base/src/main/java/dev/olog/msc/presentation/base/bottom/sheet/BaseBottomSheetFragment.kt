@@ -12,7 +12,7 @@ import dagger.android.support.AndroidSupportInjection
 
 abstract class BaseBottomSheetFragment : DimBottomSheetDialogFragment() {
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }

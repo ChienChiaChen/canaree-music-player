@@ -1,11 +1,15 @@
 <resources>
 
-    <attr name="textColorPrimaryTransparent" format="reference"/>
+    <attr name="textColorPrimaryTransparent" format="reference" />
 
-    <attr name="cleanButtonColor" format="reference|color"/>
-    <attr name="cleanTitleColor" format="reference|color"/>
-    <attr name="cleanSeekBarColor" format="reference|color"/>
-    <attr name="cleanSeekBarBackgroundColor" format="reference|color"/>
+    <attr name="cleanButtonColor" format="reference|color" />
+    <attr name="cleanTitleColor" format="reference|color" />
+    <attr name="cleanSeekBarColor" format="reference|color" />
+    <attr name="cleanSeekBarBackgroundColor" format="reference|color" />
+
+    <style name="MaterialAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="miniPlayerColor">?android:attr/windowBackground</item>
+    </style>
 
     <!-- Base application theme. -->
     <style name="BaseTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -28,9 +32,6 @@
         <item name="chipStyle">@style/DefaultChip</item>
         <item name="bottomAppBarStyle">@style/DefaultBottomBar</item>
         <item name="bottomNavigationStyle">@style/AppBottomNavigationBar</item>
-
-        <item name="scrimColor">#88FFFFFF</item>
-        <item name="miniPlayerColor">?android:attr/windowBackground</item>
 
         <item name="dialogCornerRadius">@dimen/default_corner_radius</item>
         <item name="android:colorEdgeEffect">@color/dark_grey</item>
@@ -58,7 +59,6 @@
         <item name="bottomAppBarStyle">@style/DefaultBottomBar</item>
         <item name="bottomNavigationStyle">@style/AppBottomNavigationBar</item>
 
-        <item name="scrimColor">#AA232323</item>
         <item name="miniPlayerColor">@color/theme_dark_toolbar</item>
 
         <item name="dialogCornerRadius">@dimen/default_corner_radius</item>
@@ -71,7 +71,7 @@
         <item name="cleanSeekBarBackgroundColor">#757575</item>
     </style>
 
-    <style name="AppTheme" parent="BaseTheme"/>
+    <style name="AppTheme" parent="BaseTheme" />
 
     <style name="DefaultTabLayout" parent="Widget.MaterialComponents.TabLayout">
         <item name="tabIndicatorFullWidth">true</item>
@@ -83,14 +83,13 @@
         <item name="tabIndicatorHeight">2dp</item>
         <item name="tabIndicator">@drawable/tab_indicator</item>
         <item name="tabUnboundedRipple">true</item>
-        <item name="tabTextAppearance">@style/DefaultTabLayoutTextAppearance</item>
     </style>
 
-    <style name="AppTabLayout" parent="DefaultTabLayout"/>
+    <style name="AppTabLayout" parent="DefaultTabLayout" />
 
-    <style name="DefaultTabLayoutTextAppearance" parent="TextAppearance.MaterialComponents.Tab">
-        <item name="android:letterSpacing">0</item>
-    </style>
+<!--    <style name="DefaultTabLayoutTextAppearance" parent="TextAppearance.MaterialComponents.Tab">-->
+<!--        <item name="android:letterSpacing">0</item>-->
+<!--    </style>-->
 
     <style name="DefaultMaterialCard" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">@dimen/default_corner_radius</item>
@@ -133,7 +132,6 @@
         <item name="android:progressTint">?attr/colorAccent</item>
         <item name="android:progressBackgroundTint">@android:color/transparent</item>
     </style>
-
 
 
     <style name="DefaultChip" parent="Widget.MaterialComponents.Chip.Action">
