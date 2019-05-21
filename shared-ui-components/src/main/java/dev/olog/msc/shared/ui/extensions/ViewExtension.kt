@@ -46,10 +46,23 @@ fun View.colorSurface(): Int {
     return context.themeAttributeToColor(android.R.attr.windowBackground)
 }
 
-inline fun ViewGroup.forEachRecursively(action: (view: View) -> Unit){
+fun ViewGroup.findChild(filter: (View) -> Boolean): View?{
+    var child : View? = null
+
+    forEachRecursively {
+        if (filter(it)){
+            child = it
+            return@forEachRecursively
+        }
+    }
+
+    return child
+}
+
+fun ViewGroup.forEachRecursively(action: (view: View) -> Unit){
     forEach {
         if (it is ViewGroup){
-            it.forEach(action)
+            it.forEachRecursively(action)
         } else {
             action(it)
         }

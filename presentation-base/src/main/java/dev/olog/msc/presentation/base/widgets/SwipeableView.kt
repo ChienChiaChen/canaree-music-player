@@ -5,19 +5,21 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.shared.extensions.dip
+import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.ui.extensions.findChild
+import dev.olog.msc.shared.ui.imageview.ForegroundImageView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 private const val DEFAULT_SWIPED_THRESHOLD = 100
 
-class SwipeableView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null
+class SwipeableView : View, SlidingUpPanelLayout.PanelSlideListener {
 
-) : View(context, attrs), SlidingUpPanelLayout.PanelSlideListener {
+
 
     private val swipedThreshold = DEFAULT_SWIPED_THRESHOLD
     private var xDown = 0f
@@ -30,6 +32,40 @@ class SwipeableView @JvmOverloads constructor(
     private var isTouchEnabled = true
 
     private val sixtyFourDip by lazy(LazyThreadSafetyMode.NONE) { context.dip(64) }
+
+    private val cover by lazyFast { findCover() }
+
+    constructor(context: Context?) : super(context){
+        initialize()
+    }
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs){
+        initialize()
+
+    }
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
+        initialize()
+
+    }
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes
+    ){
+        initialize()
+
+    }
+
+    private fun initialize(){
+
+    }
+
+    private fun findCover() : ForegroundImageView? {
+        if (parent is ViewGroup){
+            return (parent as ViewGroup).findChild { it is ForegroundImageView } as ForegroundImageView?
+        }
+        return null
+    }
 
     fun setOnSwipeListener(swipeListener: SwipeListener?) {
         this.swipeListener = swipeListener
@@ -76,6 +112,10 @@ class SwipeableView @JvmOverloads constructor(
     private fun onActionDown(event: MotionEvent) : Boolean{
         xDown = event.x
         yDown = event.y
+        cover?.dispatchTouchEvent(event)
+        val upEvent = MotionEvent.obtain(event).apply { this.action = MotionEvent.ACTION_UP }
+        cover?.dispatchTouchEvent(event)
+        cover?.dispatchTouchEvent(upEvent)
         return true
     }
 

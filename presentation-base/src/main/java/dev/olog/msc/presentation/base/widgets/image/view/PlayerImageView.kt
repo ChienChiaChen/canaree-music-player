@@ -24,6 +24,10 @@ open class PlayerImageView @JvmOverloads constructor(
 
 ) : AdaptiveColorImageView(context, attr) {
 
+    init {
+        isClickable = true
+        isFocusable = true
+    }
 
     open fun loadImage(metadata: MediaMetadataCompat) {
         val mediaId = metadata.getMediaId()
