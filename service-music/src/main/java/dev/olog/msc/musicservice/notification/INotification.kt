@@ -10,7 +10,7 @@ internal interface INotification {
         const val IMAGE_SIZE = 200
     }
 
-    fun update(state: MusicNotificationState): Notification
+    suspend fun update(state: MusicNotificationState): Notification
     fun cancel()
 
 }

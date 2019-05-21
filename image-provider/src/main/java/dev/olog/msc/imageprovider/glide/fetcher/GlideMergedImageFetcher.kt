@@ -7,11 +7,16 @@ import com.bumptech.glide.load.data.DataFetcher
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.getAll
+import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.FolderGateway
 import dev.olog.msc.core.gateway.track.GenreGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.imageprovider.creator.impl.MergedImagesCreator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import java.io.File
 import java.io.InputStream
 
@@ -24,18 +29,22 @@ class GlideMergedImageFetcher(
 ) : DataFetcher<InputStream> {
 
     override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) {
-        val inputStream: InputStream?
-        if (mediaId.isFolder) {
-            inputStream = makeFolderImage(mediaId.categoryValue)
-        } else if (mediaId.isGenre) {
-            inputStream = makeGenreImage(mediaId.categoryId)
-        } else {
-            inputStream = makePlaylistImage(mediaId.categoryId)
+        GlobalScope.launch(Dispatchers.IO) {
+            withTimeout(2000) {
+                val inputStream: InputStream?
+                if (mediaId.isFolder) {
+                    inputStream = makeFolderImage(mediaId.categoryValue)
+                } else if (mediaId.isGenre) {
+                    inputStream = makeGenreImage(mediaId.categoryId)
+                } else {
+                    inputStream = makePlaylistImage(mediaId.categoryId)
+                }
+                callback.onDataReady(inputStream)
+            }
         }
-        callback.onDataReady(inputStream)
     }
 
-    private fun makeFolderImage(folder: String): InputStream? {
+    private suspend fun makeFolderImage(folder: String): InputStream? {
 //        val folderImage = ImagesFolderUtils.forFolder(context, dirPath) --contains current image
         val albumsId = folderGateway.getSongListByParam(folder).getAll(Filter.NO_FILTER)
             .map { it.albumId }
@@ -52,7 +61,7 @@ class GlideMergedImageFetcher(
         return file?.inputStream()
     }
 
-    private fun makeGenreImage(genreId: Long): InputStream? {
+    private suspend fun makeGenreImage(genreId: Long): InputStream? {
 //        ImagesFolderUtils.forGenre(context, id) --contains current image
 
         val albumsId = genreGateway.getSongListByParam(genreId).getAll(Filter.NO_FILTER)
@@ -68,7 +77,10 @@ class GlideMergedImageFetcher(
         return file?.inputStream()
     }
 
-    private fun makePlaylistImage(playlistId: Long): InputStream? {
+    private suspend fun makePlaylistImage(playlistId: Long): InputStream? {
+        if (PlaylistGateway.isAutoPlaylist(playlistId) || PodcastPlaylistGateway.isPodcastAutoPlaylist(playlistId)){
+            return null
+        }
 //        ImagesFolderUtils.forPlaylist(context, id) --contains current image
         val albumsId = playlistGateway.getSongListByParam(playlistId).getAll(Filter.NO_FILTER)
             .map { it.albumId }

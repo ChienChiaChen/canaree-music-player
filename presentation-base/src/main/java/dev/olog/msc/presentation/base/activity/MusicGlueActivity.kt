@@ -16,6 +16,7 @@ import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
+import dev.olog.msc.presentation.base.extensions.filter
 import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.media.MediaServiceCallback
@@ -119,9 +120,9 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
         publisher.onNext(state)
     }
 
-    override fun onMetadataChanged(): LiveData<MediaMetadataCompat> = metadataPublisher
+    override fun onMetadataChanged(): LiveData<MediaMetadataCompat> = metadataPublisher.filter { it != null }
 
-    override fun onStateChanged(): LiveData<PlaybackStateCompat> = statePublisher
+    override fun onStateChanged(): LiveData<PlaybackStateCompat> = statePublisher.filter { it != null }
 
     override fun onRepeatModeChanged(): LiveData<Int> = repeatModePublisher
 
@@ -131,7 +132,7 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
 
     override fun onExtrasChanged(): LiveData<Bundle> = extrasPublisher
 
-    override fun onQueueChanged(): LiveData<List<MediaSessionCompat.QueueItem>> = queuePublisher
+    override fun onQueueChanged(): LiveData<List<MediaSessionCompat.QueueItem>> = queuePublisher.filter { it != null }
 
     private fun getTransportControls(): MediaControllerCompat.TransportControls? {
         val mediaController = MediaControllerCompat.getMediaController(this)

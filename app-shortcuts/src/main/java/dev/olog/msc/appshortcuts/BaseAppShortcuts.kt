@@ -11,24 +11,21 @@ import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
-import dev.olog.msc.imageprovider.glide.getBitmap
+import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.shared.ShortcutsConstants
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
 
 internal abstract class BaseAppShortcuts(
     protected val context: Context,
     @ProcessLifecycle lifecycle: Lifecycle,
     protected val classes: Classes
 
-) : AppShortcuts, DefaultLifecycleObserver {
+) : AppShortcuts, DefaultLifecycleObserver, CoroutineScope by CustomScope() {
 
-    private var disposable: Disposable? = null
+    private var job: Job? = null
 
     init {
         lifecycle.addObserver(this)
@@ -37,14 +34,13 @@ internal abstract class BaseAppShortcuts(
     override fun addDetailShortcut(mediaId: MediaId, title: String) {
         if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
 
-            disposable.unsubscribe()
-            disposable = Completable.create {
-
+            job?.cancel()
+            job = launch {
                 val intent = Intent(context, classes.mainActivity())
                 intent.action = ShortcutsConstants.SHORTCUT_DETAIL
                 intent.putExtra(ShortcutsConstants.SHORTCUT_DETAIL_MEDIA_ID, mediaId.toString())
 
-                val bitmap = context.getBitmap(mediaId, 128, { circleCrop() })
+                val bitmap = context.getCachedBitmap(mediaId, 128, { circleCrop() })
                 val shortcut = ShortcutInfoCompat.Builder(context, title)
                     .setShortLabel(title)
                     .setIcon(IconCompat.createWithBitmap(bitmap))
@@ -52,12 +48,10 @@ internal abstract class BaseAppShortcuts(
                     .build()
 
                 ShortcutManagerCompat.requestPinShortcut(context, shortcut, null)
-
-                it.onComplete()
-
-            }.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ onAddedSuccess(context) }, Throwable::printStackTrace)
+                withContext(Dispatchers.Main) {
+                    onAddedSuccess(context)
+                }
+            }
 
         } else {
             onAddedNotSupported(context)
@@ -73,7 +67,7 @@ internal abstract class BaseAppShortcuts(
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        disposable.unsubscribe()
+        job?.cancel()
     }
 
 }

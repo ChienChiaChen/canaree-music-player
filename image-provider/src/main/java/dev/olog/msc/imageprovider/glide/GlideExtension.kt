@@ -10,13 +10,15 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.CoverUtils
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-fun Context.getBitmap(
+suspend fun Context.getCachedBitmap(
     mediaId: MediaId,
     size: Int = Target.SIZE_ORIGINAL,
     extension: (GlideRequest<Bitmap>.() -> GlideRequest<Bitmap>)? = null,
     withError: Boolean = true
-): Bitmap {
+): Bitmap? = suspendCoroutine { continuation ->
 
     val placeholder = CoverUtils.getGradient(this, mediaId)
 
@@ -25,23 +27,37 @@ fun Context.getBitmap(
         .load(placeholder.toBitmap())
         .override(size)
         .extend(extension)
+        .onlyRetrieveFromCache(true)
 
-    val builder = GlideApp.with(this)
+    GlideApp.with(this)
         .asBitmap()
         .load(mediaId)
         .override(size)
         .priority(Priority.IMMEDIATE)
         .extend(extension)
+        .onlyRetrieveFromCache(true)
+        .into(object : SimpleTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                continuation.resume(resource)
+            }
 
-    return try {
-        builder.submit().get()
-    } catch (ex: Exception) {
-        if (withError) {
-            error.submit().get()
-        } else {
-            throw NullPointerException()
-        }
-    }
+            override fun onLoadFailed(errorDrawable: Drawable?) {
+                if (withError) {
+                    error.into(object : SimpleTarget<Bitmap>() {
+                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                            continuation.resume(resource)
+                        }
+
+                        override fun onLoadFailed(errorDrawable: Drawable?) {
+                            continuation.resume(null)
+                        }
+                    })
+
+                } else {
+                    continuation.resume(null)
+                }
+            }
+        })
 
 }
 
@@ -57,7 +73,6 @@ fun Context.getBitmapAsync(
         .asBitmap()
         .load(placeholder.toBitmap())
         .override(size)
-
 
     GlideApp.with(this)
         .asBitmap()

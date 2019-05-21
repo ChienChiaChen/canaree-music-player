@@ -56,8 +56,7 @@ class AppModule(private val app: App) {
         return object : WidgetClasses {
             override fun get(): List<Class<*>> {
                 return listOf(
-                    dev.olog.msc.appwidgets.base.WidgetColored::class.java,
-                    dev.olog.msc.appwidgets.queue.WidgetColoredWithQueue::class.java
+                    dev.olog.msc.appwidgets.base.WidgetColored::class.java
                 )
             }
         }

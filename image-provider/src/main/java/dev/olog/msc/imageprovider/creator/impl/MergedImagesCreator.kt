@@ -5,28 +5,28 @@ import android.graphics.Bitmap
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.imageprovider.extractImageName
-import dev.olog.msc.imageprovider.glide.getBitmap
+import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.shared.utils.assertBackgroundThread
+import kotlinx.coroutines.yield
 import java.io.File
 import java.io.FileOutputStream
 
 internal object MergedImagesCreator {
 
-    fun makeImages(context: Context, albumIdList: List<Long>, parentFolder: String, itemId: String): File? {
+    suspend fun makeImages(context: Context, albumIdList: List<Long>, parentFolder: String, itemId: String): File? {
         assertBackgroundThread()
 
-        val uris = albumIdList.asSequence()
-            .distinctBy { it }
-            .mapNotNull {
-                try {
-                    val bitmap = getBitmap(context, it)
-                    IdWithBitmap(it, bitmap)
-                } catch (ex: Exception) {
-                    null
-                }
+        val albumsId = albumIdList.distinctBy { it }
+        val uris = mutableListOf<IdWithBitmap>()
+        for (id in albumsId) {
+            try {
+                getBitmap(context, id)?.let { uris.add(IdWithBitmap(id, it)) }
+            } catch (ex: Exception){}
+            if (uris.size == 9){
+                break
             }
-            .take(9)
-            .toList()
+        }
+        yield()
 
         try {
             return doCreate(
@@ -40,11 +40,13 @@ internal object MergedImagesCreator {
         }
     }
 
-    private fun getBitmap(context: Context, albumId: Long): Bitmap {
-        return context.getBitmap(MediaId.albumId(albumId), 500, withError = false)
+    private suspend fun getBitmap(context: Context, albumId: Long): Bitmap? {
+        val bitmap = context.getCachedBitmap(MediaId.albumId(albumId), 500, withError = false)
+        yield()
+        return bitmap
     }
 
-    private fun doCreate(context: Context, uris: List<IdWithBitmap>, parentFolder: String, itemId: String): File? {
+    private suspend fun doCreate(context: Context, uris: List<IdWithBitmap>, parentFolder: String, itemId: String): File? {
         val imageDirectory = ImagesFolderUtils.getImageFolderFor(context, parentFolder)
 
         if (uris.isEmpty()) {
@@ -96,12 +98,13 @@ internal object MergedImagesCreator {
         }
     }
 
-    private fun prepareSaveThenSave(
+    private suspend fun prepareSaveThenSave(
         uris: List<IdWithBitmap>, directory: File,
         itemId: String,
         albumsId: List<Long>,
         progr: Long
     ): File {
+        yield()
         val bitmap = MergedImageUtils.joinImages(uris.map { it.bitmap })
         val child = ImagesFolderUtils.createFileName(itemId, progr, albumsId)
         return saveFile(directory, child, bitmap)

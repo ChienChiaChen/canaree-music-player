@@ -146,26 +146,6 @@
                     android:resource="@xml/widget_colored"/>
         </receiver>
 
-
-        <!--widget with queue-->
-        <receiver
-                android:name=".appwidgets.queue.WidgetColoredWithQueue"
-                android:label="@string/app_widget_with_queue">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-
-            <meta-data
-                    android:name="android.appwidget.provider"
-                    android:resource="@xml/widget_colored_with_queue"/>
-        </receiver>
-
-        <!--widget with queue service-->
-        <service
-                android:name=".appwidgets.queue.QueueWidgetService"
-                android:permission="android.permission.BIND_REMOTEVIEWS"/>
-
-
         <!--provide storage permission to share intents-->
         <provider
                 android:name="androidx.core.content.FileProvider"

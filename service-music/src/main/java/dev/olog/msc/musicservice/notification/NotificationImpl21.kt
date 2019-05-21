@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import dagger.Lazy
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.imageprovider.glide.getBitmap
+import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.musicservice.R
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
@@ -78,7 +78,7 @@ internal open class NotificationImpl21 @Inject constructor(
     protected open fun stopChronometer(bookmark: Long) {
     }
 
-    override fun update(state: MusicNotificationState): Notification {
+    override suspend fun update(state: MusicNotificationState): Notification {
         assertBackgroundThread()
 
         createIfNeeded()
@@ -118,7 +118,7 @@ internal open class NotificationImpl21 @Inject constructor(
         favoriteAction.icon = if (isFavorite) R.drawable.vd_favorite else R.drawable.vd_not_favorite
     }
 
-    protected open fun updateMetadataImpl(
+    protected open suspend fun updateMetadataImpl(
         id: Long,
         title: SpannableString,
         artist: String,
@@ -126,7 +126,10 @@ internal open class NotificationImpl21 @Inject constructor(
     ) {
         assertBackgroundThread()
 
-        val bitmap = service.getBitmap(MediaId.songId(id), size = INotification.IMAGE_SIZE)
+        val start = System.currentTimeMillis()
+        val bitmap = service.getCachedBitmap(MediaId.songId(id), size = INotification.IMAGE_SIZE)
+        val end = System.currentTimeMillis() - start
+        println("done in $end")
         builder.setLargeIcon(bitmap)
             .setContentTitle(title)
             .setContentText(artist)

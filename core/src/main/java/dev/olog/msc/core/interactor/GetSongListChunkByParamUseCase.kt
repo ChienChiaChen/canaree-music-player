@@ -17,12 +17,14 @@ class GetSongListChunkByParamUseCase @Inject constructor(
     private val folderGateway: FolderGateway,
     private val podcastPlaylistGateway: PodcastPlaylistGateway,
     private val podcastAlbumGateway: PodcastAlbumGateway,
-    private val podcastArtistGateway: PodcastArtistGateway
+    private val podcastArtistGateway: PodcastArtistGateway,
+    private val songGateway: SongGateway
 
 ) {
 
     fun execute(mediaId: MediaId): DataRequest<*> {
         return when (mediaId.category) {
+            MediaIdCategory.SONGS -> songGateway.getAll()
             MediaIdCategory.FOLDERS -> folderGateway.getSongListByParam(mediaId.categoryValue)
             MediaIdCategory.PLAYLISTS -> playlistGateway.getSongListByParam(mediaId.categoryValue.toLong())
             MediaIdCategory.ALBUMS -> albumGateway.getSongListByParam(mediaId.categoryValue.toLong())

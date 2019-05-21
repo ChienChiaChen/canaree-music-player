@@ -50,13 +50,13 @@ internal class MusicNotificationManager @Inject constructor(
 
     private val playerListener = object : PlayerLifecycle.Listener {
         override fun onPrepare(entity: MediaEntity) {
-            launch {
+            launch(Dispatchers.Main) {
                 channel.send(entity)
             }
         }
 
         override fun onMetadataChanged(entity: MediaEntity) {
-            launch {
+            launch(Dispatchers.Main) {
                 if (currentState.isDifferentMetadata(entity)){
                     channel.send(entity)
                 }
@@ -64,7 +64,7 @@ internal class MusicNotificationManager @Inject constructor(
         }
 
         override fun onStateChanged(state: PlaybackStateCompat) {
-            launch {
+            launch(Dispatchers.Main) {
                 if (currentState.isDifferentState(state)){
                     channel.send(state)
                 }
@@ -88,9 +88,6 @@ internal class MusicNotificationManager @Inject constructor(
 
         launch {
             for (type in channel) {
-                if (!(!isForeground && isOreo())){
-                    publishNotificationJob?.cancel()
-                }
 
                 when (type){
                     is MediaEntity -> {
@@ -119,6 +116,7 @@ internal class MusicNotificationManager @Inject constructor(
             // oreo needs to post notification immediately after calling startForegroundService
             issueNotification()
         } else {
+            publishNotificationJob?.cancel()
             publishNotificationJob = launch {
                 delay(delayMillis)
                 issueNotification()
@@ -136,6 +134,7 @@ internal class MusicNotificationManager @Inject constructor(
         } else {
             pauseForeground()
         }
+
     }
 
     override fun onDestroy(owner: LifecycleOwner) {

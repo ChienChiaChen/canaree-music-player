@@ -9,7 +9,7 @@ import androidx.annotation.RequiresApi
 import dagger.Lazy
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.imageprovider.glide.getBitmap
+import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.shared.utils.TextUtils
 import javax.inject.Inject
 
@@ -37,14 +37,14 @@ internal open class NotificationImpl24 @Inject constructor(
         builder.setSubText(TextUtils.formatMillis(bookmark, true))
     }
 
-    override fun updateMetadataImpl(
+    override suspend fun updateMetadataImpl(
         id: Long,
         title: SpannableString,
         artist: String,
         album: String
     ) {
 
-        val bitmap = service.getBitmap(MediaId.songId(id), size = INotification.IMAGE_SIZE)
+        val bitmap = service.getCachedBitmap(MediaId.songId(id), size = INotification.IMAGE_SIZE)
         builder.setLargeIcon(bitmap)
             .setContentTitle(title)
             .setContentText(artist)
