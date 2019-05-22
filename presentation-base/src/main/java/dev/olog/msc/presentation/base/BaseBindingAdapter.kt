@@ -22,10 +22,6 @@ object BaseBindingAdapter {
 
         GlideApp.with(context).clear(view)
 
-//        val load: Any = if (ImagesFolderUtils.isChoosedImage(item.image)) {
-//            item.image
-//        } else item TODO check
-
         var builder = GlideApp.with(context)
                 .load(mediaId)
                 .override(override)

@@ -9,7 +9,7 @@ import android.widget.ImageView
 import dev.olog.msc.presentation.base.R
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.colorControlNormal
-import dev.olog.msc.shared.ui.extensions.colorPrimaryVariant
+import dev.olog.msc.shared.ui.extensions.colorSwipeBackground
 import dev.olog.msc.shared.ui.extensions.setVisible
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlin.math.hypot
@@ -55,7 +55,7 @@ class TouchHelperAnimationController {
             it.setColorFilter(buttonColor)
         }
         background?.let {
-            val backgroundColor = it.context.colorPrimaryVariant()
+            val backgroundColor = it.context.colorSwipeBackground()
             it.setBackgroundColor(backgroundColor)
         }
         delete?.toggleVisibility(dx > 0, false)
