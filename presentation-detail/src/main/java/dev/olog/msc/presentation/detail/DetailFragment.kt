@@ -1,17 +1,22 @@
 package dev.olog.msc.presentation.detail
 
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.transition.TransitionInflater
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.*
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.DisplayableItemBindingAdapter
+import dev.olog.msc.imageprovider.CoverUtils
+import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
 import dev.olog.msc.presentation.base.adapter.SetupNestedList
 import dev.olog.msc.presentation.base.drag.OnStartDragListener
@@ -40,19 +45,11 @@ class DetailFragment : BaseFragment(),
     companion object {
         const val TAG = "DetailFragment"
         const val ARGUMENTS_MEDIA_ID = "$TAG.arguments.media_id"
-        const val ARGUMENTS_SHARED_ELEMENT = "$TAG.arguments.shared_element"
 
         @JvmStatic
         fun newInstance(mediaId: MediaId): DetailFragment {
             return DetailFragment().withArguments(
                     ARGUMENTS_MEDIA_ID to mediaId.toString()
-            )
-        }
-        @JvmStatic
-        fun newInstance(mediaId: MediaId, transitionName: String): DetailFragment {
-            return DetailFragment().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString(),
-                    ARGUMENTS_SHARED_ELEMENT to transitionName
             )
         }
     }
@@ -89,6 +86,11 @@ class DetailFragment : BaseFragment(),
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         loadImage(view)
 
+        viewModel.observeTitle().subscribe(viewLifecycleOwner) {
+            view.title.text = it
+            view.headerText.text = it
+        }
+
         view.list.layoutManager = LinearLayoutManager(ctx)
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
@@ -104,36 +106,11 @@ class DetailFragment : BaseFragment(),
         view.fastScroller.attachRecyclerView(view.list)
         view.fastScroller.showBubble(false)
 
-        viewModel.data
-                .subscribe(viewLifecycleOwner) {
-                    adapter.submitList(it)
-                    //                        if (ctx.isLandscape){
-//                            // header in list is not used in landscape
-//                            copy[DetailFragmentDataType.HEADER]!!.clear()
-//                        }
-                }
-
-        viewModel.mostPlayed
-                .subscribe(viewLifecycleOwner, mostPlayedAdapter::submitList)
-
-        viewModel.recentlyAdded
-                .subscribe(viewLifecycleOwner, recentlyAddedAdapter::submitList)
-//
-        viewModel.relatedArtists
-                .subscribe(viewLifecycleOwner, relatedArtistAdapter::submitList)
-//
-        viewModel.siblings
-                .subscribe(viewLifecycleOwner, albumsAdapter::submitList)
-
-//        viewModel.itemLiveData.subscribe(viewLifecycleOwner) { item ->
-//            if (item.isNotEmpty()){
-//                headerText.text = item[0].title
-//                val cover = view.findViewById<View>(R.id.cover)
-//                if (!isPortrait() && cover is ShapeImageView){
-//                    DisplayableItemBindingAdapter.loadBigAlbumImage(cover, item[0])
-//                }
-//            }
-//        }
+        viewModel.data.subscribe(viewLifecycleOwner, adapter::submitList)
+        viewModel.mostPlayed.subscribe(viewLifecycleOwner, mostPlayedAdapter::submitList)
+        viewModel.recentlyAdded.subscribe(viewLifecycleOwner, recentlyAddedAdapter::submitList)
+        viewModel.relatedArtists.subscribe(viewLifecycleOwner, relatedArtistAdapter::submitList)
+        viewModel.siblings.subscribe(viewLifecycleOwner, albumsAdapter::submitList)
 
         RxTextView.afterTextChangeEvents(view.editText)
                 .map { it.view().text.toString() }
@@ -142,8 +119,6 @@ class DetailFragment : BaseFragment(),
                 .distinctUntilChanged()
                 .asLiveData()
                 .subscribe(viewLifecycleOwner) { text ->
-                    val isEmpty = text.isEmpty()
-                    view.clear.toggleVisibility(!isEmpty, true)
                     viewModel.updateFilter(text)
                 }
     }
@@ -156,7 +131,6 @@ class DetailFragment : BaseFragment(),
         filter.setOnClickListener {
             searchWrapper.toggleVisibility(!searchWrapper.isVisible, true)
         }
-        clear.setOnClickListener { editText.setText("") }
     }
 
     override fun onPause() {
@@ -165,17 +139,27 @@ class DetailFragment : BaseFragment(),
         back.setOnClickListener(null)
         more.setOnClickListener(null)
         filter.setOnClickListener(null)
-        clear.setOnClickListener(null)
     }
 
-    private fun loadImage(view: View){
-        setSharedElementEnterTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.move))
-        arguments!!.getString(ARGUMENTS_SHARED_ELEMENT)?.let {
-            view.cover.transitionName = it
-        }
+    private fun loadImage(view: View) {
         postponeEnterTransition()
-        DisplayableItemBindingAdapter.loadBigAlbumImage(view.cover, mediaId)
-        view.cover.doOnPreDraw { startPostponedEnterTransition() }
+        val context = view.context
+        GlideApp.with(context)
+                .load(mediaId)
+                .priority(Priority.IMMEDIATE)
+                .onlyRetrieveFromCache(true)
+                .error(CoverUtils.getGradient(context, mediaId))
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        startPostponedEnterTransition()
+                        return false
+                    }
+
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        startPostponedEnterTransition()
+                        return false
+                    }
+                }).into(view.cover)
     }
 
     override fun setupNestedList(layoutId: Int, recyclerView: RecyclerView) {
@@ -234,7 +218,7 @@ class DetailFragment : BaseFragment(),
 
     private fun setLightStatusBar() {
         val isDarkMode = resources.getBoolean(R.bool.is_dark_mode)
-        if (isDarkMode){
+        if (isDarkMode) {
             return
         }
 

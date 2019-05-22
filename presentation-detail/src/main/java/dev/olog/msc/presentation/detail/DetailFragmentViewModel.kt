@@ -12,8 +12,10 @@ import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
+import dev.olog.msc.core.interactor.ObserveItemTitleUseCase
 import dev.olog.msc.core.interactor.sort.SetSortOrderRequestModel
 import dev.olog.msc.core.interactor.sort.SetSortOrderUseCase
+import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.domain.GetDetailSortDataUseCase
 import dev.olog.msc.presentation.detail.domain.MoveItemInPlaylistUseCase
@@ -25,6 +27,7 @@ import dev.olog.msc.presentation.detail.sort.DetailSort
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -42,7 +45,8 @@ internal class DetailFragmentViewModel @Inject constructor(
     private val observeDetailSortDataUseCase: ObserveDetailSortDataUseCase,
     private val getDetailSortDataUseCase: GetDetailSortDataUseCase,
     private val removeFromPlaylistUseCase: RemoveFromPlaylistUseCase,
-    private val moveItemInPlaylistUseCase: MoveItemInPlaylistUseCase
+    private val moveItemInPlaylistUseCase: MoveItemInPlaylistUseCase,
+    private val observeItemTitleUseCase: ObserveItemTitleUseCase
 
 ) : ViewModel() {
 
@@ -57,6 +61,7 @@ internal class DetailFragmentViewModel @Inject constructor(
     val mostPlayed: LiveData<PagedList<DisplayableItem>>
     val recentlyAdded: LiveData<PagedList<DisplayableItem>>
     val relatedArtists: LiveData<PagedList<DisplayableItem>>
+    private val titleLiveData = liveDataOf<String>()
 
     private val sortingLiveData = MutableLiveData<DetailSort>()
 
@@ -83,9 +88,15 @@ internal class DetailFragmentViewModel @Inject constructor(
                     sortingLiveData.postValue(it)
                 }
         }
+        viewModelScope.launch(Dispatchers.Default) {
+            observeItemTitleUseCase.execute(mediaId)
+                    .distinctUntilChanged()
+                    .collect { titleLiveData.postValue(it) }
+        }
     }
 
     fun observeSorting(): LiveData<DetailSort> = sortingLiveData
+    fun observeTitle() : LiveData<String> = titleLiveData
 
     fun updateFilter(filter: String) {
         detailDataSource.updateFilterBy(filter)

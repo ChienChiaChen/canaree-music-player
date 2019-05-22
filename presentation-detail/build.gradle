@@ -12,4 +12,6 @@ dependencies {
 
     implementation librariesCore.rxBinding
     implementation librariesAndroidX.coreKtx
+
+    implementation librariesUi.glide
 }
