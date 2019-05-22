@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.tabs.adapters
 
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
@@ -17,7 +18,6 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.BR
 import dev.olog.msc.presentation.tabs.R
 import dev.olog.msc.presentation.tabs.TabFragmentViewModel
-import kotlinx.android.synthetic.main.item_tab_album.view.*
 
 internal class TabFragmentAdapter(
     private val mediaIdCategory: MediaIdCategory,
@@ -58,8 +58,8 @@ internal class TabFragmentAdapter(
                     } else if (item.isPlayable) {
                         mediaProvider.playFromMediaId(item.mediaId)
                     } else {
-                        val cover = viewHolder.itemView.cover
-                        navigator.toDetailFragment(cover, item.mediaId)
+                        val activity = viewHolder.itemView.context as FragmentActivity
+                        navigator.toDetailFragment(activity, item.mediaId)
                     }
                 }
                 viewHolder.setOnLongClickListener(this) { item, _, _ ->

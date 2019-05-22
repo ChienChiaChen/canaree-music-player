@@ -14,7 +14,6 @@ interface Navigator {
     fun toPodcastCategories(activity: FragmentActivity, forceRecreate: Boolean)
 
     fun toDetailFragment(activity: FragmentActivity, mediaId: MediaId)
-    fun toDetailFragment(view: View, mediaId: MediaId)
 
     fun toSearchFragment(activity: FragmentActivity)
 
