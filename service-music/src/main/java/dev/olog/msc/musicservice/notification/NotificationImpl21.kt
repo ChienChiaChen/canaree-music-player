@@ -33,7 +33,7 @@ internal open class NotificationImpl21 @Inject constructor(
 
 ) : INotification {
 
-    protected var builder = NotificationCompat.Builder(service, INotification.CHANNEL_ID)
+    protected val builder = NotificationCompat.Builder(service, INotification.CHANNEL_ID)
 
     private var isCreated = false
 
@@ -100,7 +100,6 @@ internal open class NotificationImpl21 @Inject constructor(
 
     private fun updateState(isPlaying: Boolean, bookmark: Long) {
         val action = builder.mActions[2]
-//        action.actionIntent = buildPendingIntent(PlaybackStateCompat.ACTION_PLAY_PAUSE)
         action.icon = if (isPlaying) R.drawable.vd_pause_big else R.drawable.vd_play_big
         builder.setSmallIcon(if (isPlaying) R.drawable.vd_bird_singing else R.drawable.vd_bird_not_singing)
         builder.setOngoing(isPlaying)
@@ -126,10 +125,7 @@ internal open class NotificationImpl21 @Inject constructor(
     ) {
         assertBackgroundThread()
 
-        val start = System.currentTimeMillis()
         val bitmap = service.getCachedBitmap(MediaId.songId(id), size = INotification.IMAGE_SIZE)
-        val end = System.currentTimeMillis() - start
-        println("done in $end")
         builder.setLargeIcon(bitmap)
             .setContentTitle(title)
             .setContentText(artist)
