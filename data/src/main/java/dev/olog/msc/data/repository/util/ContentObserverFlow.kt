@@ -9,6 +9,7 @@ import android.os.Looper
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.data.request.Request
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowViaChannel
@@ -33,7 +34,7 @@ internal class ContentObserverFlow @Inject constructor(
         notifyForDescendents: Boolean
     ): QueryFlow<T> = coroutineScope {
 
-        val flow = flowViaChannel<Query<T>> { channel ->
+        val flow = flowViaChannel<Query<T>>(Channel.CONFLATED) { channel ->
 
             val query = object : Query<T>() {
                 override fun run(): Cursor? {
@@ -69,7 +70,7 @@ internal class ContentObserverFlow @Inject constructor(
 
     suspend fun createNotification(uri: Uri): Flow<Unit> = coroutineScope {
 
-        val flow = flowViaChannel<Unit> { channel ->
+        val flow = flowViaChannel<Unit>(Channel.CONFLATED) { channel ->
 
             val observer = object : ContentObserver(contentObserverHandler) {
                 override fun onChange(selfChange: Boolean) {
