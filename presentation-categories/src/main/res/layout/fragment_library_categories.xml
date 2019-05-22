@@ -37,11 +37,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/more" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <ImageButton
             android:id="@+id/more"
             style="@style/MainButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/common_icon_size"
+            android:layout_height="@dimen/common_icon_size"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/vd_more"
@@ -53,8 +53,8 @@
         <ImageButton
             android:id="@+id/floatingWindow"
             style="@style/MainButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/common_icon_size"
+            android:layout_height="@dimen/common_icon_size"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/vd_search_text"

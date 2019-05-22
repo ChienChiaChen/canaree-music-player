@@ -17,6 +17,7 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.Target
 import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.glide.GlideApp
+import dev.olog.msc.presentation.base.ripple.RippleTarget
 import dev.olog.msc.presentation.base.utils.getMediaId
 import dev.olog.msc.presentation.base.widgets.image.view.PlayerImageView
 import dev.olog.msc.presentation.player.R
@@ -24,11 +25,7 @@ import dev.olog.msc.presentation.player.widgets.shadow.PlayerShadowImageView.Com
 import dev.olog.msc.shared.extensions.dpToPx
 import kotlin.properties.Delegates
 
-class PlayerShadowImageView @JvmOverloads constructor(
-    context: Context,
-    attr: AttributeSet? = null
-
-) : PlayerImageView(context, attr) {
+class PlayerShadowImageView : PlayerImageView {
 
     companion object {
         private const val DEFAULT_RADIUS = 0.5f
@@ -40,20 +37,25 @@ class PlayerShadowImageView @JvmOverloads constructor(
         internal const val DOWNSCALE_FACTOR = 0.2f
     }
 
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        init(attrs)
+    }
+
+
     var radiusOffset by Delegates.vetoable(DEFAULT_RADIUS) { _, _, newValue ->
         newValue > 0F || newValue <= 1
     }
 
     var shadowColor = DEFAULT_COLOR
 
-    init {
+    private fun init(attrs: AttributeSet?) {
         if (!isInEditMode) {
             BlurShadow.init(context.applicationContext)
             cropToPadding = false
             super.setScaleType(ScaleType.CENTER_CROP)
             val padding = context.dpToPx(PADDING)
             setPadding(padding, padding, padding, padding)
-            val typedArray = context.obtainStyledAttributes(attr, R.styleable.ShadowView, 0, 0)
+            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ShadowView, 0, 0)
             shadowColor = typedArray.getColor(R.styleable.ShadowView_shadowColor, DEFAULT_COLOR)
             radiusOffset = typedArray.getFloat(R.styleable.ShadowView_radiusOffset, DEFAULT_RADIUS)
             typedArray.recycle()
@@ -66,12 +68,11 @@ class PlayerShadowImageView @JvmOverloads constructor(
         GlideApp.with(context).clear(this)
 
         GlideApp.with(context)
-            .load(mediaId)
-            .placeholder(CoverUtils.getGradient(context, mediaId))
-            .priority(Priority.IMMEDIATE)
-            .override(Target.SIZE_ORIGINAL)
-
-            .into(Ripple(this))
+                .load(mediaId)
+                .placeholder(CoverUtils.getGradient(context, mediaId))
+                .priority(Priority.IMMEDIATE)
+                .override(Target.SIZE_ORIGINAL)
+                .into(RippleTarget(this))
     }
 
     override fun setImageBitmap(bm: Bitmap?) {
@@ -144,12 +145,12 @@ class PlayerShadowImageView @JvmOverloads constructor(
         val blur = BlurShadow.blur(this, width, height - context.dpToPx(TOP_OFFSET), radius)
         //brightness -255..255 -25 is default
         val colorMatrix = ColorMatrix(
-            floatArrayOf(
-                1f, 0f, 0f, 0f, BRIGHTNESS,
-                0f, 1f, 0f, 0f, BRIGHTNESS,
-                0f, 0f, 1f, 0f, BRIGHTNESS,
-                0f, 0f, 0f, 1f, 0f
-            )
+                floatArrayOf(
+                        1f, 0f, 0f, 0f, BRIGHTNESS,
+                        0f, 1f, 0f, 0f, BRIGHTNESS,
+                        0f, 0f, 1f, 0f, BRIGHTNESS,
+                        0f, 0f, 0f, 1f, 0f
+                )
         ).apply { setSaturation(SATURATION) }
 
         background = BitmapDrawable(resources, blur).apply {
@@ -178,7 +179,7 @@ object BlurShadow {
 
     fun blur(view: ImageView, width: Int, height: Int, radius: Float): Bitmap? {
         val src = getBitmapForView(view, DOWNSCALE_FACTOR, width, height)
-            ?: return null
+                ?: return null
         val input = Allocation.createFromBitmap(renderScript, src)
         val output = Allocation.createTyped(renderScript, input.type)
         val script = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
@@ -193,9 +194,9 @@ object BlurShadow {
 
     private fun getBitmapForView(view: ImageView, downscaleFactor: Float, width: Int, height: Int): Bitmap? {
         val bitmap = Bitmap.createBitmap(
-            (width * downscaleFactor).toInt(),
-            (height * downscaleFactor).toInt(),
-            Bitmap.Config.ARGB_8888
+                (width * downscaleFactor).toInt(),
+                (height * downscaleFactor).toInt(),
+                Bitmap.Config.ARGB_8888
         )
 
         val canvas = Canvas(bitmap)

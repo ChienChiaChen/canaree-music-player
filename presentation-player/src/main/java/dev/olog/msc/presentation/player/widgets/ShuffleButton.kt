@@ -8,57 +8,58 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import dev.olog.msc.presentation.player.R
+import dev.olog.msc.shared.ui.extensions.colorControlNormal
 import dev.olog.msc.shared.ui.extensions.colorSecondary
 import dev.olog.msc.shared.ui.extensions.getAnimatedVectorDrawable
-import dev.olog.msc.shared.ui.extensions.textColorTertiary
 
-class ShuffleButton @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null
+class ShuffleButton : AppCompatImageButton {
 
-) : AppCompatImageButton(context, attrs) {
+    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, androidx.appcompat.R.attr.imageButtonStyle)
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        init(attrs)
+    }
 
-    private var enabledColor : Int
+    private var enabledColor: Int = 0
     private var shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
 
-    init {
+    private fun init(attrs: AttributeSet?) {
         setImageResource(R.drawable.vd_shuffle)
         enabledColor = context.colorSecondary()
         setColorFilter(getDefaultColor())
     }
 
-    fun cycle(state: Int){
-        if (this.shuffleMode != state){
+    fun cycle(state: Int) {
+        if (this.shuffleMode != state) {
             this.shuffleMode = state
-            when (state){
+            when (state) {
                 PlaybackStateCompat.SHUFFLE_MODE_NONE -> disable()
                 else -> enable()
             }
         }
     }
 
-    fun updateSelectedColor(color: Int){
+    fun updateSelectedColor(color: Int) {
         this.enabledColor = color
 
-        if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL){
+        if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL) {
             setColorFilter(this.enabledColor)
         }
     }
 
-    private fun enable(){
+    private fun enable() {
         alpha = 1f
         animateAvd(enabledColor)
     }
 
-    private fun disable(){
+    private fun disable() {
         val color = getDefaultColor()
         animateAvd(color)
     }
 
-    private fun animateAvd(@ColorInt endColor: Int){
+    private fun animateAvd(@ColorInt endColor: Int) {
         val hideDrawable = context.getAnimatedVectorDrawable(R.drawable.shuffle_hide)
         setImageDrawable(hideDrawable)
-        hideDrawable.registerAnimationCallback(object : Animatable2Compat.AnimationCallback(){
+        hideDrawable.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
             override fun onAnimationEnd(drawable: Drawable?) {
                 val showDrawable = context.getAnimatedVectorDrawable(R.drawable.shuffle_show)
                 setColorFilter(endColor)
@@ -73,11 +74,7 @@ class ShuffleButton @JvmOverloads constructor(
         return when {
 //            context.isClean() && !context.isDark() -> 0xFF_8d91a6.toInt() // TODO get color from res
 //            context.isFullscreen() -> Color.WHITE
-//            context.isDark() -> {
-//                alpha = .7f
-//                context.textColorSecondary()
-//            }
-            else -> context.textColorTertiary()
+            else -> context.colorControlNormal()
         }
     }
 

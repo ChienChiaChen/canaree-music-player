@@ -9,20 +9,21 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import dev.olog.msc.presentation.player.R
+import dev.olog.msc.shared.ui.extensions.colorControlNormal
 import dev.olog.msc.shared.ui.extensions.colorSecondary
 import dev.olog.msc.shared.ui.extensions.getAnimatedVectorDrawable
-import dev.olog.msc.shared.ui.extensions.textColorTertiary
 
-class RepeatButton @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null
+class RepeatButton : AppCompatImageButton {
 
-) : AppCompatImageButton(context, attrs) {
+    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, androidx.appcompat.R.attr.imageButtonStyle)
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
+        init(attrs)
+    }
 
-    private var enabledColor: Int
+    private var enabledColor: Int = 0
     private var repeatMode = PlaybackStateCompat.REPEAT_MODE_NONE
 
-    init {
+    private fun init(attrs: AttributeSet?) {
         setImageResource(R.drawable.vd_repeat)
         enabledColor = context.colorSecondary()
         setColorFilter(getDefaultColor())
@@ -84,7 +85,7 @@ class RepeatButton @JvmOverloads constructor(
 //                alpha = .7f
 //                context.textColorSecondary()
 //            }
-            else -> context.textColorTertiary()
+            else -> context.colorControlNormal()
         }
     }
 

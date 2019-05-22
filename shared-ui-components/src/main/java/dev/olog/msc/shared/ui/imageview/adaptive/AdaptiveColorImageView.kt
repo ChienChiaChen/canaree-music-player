@@ -9,11 +9,7 @@ import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.layers
 import dev.olog.msc.shared.ui.imageview.ForegroundImageView
 
-open class AdaptiveColorImageView @JvmOverloads constructor(
-        context: Context,
-        attr: AttributeSet? = null
-
-) : ForegroundImageView(context, attr) {
+open class AdaptiveColorImageView(context: Context, attrs: AttributeSet?) : ForegroundImageView(context, attrs) {
 
     private val presenter by lazyFast { AdaptiveColorImageViewPresenter(context) }
 
@@ -24,8 +20,8 @@ open class AdaptiveColorImageView @JvmOverloads constructor(
 
     override fun setImageDrawable(drawable: Drawable?) {
         super.setImageDrawable(drawable)
-        if (drawable is TransitionDrawable){
-            if (drawable.numberOfLayers == 2){
+        if (drawable is TransitionDrawable) {
+            if (drawable.numberOfLayers == 2) {
                 presenter.onNextImage(drawable.layers[1])
             } else {
                 presenter.onNextImage(drawable)

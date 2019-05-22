@@ -8,15 +8,16 @@ import dev.olog.msc.presentation.base.theme.player.theme.isClean
 import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
 import dev.olog.msc.presentation.player.R
 
-class LottieFavorite @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null
+class LottieFavorite : LottieAnimationView {
 
-) : LottieAnimationView(context, attrs) {
+    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        init(attrs)
+    }
 
     private var state: FavoriteEnum? = null
 
-    init {
+    private fun init(attrs: AttributeSet?) {
         var useWhiteIcon = context.isFullscreen()
         val isDark = context.resources.getBoolean(R.bool.is_dark_mode)
         useWhiteIcon = useWhiteIcon || isDark

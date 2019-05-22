@@ -12,11 +12,7 @@ import dev.olog.msc.presentation.player.R
 import dev.olog.msc.shared.extensions.dpToPx
 import kotlin.properties.Delegates
 
-class ShadowImageView @JvmOverloads constructor(
-        context: Context,
-        attr: AttributeSet? = null
-
-) : AppCompatImageView(context, attr) {
+class ShadowImageView : AppCompatImageView {
 
     companion object {
         private const val DEFAULT_RADIUS = 0.5f
@@ -33,14 +29,19 @@ class ShadowImageView @JvmOverloads constructor(
 
     var shadowColor = DEFAULT_COLOR
 
-    init {
-        if (!isInEditMode){
+    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        init(attrs)
+    }
+
+    private fun init(attrs: AttributeSet?) {
+        if (!isInEditMode) {
             BlurShadow.init(context.applicationContext)
             cropToPadding = false
             super.setScaleType(ScaleType.CENTER_CROP)
             val padding = context.dpToPx(PADDING)
             setPadding(padding, padding, padding, padding)
-            val typedArray = context.obtainStyledAttributes(attr, R.styleable.ShadowView, 0, 0)
+            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ShadowView, 0, 0)
             shadowColor = typedArray.getColor(R.styleable.ShadowView_shadowColor, DEFAULT_COLOR)
             radiusOffset = typedArray.getFloat(R.styleable.ShadowView_radiusOffset, DEFAULT_RADIUS)
             typedArray.recycle()
@@ -48,7 +49,7 @@ class ShadowImageView @JvmOverloads constructor(
     }
 
     override fun setImageBitmap(bm: Bitmap?) {
-        if (!isInEditMode){
+        if (!isInEditMode) {
             setBlurShadow { super.setImageDrawable(BitmapDrawable(resources, bm)) }
         } else {
             super.setImageBitmap(bm)
@@ -56,7 +57,7 @@ class ShadowImageView @JvmOverloads constructor(
     }
 
     override fun setImageResource(resId: Int) {
-        if (!isInEditMode){
+        if (!isInEditMode) {
             setBlurShadow { super.setImageDrawable(ContextCompat.getDrawable(context, resId)) }
         } else {
             super.setImageResource(resId)
@@ -82,7 +83,7 @@ class ShadowImageView @JvmOverloads constructor(
     }
 
     override fun setImageDrawable(drawable: Drawable?) {
-        if (!isInEditMode){
+        if (!isInEditMode) {
             setBlurShadow { super.setImageDrawable(drawable) }
         } else {
             super.setImageDrawable(drawable)

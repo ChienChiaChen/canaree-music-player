@@ -10,13 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.R as materialR
 
-inline fun Context.getAnimatedVectorDrawable (@DrawableRes id: Int): AnimatedVectorDrawableCompat {
+inline fun Context.getAnimatedVectorDrawable(@DrawableRes id: Int): AnimatedVectorDrawableCompat {
     return AnimatedVectorDrawableCompat.create(this, id)!!
-}
-
-// Used to tint buttons
-inline fun Context.textColorTertiary(): Int {
-    return this.themeAttributeToColor(android.R.attr.textColorTertiary)
 }
 
 inline fun Context.colorAccentId(): Int {
@@ -55,7 +50,7 @@ fun Context.themeAttributeToColor(themeAttributeId: Int, fallbackColor: Int = Co
     val outValue = TypedValue()
     val theme = this.theme
     val resolved = theme.resolveAttribute(themeAttributeId, outValue, true)
-    if (resolved){
+    if (resolved) {
         return ContextCompat.getColor(this, outValue.resourceId)
     }
     return fallbackColor

@@ -44,12 +44,9 @@ class AppearanceDefault(private val viewModel: PlayerFragmentViewModel) : IPlaye
             .subscribe(viewHolder) { palette ->
                 val accent = palette.accent
                 view.artist.apply { animateTextColor(accent) }
-                view.shuffle?.updateSelectedColor(accent)
-                view.repeat?.updateSelectedColor(accent)
-                view.seekBar.apply {
-                    thumbTintList = ColorStateList.valueOf(accent)
-                    progressTintList = ColorStateList.valueOf(accent)
-                }
+                view.shuffle.updateSelectedColor(accent)
+                view.repeat.updateSelectedColor(accent)
+                view.seekBar.updateColor(accent)
             }
     }
 }
@@ -71,12 +68,9 @@ class AppearanceFlat(private val viewModel: PlayerFragmentViewModel) : IPlayerAp
         viewModel.observePaletteColors()
             .subscribe(viewHolder) { palette ->
                 val accent = palette.accent
-                view.seekBar.apply {
-                    thumbTintList = ColorStateList.valueOf(accent)
-                    progressTintList = ColorStateList.valueOf(accent)
-                }
-                view.shuffle?.updateSelectedColor(accent)
-                view.repeat?.updateSelectedColor(accent)
+                view.seekBar.updateColor(accent)
+                view.shuffle.updateSelectedColor(accent)
+                view.repeat.updateSelectedColor(accent)
             }
     }
 }
@@ -88,12 +82,9 @@ class AppearanceSpotify(private val viewModel: PlayerFragmentViewModel) : IPlaye
             .subscribe(viewHolder) { palette ->
                 val accent = palette.accent
                 view.artist.apply { animateTextColor(accent) }
-                view.shuffle?.updateSelectedColor(accent)
-                view.repeat?.updateSelectedColor(accent)
-                view.seekBar.apply {
-                    thumbTintList = ColorStateList.valueOf(accent)
-                    progressTintList = ColorStateList.valueOf(accent)
-                }
+                view.shuffle.updateSelectedColor(accent)
+                view.repeat.updateSelectedColor(accent)
+                view.seekBar.updateColor(accent)
             }
     }
 }
@@ -105,10 +96,7 @@ class AppearanceFullscreen(private val viewModel: PlayerFragmentViewModel) : IPl
         viewModel.observePaletteColors()
             .subscribe(viewHolder) { palette ->
                 val accent = palette.accent
-                view.seekBar.apply {
-                    thumbTintList = ColorStateList.valueOf(accent)
-                    progressTintList = ColorStateList.valueOf(accent)
-                }
+                view.seekBar.updateColor(accent)
                 view.artist.animateTextColor(accent)
                 view.playPause.backgroundTintList = ColorStateList.valueOf(accent)
                 view.shuffle.updateSelectedColor(accent)
@@ -124,12 +112,9 @@ class AppearanceBigImage(private val viewModel: PlayerFragmentViewModel) : IPlay
             .subscribe(viewHolder) { palette ->
                 val accent = palette.accent
                 view.artist.apply { animateTextColor(accent) }
-                view.shuffle?.updateSelectedColor(accent)
-                view.repeat?.updateSelectedColor(accent)
-                view.seekBar.apply {
-                    thumbTintList = ColorStateList.valueOf(accent)
-                    progressTintList = ColorStateList.valueOf(accent)
-                }
+                view.shuffle.updateSelectedColor(accent)
+                view.repeat.updateSelectedColor(accent)
+                view.seekBar.updateColor(accent)
             }
 
         val mediaProvider = view.context as MediaProvider
@@ -153,12 +138,9 @@ class AppearanceClean(private val viewModel: PlayerFragmentViewModel) : IPlayerA
             .subscribe(viewHolder) { palette ->
                 val accent = palette.accent
                 view.artist.apply { animateTextColor(accent) }
-                view.shuffle?.updateSelectedColor(accent)
-                view.repeat?.updateSelectedColor(accent)
-                view.seekBar.apply {
-                    thumbTintList = ColorStateList.valueOf(accent)
-                    progressTintList = ColorStateList.valueOf(accent)
-                }
+                view.shuffle.updateSelectedColor(accent)
+                view.repeat.updateSelectedColor(accent)
+                view.seekBar.updateColor(accent)
             }
     }
 }
@@ -172,10 +154,7 @@ class AppearanceMini(private val viewModel: PlayerFragmentViewModel) : IPlayerAp
                 view.artist.apply { animateTextColor(accent) }
                 view.shuffle.updateSelectedColor(accent)
                 view.repeat.updateSelectedColor(accent)
-                view.seekBar.apply {
-                    thumbTintList = ColorStateList.valueOf(accent)
-                    progressTintList = ColorStateList.valueOf(accent)
-                }
+                view.seekBar.updateColor(accent)
                 view.more.imageTintList = ColorStateList.valueOf(accent)
                 view.lyrics.imageTintList = ColorStateList.valueOf(accent)
             }

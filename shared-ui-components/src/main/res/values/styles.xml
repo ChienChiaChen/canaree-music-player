@@ -17,6 +17,7 @@
         <item name="bottomNavigationStyle">@style/DefaultBottomNavigationBar</item>
         <item name="tabStyle">@style/AppTabLayout</item>
         <item name="imageButtonStyle">@style/MaterialImageButton</item>
+        <item name="seekBarStyle">@style/MaterialSeekBar</item>
     </style>
 
     <style name="MaterialAppTheme" parent="BaseMaterialTheme">
@@ -28,16 +29,24 @@
         <item name="android:tint">?colorControlNormal</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:padding">12dp</item>
+        <item name="android:scaleType">fitCenter</item>
     </style>
 
 
     <style name="MainButton" parent="MaterialImageButton">
+        <item name="android:padding">14dp</item>
         <item name="android:background">@drawable/grey_circle_with_inset</item>
     </style>
 
 
 
-
+    <style name="MaterialSeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressTint">?colorSecondary</item>
+        <item name="android:thumbTint">?colorSecondary</item>
+        <item name="android:progressBackgroundTint">@color/grey400</item>
+        <item name="android:thumb">@drawable/seekbar_thumb</item>
+        <item name="android:progressDrawable">@drawable/seek_bar_progress</item>
+    </style>
 
 
 

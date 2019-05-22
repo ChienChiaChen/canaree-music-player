@@ -11,11 +11,11 @@ import dev.olog.msc.presentation.base.ripple.RippleTarget
 object BaseBindingAdapter {
 
     fun loadImageImpl(
-        view: ImageView,
-        mediaId: MediaId,
-        override: Int,
-        priority: Priority = Priority.HIGH,
-        crossfade: Boolean = true
+            view: ImageView,
+            mediaId: MediaId,
+            override: Int,
+            priority: Priority = Priority.HIGH,
+            crossfade: Boolean = true
     ) {
 
         val context = view.context
@@ -27,13 +27,18 @@ object BaseBindingAdapter {
 //        } else item TODO check
 
         var builder = GlideApp.with(context)
-            .load(mediaId)
-            .override(override)
-            .priority(priority)
-            .placeholder(CoverUtils.getGradient(context, mediaId))
+                .load(mediaId)
+                .override(override)
+                .priority(priority)
+                .placeholder(CoverUtils.getGradient(context, mediaId))
         if (crossfade) {
             builder = builder.transition(DrawableTransitionOptions.withCrossFade())
         }
-        builder.into(RippleTarget(view, mediaId.isLeaf))
+        if (mediaId.isLeaf) {
+            builder.into(view)
+        } else {
+            builder.into(RippleTarget(view))
+
+        }
     }
 }

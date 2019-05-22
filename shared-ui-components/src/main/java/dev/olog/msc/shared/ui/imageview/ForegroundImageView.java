@@ -6,14 +6,12 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
 import dev.olog.msc.shared.ui.R;
 
-@Keep
 public class ForegroundImageView extends AppCompatImageView {
 
     private Drawable foreground;
@@ -108,7 +106,8 @@ public class ForegroundImageView extends AppCompatImageView {
             if (foreground != null) {
                 foreground.draw(canvas);
             }
-        } catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override

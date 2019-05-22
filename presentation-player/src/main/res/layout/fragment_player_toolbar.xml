@@ -4,9 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/player_toolbar"
     android:clickable="true"
-    android:focusable="true"
-    android:paddingStart="@dimen/player_toolbar_margin_start"
-    android:paddingEnd="@dimen/player_toolbar_margin_end">
+    android:focusable="true">
 
     <TextView
         android:id="@+id/nowPlaying"
@@ -25,13 +23,10 @@
         android:id="@+id/lyrics"
         android:layout_gravity="end"
         android:layout_width="@dimen/common_icon_size"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/common_icon_size"
         android:src="@drawable/vd_offline_lyrics"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
         android:clickable="true"
         android:focusable="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -39,8 +34,8 @@
     <dev.olog.msc.presentation.player.widgets.LottieFavorite
         android:id="@+id/favorite"
         android:layout_width="@dimen/common_icon_size"
-        android:layout_height="0dp"
-        android:layout_gravity="end"
+        android:layout_height="@dimen/common_icon_size"
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/lyrics"/>
@@ -49,13 +44,10 @@
         android:id="@+id/playbackSpeed"
         android:layout_gravity="end"
         android:layout_width="@dimen/common_icon_size"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/common_icon_size"
         android:src="@drawable/vd_slow_motion"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
         android:clickable="true"
         android:focusable="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/favorite"/>
