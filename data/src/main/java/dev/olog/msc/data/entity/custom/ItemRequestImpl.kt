@@ -29,7 +29,7 @@ internal class ItemRequestImpl<T>(
             .mapToOne { cursorMapper(it) }
             .map {
                 if (it != null) {
-                    itemMapper?.invoke(it)
+                    itemMapper?.invoke(it) ?: it
                 } else {
                     null
                 }
