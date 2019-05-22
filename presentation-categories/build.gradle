@@ -11,4 +11,6 @@ dependencies {
     implementation project(':presentation-tabs')
     implementation project(':presentation-tabs-folder-tree')
     implementation project(':tap-target-view')
+
+//    debugImplementation librariesCore.coroutinesDebug
 }

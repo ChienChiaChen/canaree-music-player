@@ -14,18 +14,19 @@ import kotlin.math.abs
 private const val DEFAULT_PARALLAX = .7f
 private const val MAX_ALPHA = 40 //.3f
 
-class ParallaxImageView(
-        context: Context,
-        attrs: AttributeSet? = null
-
-) : ForegroundImageView(context, attrs) {
+class ParallaxImageView : ForegroundImageView {
 
     private var scrimColor = Color.LTGRAY
     private val paint = Paint()
 
-    private var parallax : Float
+    private var parallax : Float = 0f
 
-    init {
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs){
+        init(attrs)
+    }
+
+
+    private fun init(attrs: AttributeSet?) {
         val a = context.obtainStyledAttributes(R.styleable.ParallaxView)
         parallax = a.getFloat(R.styleable.ParallaxView_parallax, DEFAULT_PARALLAX)
         a.recycle()

@@ -2,13 +2,16 @@ package dev.olog.msc.presentation.detail
 
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.*
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.presentation.base.DisplayableItemBindingAdapter
 import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
 import dev.olog.msc.presentation.base.adapter.SetupNestedList
 import dev.olog.msc.presentation.base.drag.OnStartDragListener
@@ -37,11 +40,19 @@ class DetailFragment : BaseFragment(),
     companion object {
         const val TAG = "DetailFragment"
         const val ARGUMENTS_MEDIA_ID = "$TAG.arguments.media_id"
+        const val ARGUMENTS_SHARED_ELEMENT = "$TAG.arguments.shared_element"
 
         @JvmStatic
         fun newInstance(mediaId: MediaId): DetailFragment {
             return DetailFragment().withArguments(
                     ARGUMENTS_MEDIA_ID to mediaId.toString()
+            )
+        }
+        @JvmStatic
+        fun newInstance(mediaId: MediaId, transitionName: String): DetailFragment {
+            return DetailFragment().withArguments(
+                    ARGUMENTS_MEDIA_ID to mediaId.toString(),
+                    ARGUMENTS_SHARED_ELEMENT to transitionName
             )
         }
     }
@@ -50,55 +61,19 @@ class DetailFragment : BaseFragment(),
     lateinit var navigator: Navigator
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
     private val viewModel by lazyFast { viewModelProvider<DetailFragmentViewModel>(viewModelFactory) }
 
     private val recyclerOnScrollListener by lazyFast { HeaderVisibilityScrollListener(this) }
 
+    private val mediaId by lazyFast { MediaId.fromString(arguments!!.getString(ARGUMENTS_MEDIA_ID)!!) }
+
     private val mostPlayedAdapter by lazyFast { DetailMostPlayedAdapter(navigator) }
-
     private val recentlyAddedAdapter by lazyFast { DetailRecentlyAddedAdapter(navigator) }
-
     private val relatedArtistAdapter by lazyFast { DetailRelatedArtistsAdapter(navigator) }
     private val albumsAdapter by lazyFast { DetailAlbumsAdapter(navigator) }
 
     private val adapter by lazyFast {
-        val mediaId = MediaId.fromString(arguments!!.getString(ARGUMENTS_MEDIA_ID)!!)
         DetailFragmentAdapter(mediaId, act as MediaProvider, this, navigator, viewModel, this)
-    }
-
-    override fun setupNestedList(layoutId: Int, recyclerView: RecyclerView) {
-        when (layoutId) {
-            R.layout.item_detail_most_played_list -> {
-                setupHorizontalListAsGrid(recyclerView, mostPlayedAdapter)
-            }
-            R.layout.item_detail_recently_added_list -> {
-                setupHorizontalListAsGrid(recyclerView, recentlyAddedAdapter)
-            }
-            R.layout.item_detail_related_artists_list -> {
-                setupHorizontalListAsList(recyclerView, relatedArtistAdapter)
-            }
-            R.layout.item_detail_albums_list -> {
-                setupHorizontalListAsList(recyclerView, albumsAdapter)
-            }
-        }
-    }
-
-    private fun setupHorizontalListAsGrid(list: RecyclerView, adapter: BasePagedAdapter<*>) {
-        val layoutManager = GridLayoutManager(
-                list.context, DetailFragmentViewModel.NESTED_SPAN_COUNT,
-                GridLayoutManager.HORIZONTAL, false
-        )
-        list.layoutManager = layoutManager
-        list.adapter = adapter
-        val snapHelper = LinearSnapHelper()
-        snapHelper.attachToRecyclerView(list)
-    }
-
-    private fun setupHorizontalListAsList(list: RecyclerView, adapter: BasePagedAdapter<*>) {
-        val layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.HORIZONTAL, false)
-        list.layoutManager = layoutManager
-        list.adapter = adapter
     }
 
     private var itemTouchHelper: ItemTouchHelper? = null
@@ -112,6 +87,8 @@ class DetailFragment : BaseFragment(),
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
+        loadImage(view)
+
         view.list.layoutManager = LinearLayoutManager(ctx)
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
@@ -189,6 +166,50 @@ class DetailFragment : BaseFragment(),
         more.setOnClickListener(null)
         filter.setOnClickListener(null)
         clear.setOnClickListener(null)
+    }
+
+    private fun loadImage(view: View){
+        setSharedElementEnterTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.move))
+        arguments!!.getString(ARGUMENTS_SHARED_ELEMENT)?.let {
+            view.cover.transitionName = it
+        }
+        postponeEnterTransition()
+        DisplayableItemBindingAdapter.loadBigAlbumImage(view.cover, mediaId)
+        view.cover.doOnPreDraw { startPostponedEnterTransition() }
+    }
+
+    override fun setupNestedList(layoutId: Int, recyclerView: RecyclerView) {
+        when (layoutId) {
+            R.layout.item_detail_most_played_list -> {
+                setupHorizontalListAsGrid(recyclerView, mostPlayedAdapter)
+            }
+            R.layout.item_detail_recently_added_list -> {
+                setupHorizontalListAsGrid(recyclerView, recentlyAddedAdapter)
+            }
+            R.layout.item_detail_related_artists_list -> {
+                setupHorizontalListAsList(recyclerView, relatedArtistAdapter)
+            }
+            R.layout.item_detail_albums_list -> {
+                setupHorizontalListAsList(recyclerView, albumsAdapter)
+            }
+        }
+    }
+
+    private fun setupHorizontalListAsGrid(list: RecyclerView, adapter: BasePagedAdapter<*>) {
+        val layoutManager = GridLayoutManager(
+                list.context, DetailFragmentViewModel.NESTED_SPAN_COUNT,
+                GridLayoutManager.HORIZONTAL, false
+        )
+        list.layoutManager = layoutManager
+        list.adapter = adapter
+        val snapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(list)
+    }
+
+    private fun setupHorizontalListAsList(list: RecyclerView, adapter: BasePagedAdapter<*>) {
+        val layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.HORIZONTAL, false)
+        list.layoutManager = layoutManager
+        list.adapter = adapter
     }
 
     override fun adjustStatusBarColor() {

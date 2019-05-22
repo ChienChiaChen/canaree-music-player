@@ -182,6 +182,22 @@ class NavigatorImpl @Inject internal constructor(
         }
     }
 
+    override fun toDetailFragment(view: View, mediaId: MediaId) {
+        if (allowed()) {
+            val activity = view.context as FragmentActivity
+            activity.findViewById<SlidingUpPanelLayout>(R.id.slidingPanel).collapse()
+
+            activity.fragmentTransaction {
+                setReorderingAllowed(true)
+//                setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                addSharedElement(view, view.transitionName)
+//                getFragmentOnFragmentContainer(activity)?.let { hide(it) }
+                replace(R.id.fragmentContainer, DetailFragment.newInstance(mediaId, view.transitionName), DetailFragment.TAG)
+                addToBackStack(DetailFragment.TAG)
+            }
+        }
+    }
+
     override fun toDetailFragment(activity: FragmentActivity, mediaId: MediaId) {
 
         if (allowed()) {
@@ -189,7 +205,7 @@ class NavigatorImpl @Inject internal constructor(
 
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
-                setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 getFragmentOnFragmentContainer(activity)?.let { hide(it) }
                 replace(R.id.upperFragmentContainer, DetailFragment.newInstance(mediaId), DetailFragment.TAG)
                 addToBackStack(DetailFragment.TAG)

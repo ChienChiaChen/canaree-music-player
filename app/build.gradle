@@ -166,6 +166,7 @@ dependencies {
 
     implementation librariesCore.coroutines
     implementation librariesCore.coroutinesRx
+//    debugImplementation librariesCore.coroutinesDebug
 
     // support
     implementation librariesAndroidX.core

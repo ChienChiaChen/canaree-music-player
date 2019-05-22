@@ -131,6 +131,7 @@ ext {
 
             coroutines            : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines",
             coroutinesRx          : "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutines",
+            coroutinesDebug          : "org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutines",
     ]
 
     librariesMusic = [

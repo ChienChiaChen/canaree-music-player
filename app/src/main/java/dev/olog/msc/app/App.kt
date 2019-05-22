@@ -98,6 +98,7 @@ class App : ThemedApp() {
         }
 
         if (BuildConfig.DEBUG) {
+//            DebugProbes.install()
 //            Traceur.enableLogging()
 //            LeakCanary.install(this)
 //            Stetho.initializeWithDefaults(this)

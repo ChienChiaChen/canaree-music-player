@@ -26,7 +26,6 @@
             tools:background="?colorSecondary"
             android:clickable="true"
             android:focusable="true"
-            app:imageBigAlbum="@{item}"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             app:imageViewCornerRadius="0"/>

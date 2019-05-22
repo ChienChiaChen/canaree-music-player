@@ -59,12 +59,11 @@ object DisplayableItemBindingAdapter {
         loadImageImpl(view, item.mediaId, OVERRIDE_MID, Priority.HIGH)
     }
 
-    @BindingAdapter("imageBigAlbum")
     @JvmStatic
-    fun loadBigAlbumImage(view: ImageView, item: DisplayableItem) {
+    fun loadBigAlbumImage(view: ImageView, mediaId: MediaId) {
         loadImageImpl(
                 view,
-                item.mediaId,
+                mediaId,
                 Target.SIZE_ORIGINAL,
                 Priority.IMMEDIATE,
                 crossfade = false

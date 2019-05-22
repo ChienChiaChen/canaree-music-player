@@ -33,19 +33,19 @@ private const val TRACK_SNAP_RANGE = 5
 private const val TEXT_THROTTLE = 100L
 private const val SCROLL_THROTTLE = 50L
 
-class RxFastScroller @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+class RxFastScroller : LinearLayout {
 
-) : LinearLayout(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
+        init(context, attrs)
+    }
 
 
     interface SectionIndexer {
         fun getSectionText(position: Int): String?
     }
 
-    init {
+    private fun init(context: Context, attrs: AttributeSet?) {
         layout(context, attrs)
         if (attrs == null){
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)

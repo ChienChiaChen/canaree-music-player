@@ -3,19 +3,22 @@ package dev.olog.msc.presentation.detail.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.presentation.base.widgets.image.view.ParallaxImageView
 import dev.olog.msc.presentation.detail.R
 
-class ParallaxRecyclerView(
-        context: Context,
-        attrs: AttributeSet? = null
+class ParallaxRecyclerView : RecyclerView {
 
-) : androidx.recyclerview.widget.RecyclerView(context, attrs) {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!isInEditMode){
+        if (!isInEditMode) {
             addOnScrollListener(parallaxScrollListener)
         }
     }
@@ -25,18 +28,18 @@ class ParallaxRecyclerView(
         removeOnScrollListener(parallaxScrollListener)
     }
 
-    private val parallaxScrollListener = object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+    private val parallaxScrollListener = object : RecyclerView.OnScrollListener() {
 
-        override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
-            if (!isInEditMode){
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            if (!isInEditMode) {
                 val firstVisible = findFirstVisibleItemPosition()
                 if (firstVisible > 0) return
 
                 val viewHolder = recyclerView.findViewHolderForAdapterPosition(firstVisible)
-                if (viewHolder != null){
+                if (viewHolder != null) {
                     val img = viewHolder.itemView.findViewById<View>(R.id.cover)
                     val textWrapper = viewHolder.itemView.findViewById<View>(R.id.textWrapper)
-                    if (img != null && img is ParallaxImageView){
+                    if (img != null && img is ParallaxImageView) {
                         img.translateY(viewHolder.itemView, textWrapper)
                     }
                 }
@@ -44,11 +47,11 @@ class ParallaxRecyclerView(
         }
     }
 
-    private fun findFirstVisibleItemPosition(): Int{
+    private fun findFirstVisibleItemPosition(): Int {
         val layoutManager = layoutManager
-        return when (layoutManager){
-            is androidx.recyclerview.widget.LinearLayoutManager -> layoutManager.findFirstVisibleItemPosition()
-            is androidx.recyclerview.widget.GridLayoutManager -> layoutManager.findFirstVisibleItemPosition()
+        return when (layoutManager) {
+            is LinearLayoutManager -> layoutManager.findFirstVisibleItemPosition()
+            is GridLayoutManager -> layoutManager.findFirstVisibleItemPosition()
             else -> throw IllegalArgumentException("invalid layout manager class ${layoutManager!!::class}")
         }
     }

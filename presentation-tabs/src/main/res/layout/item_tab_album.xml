@@ -26,7 +26,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintDimensionRatio="1" />
+            app:layout_constraintDimensionRatio="1"
+            android:transitionName="@{item.mediaId.toString()}"/>
 
         <dev.olog.msc.presentation.base.widgets.image.view.QuickActionView
             style="@style/QuickActionStyle"

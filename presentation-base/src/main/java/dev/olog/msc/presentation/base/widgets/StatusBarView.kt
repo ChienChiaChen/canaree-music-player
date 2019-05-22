@@ -13,17 +13,19 @@ import dev.olog.msc.shared.ui.theme.HasImmersive
 /**
  * Custom status bar to handle device notch
  */
-class StatusBarView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null
+class StatusBarView : View {
 
-) : View(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        init()
+    }
+
 
     private val defaultStatusBarHeight = context.dimen(R.dimen.status_bar)
     private val statusBarHeightPlusNotch = context.dip(48)
     private var hasNotch = false
 
-    init {
+    private fun init() {
         setBackgroundColor(context.colorPrimary())
     }
 
@@ -44,7 +46,7 @@ class StatusBarView @JvmOverloads constructor(
 
             setMeasuredDimension(widthMeasureSpec, height)
         } else {
-            super.onMeasure(widthMeasureSpec, defaultStatusBarHeight)
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         }
     }
 

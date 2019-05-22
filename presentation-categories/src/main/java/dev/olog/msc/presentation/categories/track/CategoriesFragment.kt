@@ -67,6 +67,10 @@ class CategoriesFragment : BaseFragment() {
                 }
                 activity?.recreate()
             }
+            view.header.setOnLongClickListener {
+//                DebugProbes.dumpCoroutines()
+                true
+            }
         }
     }
 
