@@ -3,7 +3,7 @@ package dev.olog.msc.presentation.categories.track
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
@@ -18,7 +18,7 @@ class CategoriesViewPager(
         private val categories: List<LibraryCategoryBehavior>,
         private val gateway: AppPreferencesGateway
 
-) : FragmentStatePagerAdapter(fragmentManager) {
+) : FragmentPagerAdapter(fragmentManager) {
 
     private val showFolderAsHierarchy by lazyFast { gateway.getShowFolderAsTreeView() }
 
