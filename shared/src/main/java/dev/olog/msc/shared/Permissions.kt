@@ -4,20 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import dev.olog.msc.shared.extensions.lazyFast
-import io.reactivex.subjects.BehaviorSubject
-
-val hasPermissionPublisher by lazyFast { BehaviorSubject.createDefault<Boolean>(false) }
-
-fun updatePermissionValve(context: Context, enable: Boolean){
-    hasPermissionPublisher.onNext(enable)
-    context.contentResolver.notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null)
-    context.contentResolver.notifyChange(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, null)
-    context.contentResolver.notifyChange(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI, null)
-}
 
 object Permissions {
 
@@ -33,7 +21,7 @@ object Permissions {
         return hasPermission(context, READ_STORAGE)
     }
 
-    fun requestReadStorage(activity: Activity){
+    fun requestReadStorage(activity: Activity) {
         requestPermissions(activity, READ_STORAGE, READ_CODE)
     }
 
@@ -41,15 +29,15 @@ object Permissions {
         return hasUserDisabledPermission(activity, READ_STORAGE)
     }
 
-    private fun hasPermission(context: Context, permission: String): Boolean{
+    private fun hasPermission(context: Context, permission: String): Boolean {
         return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun requestPermissions(activity: Activity, permission: String, requestCode: Int){
+    private fun requestPermissions(activity: Activity, permission: String, requestCode: Int) {
         ActivityCompat.requestPermissions(activity, arrayOf(permission), requestCode)
     }
 
-    private fun hasUserDisabledPermission(activity: Activity, permission: String): Boolean{
+    private fun hasUserDisabledPermission(activity: Activity, permission: String): Boolean {
         return !ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
     }
 

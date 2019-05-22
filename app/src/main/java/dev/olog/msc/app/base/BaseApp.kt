@@ -1,7 +1,5 @@
 package dev.olog.msc.app.base
 
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.ProcessLifecycleOwner
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.HasActivityInjector
 import dagger.android.HasBroadcastReceiverInjector
@@ -9,15 +7,13 @@ import dagger.android.HasServiceInjector
 import dagger.android.support.DaggerApplication
 import dev.olog.msc.app.app
 
-abstract class BaseApp: DaggerApplication(),
-        HasActivityInjector,
-        HasServiceInjector,
-        HasBroadcastReceiverInjector,
-        DefaultLifecycleObserver {
+abstract class BaseApp : DaggerApplication(),
+    HasActivityInjector,
+    HasServiceInjector,
+    HasBroadcastReceiverInjector {
 
     override fun onCreate() {
-        super<DaggerApplication>.onCreate()
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+        super.onCreate()
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return
         }

@@ -3,7 +3,6 @@ package dev.olog.msc.app
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
-import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceManager
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
@@ -24,9 +23,7 @@ import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.shared.PendingIntents
-import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.TrackUtils
-import dev.olog.msc.shared.updatePermissionValve
 import io.alterac.blurkit.BlurKit
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -61,7 +58,8 @@ class App : ThemedApp() {
     @Inject
     lateinit var prefsGateway: AppPreferencesGateway
 
-    @Inject lateinit var usedImageGateway: UsedImageGateway
+    @Inject
+    lateinit var usedImageGateway: UsedImageGateway
 
     @Inject
     lateinit var prefsKeys: PrefsKeys
@@ -86,10 +84,6 @@ class App : ThemedApp() {
         resetSleepTimer()
 
         registerActivityLifecycleCallbacks(CustomTabsActivityLifecycleCallback())
-    }
-
-    override fun onStart(owner: LifecycleOwner) {
-        updatePermissionValve(this, Permissions.canReadStorage(this))
     }
 
     private fun initializeComponents() {
