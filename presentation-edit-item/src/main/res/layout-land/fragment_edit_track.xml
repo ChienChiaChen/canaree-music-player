@@ -80,7 +80,7 @@
             app:layout_constraintEnd_toStartOf="@+id/picker"
             app:layout_constraintBottom_toBottomOf="parent"
             app:fabSize="mini"
-            android:src="@drawable/vd_search"
+            app:srcCompat="@drawable/vd_search"
             app:layout_constraintHorizontal_chainStyle="packed"
             android:layout_marginEnd="16dp"/>
 
@@ -93,7 +93,7 @@
             app:layout_constraintEnd_toEndOf="@+id/cover"
             app:layout_constraintBottom_toBottomOf="@+id/autoTag"
             app:fabSize="mini"
-            android:src="@drawable/vd_image_search" />
+            app:srcCompat="@drawable/vd_image_search" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/titleLayout"

@@ -8,6 +8,7 @@ import android.util.TypedValue
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+import dev.olog.msc.shared.ui.R
 import com.google.android.material.R as materialR
 
 inline fun Context.getAnimatedVectorDrawable(@DrawableRes id: Int): AnimatedVectorDrawableCompat {
@@ -30,8 +31,8 @@ inline fun Context.colorPrimary(): Int {
     return themeAttributeToColor(materialR.attr.colorPrimary)
 }
 
-inline fun Context.colorPrimaryVariant(): Int {
-    return themeAttributeToColor(materialR.attr.colorPrimaryVariant)
+inline fun Context.colorSwipeBackground(): Int {
+    return themeAttributeToColor(R.attr.colorSwipeBackground)
 }
 
 inline fun Context.colorSecondary(): Int {

@@ -237,7 +237,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/vd_edit"
+        app:srcCompat="@drawable/vd_edit"
         android:layout_gravity="end"
         android:translationY="-107dp"
         android:translationX="-32dp"

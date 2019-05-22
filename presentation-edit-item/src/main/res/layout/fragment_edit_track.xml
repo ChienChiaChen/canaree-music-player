@@ -74,7 +74,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/autoTag"
                 app:layout_constraintBottom_toTopOf="@+id/autoTag"
                 app:fabSize="mini"
-                android:src="@drawable/vd_image_search"
+                app:srcCompat="@drawable/vd_image_search"
                 android:layout_marginBottom="8dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -85,7 +85,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/cover"
                 android:layout_marginEnd="16dp"
                 app:fabSize="mini"
-                android:src="@drawable/vd_search"
+                app:srcCompat="@drawable/vd_search"
                 android:layout_marginBottom="22dp"/>
 
             <LinearLayout

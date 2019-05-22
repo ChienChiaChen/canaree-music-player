@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#FAFAFA</color>
-    <color name="colorPrimaryVariant">@android:color/white</color>
+<!--    <color name="colorPrimary">#FAFAFA</color>-->
+    <color name="colorPrimary">@android:color/white</color>
+<!--    <color name="colorPrimaryVariant">@android:color/white</color>-->
     <color name="colorSecondary">@color/defaultColorAccent</color>
 
     <color name="defaultColorAccent">@color/md_indigo_A400</color>

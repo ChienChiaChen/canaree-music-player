@@ -2,6 +2,6 @@
 <resources>
 
     <color name="colorPrimary">#282828</color>
-    <color name="colorPrimaryVariant">@android:color/black</color>
+<!--    <color name="colorPrimaryVariant">@android:color/black</color>-->
 
 </resources>

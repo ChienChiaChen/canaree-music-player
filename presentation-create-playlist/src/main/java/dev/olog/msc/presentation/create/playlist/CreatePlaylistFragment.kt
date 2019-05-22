@@ -132,26 +132,17 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
             .asLiveData()
             .subscribe(this, viewModel::updateFilter)
 
-        RxTextView.afterTextChangeEvents(view.filter)
-            .map { it.view().text.isBlank() }
-            .asLiveData()
-            .subscribe(viewLifecycleOwner) { isEmpty ->
-                view.clear.toggleVisibility(!isEmpty, true)
-            }
-
         view.sidebar.scrollableLayoutId = R.layout.item_choose_track
     }
 
     override fun onResume() {
         super.onResume()
 //        sidebar.setListener(letterTouchListener) TODO
-        clear.setOnClickListener { filter.setText("") }
     }
 
     override fun onPause() {
         super.onPause()
         sidebar.setListener(null)
-        clear.setOnClickListener(null)
     }
 
     private fun showCreateDialog() {

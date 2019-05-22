@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.RxTextView
+import dev.olog.msc.core.Classes
+import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.adapter.SetupNestedList
 import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
@@ -42,6 +44,9 @@ class SearchFragment : BaseFragment(), SetupNestedList {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by lazyFast { viewModelProvider<SearchFragmentViewModel>(viewModelFactory) }
 
+    @Inject
+    lateinit var classes: Classes
+
     private lateinit var layoutManager: LinearLayoutManager
 
     @Inject
@@ -60,7 +65,7 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         val fragmentManager = activity?.supportFragmentManager
         act.fragmentTransaction {
             fragmentManager?.findFragmentByTag(FragmentTags.DETAIL)?.let { show(it) }
-                    ?: fragmentManager!!.findFragmentByTag(FragmentTags.CATEGORIES)?.let { show(it) }
+                ?: fragmentManager!!.findFragmentByTag(FragmentTags.CATEGORIES)?.let { show(it) }
             setReorderingAllowed(true)
         }
         super.onDetach()
@@ -84,20 +89,30 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         viewModel.genreData.subscribe(viewLifecycleOwner, genreAdapter::submitList)
 
         RxTextView.afterTextChangeEvents(view.editText)
-                .debounceFirst(250, TimeUnit.MILLISECONDS)
-                .map { it.editable()!!.toString() }
-                .filter { it.isBlank() || it.trim().length >= 2 }
-                .distinctUntilChanged()
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) {
-                    viewModel.updateFilter(it)
-                }
+            .debounceFirst(250, TimeUnit.MILLISECONDS)
+            .map { it.editable()!!.toString() }
+            .filter { it.isBlank() || it.trim().length >= 2 }
+            .distinctUntilChanged()
+            .asLiveData()
+            .subscribe(viewLifecycleOwner) {
+                viewModel.updateFilter(it)
+            }
     }
 
     override fun onResume() {
         super.onResume()
         act.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         keyboard.setOnClickListener { ImeUtils.showIme(editText) }
+
+        floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
+        more.setOnClickListener {
+            try {
+                navigator.toMainPopup(requireActivity(), it, null)
+            } catch (ex: Throwable) {
+                ex.printStackTrace()
+            }
+        }
+
         adapter.registerAdapterDataObserver(mainDataObserver)
     }
 
@@ -105,6 +120,9 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         super.onPause()
         act.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
         keyboard.setOnClickListener(null)
+        floatingWindow.setOnClickListener(null)
+        more.setOnClickListener(null)
+
         adapter.unregisterAdapterDataObserver(mainDataObserver)
     }
 
@@ -130,8 +148,8 @@ class SearchFragment : BaseFragment(), SetupNestedList {
 
     private fun setupHorizontalList(list: RecyclerView, adapter: RecyclerView.Adapter<*>) {
         val layoutManager = LinearLayoutManager(
-                list.context,
-                LinearLayoutManager.HORIZONTAL, false
+            list.context,
+            LinearLayoutManager.HORIZONTAL, false
         )
         list.layoutManager = layoutManager
         list.adapter = adapter
@@ -174,7 +192,6 @@ class SearchFragment : BaseFragment(), SetupNestedList {
             val itemCount = list.size
             val isEmpty = itemCount == 0
             val queryLength = editText.text.toString().length
-            view!!.searchImage.toggleVisibility(isEmpty && queryLength < 2, true)
             view!!.list.toggleVisibility(!isEmpty, true)
 
             val showEmptyState = isEmpty && queryLength >= 2
@@ -188,6 +205,11 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         }
 
     }
+
+    private fun startServiceOrRequestOverlayPermission() {
+        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, classes.floatingWindowService())
+    }
+
 
     override fun onStop() {
         super.onStop()

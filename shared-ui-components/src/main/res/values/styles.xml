@@ -7,9 +7,10 @@
     <attr name="cleanSeekBarColor" format="reference|color" />
     <attr name="cleanSeekBarBackgroundColor" format="reference|color" />
 
+    <attr name="colorSwipeBackground" format="reference|color"/>
+
     <style name="BaseMaterialTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="colorSecondary">@color/colorSecondary</item>
 
         <item name="preferenceTheme">@style/DefaultPreferenceTheme</item>
@@ -22,6 +23,7 @@
 
     <style name="MaterialAppTheme" parent="BaseMaterialTheme">
         <item name="colorControlNormal">@android:color/black</item>
+        <item name="colorSwipeBackground">#c6c6c6</item>
     </style>
 
 
@@ -38,8 +40,6 @@
         <item name="android:background">@drawable/grey_circle_with_inset</item>
     </style>
 
-
-
     <style name="MaterialSeekBar" parent="Widget.AppCompat.SeekBar">
         <item name="android:progressTint">?colorSecondary</item>
         <item name="android:thumbTint">?colorSecondary</item>
@@ -48,10 +48,43 @@
         <item name="android:progressDrawable">@drawable/seek_bar_progress</item>
     </style>
 
+    <style name="SearchThemeLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/search_state_list</item>
+        <item name="boxBackgroundMode">filled</item>
+        <item name="boxBackgroundColor">@color/status_bar</item>
+        <item name="endIconMode">clear_text</item>
+        <item name="endIconDrawable">@drawable/vd_clear</item>
+        <item name="boxCornerRadiusTopStart">@dimen/search_round_corner</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/search_round_corner</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/search_round_corner</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/search_round_corner</item>
+        <item name="hintEnabled">false</item>
+    </style>
 
 
+    <style name="SearchThemeEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:imeOptions">flagNoExtractUi|actionDone</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:inputType">textFilter</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="FilterChip" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="chipIconVisible">true</item>
+        <item name="chipIconSize">16dp</item>
+        <item name="iconStartPadding">8dp</item>
+        <item name="chipIconTint">?colorControlNormal</item>
+        <item name="android:textAppearance">@style/FilterChipTextAppearance</item>
+    </style>
 
 
+    <style name="FilterChipTextAppearance" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/roboto_black</item>
+    </style>
 
 
     <!-- Base application theme. -->

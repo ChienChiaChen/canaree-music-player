@@ -12,7 +12,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#e2e3e7">
+        android:background="?colorSwipeBackground">
 
         <View
             android:id="@+id/background"
