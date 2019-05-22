@@ -97,8 +97,7 @@ ext {
     android_x_core = '1.0.1'
     android_x_legacy = '1.0.0'
     android_x_appcompat = '1.0.2'
-    android_x_media = '1.0.1'
-    android_x_media_router = '1.0.0'
+    android_x_media = '1.1.0-beta01'
     android_x_recycler = '1.0.0'
     android_x_cardview = '1.0.0'
     android_x_browser = '1.0.0'
@@ -175,7 +174,6 @@ ext {
             legacyV4   : "androidx.legacy:legacy-support-v4:$android_x_legacy",
             appcompat  : "androidx.appcompat:appcompat:$android_x_appcompat",
             media      : "androidx.media:media:$android_x_media",
-            mediaRouter: "androidx.mediarouter:mediarouter:$android_x_media_router",
             recycler   : "androidx.recyclerview:recyclerview:$android_x_recycler",
             cardview   : "androidx.cardview:cardview:$android_x_cardview",
             browser    : "androidx.browser:browser:$android_x_browser",

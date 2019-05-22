@@ -174,7 +174,6 @@ dependencies {
     implementation librariesAndroidX.legacyV4
     implementation librariesAndroidX.appcompat
     implementation librariesAndroidX.media
-    implementation librariesAndroidX.mediaRouter
     implementation librariesAndroidX.recycler
     implementation librariesAndroidX.cardview
     implementation librariesAndroidX.browser
