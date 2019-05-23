@@ -85,10 +85,8 @@ class PlayerFragmentAdapter(
                     navigator.toDialog(mediaId, view)
                 }
                 val view = viewHolder.itemView
-                view.bigCover?.observeProcessorColors()
-                        ?.subscribe(viewHolder, viewModel::updateProcessorColors)
-                view.bigCover?.observePaletteColors()
-                        ?.subscribe(viewHolder, viewModel::updatePaletteColors)
+                view.bigCover.observeProcessorColors().subscribe(viewHolder, viewModel::updateProcessorColors)
+                view.bigCover.observePaletteColors().subscribe(viewHolder, viewModel::updatePaletteColors)
                 bindPlayerControls(view, viewHolder)
 
                 appearanceDelegate.initViewHolderListeners(viewHolder, viewType)
@@ -144,7 +142,7 @@ class PlayerFragmentAdapter(
 
         view.favorite.setOnClickListener { mediaProvider.togglePlayerFavorite() }
 
-        view.swipeableView?.setOnSwipeListener(object : SwipeableView.SwipeListener {
+        view.swipeableView.setOnSwipeListener(object : SwipeableView.SwipeListener {
             override fun onSwipedLeft() {
                 mediaProvider.skipToNext()
             }
