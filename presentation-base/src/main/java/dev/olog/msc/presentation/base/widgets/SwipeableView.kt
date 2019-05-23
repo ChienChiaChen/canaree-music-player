@@ -114,7 +114,6 @@ class SwipeableView : View, SlidingUpPanelLayout.PanelSlideListener {
         yDown = event.y
         cover?.dispatchTouchEvent(event)
         val upEvent = MotionEvent.obtain(event).apply { this.action = MotionEvent.ACTION_UP }
-        cover?.dispatchTouchEvent(event)
         cover?.dispatchTouchEvent(upEvent)
         return true
     }
