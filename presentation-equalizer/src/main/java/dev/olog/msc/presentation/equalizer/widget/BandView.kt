@@ -16,7 +16,7 @@ import dev.olog.msc.presentation.equalizer.R
 import dev.olog.msc.presentation.equalizer.ResizeAnimation
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.dip
-import dev.olog.msc.shared.ui.extensions.colorSecondary
+import dev.olog.msc.shared.ui.extensions.colorPrimary
 import dev.olog.msc.shared.ui.extensions.setPaddingBottom
 import dev.olog.msc.shared.ui.extensions.textColorPrimary
 import dev.olog.msc.shared.utils.clamp
@@ -95,7 +95,7 @@ class BandView (
                 normalWidth, LayoutParams.MATCH_PARENT)
 
         view.layoutParams = params
-        view.setBackgroundColor(context.colorSecondary())
+        view.setBackgroundColor(context.colorPrimary())
         view.alpha = getAlphaBasedOnPosition()
         view.elevation = resources.getDimension(R.dimen.eq_bar_elevation)
 

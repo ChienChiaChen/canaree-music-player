@@ -31,16 +31,12 @@ inline fun Context.colorPrimary(): Int {
     return themeAttributeToColor(materialR.attr.colorPrimary)
 }
 
-inline fun Context.colorSwipeBackground(): Int {
-    return themeAttributeToColor(R.attr.colorSwipeBackground)
-}
-
-inline fun Context.colorSecondary(): Int {
-    return themeAttributeToColor(materialR.attr.colorSecondary)
-}
-
 inline fun Context.colorSurface(): Int {
     return themeAttributeToColor(materialR.attr.colorSurface)
+}
+
+inline fun Context.colorSwipeBackground(): Int {
+    return themeAttributeToColor(R.attr.colorSwipeBackground)
 }
 
 inline fun Context.colorControlNormal(): Int {

@@ -7,7 +7,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.palette.graphics.Palette
-import dev.olog.msc.shared.ui.extensions.colorSecondary
+import dev.olog.msc.shared.ui.extensions.colorPrimary
 import dev.olog.msc.shared.ui.extensions.colorSurface
 import dev.olog.msc.shared.ui.extensions.textColorPrimary
 import dev.olog.msc.shared.ui.extensions.textColorSecondary
@@ -30,7 +30,7 @@ internal class AdaptiveColorImageViewPresenter(
     private var paletteJob: Job? = null
     private var processorJob: Job? = null
 
-    private val defaultPaletteColors = ValidPaletteColors(context.colorSecondary())
+    private val defaultPaletteColors = ValidPaletteColors(context.colorPrimary())
     private val processorPaletteLiveData = MutableLiveData<ProcessorColors>()
     private val paletteLiveData = MutableLiveData<PaletteColors>()
 

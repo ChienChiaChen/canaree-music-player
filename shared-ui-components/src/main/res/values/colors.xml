@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<!--    <color name="colorPrimary">#FAFAFA</color>-->
-    <color name="colorPrimary">@android:color/white</color>
-<!--    <color name="colorPrimaryVariant">@android:color/white</color>-->
-    <color name="colorSecondary">@color/defaultColorAccent</color>
+    <color name="colorBackground">@android:color/white</color>
+    <color name="colorPrimary">@color/defaultColorAccent</color>
+    <color name="colorSurface">@android:color/white</color>
+    <color name="colorControlNormal">@android:color/black</color>
+
+    <color name="colorPrimaryTransparent">@color/transparent_white</color>
+    <color name="colorSwipeBackground">#c6c6c6</color>
+
+    <color name="main_button_background">#f0f0f0</color>
+
 
     <color name="defaultColorAccent">@color/md_indigo_A400</color>
 
@@ -34,6 +40,5 @@
     <color name="transparent_white">#E6FFFFFF</color>
     <color name="transparent_black">#E6000000</color>
 
-    <color name="colorSwipeBackground">#c6c6c6</color>
 
 </resources>

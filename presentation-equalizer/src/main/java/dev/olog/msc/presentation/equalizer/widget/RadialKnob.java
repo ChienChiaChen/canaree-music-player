@@ -116,7 +116,7 @@ public class RadialKnob extends View {
         super(context, attrs, defStyle);
 
         Resources res = getResources();
-        mHighlightColor = ContextExtensionsKt.colorSecondary(getContext());
+        mHighlightColor = ContextExtensionsKt.colorPrimary(getContext());
         mBackgroundArcColor = ColorUtils.setAlphaComponent(mHighlightColor, (int) (255 * 0.5));
         mBackgroundArcColorDisabled = res.getColor(R.color.radial_knob_arc_bg_disabled);
 //        dividerColor = DarkModeExtensionKt.isDark(context) ? Color.WHITE : ContextCompat.getColor(getContext(),  R.color.dark_grey); TODO color from res

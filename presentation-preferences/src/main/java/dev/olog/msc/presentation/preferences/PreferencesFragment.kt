@@ -27,7 +27,7 @@ import dev.olog.msc.presentation.preferences.utils.ColorPalette
 import dev.olog.msc.presentation.preferences.utils.forEach
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.ThemedDialog
-import dev.olog.msc.shared.ui.extensions.colorSecondary
+import dev.olog.msc.shared.ui.extensions.colorPrimary
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -124,7 +124,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
         accentColorChooser.setOnPreferenceClickListener {
             val prefs = PreferenceManager.getDefaultSharedPreferences(act.applicationContext)
 
-            val initialSelection = prefs.getInt(getString(R.string.prefs_color_accent_key), ctx.colorSecondary())
+            val initialSelection = prefs.getInt(getString(R.string.prefs_color_accent_key), ctx.colorPrimary())
 
             MaterialDialog(act)
                     .colorChooser(

@@ -20,7 +20,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import dev.olog.msc.presentation.base.R
 import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.shared.ui.extensions.colorSecondary
+import dev.olog.msc.shared.ui.extensions.colorPrimary
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
@@ -75,7 +75,7 @@ class RxFastScroller : LinearLayout {
 
             if (typedArray != null) {
                 try {
-                    bubbleColor = context.colorSecondary()
+                    bubbleColor = context.colorPrimary()
 //                    handleColor = if (context.isDark()) Color.WHITE else ContextCompat.getColor(context, R.color.dark_grey)
                     handleColor = Color.WHITE // TODO get color from res
                     textColor = typedArray.getColor(R.styleable.FastScroller_bubbleTextColor, textColor)

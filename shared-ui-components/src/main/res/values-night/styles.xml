@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="MaterialAppTheme" parent="BaseMaterialTheme">
-        <item name="colorControlNormal">@android:color/white</item>
-    </style>
-
+    <!--    main screen button-->
     <style name="MainButton" parent="MaterialImageButton">
-
+        <item name="android:padding">12dp</item>
+        <item name="android:background">@drawable/grey_circle_with_inset</item>
     </style>
 
 </resources>

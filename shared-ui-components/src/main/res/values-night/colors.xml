@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#282828</color>
-<!--    <color name="colorPrimaryVariant">@android:color/black</color>-->
+    <color name="colorBackground">@android:color/black</color>
 
+    <color name="colorSurface">#282828</color>
+    <color name="colorControlNormal">@android:color/white</color>
+
+    <color name="colorPrimaryTransparent">@color/transparent_black</color>
     <color name="colorSwipeBackground">@android:color/black</color>
+
+    <color name="main_button_background">@android:color/transparent</color>
 
 
 </resources>

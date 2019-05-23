@@ -21,8 +21,7 @@
             android:id="@+id/background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible"
-            tools:background="@android:color/holo_red_light" />
+            android:visibility="invisible" />
 
         <ImageButton
             android:id="@+id/deleteIcon"
@@ -44,7 +43,7 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?colorPrimary"
+            android:background="?colorSurface"
             android:paddingStart="@dimen/mini_queue_margin_start"
             android:paddingEnd="@dimen/mini_queue_margin_end">
 

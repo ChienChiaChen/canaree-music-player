@@ -6,7 +6,7 @@ import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.presentation.base.R
-import dev.olog.msc.shared.ui.extensions.colorSecondary
+import dev.olog.msc.shared.ui.extensions.colorPrimary
 import dev.olog.msc.shared.ui.theme.HasImmersive
 
 interface ThemedActivity {
@@ -20,7 +20,7 @@ interface ThemedActivity {
 
     private fun getAccentStyle(context: Context, prefsKeys: PrefsKeys): Int {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val color = prefs.getInt(context.getString(prefsKeys.colorAccent()), context.colorSecondary())
+        val color = prefs.getInt(context.getString(prefsKeys.colorAccent()), context.colorPrimary())
 
         return when (color){
             ContextCompat.getColor(context, R.color.md_red_A100) -> R.style.ThemeAccentRed100

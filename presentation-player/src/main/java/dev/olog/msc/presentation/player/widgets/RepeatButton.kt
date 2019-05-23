@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import dev.olog.msc.presentation.player.R
 import dev.olog.msc.shared.ui.extensions.colorControlNormal
-import dev.olog.msc.shared.ui.extensions.colorSecondary
+import dev.olog.msc.shared.ui.extensions.colorPrimary
 import dev.olog.msc.shared.ui.extensions.getAnimatedVectorDrawable
 
 class RepeatButton : AppCompatImageButton {
@@ -25,7 +25,7 @@ class RepeatButton : AppCompatImageButton {
 
     private fun init(attrs: AttributeSet?) {
         setImageResource(R.drawable.vd_repeat)
-        enabledColor = context.colorSecondary()
+        enabledColor = context.colorPrimary()
         setColorFilter(getDefaultColor())
     }
 

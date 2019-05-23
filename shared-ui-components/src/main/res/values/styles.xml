@@ -1,6 +1,6 @@
 <resources>
 
-    <attr name="textColorPrimaryTransparent" format="reference" />
+    <attr name="colorPrimaryTransparent" format="reference" />
 
     <attr name="cleanButtonColor" format="reference|color" />
     <attr name="cleanTitleColor" format="reference|color" />
@@ -10,23 +10,44 @@
     <attr name="colorSwipeBackground" format="reference|color"/>
 
     <style name="BaseMaterialTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:colorBackground">@color/colorBackground</item>
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
+<!--        <item name="colorSecondary">@null</item>-->
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorControlNormal">@color/colorControlNormal</item>
+
+        <item name="colorPrimaryTransparent">@color/colorPrimaryTransparent</item>
         <item name="colorSwipeBackground">@color/colorSwipeBackground</item>
 
         <item name="preferenceTheme">@style/DefaultPreferenceTheme</item>
 
         <item name="bottomNavigationStyle">@style/DefaultBottomNavigationBar</item>
-        <item name="tabStyle">@style/AppTabLayout</item>
+        <item name="tabStyle">@style/DefaultTabLayout</item>
         <item name="imageButtonStyle">@style/MaterialImageButton</item>
         <item name="seekBarStyle">@style/MaterialSeekBar</item>
+        <item name="floatingActionButtonStyle">@style/DefaultFab</item>
     </style>
 
     <style name="MaterialAppTheme" parent="BaseMaterialTheme">
-        <item name="colorControlNormal">@android:color/black</item>
     </style>
 
 
+
+
+
+
+<!--    bottom navigation-->
+    <style name="DefaultBottomNavigationBar" parent="@style/Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconTint">@drawable/bottom_navigation_colors</item>
+        <item name="itemTextColor">@drawable/bottom_navigation_colors</item>
+        <item name="itemTextAppearanceActive">@style/BottomNavigationAction</item>
+    </style>
+
+    <style name="BottomNavigationAction" parent="@style/TextAppearance.MaterialComponents.Caption">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+<!--    image button-->
     <style name="MaterialImageButton" parent="Widget.AppCompat.ImageButton">
         <item name="android:tint">?colorControlNormal</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
@@ -34,20 +55,28 @@
         <item name="android:scaleType">fitCenter</item>
     </style>
 
-
+<!--    main screen button-->
     <style name="MainButton" parent="MaterialImageButton">
         <item name="android:padding">14dp</item>
         <item name="android:background">@drawable/grey_circle_with_inset</item>
     </style>
 
+<!--    seekbar-->
     <style name="MaterialSeekBar" parent="Widget.AppCompat.SeekBar">
-        <item name="android:progressTint">?colorSecondary</item>
-        <item name="android:thumbTint">?colorSecondary</item>
+        <item name="android:progressTint">?colorPrimary</item>
+        <item name="android:thumbTint">?colorPrimary</item>
         <item name="android:progressBackgroundTint">@color/grey400</item>
         <item name="android:thumb">@drawable/seekbar_thumb</item>
         <item name="android:progressDrawable">@drawable/seek_bar_progress</item>
     </style>
 
+<!--    progress bar-->
+    <style name="DefaultHorizontalProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressTint">?attr/colorPrimary</item>
+        <item name="android:progressBackgroundTint">@android:color/transparent</item>
+    </style>
+
+<!--    search-->
     <style name="SearchThemeLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxStrokeColor">@color/search_state_list</item>
         <item name="boxBackgroundMode">filled</item>
@@ -73,11 +102,10 @@
         <item name="android:paddingBottom">0dp</item>
     </style>
 
+
+<!--    chip-->
     <style name="FilterChip" parent="Widget.MaterialComponents.Chip.Filter">
-        <item name="chipIconVisible">true</item>
-        <item name="chipIconSize">16dp</item>
         <item name="iconStartPadding">8dp</item>
-        <item name="chipIconTint">?colorControlNormal</item>
         <item name="android:textAppearance">@style/FilterChipTextAppearance</item>
     </style>
 
@@ -86,10 +114,31 @@
         <item name="fontFamily">@font/roboto_black</item>
     </style>
 
+<!--    tab layout-->
+    <style name="DefaultTabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabMode">scrollable</item>
+        <item name="tabGravity">center</item>
+        <item name="tabSelectedTextColor">?colorPrimary</item>
+        <item name="tabTextColor">?android:textColorPrimary</item>
+        <item name="tabIndicatorColor">?colorPrimary</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabIndicator">@drawable/tab_indicator</item>
+        <item name="tabUnboundedRipple">true</item>
+        <item name="tabTextAppearance">@style/TabLayoutTextAppearance</item>
+        <item name="tabBackground">?colorSurface</item>
+    </style>
 
+    <style name="TabLayoutTextAppearance" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:letterSpacing">0</item>
+    </style>
 
-
-
+<!--fab-->
+    <style name="DefaultFab" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="fabSize">normal</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="tint">?attr/colorPrimaryTransparent</item>
+    </style>
 
 
 
@@ -104,7 +153,6 @@
 
     <!-- Base application theme. -->
     <style name="BaseTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="tabStyle">@style/AppTabLayout</item>
         <item name="materialCardViewStyle">@style/DefaultMaterialCard</item>
         <item name="textInputStyle">@style/DefaultTextBox</item>
         <item name="floatingActionButtonStyle">@style/DefaultFab</item>
@@ -123,7 +171,6 @@
 
         <item name="dialogCornerRadius">@dimen/default_corner_radius</item>
         <item name="android:colorEdgeEffect">@color/dark_grey</item>
-        <item name="textColorPrimaryTransparent">@color/transparent_white</item>
 
         <item name="cleanButtonColor">#8d91a6</item>
         <item name="cleanTitleColor">#585858</item>
@@ -147,7 +194,6 @@
 
         <item name="dialogCornerRadius">@dimen/default_corner_radius</item>
         <item name="android:colorEdgeEffect">@android:color/white</item>
-        <item name="textColorPrimaryTransparent">@color/transparent_black</item>
 
         <item name="cleanButtonColor">@android:color/white</item>
         <item name="cleanTitleColor">?android:textColorPrimary</item>
@@ -157,24 +203,7 @@
 
     <style name="AppTheme" parent="BaseTheme" />
 
-    <style name="DefaultTabLayout" parent="Widget.MaterialComponents.TabLayout">
-        <item name="tabIndicatorFullWidth">true</item>
-        <item name="tabMode">scrollable</item>
-        <item name="tabGravity">center</item>
-        <item name="tabSelectedTextColor">?colorSecondary</item>
-        <item name="tabTextColor">?colorControlNormal</item>
-        <item name="tabIndicatorColor">?colorSecondary</item>
-        <item name="tabIndicatorHeight">2dp</item>
-        <item name="tabIndicator">@drawable/tab_indicator</item>
-        <item name="tabUnboundedRipple">true</item>
-        <item name="tabTextAppearance">@style/TabLayoutTextAppearance</item>
-    </style>
 
-    <style name="AppTabLayout" parent="DefaultTabLayout" />
-
-    <style name="TabLayoutTextAppearance" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:letterSpacing">0</item>
-    </style>
 
     <style name="DefaultMaterialCard" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">@dimen/default_corner_radius</item>
@@ -204,18 +233,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingBottom">12dp</item>
-        <item name="android:textColor">?attr/textColorPrimaryTransparent</item>
-    </style>
-
-    <style name="DefaultFab" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="fabSize">normal</item>
-        <item name="backgroundTint">?attr/colorAccent</item>
-        <item name="android:tint">?attr/textColorPrimaryTransparent</item>
-    </style>
-
-    <style name="DefaultHorizontalProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:progressTint">?attr/colorAccent</item>
-        <item name="android:progressBackgroundTint">@android:color/transparent</item>
+        <item name="android:textColor">?attr/colorPrimaryTransparent</item>
     </style>
 
 
@@ -245,18 +263,8 @@
         <item name="backgroundTint">@color/toolbar</item>
     </style>
 
-    <style name="DefaultBottomNavigationBar" parent="@style/Widget.MaterialComponents.BottomNavigationView">
-        <item name="itemIconTint">@drawable/bottom_navigation_colors</item>
-        <item name="itemTextColor">@drawable/bottom_navigation_colors</item>
-        <item name="itemTextAppearanceActive">@style/BottomNavigationAction</item>
-    </style>
-
-    <style name="BottomNavigationAction" parent="@style/TextAppearance.MaterialComponents.Caption">
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="ExtendedFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="android:textColor">?attr/textColorPrimaryTransparent</item>
+        <item name="android:textColor">?attr/colorPrimaryTransparent</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
         <item name="android:paddingLeft">24dp</item>

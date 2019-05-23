@@ -7,7 +7,7 @@ import dev.olog.msc.presentation.base.extensions.hasNotch
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.ui.R
-import dev.olog.msc.shared.ui.extensions.colorPrimary
+import dev.olog.msc.shared.ui.extensions.colorSurface
 import dev.olog.msc.shared.ui.theme.HasImmersive
 
 /**
@@ -26,7 +26,7 @@ class StatusBarView : View {
     private var hasNotch = false
 
     private fun init() {
-        setBackgroundColor(context.colorPrimary())
+        setBackgroundColor(context.colorSurface())
     }
 
     override fun onAttachedToWindow() {

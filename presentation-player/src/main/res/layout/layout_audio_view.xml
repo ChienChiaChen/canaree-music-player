@@ -35,7 +35,7 @@
         tools:max="100"
         tools:progress="50"
         android:progressTint="@android:color/white"
-        style="@style/SizedProgressBar"
+        style="@style/DefaultHorizontalProgressBar"
         android:scaleY="1.2"/>
 
 </FrameLayout>
