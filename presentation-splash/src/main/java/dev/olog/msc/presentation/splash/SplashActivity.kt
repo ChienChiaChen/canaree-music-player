@@ -10,7 +10,6 @@ import dev.olog.msc.presentation.base.activity.BaseActivity
 import dev.olog.msc.presentation.base.extensions.simpleDialog
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.updatePermissionValve
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : BaseActivity(), View.OnClickListener {
@@ -68,8 +67,6 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun onStoragePermissionGranted(){
-        updatePermissionValve(this, true)
-
         ExplainTrialDialog.show(this) {
             finishActivity()
         }
