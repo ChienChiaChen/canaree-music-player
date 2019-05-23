@@ -3,7 +3,6 @@
 
     <style name="MaterialAppTheme" parent="BaseMaterialTheme">
         <item name="colorControlNormal">@android:color/white</item>
-        <item name="colorSwipeBackground">@android:color/black</item>
     </style>
 
     <style name="MainButton" parent="MaterialImageButton">
