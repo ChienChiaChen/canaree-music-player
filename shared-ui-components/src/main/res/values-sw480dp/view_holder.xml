@@ -12,8 +12,4 @@
     <dimen name="item_header_text_size">22dp</dimen>
     <dimen name="item_header_sec_text_size">16dp</dimen>
 
-    <!--shuffle-->
-    <dimen name="item_shuffle_text_size">18dp</dimen>
-    <dimen name="item_shuffle_padding">14dp</dimen>
-
 </resources>
