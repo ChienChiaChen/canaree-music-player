@@ -9,6 +9,7 @@ import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
+import dev.olog.msc.core.entity.SearchFilters
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
@@ -74,6 +75,8 @@ internal class AppPreferencesImpl @Inject constructor(
         private const val BLACKLIST = "$TAG.BLACKLIST"
 
         private const val DEFAULT_MUSIC_FOLDER = "$TAG.DEFAULT_MUSIC_FOLDER"
+
+        private const val SEARCH_FILTERS = "$TAG.SEARCH_FILTERS"
     }
 
     override fun isFirstAccess(): Boolean {
@@ -475,5 +478,36 @@ internal class AppPreferencesImpl @Inject constructor(
 
     override fun getShowFolderAsTreeView(): Boolean {
         return preferences.getBoolean(context.getString(prefsKeys.showFolderAsTreeView()), false)
+    }
+
+    override fun getSearchFilters(): Set<SearchFilters> {
+        val set = preferences.getStringSet(SEARCH_FILTERS, mutableSetOf(
+                SearchFilters.ALBUM.name,
+                SearchFilters.ARTIST.name,
+                SearchFilters.PLAYLIST.name,
+                SearchFilters.GENRE.name,
+                SearchFilters.FOLDER.name
+        ))!!
+        return set.map { SearchFilters.valueOf(it) }.toSet()
+    }
+
+    override fun observeSearchFilters(): Flow<Set<SearchFilters>> {
+        return rxPreferences.getStringSet(SEARCH_FILTERS, mutableSetOf(
+                SearchFilters.ALBUM.name,
+                SearchFilters.ARTIST.name,
+                SearchFilters.PLAYLIST.name,
+                SearchFilters.GENRE.name,
+                SearchFilters.FOLDER.name
+        )).asObservable()
+                .toFlowable(BackpressureStrategy.LATEST)
+                .asFlow()
+                .map { it.map { SearchFilters.valueOf(it) }.toSet() }
+    }
+
+    override fun setSearchFilters(filters: Set<SearchFilters>) {
+        val asString = filters.map { it.name }.toSet()
+        preferences.edit {
+            putStringSet(SEARCH_FILTERS, asString)
+        }
     }
 }

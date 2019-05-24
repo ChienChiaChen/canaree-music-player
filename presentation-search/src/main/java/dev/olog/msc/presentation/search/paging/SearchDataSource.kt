@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.paging.DataSource
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.entity.SearchFilters
 import dev.olog.msc.core.entity.SearchResult
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
@@ -11,6 +12,11 @@ import dev.olog.msc.core.entity.data.request.with
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.RecentSearchesGateway
+import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
+import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
+import dev.olog.msc.core.gateway.podcast.PodcastGateway
+import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.*
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.base.list.paging.BaseDataSource
@@ -23,37 +29,57 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
-// TODO show songs and podcast ??
 internal class SearchDataSource @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val songGateway: SongGateway,
-    private val albumGateway: AlbumGateway,
-    private val artistGateway: ArtistGateway,
-    private val genreGateway: GenreGateway,
-    private val folderGateway: FolderGateway,
-    private val playlistGateway: PlaylistGateway,
-    private val displayableHeaders: SearchFragmentHeaders,
-    private val recentSearchesGateway: RecentSearchesGateway
+        @ApplicationContext private val context: Context,
+        private val songGateway: SongGateway,
+        private val podcastGateway: PodcastGateway,
+
+        private val podcastAlbumGateway: PodcastAlbumGateway,
+        private val albumGateway: AlbumGateway,
+
+        private val podcastArtistGateway: PodcastArtistGateway,
+        private val artistGateway: ArtistGateway,
+
+        private val genreGateway: GenreGateway,
+        private val folderGateway: FolderGateway,
+
+        private val podcastPlaylistGateway: PodcastPlaylistGateway,
+        private val playlistGateway: PlaylistGateway,
+
+        private val displayableHeaders: SearchFragmentHeaders,
+        private val recentSearchesGateway: RecentSearchesGateway,
+        prefsGateway: AppPreferencesGateway
 ) : BaseDataSource<DisplayableItem>() {
 
     var filterBy: String = ""
 
+    private val filters = prefsGateway.getSearchFilters()
+    private val podcastsOnly = filters.contains(SearchFilters.PODCAST)
+
     override fun onAttach() {
         launch {
-            songGateway.getAll().observeNotification()
-                .collect { invalidate() }
+            if (podcastsOnly){
+                podcastGateway.getAll().observeNotification()
+                        .collect { invalidate() }
+            } else {
+                songGateway.getAll().observeNotification()
+                        .collect { invalidate() }
+            }
         }
     }
 
     private val filterRequest by lazy {
         Filter(
-            filterBy,
-            arrayOf(Filter.By.TITLE, Filter.By.ARTIST, Filter.By.ALBUM),
-            Filter.BehaviorOnEmpty.NONE
+                filterBy,
+                arrayOf(Filter.By.TITLE, Filter.By.ARTIST, Filter.By.ALBUM),
+                Filter.BehaviorOnEmpty.NONE
         )
     }
 
     override fun getMainDataSize(): Int {
+        if (podcastsOnly) {
+            return podcastGateway.getAll().getCount(filterRequest)
+        }
         return songGateway.getAll().getCount(filterRequest)
     }
 
@@ -68,26 +94,34 @@ internal class SearchDataSource @Inject constructor(
         } else {
             val headers = mutableListOf<DisplayableItem>()
 
-            val albumsSize = albumGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ALBUM, Filter.By.ARTIST)))
-            val artistsSize = artistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ARTIST)))
-            val playlistsSize = playlistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
+            val albumsSize = if (podcastsOnly) podcastAlbumGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ALBUM, Filter.By.ARTIST)))
+            else albumGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ALBUM, Filter.By.ARTIST)))
+
+            val artistsSize = if (podcastsOnly) podcastArtistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ARTIST)))
+            else artistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ARTIST)))
+
+            val playlistsSize = if (podcastsOnly) podcastPlaylistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
+            else playlistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
+
             val foldersSize = folderGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
             val genresSize = genreGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
-            val songsSize = songGateway.getAll().getCount(filterRequest)
 
-            if (albumsSize > 0) {
+            val songsSize = if (podcastsOnly) podcastGateway.getAll().getCount(filterRequest)
+            else songGateway.getAll().getCount(filterRequest)
+
+            if (albumsSize > 0 && filters.contains(SearchFilters.ALBUM)) {
                 headers.addAll(displayableHeaders.albumsHeaders(albumsSize))
             }
-            if (artistsSize > 0) {
+            if (artistsSize > 0 && filters.contains(SearchFilters.ARTIST)) {
                 headers.addAll(displayableHeaders.artistsHeaders(artistsSize))
             }
-            if (playlistsSize > 0) {
-                headers.addAll(displayableHeaders.playlistsHeaders(albumsSize))
+            if (playlistsSize > 0 && filters.contains(SearchFilters.PLAYLIST)) {
+                headers.addAll(displayableHeaders.playlistsHeaders(playlistsSize))
             }
-            if (foldersSize > 0) {
-                headers.addAll(displayableHeaders.foldersHeaders(albumsSize))
+            if (foldersSize > 0 && filters.contains(SearchFilters.FOLDER)) {
+                headers.addAll(displayableHeaders.foldersHeaders(foldersSize))
             }
-            if (genresSize > 0) {
+            if (genresSize > 0 && filters.contains(SearchFilters.GENRE)) {
                 headers.addAll(displayableHeaders.genreHeaders(genresSize))
             }
             if (songsSize > 0) {
@@ -100,27 +134,31 @@ internal class SearchDataSource @Inject constructor(
     override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun loadInternal(request: Request): List<DisplayableItem> {
+        if (podcastsOnly) {
+            return podcastGateway.getAll().getPage(request.with(filter = filterRequest))
+                    .map { it.toSearchDisplayableItem() }
+        }
         return songGateway.getAll().getPage(request.with(filter = filterRequest))
-            .map { it.toSearchDisplayableItem() }
+                .map { it.toSearchDisplayableItem() }
     }
 
     private fun Song.toSearchDisplayableItem(): DisplayableItem {
         return DisplayableItem(
-            R.layout.item_search_song,
-            MediaId.songId(this.id),
-            title,
-            artist,
-            true
+                R.layout.item_search_song,
+                MediaId.songId(this.id),
+                title,
+                artist,
+                true
         )
     }
 
-    private fun Podcast.toSearchDisplayableItem(): DisplayableItem { // TODO
+    private fun Podcast.toSearchDisplayableItem(): DisplayableItem {
         return DisplayableItem(
-            R.layout.item_search_song,
-            MediaId.podcastId(this.id),
-            title,
-            artist,
-            true
+                R.layout.item_search_song,
+                MediaId.podcastId(this.id),
+                title,
+                artist,
+                true
         )
     }
 
@@ -150,18 +188,18 @@ internal class SearchDataSource @Inject constructor(
         }
 
         return DisplayableItem(
-            layout,
-            this.mediaId,
-            this.title,
-            subtitle,
-            isPlayable
+                layout,
+                this.mediaId,
+                this.title,
+                subtitle,
+                isPlayable
         )
     }
 
 }
 
 internal class SearchDataSourceFactory @Inject constructor(
-    dataSourceProvider: Provider<SearchDataSource>
+        dataSourceProvider: Provider<SearchDataSource>
 ) : BaseDataSourceFactory<DisplayableItem, SearchDataSource>(dataSourceProvider) {
 
     private var filterBy: String = ""

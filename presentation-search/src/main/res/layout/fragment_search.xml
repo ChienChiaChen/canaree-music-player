@@ -78,7 +78,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <HorizontalScrollView
-        android:id="@+id/filters"
+        android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:scrollbars="none"
@@ -87,6 +87,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <com.google.android.material.chip.ChipGroup
+            android:id="@+id/filtersGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
@@ -99,6 +100,7 @@
             app:singleLine="true">
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/podcastFilter"
                 style="@style/FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,13 +108,15 @@
                 app:chipIcon="@drawable/vd_podcast" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/albumFilter"
                 style="@style/FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/common_albums"
-                app:chipIcon="@drawable/vd_album"/>
+                app:chipIcon="@drawable/vd_album" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/artistFilter"
                 style="@style/FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -120,25 +124,28 @@
                 app:chipIcon="@drawable/vd_artist" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/folderFilter"
                 style="@style/FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/category_folders"
-                app:chipIcon="@drawable/vd_folder"/>
+                app:chipIcon="@drawable/vd_folder" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/genreFilter"
                 style="@style/FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/common_genres"
-                app:chipIcon="@drawable/vd_genre"/>
+                app:chipIcon="@drawable/vd_genre" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/playlistFilter"
                 style="@style/FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/common_playlists"
-                app:chipIcon="@drawable/vd_playlist"/>
+                app:chipIcon="@drawable/vd_playlist" />
 
         </com.google.android.material.chip.ChipGroup>
 
@@ -154,7 +161,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filters">
+        app:layout_constraintTop_toBottomOf="@+id/scrollView">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"

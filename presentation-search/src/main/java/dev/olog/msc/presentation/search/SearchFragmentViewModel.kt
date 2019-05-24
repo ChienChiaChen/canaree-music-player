@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.entity.SearchFilters
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.search.domain.ClearRecentSearchesUseCase
 import dev.olog.msc.presentation.search.domain.DeleteRecentSearchUseCase
@@ -26,28 +28,29 @@ internal class SearchFragmentViewModel @Inject constructor(
         private val searchAlbumsDataSource: SearchAlbumsDataSourceFactory,
         private val searchFoldersDataSource: SearchFoldersDataSourceFactory,
         private val searchPlaylistsDataSource: SearchPlaylistsDataSourceFactory,
-        private val searchGenresDataSource: SearchGenresDataSourceFactory
+        private val searchGenresDataSource: SearchGenresDataSourceFactory,
+        private val prefsGateway: AppPreferencesGateway
 
 ) : ViewModel() {
 
-    val data : LiveData<PagedList<DisplayableItem>>
-    val albumsData : LiveData<PagedList<DisplayableItem>>
-    val artistsData : LiveData<PagedList<DisplayableItem>>
-    val foldersData : LiveData<PagedList<DisplayableItem>>
-    val playlistData : LiveData<PagedList<DisplayableItem>>
-    val genreData : LiveData<PagedList<DisplayableItem>>
+    val data: LiveData<PagedList<DisplayableItem>>
+    val albumsData: LiveData<PagedList<DisplayableItem>>
+    val artistsData: LiveData<PagedList<DisplayableItem>>
+    val foldersData: LiveData<PagedList<DisplayableItem>>
+    val playlistData: LiveData<PagedList<DisplayableItem>>
+    val genreData: LiveData<PagedList<DisplayableItem>>
 
     init {
         val config = PagedList.Config.Builder()
-            .setPageSize(20)
-            .setInitialLoadSizeHint(20)
-            .setEnablePlaceholders(true)
-            .build()
+                .setPageSize(20)
+                .setInitialLoadSizeHint(20)
+                .setEnablePlaceholders(true)
+                .build()
         val miniConfig = PagedList.Config.Builder()
-            .setInitialLoadSizeHint(8)
-            .setPageSize(4)
-            .setEnablePlaceholders(true)
-            .build()
+                .setInitialLoadSizeHint(8)
+                .setPageSize(4)
+                .setEnablePlaceholders(true)
+                .build()
         data = LivePagedListBuilder(searchDataSource, config).build()
         albumsData = LivePagedListBuilder(searchAlbumsDataSource, miniConfig).build()
         artistsData = LivePagedListBuilder(searchArtistsDataSource, miniConfig).build()
@@ -56,7 +59,20 @@ internal class SearchFragmentViewModel @Inject constructor(
         playlistData = LivePagedListBuilder(searchPlaylistsDataSource, miniConfig).build()
     }
 
-    fun updateFilter(filter: String){
+    fun getSearchFilters(): Set<SearchFilters> = prefsGateway.getSearchFilters()
+
+    fun onFilterChanged(filter: SearchFilters, enabled: Boolean){
+        val oldFilters = getSearchFilters().toMutableSet()
+        if (enabled){
+            oldFilters.add(filter)
+        } else {
+            oldFilters.remove(filter)
+        }
+        prefsGateway.setSearchFilters(oldFilters)
+        invalidateData()
+    }
+
+    fun updateFilter(filter: String) {
         val trimmed = filter.trim()
         searchDataSource.updateFilterBy(trimmed)
         searchArtistsDataSource.updateFilterBy(trimmed)
@@ -66,7 +82,7 @@ internal class SearchFragmentViewModel @Inject constructor(
         searchGenresDataSource.updateFilterBy(trimmed)
     }
 
-    private fun invalidateData(){
+    private fun invalidateData() {
         searchDataSource.invalidate()
         searchArtistsDataSource.invalidate()
         searchAlbumsDataSource.invalidate()
@@ -75,20 +91,20 @@ internal class SearchFragmentViewModel @Inject constructor(
         searchGenresDataSource.invalidate()
     }
 
-    fun insertToRecent(mediaId: MediaId) = viewModelScope.launch(Dispatchers.Default){
+    fun insertToRecent(mediaId: MediaId) = viewModelScope.launch(Dispatchers.Default) {
         insertRecentUse.execute(mediaId)
     }
 
-    fun deleteFromRecent(mediaId: MediaId)= viewModelScope.launch(Dispatchers.Default){
+    fun deleteFromRecent(mediaId: MediaId) = viewModelScope.launch(Dispatchers.Default) {
         deleteRecentSearchUseCase.execute(mediaId)
-        withContext(Dispatchers.Main){
+        withContext(Dispatchers.Main) {
             invalidateData()
         }
     }
 
-    fun clearRecentSearches() = viewModelScope.launch(Dispatchers.Default){
+    fun clearRecentSearches() = viewModelScope.launch(Dispatchers.Default) {
         clearRecentSearchesUseCase.execute()
-        withContext(Dispatchers.Main){
+        withContext(Dispatchers.Main) {
             invalidateData()
         }
     }

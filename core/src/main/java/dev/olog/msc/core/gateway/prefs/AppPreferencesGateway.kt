@@ -1,6 +1,7 @@
 package dev.olog.msc.core.gateway.prefs
 
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
+import dev.olog.msc.core.entity.SearchFilters
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
@@ -65,6 +66,10 @@ interface AppPreferencesGateway {
     fun isLockscreenArtworkEnabled(): Boolean
 
     fun getShowFolderAsTreeView(): Boolean
+
+    fun getSearchFilters(): Set<SearchFilters>
+    fun observeSearchFilters(): Flow<Set<SearchFilters>>
+    fun setSearchFilters(filters: Set<SearchFilters>)
 
 }
 

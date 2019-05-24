@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.Classes
+import dev.olog.msc.core.entity.SearchFilters
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.extensions.act
@@ -80,6 +81,8 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
         view.list.layoutManager = layoutManager
         view.list.setHasFixedSize(true)
 
+        updateFilters(view)
+
         val callback = TouchHelperAdapterCallback(adapter, ItemTouchHelper.LEFT)
         val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(view.list)
@@ -93,7 +96,7 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
 
         launch {
             view.editText.afterTextChange()
-                    .debounceFirst(250)
+                    .debounceFirst(200)
                     .filter { it.isBlank() || it.trim().length >= 2 }
                     .distinctUntilChanged()
                     .collect { viewModel.updateFilter(it) }
@@ -113,6 +116,12 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
         more.setOnClickListener { navigator.toMainPopup(requireActivity(), it, null) }
 
         adapter.registerAdapterDataObserver(mainDataObserver)
+        podcastFilter.setOnCheckedChangeListener { _, isChecked -> onFilterChanged(SearchFilters.PODCAST, isChecked) }
+        albumFilter.setOnCheckedChangeListener { _, isChecked -> onFilterChanged(SearchFilters.ALBUM, isChecked) }
+        artistFilter.setOnCheckedChangeListener { _, isChecked -> onFilterChanged(SearchFilters.ARTIST, isChecked) }
+        playlistFilter.setOnCheckedChangeListener { _, isChecked -> onFilterChanged(SearchFilters.PLAYLIST, isChecked) }
+        folderFilter.setOnCheckedChangeListener { _, isChecked -> onFilterChanged(SearchFilters.FOLDER, isChecked) }
+        genreFilter.setOnCheckedChangeListener { _, isChecked -> onFilterChanged(SearchFilters.GENRE, isChecked) }
     }
 
     override fun onPause() {
@@ -121,8 +130,31 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
         keyboard.setOnClickListener(null)
         floatingWindow.setOnClickListener(null)
         more.setOnClickListener(null)
-
+        podcastFilter.setOnCheckedChangeListener(null)
+        albumFilter.setOnCheckedChangeListener(null)
+        artistFilter.setOnCheckedChangeListener(null)
+        playlistFilter.setOnCheckedChangeListener(null)
+        folderFilter.setOnCheckedChangeListener(null)
+        genreFilter.setOnCheckedChangeListener(null)
         adapter.unregisterAdapterDataObserver(mainDataObserver)
+    }
+
+    private fun onFilterChanged(filter: SearchFilters, isChecked: Boolean) {
+        viewModel.onFilterChanged(filter, isChecked)
+    }
+
+    private fun updateFilters(view: View) {
+        val searchFilters = viewModel.getSearchFilters()
+        for (filter in searchFilters) {
+            when (filter) {
+                SearchFilters.PODCAST -> view.podcastFilter.isChecked = true
+                SearchFilters.ALBUM -> view.albumFilter.isChecked = true
+                SearchFilters.ARTIST -> view.artistFilter.isChecked = true
+                SearchFilters.PLAYLIST -> view.playlistFilter.isChecked = true
+                SearchFilters.GENRE -> view.genreFilter.isChecked = true
+                SearchFilters.FOLDER -> view.folderFilter.isChecked = true
+            }
+        }
     }
 
     override fun setupNestedList(layoutId: Int, recyclerView: RecyclerView) {
