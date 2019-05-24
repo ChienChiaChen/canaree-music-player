@@ -12,7 +12,7 @@ import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.BR
 
-internal class TabFragmentNewAlbumsAdapter constructor(
+internal class TabFragmentNestedAdapter constructor(
     private val navigator: Navigator
 
 ) : BasePagedAdapter<DisplayableItem>(DiffCallbackDisplayableItem) {

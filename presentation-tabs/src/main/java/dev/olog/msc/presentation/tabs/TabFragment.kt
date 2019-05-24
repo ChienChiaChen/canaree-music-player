@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.sort.SortType
@@ -13,9 +14,12 @@ import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.parentViewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
+import dev.olog.msc.presentation.base.list.BasePagedAdapter
+import dev.olog.msc.presentation.base.list.SetupNestedList
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.adapters.TabFragmentAdapter
+import dev.olog.msc.presentation.tabs.adapters.TabFragmentNestedAdapter
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.ui.extensions.subscribe
@@ -25,41 +29,26 @@ import kotlinx.android.synthetic.main.fragment_tab.*
 import kotlinx.android.synthetic.main.fragment_tab.view.*
 import javax.inject.Inject
 
-class TabFragment : BaseFragment() {
+class TabFragment : BaseFragment(), SetupNestedList {
 
     @Inject
     lateinit var navigator: Navigator
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val lastAlbumsAdapter by lazyFast { TabHorizontalAdapters.getLastPlayedAlbums(this) }
-    private val lastArtistsAdapter by lazyFast {
-        TabHorizontalAdapters.getLastPlayedArtists(
-            this
-        )
-    }
-    private val newAlbumsAdapter by lazyFast { TabHorizontalAdapters.getNewAlbums(this) }
-    private val newArtistsAdapter by lazyFast { TabHorizontalAdapters.getNewArtists(this) }
+    private val lastAlbumsAdapter by lazyFast { TabFragmentNestedAdapter(navigator) }
+    private val lastArtistsAdapter by lazyFast { TabFragmentNestedAdapter(navigator) }
+    private val newAlbumsAdapter by lazyFast { TabFragmentNestedAdapter(navigator) }
+    private val newArtistsAdapter by lazyFast { TabFragmentNestedAdapter(navigator) }
 
-    private val viewModel by lazyFast {
-        parentViewModelProvider<TabFragmentViewModel>(
-            viewModelFactory
-        )
-    }
+    private val viewModel by lazyFast { parentViewModelProvider<TabFragmentViewModel>(viewModelFactory) }
 
     internal val category by lazyFast {
         val ordinalCategory = arguments!!.getInt(FragmentTags.TAB_ARGUMENTS_SOURCE)
         MediaIdCategory.values()[ordinalCategory]
     }
 
-    private val adapter by lazyFast {
-        TabFragmentAdapter(
-            category,
-            navigator, lastArtistsAdapter, lastAlbumsAdapter,
-            newAlbumsAdapter, newArtistsAdapter, viewModel,
-            act as MediaProvider
-        )
-    }
+    private val adapter by lazyFast { TabFragmentAdapter(category, navigator, viewModel, act as MediaProvider, this) }
 
     private fun handleEmptyStateVisibility(isEmpty: Boolean) {
         emptyStateText.toggleVisibility(isEmpty, true)
@@ -111,31 +100,50 @@ class TabFragment : BaseFragment() {
         when (category) {
             MediaIdCategory.ALBUMS -> {
                 viewModel.observeData(MediaIdCategory.LAST_PLAYED_ALBUMS)
-                    .subscribe(viewLifecycleOwner) { lastAlbumsAdapter!!.submitList(it) }
+                    .subscribe(viewLifecycleOwner) { lastAlbumsAdapter.submitList(it) }
                 viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_ALBUMS)
-                    .subscribe(viewLifecycleOwner) { newAlbumsAdapter!!.submitList(it) }
+                    .subscribe(viewLifecycleOwner) { newAlbumsAdapter.submitList(it) }
             }
             MediaIdCategory.ARTISTS -> {
                 viewModel.observeData(MediaIdCategory.LAST_PLAYED_ARTISTS)
-                    .subscribe(viewLifecycleOwner) { lastArtistsAdapter!!.submitList(it) }
+                    .subscribe(viewLifecycleOwner) { lastArtistsAdapter.submitList(it) }
                 viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_ARTISTS)
-                    .subscribe(viewLifecycleOwner) { newArtistsAdapter!!.submitList(it) }
+                    .subscribe(viewLifecycleOwner) { newArtistsAdapter.submitList(it) }
             }
             MediaIdCategory.PODCASTS_ALBUMS -> {
                 viewModel.observeData(MediaIdCategory.LAST_PLAYED_PODCAST_ALBUMS)
-                    .subscribe(viewLifecycleOwner) { lastAlbumsAdapter!!.submitList(it) }
+                    .subscribe(viewLifecycleOwner) { lastAlbumsAdapter.submitList(it) }
                 viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_PODCAST_ALBUMS)
-                    .subscribe(viewLifecycleOwner) { newAlbumsAdapter!!.submitList(it) }
+                    .subscribe(viewLifecycleOwner) { newAlbumsAdapter.submitList(it) }
             }
             MediaIdCategory.PODCASTS_ARTISTS -> {
                 viewModel.observeData(MediaIdCategory.LAST_PLAYED_PODCAST_ARTISTS)
-                    .subscribe(viewLifecycleOwner) { lastArtistsAdapter!!.submitList(it) }
+                    .subscribe(viewLifecycleOwner) { lastArtistsAdapter.submitList(it) }
                 viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_PODCAST_ARTISTS)
-                    .subscribe(viewLifecycleOwner) { newArtistsAdapter!!.submitList(it) }
+                    .subscribe(viewLifecycleOwner) { newArtistsAdapter.submitList(it) }
             }
             else -> {/*making lint happy*/
             }
         }
+    }
+
+    override fun setupNestedList(layoutId: Int, recyclerView: RecyclerView) {
+        when (layoutId){
+            R.layout.item_tab_last_played_album_horizontal_list -> setupHorizontalList(recyclerView, lastAlbumsAdapter)
+            R.layout.item_tab_last_played_artist_horizontal_list -> setupHorizontalList(recyclerView, lastArtistsAdapter)
+            R.layout.item_tab_new_album_horizontal_list -> setupHorizontalList(recyclerView, newAlbumsAdapter)
+            R.layout.item_tab_new_artist_horizontal_list -> setupHorizontalList(recyclerView, newArtistsAdapter)
+        }
+    }
+
+    private fun setupHorizontalList(list: RecyclerView, adapter: BasePagedAdapter<*>) {
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            list.context,
+            androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        list.layoutManager = layoutManager
+        list.adapter = adapter
     }
 
     override fun onResume() {
@@ -170,7 +178,6 @@ class TabFragment : BaseFragment() {
                 ctx.dimen(R.dimen.tab_margin_end), ctx.dimen(R.dimen.tab_margin_bottom)
             )
         }
-
     }
 
 //    private val letterTouchListener = WaveSideBarView.OnTouchLetterChangeListener { letter ->

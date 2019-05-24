@@ -6,6 +6,7 @@ import android.provider.MediaStore
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
+import androidx.lifecycle.Lifecycle
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.*
 import dev.olog.msc.core.Classes
@@ -251,7 +252,9 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
             }
 
             super.onBackPressed()
-        } catch (ex: IllegalStateException) { /*random fragment manager crashes */
+        } catch (ex: IllegalStateException) {
+            /*random fragment manager crashes */
+            ex.printStackTrace()
         }
 
     }
@@ -260,11 +263,14 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         val categoriesFragment = supportFragmentManager.findFragmentByTag(FragmentTags.CATEGORIES)
         val fragments = categoriesFragment!!.childFragmentManager.fragments
         for (fragment in fragments) {
-            if (fragment is CanHandleOnBackPressed && fragment.handleOnBackPressed()) {
+            if (fragment is CanHandleOnBackPressed &&
+                fragment.viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED && // ensure fragment is visible
+                fragment.handleOnBackPressed()
+            ) {
                 return true
             }
         }
-        return true
+        return false
     }
 
     override fun getSlidingPanel(): SlidingUpPanelLayout = slidingPanel

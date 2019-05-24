@@ -9,6 +9,7 @@ import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
 import dev.olog.msc.presentation.base.list.DiffCallbackDisplayableItem
+import dev.olog.msc.presentation.base.list.SetupNestedList
 import dev.olog.msc.presentation.base.list.extensions.elevateAlbumOnTouch
 import dev.olog.msc.presentation.base.list.extensions.elevateSongOnTouch
 import dev.olog.msc.presentation.base.list.extensions.setOnClickListener
@@ -22,18 +23,15 @@ import dev.olog.msc.presentation.tabs.TabFragmentViewModel
 internal class TabFragmentAdapter(
     private val mediaIdCategory: MediaIdCategory,
     private val navigator: Navigator,
-    private val lastPlayedArtistsAdapter: TabFragmentLastPlayedArtistsAdapter?,
-    private val lastPlayedAlbumsAdapter: TabFragmentLastPlayedAlbumsAdapter?,
-    private val newAlbumsAdapter: TabFragmentNewAlbumsAdapter?,
-    private val newArtistsAdapter: TabFragmentNewArtistsAdapter?,
     private val viewModel: TabFragmentViewModel,
-    private val mediaProvider: MediaProvider
+    private val mediaProvider: MediaProvider,
+    private val setupNestedList: SetupNestedList
 
 ) : BasePagedAdapter<DisplayableItem>(DiffCallbackDisplayableItem) {
 
     override val placeholder: Int
         get() {
-            if (mediaIdCategory == MediaIdCategory.SONGS || mediaIdCategory == MediaIdCategory.PODCASTS){
+            if (mediaIdCategory == MediaIdCategory.SONGS || mediaIdCategory == MediaIdCategory.PODCASTS) {
                 return super.placeholder
             }
             return R.layout.item_placeholder_album
@@ -66,21 +64,12 @@ internal class TabFragmentAdapter(
                     navigator.toDialog(item.mediaId, viewHolder.itemView)
                 }
             }
-            R.layout.item_tab_last_played_album_horizontal_list -> {
-                val view = viewHolder.itemView as RecyclerView
-                setupHorizontalList(view, lastPlayedAlbumsAdapter!!)
-            }
-            R.layout.item_tab_last_played_artist_horizontal_list -> {
-                val view = viewHolder.itemView as RecyclerView
-                setupHorizontalList(view, lastPlayedArtistsAdapter!!)
-            }
-            R.layout.item_tab_new_album_horizontal_list -> {
-                val view = viewHolder.itemView as RecyclerView
-                setupHorizontalList(view, newAlbumsAdapter!!)
-            }
+            R.layout.item_tab_last_played_album_horizontal_list,
+            R.layout.item_tab_last_played_artist_horizontal_list,
+            R.layout.item_tab_new_album_horizontal_list,
             R.layout.item_tab_new_artist_horizontal_list -> {
                 val view = viewHolder.itemView as RecyclerView
-                setupHorizontalList(view, newArtistsAdapter!!)
+                setupNestedList.setupNestedList(viewType, view)
             }
         }
 
@@ -91,16 +80,6 @@ internal class TabFragmentAdapter(
             R.layout.item_tab_song,
             R.layout.item_tab_podcast -> viewHolder.elevateSongOnTouch()
         }
-    }
-
-    private fun setupHorizontalList(list: RecyclerView, adapter: BasePagedAdapter<*>) {
-        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-            list.context,
-            androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        list.layoutManager = layoutManager
-        list.adapter = adapter
     }
 
     override fun bind(binding: ViewDataBinding, item: DisplayableItem, position: Int) {

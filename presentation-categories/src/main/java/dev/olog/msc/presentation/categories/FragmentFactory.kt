@@ -18,7 +18,7 @@ class FragmentFactory(
             Classes.tabFragment,
             null
         )
-        return fragment.withArguments(FragmentTags.TAB_ARGUMENTS_SOURCE to category)
+        return fragment.withArguments(FragmentTags.TAB_ARGUMENTS_SOURCE to category.ordinal)
     }
 
     fun folderTreeFragment(): Fragment {
