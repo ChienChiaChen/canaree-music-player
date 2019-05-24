@@ -14,7 +14,7 @@ class DetailFragmentModule(private val fragment: DetailFragment) {
 
     @Provides
     internal fun provideMediaId(): MediaId {
-        val mediaId = fragment.arguments!!.getString(DetailFragment.ARGUMENTS_MEDIA_ID)
+        val mediaId = fragment.arguments!!.getString(DetailFragment.ARGUMENTS_MEDIA_ID)!!
         return MediaId.fromString(mediaId)
     }
 

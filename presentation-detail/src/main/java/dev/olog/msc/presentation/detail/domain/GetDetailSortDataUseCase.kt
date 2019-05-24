@@ -19,8 +19,7 @@ class GetDetailSortDataUseCase @Inject constructor(
     }
 
     private fun getSortType(mediaId: MediaId): SortType {
-        val category = mediaId.category
-        return when (category) {
+        return when (mediaId.category) {
             MediaIdCategory.FOLDERS -> prefsGateway.getDetailFolderSortOrder()
             MediaIdCategory.PLAYLISTS,
             MediaIdCategory.PODCASTS_PLAYLIST -> prefsGateway.getDetailPlaylistSortOrder()

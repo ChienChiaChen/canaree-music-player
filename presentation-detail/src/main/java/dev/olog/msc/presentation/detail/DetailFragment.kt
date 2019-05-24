@@ -27,18 +27,28 @@ import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.shared.core.flow.debounceFirst
 import dev.olog.msc.shared.core.lazyFast
+import dev.olog.msc.shared.ui.bindinds.afterTextChange
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
 class DetailFragment : BaseFragment(),
-    CanChangeStatusBarColor,
-    SetupNestedList,
-    OnStartDragListener {
+        CanChangeStatusBarColor,
+        SetupNestedList,
+        OnStartDragListener,
+        CoroutineScope by MainScope() {
 
     companion object {
         const val TAG = "DetailFragment"
@@ -47,7 +57,7 @@ class DetailFragment : BaseFragment(),
         @JvmStatic
         fun newInstance(mediaId: MediaId): DetailFragment {
             return DetailFragment().withArguments(
-                ARGUMENTS_MEDIA_ID to mediaId.toString()
+                    ARGUMENTS_MEDIA_ID to mediaId.toString()
             )
         }
     }
@@ -56,21 +66,11 @@ class DetailFragment : BaseFragment(),
     lateinit var navigator: Navigator
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazyFast {
-        viewModelProvider<DetailFragmentViewModel>(
-            viewModelFactory
-        )
-    }
+    private val viewModel by lazyFast { viewModelProvider<DetailFragmentViewModel>(viewModelFactory) }
 
     private val recyclerOnScrollListener by lazyFast { HeaderVisibilityScrollListener(this) }
 
-    private val mediaId by lazyFast {
-        MediaId.fromString(
-            arguments!!.getString(
-                ARGUMENTS_MEDIA_ID
-            )!!
-        )
-    }
+    private val mediaId by lazyFast { MediaId.fromString(arguments!!.getString(ARGUMENTS_MEDIA_ID)!!) }
 
     private val mostPlayedAdapter by lazyFast { DetailMostPlayedAdapter(navigator) }
     private val recentlyAddedAdapter by lazyFast { DetailRecentlyAddedAdapter(navigator) }
@@ -120,15 +120,18 @@ class DetailFragment : BaseFragment(),
         viewModel.relatedArtists.subscribe(viewLifecycleOwner, relatedArtistAdapter::submitList)
         viewModel.siblings.subscribe(viewLifecycleOwner, albumsAdapter::submitList)
 
-//        RxTextView.afterTextChangeEvents(view.editText) TODO
-//                .map { it.view().text.toString() }
-//                .filter { it.isBlank() || it.trim().length >= 2 }
-//                .debounceFirst(250, TimeUnit.MILLISECONDS)
-//                .distinctUntilChanged()
-//                .asLiveData()
-//                .subscribe(viewLifecycleOwner) { text ->
-//                    viewModel.updateFilter(text)
-//                }
+        launch {
+            view.editText.afterTextChange()
+                    .filter { it.isBlank() || it.trim().length >= 2 }
+                    .debounceFirst(200)
+                    .distinctUntilChanged()
+                    .collect { viewModel.updateFilter(it) }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cancel()
     }
 
     override fun onResume() {
@@ -153,32 +156,32 @@ class DetailFragment : BaseFragment(),
         postponeEnterTransition()
         val context = view.context
         GlideApp.with(context)
-            .load(mediaId)
-            .priority(Priority.IMMEDIATE)
-            .onlyRetrieveFromCache(true)
-            .error(CoverUtils.getGradient(context, mediaId))
-            .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    startPostponedEnterTransition()
-                    return false
-                }
+                .load(mediaId)
+                .priority(Priority.IMMEDIATE)
+                .onlyRetrieveFromCache(true)
+                .error(CoverUtils.getGradient(context, mediaId))
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                    ): Boolean {
+                        startPostponedEnterTransition()
+                        return false
+                    }
 
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    startPostponedEnterTransition()
-                    return false
-                }
-            }).into(view.cover)
+                    override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                    ): Boolean {
+                        startPostponedEnterTransition()
+                        return false
+                    }
+                }).into(view.cover)
     }
 
     override fun setupNestedList(layoutId: Int, recyclerView: RecyclerView) {
@@ -200,8 +203,8 @@ class DetailFragment : BaseFragment(),
 
     private fun setupHorizontalListAsGrid(list: RecyclerView, adapter: BasePagedAdapter<*>) {
         val layoutManager = GridLayoutManager(
-            list.context, DetailFragmentViewModel.NESTED_SPAN_COUNT,
-            GridLayoutManager.HORIZONTAL, false
+                list.context, DetailFragmentViewModel.NESTED_SPAN_COUNT,
+                GridLayoutManager.HORIZONTAL, false
         )
         list.layoutManager = layoutManager
         list.adapter = adapter

@@ -6,9 +6,7 @@ import dev.olog.msc.core.dagger.scope.PerFragment
 import dev.olog.msc.presentation.detail.DetailFragment
 
 
-@Subcomponent(modules = arrayOf(
-        DetailFragmentModule::class
-))
+@Subcomponent(modules = [DetailFragmentModule::class])
 @PerFragment
 interface DetailFragmentSubComponent : AndroidInjector<DetailFragment> {
 
