@@ -17,7 +17,7 @@ internal class RecentlyAddedPodcastAlbumDataSource @Inject constructor(
     private val gateway: PodcastAlbumGateway
 ) : BaseDataSource<DisplayableItem>() {
 
-    private val chunked = gateway.getAll()
+    private val chunked = gateway.getRecentlyAdded()
 
     override fun onAttach() {
         launch {

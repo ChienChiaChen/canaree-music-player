@@ -19,7 +19,7 @@ internal class RecentlyAddedArtistDataSource @Inject constructor(
     private val gateway: ArtistGateway
 ) : BaseDataSource<DisplayableItem>() {
 
-    private val chunked = gateway.getAll()
+    private val chunked = gateway.getRecentlyAdded()
 
     override fun onAttach() {
         launch {
