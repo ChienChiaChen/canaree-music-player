@@ -3,8 +3,6 @@ apply from: '../base_module.gradle'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    dataBinding.enabled = true
-
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
     }

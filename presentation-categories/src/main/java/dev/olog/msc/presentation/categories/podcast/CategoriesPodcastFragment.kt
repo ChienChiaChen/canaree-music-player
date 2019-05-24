@@ -7,10 +7,10 @@ import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.fragment.BaseFragment
+import dev.olog.msc.presentation.categories.FragmentFactory
 import dev.olog.msc.presentation.categories.R
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.ui.extensions.toggleVisibility
+import dev.olog.msc.shared.core.lazyFast
 import kotlinx.android.synthetic.main.fragment_library_categories.*
 import kotlinx.android.synthetic.main.fragment_library_categories.view.*
 import javax.inject.Inject
@@ -31,9 +31,12 @@ class CategoriesPodcastFragment : BaseFragment() {
     @Inject
     lateinit var presenter: CategoriesPodcastFragmentPresenter
 
+    private val fragmentFactory by lazyFast { FragmentFactory(childFragmentManager.fragmentFactory) }
+
     private val pagerAdapter by lazyFast {
         CategoriesPodcastFragmentViewPager(
-                act.applicationContext, childFragmentManager, presenter.getCategories()
+            act.applicationContext, childFragmentManager,
+            fragmentFactory, presenter.getCategories()
         )
     }
 
@@ -44,7 +47,11 @@ class CategoriesPodcastFragment : BaseFragment() {
         view.viewPager.offscreenPageLimit = 3
         view.viewPager.currentItem = presenter.getViewPagerLastPage(pagerAdapter.count)
 
-        view.pagerEmptyState.toggleVisibility(pagerAdapter.isEmpty(), true)
+        if (pagerAdapter.isEmpty()) {
+            view.pagerEmptyState.visibility = View.VISIBLE
+        } else {
+            view.pagerEmptyState.visibility = View.GONE
+        }
     }
 
     override fun onResume() {

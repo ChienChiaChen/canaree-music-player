@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.tabs.foldertree
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.model.BaseModel
+import dev.olog.msc.presentation.base.list.model.BaseModel
 import java.io.File
 
 data class DisplayableFile(

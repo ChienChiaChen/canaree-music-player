@@ -9,7 +9,7 @@ import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.interactor.all.ObserveAllFoldersUnfilteredUseCase
 import dev.olog.msc.presentation.base.OnSuccess
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.preferences.R
 import dev.olog.msc.shared.core.flow.mapToList
 import dev.olog.msc.shared.ui.extensions.liveDataOf

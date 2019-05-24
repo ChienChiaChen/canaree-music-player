@@ -2,8 +2,8 @@ package dev.olog.msc.presentation.about.thanks
 
 import androidx.databinding.ViewDataBinding
 import dev.olog.msc.presentation.base.BR
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.adapter.SimpleAdapter
+import dev.olog.msc.presentation.base.list.DataBoundViewHolder
+import dev.olog.msc.presentation.base.list.SimpleAdapter
 
 class SpecialThanksFragmentAdapter : SimpleAdapter<SpecialThanksModel>() {
 

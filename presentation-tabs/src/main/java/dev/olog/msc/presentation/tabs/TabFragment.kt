@@ -7,17 +7,17 @@ import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.sort.SortType
+import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.parentViewModelProvider
-import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.adapters.TabFragmentAdapter
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
-import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.utils.TextUtils
@@ -27,31 +27,28 @@ import javax.inject.Inject
 
 class TabFragment : BaseFragment() {
 
-    companion object {
-
-        private const val TAG = "TabFragment"
-        const val ARGUMENTS_SOURCE = "$TAG.argument.dataSource"
-
-        @JvmStatic
-        fun newInstance(category: MediaIdCategory): TabFragment {
-            return TabFragment().withArguments(ARGUMENTS_SOURCE to category.ordinal)
-        }
-    }
-
     @Inject
     lateinit var navigator: Navigator
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val lastAlbumsAdapter by lazyFast { TabHorizontalAdapters.getLastPlayedAlbums(this) }
-    private val lastArtistsAdapter by lazyFast { TabHorizontalAdapters.getLastPlayedArtists(this) }
+    private val lastArtistsAdapter by lazyFast {
+        TabHorizontalAdapters.getLastPlayedArtists(
+            this
+        )
+    }
     private val newAlbumsAdapter by lazyFast { TabHorizontalAdapters.getNewAlbums(this) }
     private val newArtistsAdapter by lazyFast { TabHorizontalAdapters.getNewArtists(this) }
 
-    private val viewModel by lazyFast { parentViewModelProvider<TabFragmentViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        parentViewModelProvider<TabFragmentViewModel>(
+            viewModelFactory
+        )
+    }
 
     internal val category by lazyFast {
-        val ordinalCategory = arguments!!.getInt(ARGUMENTS_SOURCE)
+        val ordinalCategory = arguments!!.getInt(FragmentTags.TAB_ARGUMENTS_SOURCE)
         MediaIdCategory.values()[ordinalCategory]
     }
 

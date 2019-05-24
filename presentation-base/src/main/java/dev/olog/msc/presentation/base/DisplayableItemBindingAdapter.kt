@@ -8,7 +8,6 @@ import com.bumptech.glide.request.target.Target
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.glide.GlideApp
-import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.ripple.RippleTarget
 import dev.olog.msc.presentation.base.widgets.image.view.QuickActionView
 
@@ -49,14 +48,14 @@ object DisplayableItemBindingAdapter {
 
     @BindingAdapter("imageSong")
     @JvmStatic
-    fun loadSongImage(view: ImageView, item: DisplayableItem) {
-        loadImageImpl(view, item.mediaId, OVERRIDE_SMALL)
+    fun loadSongImage(view: ImageView, mediaId: MediaId) {
+        loadImageImpl(view, mediaId, OVERRIDE_SMALL)
     }
 
     @BindingAdapter("imageAlbum")
     @JvmStatic
-    fun loadAlbumImage(view: ImageView, item: DisplayableItem) {
-        loadImageImpl(view, item.mediaId, OVERRIDE_MID, Priority.HIGH)
+    fun loadAlbumImage(view: ImageView, mediaId: MediaId) {
+        loadImageImpl(view, mediaId, OVERRIDE_MID, Priority.HIGH)
     }
 
     @JvmStatic
@@ -72,7 +71,7 @@ object DisplayableItemBindingAdapter {
 
     @BindingAdapter("quickActionItem")
     @JvmStatic
-    fun quickActionItem(view: QuickActionView, item: DisplayableItem) {
-        view.setId(item.mediaId)
+    fun quickActionItem(view: QuickActionView, mediaId: MediaId) {
+        view.setId(mediaId)
     }
 }

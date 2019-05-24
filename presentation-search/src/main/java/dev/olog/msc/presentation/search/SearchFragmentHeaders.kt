@@ -3,7 +3,7 @@ package dev.olog.msc.presentation.search
 import android.content.Context
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import javax.inject.Inject
 
 class SearchFragmentHeaders @Inject constructor(

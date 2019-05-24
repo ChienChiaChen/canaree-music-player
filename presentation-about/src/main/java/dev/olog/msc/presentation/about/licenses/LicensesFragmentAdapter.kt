@@ -4,8 +4,8 @@ import android.text.method.LinkMovementMethod
 import androidx.databinding.ViewDataBinding
 import dev.olog.msc.presentation.about.BR
 import dev.olog.msc.presentation.about.databinding.ItemLicenseBinding
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.adapter.SimpleAdapter
+import dev.olog.msc.presentation.base.list.DataBoundViewHolder
+import dev.olog.msc.presentation.base.list.SimpleAdapter
 import kotlinx.android.synthetic.main.item_license.view.*
 
 class LicensesFragmentAdapter : SimpleAdapter<LicenseModel>() {

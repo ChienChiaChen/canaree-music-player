@@ -2,11 +2,10 @@ package dev.olog.msc.presentation.detail.listener
 
 import android.view.View
 import dev.olog.msc.presentation.base.extensions.ctx
-
 import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.detail.R
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
-import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 

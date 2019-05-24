@@ -8,7 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import dev.olog.msc.presentation.base.activity.BaseActivity
 import dev.olog.msc.shared.Permissions
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : BaseActivity(), View.OnClickListener {

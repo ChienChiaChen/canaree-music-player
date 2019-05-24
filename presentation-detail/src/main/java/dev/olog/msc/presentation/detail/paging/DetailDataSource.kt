@@ -21,9 +21,10 @@ import dev.olog.msc.core.interactor.GetSiblingsUseCase
 import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.core.interactor.played.GetMostPlayedSongsUseCase
 import dev.olog.msc.core.interactor.played.GetRecentlyAddedSongsUseCase
-import dev.olog.msc.presentation.base.model.DisplayableItem
-import dev.olog.msc.presentation.base.paging.BaseDataSource
-import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.paging.BaseDataSource
+import dev.olog.msc.presentation.base.list.paging.BaseDataSourceFactory
+import dev.olog.msc.presentation.base.utils.handleSongListSize
 import dev.olog.msc.presentation.detail.DetailFragmentHeaders
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.RECENTLY_ADDED_VISIBLE_PAGES
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.RELATED_ARTISTS_TO_SEE
@@ -171,7 +172,7 @@ internal class DetailDataSource @Inject constructor(
 
     private fun createDurationFooter(duration: Int): DisplayableItem {
         val songListSize = chunked.getCount(filterRequest)
-        var title = DisplayableItem.handleSongListSize(context.resources, songListSize)
+        var title = handleSongListSize(context.resources, songListSize)
         title += TextUtils.MIDDLE_DOT_SPACED + TimeUtils.formatMillis(context, duration)
 
         return DisplayableItem(

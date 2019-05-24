@@ -1,16 +1,31 @@
 apply plugin: 'com.android.library'
-apply from: '../presentation_module.gradle'
+apply from: '../base_module.gradle'
+apply plugin: 'kotlin-android-extensions'
 
 android {
+
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+
     lintOptions {
         disable 'MissingTranslation'
     }
 }
 
 dependencies {
-    implementation project(':presentation-tabs')
-    implementation project(':presentation-tabs-folder-tree')
+    implementation project(':core')
     implementation project(':tap-target-view')
+    implementation project(':presentation-base')
+    implementation project(':presentation-navigator')
+
+    implementation librariesAndroidX.core
+    implementation librariesAndroidX.material
+    implementation librariesAndroidX.appcompat // TODO remove
+
+    implementation librariesCore.daggerAndroid
+    implementation librariesCore.daggerAndroidSupport
+    kapt librariesCore.daggerAndroidProcessor
 
 //    debugImplementation librariesCore.coroutinesDebug
 }

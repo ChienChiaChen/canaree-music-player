@@ -6,7 +6,7 @@ import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.core.entity.track.*
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.detail.R
 import dev.olog.msc.shared.utils.TextUtils
 

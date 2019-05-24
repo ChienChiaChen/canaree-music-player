@@ -5,13 +5,13 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
+import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.fragment_recently_added.*
 import kotlinx.android.synthetic.main.fragment_recently_added.view.*
@@ -39,7 +39,11 @@ class RecentlyAddedFragment : BaseFragment() {
         RecentlyAddedFragmentAdapter(navigator, activity as MediaProvider)
     }
 
-    private val viewModel by lazyFast { viewModelProvider<RecentlyAddedFragmentViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        viewModelProvider<RecentlyAddedFragmentViewModel>(
+            viewModelFactory
+        )
+    }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         view.list.adapter = adapter

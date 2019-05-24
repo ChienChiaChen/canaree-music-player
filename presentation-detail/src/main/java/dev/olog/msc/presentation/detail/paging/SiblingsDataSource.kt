@@ -13,9 +13,9 @@ import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.core.entity.track.Genre
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.interactor.GetSiblingsUseCase
-import dev.olog.msc.presentation.base.model.DisplayableItem
-import dev.olog.msc.presentation.base.paging.BaseDataSource
-import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.paging.BaseDataSource
+import dev.olog.msc.presentation.base.list.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.detail.mapper.toDetailDisplayableItem
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take

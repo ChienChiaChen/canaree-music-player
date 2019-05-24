@@ -3,11 +3,11 @@ package dev.olog.msc.presentation.create.playlist
 
 import android.widget.CheckBox
 import androidx.databinding.ViewDataBinding
-import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.adapter.DiffCallbackDisplayableItem
-import dev.olog.msc.presentation.base.extensions.setOnClickListener
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.BasePagedAdapter
+import dev.olog.msc.presentation.base.list.DataBoundViewHolder
+import dev.olog.msc.presentation.base.list.DiffCallbackDisplayableItem
+import dev.olog.msc.presentation.base.list.extensions.setOnClickListener
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 
 class CreatePlaylistAdapter (
         private val viewModel: CreatePlaylistViewModel

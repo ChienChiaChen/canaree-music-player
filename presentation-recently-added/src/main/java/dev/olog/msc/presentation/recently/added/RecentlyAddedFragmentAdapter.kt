@@ -3,15 +3,15 @@ package dev.olog.msc.presentation.recently.added
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.presentation.base.BR
-import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.adapter.DiffCallbackDisplayableItem
-import dev.olog.msc.presentation.base.drag.TouchableAdapter
-import dev.olog.msc.presentation.base.extensions.elevateSongOnTouch
-import dev.olog.msc.presentation.base.extensions.setOnClickListener
-import dev.olog.msc.presentation.base.extensions.setOnLongClickListener
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.BasePagedAdapter
+import dev.olog.msc.presentation.base.list.DataBoundViewHolder
+import dev.olog.msc.presentation.base.list.DiffCallbackDisplayableItem
+import dev.olog.msc.presentation.base.list.drag.TouchableAdapter
+import dev.olog.msc.presentation.base.list.extensions.elevateSongOnTouch
+import dev.olog.msc.presentation.base.list.extensions.setOnClickListener
+import dev.olog.msc.presentation.base.list.extensions.setOnLongClickListener
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
 
 class RecentlyAddedFragmentAdapter(

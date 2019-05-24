@@ -10,11 +10,11 @@ import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.categories.BuildConfig
+import dev.olog.msc.presentation.categories.FragmentFactory
 import dev.olog.msc.presentation.categories.R
 import dev.olog.msc.presentation.categories.Tutorial
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.ui.extensions.toggleVisibility
+import dev.olog.msc.shared.core.lazyFast
 import kotlinx.android.synthetic.main.fragment_library_categories.*
 import kotlinx.android.synthetic.main.fragment_library_categories.view.*
 import javax.inject.Inject
@@ -22,7 +22,6 @@ import javax.inject.Inject
 class CategoriesFragment : BaseFragment() {
 
     companion object {
-        const val TAG = "CategoriesFragment"
 
         @JvmStatic
         fun newInstance(): CategoriesFragment {
@@ -37,9 +36,11 @@ class CategoriesFragment : BaseFragment() {
     @Inject
     lateinit var prefsGateway: AppPreferencesGateway
 
+    private val fragmentFactory by lazyFast { FragmentFactory(childFragmentManager.fragmentFactory) }
+
     private val pagerAdapter by lazyFast {
         CategoriesViewPager(
-            act.applicationContext, childFragmentManager,
+            act.applicationContext, childFragmentManager, fragmentFactory,
             presenter.getCategories(), prefsGateway
         )
     }
@@ -50,9 +51,13 @@ class CategoriesFragment : BaseFragment() {
         view.viewPager.currentItem = presenter.getViewPagerLastPage(pagerAdapter.count)
         view.viewPager.offscreenPageLimit = 3
 
-        view.pagerEmptyState.toggleVisibility(pagerAdapter.isEmpty(), true)
+        if (pagerAdapter.isEmpty()) {
+            view.pagerEmptyState.visibility = View.VISIBLE
+        } else {
+            view.pagerEmptyState.visibility = View.GONE
+        }
 
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) { // TODO remove
             view.header.setOnClickListener {
                 val current = AppCompatDelegate.getDefaultNightMode()
                 if (current == AppCompatDelegate.MODE_NIGHT_NO) {

@@ -10,7 +10,7 @@ import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.fragment_related_artist.*
 import kotlinx.android.synthetic.main.fragment_related_artist.view.*
@@ -32,7 +32,11 @@ class RelatedArtistFragment : BaseFragment() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
-    private val viewModel by lazyFast { viewModelProvider<RelatedArtistFragmentViewModel>(factory) }
+    private val viewModel by lazyFast {
+        viewModelProvider<RelatedArtistFragmentViewModel>(
+            factory
+        )
+    }
 
     @Inject
     lateinit var navigator: Navigator

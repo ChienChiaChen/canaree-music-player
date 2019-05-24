@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dev.olog.msc.presentation.base.drag.OnStartDragListener
-import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
+import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
+import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.theme.player.theme.isBigImage
 import dev.olog.msc.presentation.base.theme.player.theme.isClean
 import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
@@ -24,9 +24,9 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.core.flow.flowInterval
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.extractBookmark
 import dev.olog.msc.shared.extensions.isPlaying
-import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.distinctUntilChanged
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.theme.HasPlayerTheme
@@ -51,7 +51,11 @@ class PlayerFragment : BaseFragment(),
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazyFast { viewModelProvider<PlayerFragmentViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        viewModelProvider<PlayerFragmentViewModel>(
+            viewModelFactory
+        )
+    }
 
     @Inject
     lateinit var navigator: Navigator

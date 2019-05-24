@@ -8,7 +8,8 @@ import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.interactor.all.ObserveAllPlaylistsUseCase
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.base.utils.handleSongListSize
 import dev.olog.msc.shared.core.flow.mapToList
 import dev.olog.msc.shared.ui.extensions.liveDataOf
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +35,7 @@ class PlaylistChooserActivityViewModel @Inject constructor(
     fun observeData(): LiveData<List<DisplayableItem>> = data
 
     private fun Playlist.toDisplayableItem(resources: Resources): DisplayableItem {
-        val size = DisplayableItem.handleSongListSize(resources, size)
+        val size = handleSongListSize(resources, size)
 
         return DisplayableItem(
             R.layout.item_tab_album,

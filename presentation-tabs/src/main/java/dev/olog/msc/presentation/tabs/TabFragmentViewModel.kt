@@ -9,7 +9,7 @@ import androidx.paging.PagedList
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.tabs.paging.last.played.LastPlayedAlbumDataSourceFactory
 import dev.olog.msc.presentation.tabs.paging.last.played.LastPlayedArtistDataSourceFactory
 import dev.olog.msc.presentation.tabs.paging.last.played.LastPlayedPodcastAlbumDataSourceFactory

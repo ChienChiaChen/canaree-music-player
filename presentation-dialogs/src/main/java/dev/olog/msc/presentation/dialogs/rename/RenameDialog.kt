@@ -11,7 +11,7 @@ import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
 import dev.olog.msc.presentation.dialogs.base.BaseEditTextDialog
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.toast
 import javax.inject.Inject
 

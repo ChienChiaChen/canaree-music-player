@@ -12,9 +12,9 @@ import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.RecentSearchesGateway
 import dev.olog.msc.core.gateway.track.*
-import dev.olog.msc.presentation.base.model.DisplayableItem
-import dev.olog.msc.presentation.base.paging.BaseDataSource
-import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.paging.BaseDataSource
+import dev.olog.msc.presentation.base.list.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.search.R
 import dev.olog.msc.presentation.search.SearchFragmentHeaders
 import dev.olog.msc.shared.RecentSearchesTypes

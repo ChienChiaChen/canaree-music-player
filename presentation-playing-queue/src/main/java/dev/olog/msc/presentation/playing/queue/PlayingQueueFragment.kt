@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.FloatingWindowHelper
-import dev.olog.msc.presentation.base.drag.OnStartDragListener
-import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
+import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
+import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.playing.queue.adapter.PlayingQueueFragmentAdapter
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dip
-import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.fragment_playing_queue.*
 import kotlinx.android.synthetic.main.fragment_playing_queue.view.*
@@ -44,7 +44,11 @@ class PlayingQueueFragment : BaseFragment(), OnStartDragListener {
 
     private val adapter by lazyFast { PlayingQueueFragmentAdapter(navigator, this) }
 
-    private val viewModel by lazyFast { act.viewModelProvider<PlayingQueueFragmentViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        act.viewModelProvider<PlayingQueueFragmentViewModel>(
+            viewModelFactory
+        )
+    }
 
     private var itemTouchHelper: ItemTouchHelper? = null
 

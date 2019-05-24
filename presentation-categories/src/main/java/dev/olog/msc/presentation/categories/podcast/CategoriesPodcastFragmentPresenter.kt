@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.categories.podcast
 
+import androidx.core.math.MathUtils.clamp
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.shared.utils.clamp
 import javax.inject.Inject
 
 class CategoriesPodcastFragmentPresenter @Inject constructor(

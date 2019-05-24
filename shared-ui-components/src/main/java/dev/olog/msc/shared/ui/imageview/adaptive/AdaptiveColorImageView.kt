@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable
 import android.util.AttributeSet
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.layers
 import dev.olog.msc.shared.ui.imageview.ForegroundImageView
 

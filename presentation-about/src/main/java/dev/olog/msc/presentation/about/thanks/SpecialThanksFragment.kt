@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.presentation.about.R
 import dev.olog.msc.presentation.base.extensions.act
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.fragment_special_thanks.view.*
 

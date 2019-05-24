@@ -2,9 +2,9 @@ package dev.olog.msc.presentation.base.widgets
 
 import android.content.Context
 import android.util.AttributeSet
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.model.SideBarModel
 import dev.olog.msc.shared.utils.TextUtils
-import dev.olog.msc.shared.utils.runOnMainThread
+import dev.olog.msc.shared.utils.assertBackgroundThread
 
 class RxWaveSideBarView @JvmOverloads constructor(
         context: Context,
@@ -14,7 +14,7 @@ class RxWaveSideBarView @JvmOverloads constructor(
 
     var scrollableLayoutId : Int = 0
 
-    fun onDataChanged(list: List<DisplayableItem>){
+    fun onDataChanged(list: List<SideBarModel>){
         updateLetters(generateLetters(list))
     }
 
@@ -22,10 +22,11 @@ class RxWaveSideBarView @JvmOverloads constructor(
         this.listener = listener
     }
 
-    private fun generateLetters(data: List<DisplayableItem>): List<String> {
+    private fun generateLetters(data: List<SideBarModel>): List<String> {
         if (scrollableLayoutId == 0){
             throw IllegalStateException("provide a real layout id to filter")
         }
+        assertBackgroundThread()
 
         val list = data.asSequence()
                 .filter { it.type == scrollableLayoutId }
@@ -42,10 +43,8 @@ class RxWaveSideBarView @JvmOverloads constructor(
     }
 
     private fun updateLetters(letters: List<String>){
-        runOnMainThread {
-            this.mLetters = letters
-            invalidate()
-        }
+        this.mLetters = letters
+        invalidate()
     }
 
 }

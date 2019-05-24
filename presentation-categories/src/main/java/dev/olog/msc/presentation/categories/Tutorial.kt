@@ -2,10 +2,10 @@ package dev.olog.msc.presentation.categories
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
+import android.util.TypedValue
 import android.view.View
 import androidx.core.content.ContextCompat
-import dev.olog.msc.shared.ui.extensions.colorPrimary
-import dev.olog.msc.shared.ui.extensions.colorSurface
 import dev.olog.msc.taptargetview.TapTarget
 import dev.olog.msc.taptargetview.TapTargetView
 
@@ -20,11 +20,22 @@ object Tutorial {
     }
 
     private fun TapTarget.tint(context: Context): TapTarget {
-        val accentColor = context.colorPrimary()
-        val backgroundColor = context.colorSurface()
+        val accentColor = context.themeAttributeToColor(com.google.android.material.R.attr.colorPrimary)
+        val backgroundColor = context.themeAttributeToColor(com.google.android.material.R.attr.colorSurface)
 
         return this.tintTarget(true)
                 .outerCircleColorInt(accentColor)
                 .targetCircleColorInt(backgroundColor)
     }
+
+    private fun Context.themeAttributeToColor(themeAttributeId: Int, fallbackColor: Int = Color.WHITE): Int {
+        val outValue = TypedValue()
+        val theme = this.theme
+        val resolved = theme.resolveAttribute(themeAttributeId, outValue, true)
+        if (resolved) {
+            return ContextCompat.getColor(this, outValue.resourceId)
+        }
+        return fallbackColor
+    }
+
 }

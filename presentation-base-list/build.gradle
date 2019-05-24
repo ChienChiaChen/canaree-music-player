@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+apply from: '../base_module.gradle'
+
+android {
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    dataBinding.enabled = true
+}
+
+dependencies {
+    implementation project(':core')
+    implementation project(':shared-ui-components')
+
+    // data binding
+    kapt librariesUi.dataBinding
+
+    implementation librariesCore.lifecycleRuntime
+    implementation librariesCore.lifecycleJava8
+
+    implementation librariesAndroidX.recycler
+    implementation librariesAndroidX.paging
+    implementation librariesUi.constraintLayout
+}

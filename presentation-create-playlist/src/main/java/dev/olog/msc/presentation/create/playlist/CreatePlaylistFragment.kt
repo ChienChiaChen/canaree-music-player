@@ -15,7 +15,7 @@ import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.base.utils.ImeUtils
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import io.reactivex.disposables.Disposable
@@ -39,7 +39,11 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazyFast { viewModelProvider<CreatePlaylistViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        viewModelProvider<CreatePlaylistViewModel>(
+            viewModelFactory
+        )
+    }
     private val adapter by lazyFast { CreatePlaylistAdapter(viewModel) }
 
     private var toast: Toast? = null

@@ -20,9 +20,9 @@ import dev.olog.msc.presentation.base.utils.getTitle
 import dev.olog.msc.presentation.base.utils.isPodcast
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.core.flow.flowInterval
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
-import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.*
 import kotlinx.android.synthetic.main.fragment_mini_player.*
 import kotlinx.android.synthetic.main.fragment_mini_player.view.*

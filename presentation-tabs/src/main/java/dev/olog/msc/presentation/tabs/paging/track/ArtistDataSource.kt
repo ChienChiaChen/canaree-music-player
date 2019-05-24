@@ -5,9 +5,9 @@ import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.track.ArtistGateway
-import dev.olog.msc.presentation.base.model.DisplayableItem
-import dev.olog.msc.presentation.base.paging.BaseDataSource
-import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.paging.BaseDataSource
+import dev.olog.msc.presentation.base.list.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.tabs.TabFragmentHeaders
 import dev.olog.msc.presentation.tabs.mapper.toTabDisplayableItem
 import dev.olog.msc.shared.core.flow.merge

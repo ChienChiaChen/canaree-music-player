@@ -15,7 +15,7 @@ import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.interactor.ObserveItemTitleUseCase
 import dev.olog.msc.core.interactor.sort.SetSortOrderRequestModel
 import dev.olog.msc.core.interactor.sort.SetSortOrderUseCase
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.detail.domain.GetDetailSortDataUseCase
 import dev.olog.msc.presentation.detail.domain.MoveItemInPlaylistUseCase
 import dev.olog.msc.presentation.detail.domain.ObserveDetailSortDataUseCase

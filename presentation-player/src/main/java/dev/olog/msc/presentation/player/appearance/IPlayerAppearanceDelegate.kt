@@ -1,8 +1,8 @@
 package dev.olog.msc.presentation.player.appearance
 
 import android.content.res.ColorStateList
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
+import dev.olog.msc.presentation.base.list.DataBoundViewHolder
 import dev.olog.msc.presentation.base.utils.getDuration
 import dev.olog.msc.presentation.player.PlayerFragmentViewModel
 import dev.olog.msc.presentation.player.R

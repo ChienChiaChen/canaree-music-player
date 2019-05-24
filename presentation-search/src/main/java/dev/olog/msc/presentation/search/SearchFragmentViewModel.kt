@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.search.domain.ClearRecentSearchesUseCase
 import dev.olog.msc.presentation.search.domain.DeleteRecentSearchUseCase
 import dev.olog.msc.presentation.search.domain.InsertRecentSearchUseCase

@@ -6,9 +6,9 @@ import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.BR
 import dev.olog.msc.R
 import dev.olog.msc.core.AppShortcuts
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.adapter.SimpleAdapter
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.DataBoundViewHolder
+import dev.olog.msc.presentation.base.list.SimpleAdapter
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import javax.inject.Inject
 
 class PlaylistChooserActivityAdapter @Inject constructor(

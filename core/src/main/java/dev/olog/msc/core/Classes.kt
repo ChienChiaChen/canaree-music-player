@@ -7,4 +7,7 @@ object Classes {
     val floatingWindowService by lazy { Class.forName("dev.olog.msc.floatingwindowservice.FloatingWindowService")!! }
     val shortcutActivity by lazy { Class.forName("dev.olog.msc.presentation.shortcuts.ShortcutsActivity")!! }
     val playlistChooser by lazy { Class.forName("dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivity")!! }
+
+    const val tabFragment = "dev.olog.msc.presentation.tabs.TabFragment"
+    const val folderTreeFragment = "dev.olog.msc.presentation.tabs.foldertree.FolderTreeFragment"
 }

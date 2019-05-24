@@ -6,9 +6,9 @@ import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.SearchGateway
 import dev.olog.msc.core.gateway.SearchGateway.By
-import dev.olog.msc.presentation.base.model.DisplayableItem
-import dev.olog.msc.presentation.base.paging.BaseDataSource
-import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.paging.BaseDataSource
+import dev.olog.msc.presentation.base.list.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.create.playlist.model.toDisplayableItem
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

@@ -13,7 +13,7 @@ import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.core.interactor.favorite.ObserveFavoriteAnimationUseCase
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.base.theme.player.theme.*
 import dev.olog.msc.shared.ui.extensions.liveDataOf
 import dev.olog.msc.shared.ui.imageview.adaptive.PaletteColors

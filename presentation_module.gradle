@@ -16,6 +16,7 @@ dependencies {
     implementation project(':shared-ui-components')
     implementation project(':image-provider')
     implementation project(':presentation-base')
+    implementation project(':presentation-base-list')
     implementation project(':presentation-navigator')
 
     // data binding

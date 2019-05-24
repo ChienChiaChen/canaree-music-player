@@ -11,17 +11,17 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.Classes
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.FragmentTags
-import dev.olog.msc.presentation.base.adapter.SetupNestedList
-import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.fragmentTransaction
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
+import dev.olog.msc.presentation.base.list.SetupNestedList
+import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.utils.ImeUtils
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.search.adapters.SearchFragmentAdapter
 import dev.olog.msc.presentation.search.adapters.SearchFragmentNestedAdapter
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -42,7 +42,11 @@ class SearchFragment : BaseFragment(), SetupNestedList {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazyFast { viewModelProvider<SearchFragmentViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        viewModelProvider<SearchFragmentViewModel>(
+            viewModelFactory
+        )
+    }
 
     private lateinit var layoutManager: LinearLayoutManager
 
@@ -53,7 +57,12 @@ class SearchFragment : BaseFragment(), SetupNestedList {
     private val albumAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
     private val artistAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
     private val genreAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
-    private val playlistAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
+    private val playlistAdapter by lazyFast {
+        SearchFragmentNestedAdapter(
+            navigator,
+            viewModel
+        )
+    }
     private val folderAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
 
     private val mainDataObserver by lazyFast { MainDataObserver() }

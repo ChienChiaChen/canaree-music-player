@@ -8,13 +8,15 @@ import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.base.utils.handleAlbumListSize
+import dev.olog.msc.presentation.base.utils.handleSongListSize
 import dev.olog.msc.presentation.detail.R
 import dev.olog.msc.shared.utils.TextUtils
 
 internal fun Artist.toRelatedArtist(resources: Resources): DisplayableItem {
-    val songs = DisplayableItem.handleSongListSize(resources, songs)
-    var albums = DisplayableItem.handleAlbumListSize(resources, albums)
+    val songs = handleSongListSize(resources, songs)
+    var albums = handleAlbumListSize(resources, albums)
     if (albums.isNotBlank()) albums += TextUtils.MIDDLE_DOT_SPACED
 
     return DisplayableItem(

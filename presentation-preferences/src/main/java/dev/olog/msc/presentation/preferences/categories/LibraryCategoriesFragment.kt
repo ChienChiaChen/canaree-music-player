@@ -12,11 +12,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.withArguments
+import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.preferences.R
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import javax.inject.Inject
 
 class LibraryCategoriesFragment : DialogFragment() {

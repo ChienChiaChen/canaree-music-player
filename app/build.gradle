@@ -132,6 +132,7 @@ dependencies {
 
     implementation project(':pro')
     implementation project(':presentation-base')
+    implementation project(':presentation-base-list')
     implementation project(':presentation-navigator')
     implementation project(':presentation-search')
     implementation project(':presentation-offline-lyrics')

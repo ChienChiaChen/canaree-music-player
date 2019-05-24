@@ -3,7 +3,7 @@ package dev.olog.msc.presentation.create.playlist.model
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.create.playlist.R
 
 internal fun Podcast.toDisplayableItem(): DisplayableItem {

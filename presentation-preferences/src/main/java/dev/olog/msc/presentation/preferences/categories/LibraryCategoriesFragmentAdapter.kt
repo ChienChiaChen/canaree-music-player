@@ -9,9 +9,9 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
-import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.drag.TouchableAdapter
 import dev.olog.msc.presentation.base.extensions.asString
+import dev.olog.msc.presentation.base.list.DataBoundViewHolder
+import dev.olog.msc.presentation.base.list.drag.TouchableAdapter
 import dev.olog.msc.presentation.preferences.R
 import dev.olog.msc.shared.extensions.swap
 import kotlinx.android.synthetic.main.dialog_tab_category_item.view.*

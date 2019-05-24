@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.detail.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 
 object DiffCallbackDetail : DiffUtil.ItemCallback<DisplayableItem>(){
     override fun areItemsTheSame(oldItem: DisplayableItem, newItem: DisplayableItem): Boolean {

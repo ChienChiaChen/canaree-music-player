@@ -14,7 +14,7 @@ import dev.olog.msc.core.interactor.InsertCustomTrackListRequest
 import dev.olog.msc.core.interactor.InsertCustomTrackListToPlaylist
 import dev.olog.msc.presentation.base.OnFail
 import dev.olog.msc.presentation.base.OnSuccess
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.shared.extensions.toList
 import dev.olog.msc.shared.extensions.toggle
 import kotlinx.coroutines.Dispatchers

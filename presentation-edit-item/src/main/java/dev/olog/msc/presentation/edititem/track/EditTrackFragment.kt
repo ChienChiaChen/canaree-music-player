@@ -11,7 +11,7 @@ import dev.olog.msc.presentation.base.extensions.extractText
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.edititem.*
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.C
 import kotlinx.android.synthetic.main.fragment_edit_track.*
@@ -33,8 +33,16 @@ class EditTrackFragment : BaseEditItemFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazyFast { viewModelProvider<EditTrackFragmentViewModel>(viewModelFactory) }
-    private val editItemViewModel by lazyFast { activity!!.viewModelProvider<EditItemViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        viewModelProvider<EditTrackFragmentViewModel>(
+            viewModelFactory
+        )
+    }
+    private val editItemViewModel by lazyFast {
+        activity!!.viewModelProvider<EditItemViewModel>(
+            viewModelFactory
+        )
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

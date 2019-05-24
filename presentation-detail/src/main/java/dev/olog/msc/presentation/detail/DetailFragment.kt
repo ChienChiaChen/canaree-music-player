@@ -16,18 +16,18 @@ import com.bumptech.glide.request.target.Target
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.glide.GlideApp
-import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
-import dev.olog.msc.presentation.base.adapter.SetupNestedList
-import dev.olog.msc.presentation.base.drag.OnStartDragListener
-import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.CanChangeStatusBarColor
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
+import dev.olog.msc.presentation.base.list.BasePagedAdapter
+import dev.olog.msc.presentation.base.list.SetupNestedList
+import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
+import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.*
@@ -36,9 +36,9 @@ import javax.inject.Inject
 import kotlin.properties.Delegates
 
 class DetailFragment : BaseFragment(),
-        CanChangeStatusBarColor,
-        SetupNestedList,
-        OnStartDragListener {
+    CanChangeStatusBarColor,
+    SetupNestedList,
+    OnStartDragListener {
 
     companion object {
         const val TAG = "DetailFragment"
@@ -47,7 +47,7 @@ class DetailFragment : BaseFragment(),
         @JvmStatic
         fun newInstance(mediaId: MediaId): DetailFragment {
             return DetailFragment().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString()
+                ARGUMENTS_MEDIA_ID to mediaId.toString()
             )
         }
     }
@@ -56,11 +56,21 @@ class DetailFragment : BaseFragment(),
     lateinit var navigator: Navigator
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazyFast { viewModelProvider<DetailFragmentViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        viewModelProvider<DetailFragmentViewModel>(
+            viewModelFactory
+        )
+    }
 
     private val recyclerOnScrollListener by lazyFast { HeaderVisibilityScrollListener(this) }
 
-    private val mediaId by lazyFast { MediaId.fromString(arguments!!.getString(ARGUMENTS_MEDIA_ID)!!) }
+    private val mediaId by lazyFast {
+        MediaId.fromString(
+            arguments!!.getString(
+                ARGUMENTS_MEDIA_ID
+            )!!
+        )
+    }
 
     private val mostPlayedAdapter by lazyFast { DetailMostPlayedAdapter(navigator) }
     private val recentlyAddedAdapter by lazyFast { DetailRecentlyAddedAdapter(navigator) }
@@ -143,21 +153,32 @@ class DetailFragment : BaseFragment(),
         postponeEnterTransition()
         val context = view.context
         GlideApp.with(context)
-                .load(mediaId)
-                .priority(Priority.IMMEDIATE)
-                .onlyRetrieveFromCache(true)
-                .error(CoverUtils.getGradient(context, mediaId))
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        startPostponedEnterTransition()
-                        return false
-                    }
+            .load(mediaId)
+            .priority(Priority.IMMEDIATE)
+            .onlyRetrieveFromCache(true)
+            .error(CoverUtils.getGradient(context, mediaId))
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    startPostponedEnterTransition()
+                    return false
+                }
 
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        startPostponedEnterTransition()
-                        return false
-                    }
-                }).into(view.cover)
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    startPostponedEnterTransition()
+                    return false
+                }
+            }).into(view.cover)
     }
 
     override fun setupNestedList(layoutId: Int, recyclerView: RecyclerView) {
@@ -179,8 +200,8 @@ class DetailFragment : BaseFragment(),
 
     private fun setupHorizontalListAsGrid(list: RecyclerView, adapter: BasePagedAdapter<*>) {
         val layoutManager = GridLayoutManager(
-                list.context, DetailFragmentViewModel.NESTED_SPAN_COUNT,
-                GridLayoutManager.HORIZONTAL, false
+            list.context, DetailFragmentViewModel.NESTED_SPAN_COUNT,
+            GridLayoutManager.HORIZONTAL, false
         )
         list.layoutManager = layoutManager
         list.adapter = adapter

@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.about.thanks
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.model.BaseModel
+import dev.olog.msc.presentation.base.list.model.BaseModel
 
 data class SpecialThanksModel(
         override val type: Int,

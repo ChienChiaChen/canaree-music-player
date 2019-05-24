@@ -7,9 +7,9 @@ import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.tabs.foldertree.widgets.BreadCrumbLayout
-import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.presentation.tabs.foldertree.utils.safeGetCanonicalFile
+import dev.olog.msc.presentation.tabs.foldertree.widgets.BreadCrumbLayout
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_folder_tree.*
@@ -19,17 +19,13 @@ import javax.inject.Inject
 class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback,
     CanHandleOnBackPressed {
 
-    companion object {
-
-        @JvmStatic
-        fun newInstance(): FolderTreeFragment {
-            return FolderTreeFragment()
-        }
-    }
-
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var navigator: Navigator
-    private val viewModel by lazyFast { viewModelProvider<FolderTreeFragmentViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        viewModelProvider<FolderTreeFragmentViewModel>(
+            viewModelFactory
+        )
+    }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         val adapter = FolderTreeFragmentAdapter(lifecycle, viewModel, navigator)

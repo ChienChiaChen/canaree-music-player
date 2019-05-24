@@ -1,8 +1,8 @@
 package dev.olog.msc.presentation.tabs.lookup
 
 import android.content.Context
-import dev.olog.msc.presentation.base.adapter.BasePagedAdapter
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.BasePagedAdapter
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.tabs.R
 import dev.olog.msc.shared.extensions.configuration
 

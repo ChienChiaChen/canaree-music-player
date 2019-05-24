@@ -7,9 +7,9 @@ import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.entity.data.request.with
 import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.core.gateway.track.FolderGateway
-import dev.olog.msc.presentation.base.model.DisplayableItem
-import dev.olog.msc.presentation.base.paging.BaseDataSource
-import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.paging.BaseDataSource
+import dev.olog.msc.presentation.base.list.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.search.R
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

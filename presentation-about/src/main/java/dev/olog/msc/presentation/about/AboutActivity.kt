@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.presentation.base.activity.BaseActivity
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.navigator.NavigatorAbout
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.activity_about.*
 import javax.inject.Inject
@@ -25,7 +25,11 @@ class AboutActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazyFast { viewModelProvider<AboutActivityViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        viewModelProvider<AboutActivityViewModel>(
+            viewModelFactory
+        )
+    }
     private val adapter by lazyFast { AboutActivityAdapter(lifecycle, navigator, viewModel) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -11,7 +11,7 @@ import dev.olog.msc.presentation.base.extensions.extractText
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.edititem.*
-import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.C
 import dev.olog.msc.shared.ui.extensions.subscribe
@@ -34,8 +34,16 @@ class EditAlbumFragment : BaseEditItemFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazyFast { viewModelProvider<EditAlbumFragmentViewModel>(viewModelFactory) }
-    private val editItemViewModel by lazyFast { activity!!.viewModelProvider<EditItemViewModel>(viewModelFactory) }
+    private val viewModel by lazyFast {
+        viewModelProvider<EditAlbumFragmentViewModel>(
+            viewModelFactory
+        )
+    }
+    private val editItemViewModel by lazyFast {
+        activity!!.viewModelProvider<EditItemViewModel>(
+            viewModelFactory
+        )
+    }
     @Inject
     lateinit var mediaId: MediaId
 

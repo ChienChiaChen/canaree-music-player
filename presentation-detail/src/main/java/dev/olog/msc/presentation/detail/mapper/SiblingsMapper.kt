@@ -8,7 +8,7 @@ import dev.olog.msc.core.entity.track.Album
 import dev.olog.msc.core.entity.track.Folder
 import dev.olog.msc.core.entity.track.Genre
 import dev.olog.msc.core.entity.track.Playlist
-import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.detail.R
 
 internal fun Folder.toDetailDisplayableItem(resources: Resources): DisplayableItem {

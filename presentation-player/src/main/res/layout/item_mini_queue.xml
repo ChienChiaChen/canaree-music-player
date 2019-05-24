@@ -9,7 +9,7 @@
 
         <variable
             name="item"
-            type="dev.olog.msc.presentation.base.model.DisplayableItem" />
+            type="dev.olog.msc.presentation.base.list.model.DisplayableItem" />
     </data>
 
     <FrameLayout
@@ -58,7 +58,7 @@
                     android:layout_height="@dimen/item_song_cover_size"
                     android:layout_marginTop="@dimen/item_song_cover_margin_vertical"
                     android:layout_marginBottom="@dimen/item_song_cover_margin_vertical"
-                    app:imageSong="@{item}"
+                    app:imageSong="@{item.mediaId}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
