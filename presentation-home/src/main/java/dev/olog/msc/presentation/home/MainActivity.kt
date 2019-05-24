@@ -53,8 +53,6 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        slidingPanel.panelHeight = dimen(R.dimen.sliding_panel_peek) + dimen(R.dimen.bottom_navigation_height)
-
         presenter.observeIsRepositoryEmpty()
             .subscribe(this, this::handleEmptyRepository)
 
