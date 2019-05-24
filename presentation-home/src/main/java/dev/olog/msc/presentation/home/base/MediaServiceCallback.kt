@@ -1,11 +1,10 @@
-package dev.olog.msc.presentation.base.media
+package dev.olog.msc.presentation.home.base
 
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import dev.olog.msc.presentation.base.activity.MusicGlueActivity
 
 class MediaServiceCallback(
     private val activity: MusicGlueActivity

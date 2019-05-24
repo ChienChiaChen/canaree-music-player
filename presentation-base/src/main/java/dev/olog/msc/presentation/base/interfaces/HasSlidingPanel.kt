@@ -1,20 +1,17 @@
 package dev.olog.msc.presentation.base.interfaces
 
-import android.util.Log
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 interface HasSlidingPanel {
 
-    fun getSlidingPanel(): SlidingUpPanelLayout?
+    fun getSlidingPanel(): SlidingUpPanelLayout
 
     fun addPanelSlideListener(listener: SlidingUpPanelLayout.PanelSlideListener){
-        getSlidingPanel()?.addPanelSlideListener(listener)
-                ?: Log.w("Sliding Panel", "sliding panel not found")
+        getSlidingPanel().addPanelSlideListener(listener)
     }
 
     fun removePanelSlideListener(listener: SlidingUpPanelLayout.PanelSlideListener){
-        getSlidingPanel()?.removePanelSlideListener(listener)
-                ?: Log.w("Sliding Panel", "sliding panel not found")
+        getSlidingPanel().removePanelSlideListener(listener)
     }
 
 }

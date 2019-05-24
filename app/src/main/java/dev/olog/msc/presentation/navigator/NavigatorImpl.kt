@@ -62,9 +62,9 @@ class NavigatorImpl @Inject internal constructor(
 
     private var lastRequest: Long = -1
 
-    override fun toFirstAccess(activity: FragmentActivity, requestCode: Int) {
+    override fun toFirstAccess(activity: FragmentActivity) {
         val intent = Intent(activity, SplashActivity::class.java)
-        activity.startActivityForResult(intent, requestCode)
+        activity.startActivity(intent)
     }
 
     private fun anyFragmentOnUpperFragmentContainer(activity: FragmentActivity): Boolean {

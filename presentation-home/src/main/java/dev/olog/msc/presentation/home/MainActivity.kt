@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.home
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
@@ -8,13 +7,11 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dev.olog.msc.core.Classes
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.*
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.ActivityCodes
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.RateAppDialog
-import dev.olog.msc.presentation.base.activity.MusicGlueActivity
 import dev.olog.msc.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
 import dev.olog.msc.presentation.base.extensions.collapse
 import dev.olog.msc.presentation.base.extensions.expand
@@ -25,6 +22,7 @@ import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.presentation.base.theme.player.theme.isMini
+import dev.olog.msc.presentation.home.base.MusicGlueActivity
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
@@ -36,17 +34,10 @@ import javax.inject.Inject
 
 class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
-    companion object {
-        private const val SPLASH_REQUEST_CODE = 0
-    }
-
-
     @Inject
     lateinit var presenter: MainActivityViewModel
     @Inject
     lateinit var navigator: Navigator
-    @Inject
-    lateinit var classes: Classes
     // handles lifecycle itself
     @Inject
     override lateinit var billing: IBilling
@@ -67,23 +58,32 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         presenter.observeIsRepositoryEmpty()
             .subscribe(this, this::handleEmptyRepository)
 
-        val canReadStorage = Permissions.canReadStorage(this)
-        val isFirstAccess = presenter.isFirstAccess()
-        val toFirstAccess = !canReadStorage || isFirstAccess
-        if (toFirstAccess) {
-            navigator.toFirstAccess(this, SPLASH_REQUEST_CODE)
+        val isFirstAccess = isFirstAccess()
+
+        when {
+            isFirstAccess -> navigator.toFirstAccess(this)
+            savedInstanceState == null -> handleOnActivityCreated()
+            else -> handleOnActivityResumed()
+        }
+        if (isFirstAccess) {
             return
-        } else if (savedInstanceState == null) {
-            handleOnActivityCreated()
-        } else {
-            handleOnActivityResumed()
         }
 
+        adjustSlidingPanel()
+
+        intent?.let { handleIntent(it) }
+    }
+
+    private fun isFirstAccess(): Boolean {
+        val canReadStorage = Permissions.canReadStorage(this)
+        val isFirstAccess = presenter.isFirstAccess()
+        return !canReadStorage || isFirstAccess
+    }
+
+    private fun adjustSlidingPanel() {
         if (isMini()) {
             slidingPanel.setParallaxOffset(0)
-            playerLayout.layoutParams = SlidingUpPanelLayout.LayoutParams(
-                SlidingUpPanelLayout.LayoutParams.MATCH_PARENT, SlidingUpPanelLayout.LayoutParams.WRAP_CONTENT
-            )
+            playerLayout.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         }
 
         bottomWrapper.doOnPreDraw {
@@ -91,8 +91,6 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
                 bottomWrapper.translationY = bottomWrapper.height.toFloat()
             }
         }
-
-        intent?.let { handleIntent(it) }
     }
 
     private fun handleOnActivityCreated() {
@@ -137,10 +135,10 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         handleFakeView(slidingPanel.panelState)
     }
 
-    private fun handleFakeView(state: SlidingUpPanelLayout.PanelState) {
+    private fun handleFakeView(state: PanelState) {
         when (state) {
-            SlidingUpPanelLayout.PanelState.EXPANDED,
-            SlidingUpPanelLayout.PanelState.ANCHORED -> {
+            PanelState.EXPANDED,
+            PanelState.ANCHORED -> {
                 fakeView.isClickable = true
                 fakeView.isFocusable = true
                 fakeView.setOnClickListener { slidingPanel.collapse() }
@@ -170,7 +168,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         slidingPanel.removePanelSlideListener(onPanelSlide)
     }
 
-    private val onPanelSlide = object : SlidingUpPanelLayout.PanelSlideListener {
+    private val onPanelSlide = object : PanelSlideListener {
 
         override fun onPanelSlide(panel: View, slideOffset: Float) {
             bottomWrapper.translationY = bottomWrapper.height * clamp(slideOffset, 0f, 1f)
@@ -178,8 +176,8 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
         override fun onPanelStateChanged(
             panel: View,
-            previousState: SlidingUpPanelLayout.PanelState,
-            newState: SlidingUpPanelLayout.PanelState
+            previousState: PanelState,
+            newState: PanelState
         ) {
             handleFakeView(newState)
         }
@@ -224,21 +222,6 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                SPLASH_REQUEST_CODE -> {
-                    bottomNavigate(bottomNavigation.selectedItemId, false)
-                    slidingPanel.collapse()
-                    return
-                }
-                ActivityCodes.REQUEST_CODE -> {
-                    bottomNavigate(bottomNavigation.selectedItemId, true)
-                    recreate()
-                    return
-                }
-            }
-        }
-
         if (requestCode == FloatingWindowHelper.REQUEST_CODE_HOVER_PERMISSION) {
             FloatingWindowHelper.startServiceIfHasOverlayPermission(this, classes.floatingWindowService())
         } else {
@@ -248,8 +231,6 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     override fun onBackPressed() {
         try {
-
-
             val topFragment = getTopFragment()
 
             when {
@@ -283,5 +264,5 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         return true
     }
 
-    override fun getSlidingPanel(): SlidingUpPanelLayout? = slidingPanel
+    override fun getSlidingPanel(): SlidingUpPanelLayout = slidingPanel
 }

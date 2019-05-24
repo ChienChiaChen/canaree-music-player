@@ -1,4 +1,4 @@
-package dev.olog.msc.presentation.base.activity
+package dev.olog.msc.presentation.home.base
 
 import android.content.ComponentName
 import android.os.Bundle
@@ -16,9 +16,8 @@ import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
+import dev.olog.msc.presentation.base.activity.BaseActivity
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
-import dev.olog.msc.presentation.base.media.MediaServiceCallback
-import dev.olog.msc.presentation.base.media.MusicServiceConnection
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.MusicServiceConnectionState
 import dev.olog.msc.shared.Permissions

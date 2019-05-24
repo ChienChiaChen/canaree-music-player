@@ -26,6 +26,10 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
+    override fun onCleared() {
+        viewModelScope.cancel()
+    }
+
     fun observeIsRepositoryEmpty(): LiveData<Boolean> = liveData
 
     fun isFirstAccess(): Boolean {
@@ -40,10 +44,6 @@ class MainActivityViewModel @Inject constructor(
 
     fun canShowPodcastCategory(): Boolean {
         return appPreferencesUseCase.canShowPodcastCategory()
-    }
-
-    override fun onCleared() {
-        viewModelScope.cancel()
     }
 
 }

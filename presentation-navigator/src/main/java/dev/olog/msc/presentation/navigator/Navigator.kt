@@ -8,7 +8,7 @@ import dev.olog.msc.core.entity.PlaylistType
 
 interface Navigator {
 
-    fun toFirstAccess(activity: FragmentActivity, requestCode: Int)
+    fun toFirstAccess(activity: FragmentActivity)
 
     fun toLibraryCategories(activity: FragmentActivity, forceRecreate: Boolean)
     fun toPodcastCategories(activity: FragmentActivity, forceRecreate: Boolean)

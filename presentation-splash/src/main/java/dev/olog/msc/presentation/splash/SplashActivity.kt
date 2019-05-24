@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.splash
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -73,7 +72,6 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun finishActivity(){
-        setResult(Activity.RESULT_OK)
         finish()
     }
 

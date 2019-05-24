@@ -5,6 +5,9 @@ dependencies {
     implementation librariesCore.dagger
 
     implementation librariesCore.coroutines
+
+    testImplementation "junit:junit:$rootProject.junit"
+    testImplementation librariesCore.coroutinesTest
 }
 
 sourceCompatibility = "8"

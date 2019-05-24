@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.presentation.about.AboutActivity
-import dev.olog.msc.presentation.base.ActivityCodes
 import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.debug.DebugConfigurationActivity
 import dev.olog.msc.presentation.dialogs.playlist.NewPlaylistDialog
@@ -18,7 +17,7 @@ import dev.olog.msc.shared.extensions.toast
 import javax.inject.Inject
 
 class MainPopupNavigator @Inject constructor(
-        private val prefsKeys: PrefsKeys
+    private val prefsKeys: PrefsKeys
 ) : IPopupNavigator {
 
     override fun toAboutActivity(activity: FragmentActivity) {
@@ -29,7 +28,7 @@ class MainPopupNavigator @Inject constructor(
     override fun toEqualizer(activity: FragmentActivity) {
         // TODO
         val useAppEqualizer = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
-                .getBoolean(activity.getString(prefsKeys.usedEqualizer()), true)
+            .getBoolean(activity.getString(prefsKeys.usedEqualizer()), true)
 
         if (activity is HasBilling && activity.billing.isPremium() && useAppEqualizer) {
             toBuiltInEqualizer(activity)
@@ -59,12 +58,12 @@ class MainPopupNavigator @Inject constructor(
 
     override fun toSettingsActivity(activity: FragmentActivity) {
         val intent = Intent(activity, PreferencesActivity::class.java)
-        activity.startActivityForResult(intent, ActivityCodes.REQUEST_CODE)
+        activity.startActivity(intent)
     }
 
     override fun toSleepTimer(activity: FragmentActivity) {
         SleepTimerPickerDialogBuilder(activity, activity.supportFragmentManager)
-                .show()
+            .show()
     }
 
     override fun toCreatePlaylistDialog(
