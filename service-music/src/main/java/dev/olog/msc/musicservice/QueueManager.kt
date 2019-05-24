@@ -25,11 +25,11 @@ import dev.olog.msc.musicservice.interfaces.Queue
 import dev.olog.msc.musicservice.model.*
 import dev.olog.msc.musicservice.voice.VoiceSearchParams
 import dev.olog.msc.shared.MusicConstants
-import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.swap
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.shared.utils.clamp
 import kotlinx.coroutines.coroutineScope
+import java.text.Collator
 import java.util.*
 import javax.inject.Inject
 
@@ -48,6 +48,12 @@ internal class QueueManager @Inject constructor(
     private val podcastPosition: PodcastPositionUseCase
 
 ) : Queue {
+
+    private val collator by lazy {
+        val instance = Collator.getInstance(Locale.UK)
+        instance.strength = Collator.SECONDARY
+        instance
+    }
 
     override suspend fun prepare(): PlayerMediaEntity = coroutineScope {
         assertBackgroundThread()
@@ -310,16 +316,16 @@ internal class QueueManager @Inject constructor(
         return list to currentPosition
     }
 
-    private fun getCurrentSongOnPlayFromId(songId: Long, list: List<MediaEntity>) : Pair<List<MediaEntity>, Int> {
-            if (shuffleMode.isEnabled() || songId == -1L) {
-                return list to 0
-            } else {
-                val position = clamp(list.indexOfFirst { it.id == songId }, 0, list.lastIndex)
-                return list to position
-            }
+    private fun getCurrentSongOnPlayFromId(songId: Long, list: List<MediaEntity>): Pair<List<MediaEntity>, Int> {
+        if (shuffleMode.isEnabled() || songId == -1L) {
+            return list to 0
+        } else {
+            val position = clamp(list.indexOfFirst { it.id == songId }, 0, list.lastIndex)
+            return list to position
         }
+    }
 
-    private fun shuffleIfNeeded(songId: Long, l: List<MediaEntity>) : List<MediaEntity> {
+    private fun shuffleIfNeeded(songId: Long, l: List<MediaEntity>): List<MediaEntity> {
         var list = l.toList()
         if (shuffleMode.isEnabled()) {
             val item = list.firstOrNull { it.id == songId } ?: l
@@ -378,30 +384,31 @@ internal class QueueManager @Inject constructor(
             podcastPosition.set(mediaEntity.id, position)
         }
     }
-}
 
-private fun getAscendingComparator(sortType: SortType): Comparator<MediaEntity> {
-    return when (sortType) {
-        SortType.TITLE -> Comparator { o1, o2 -> collator.compare(o1.title, o2.title) }
-        SortType.ARTIST -> Comparator { o1, o2 -> collator.compare(o1.artist, o2.artist) }
-        SortType.ALBUM_ARTIST -> Comparator { o1, o2 -> collator.compare(o1.albumArtist, o2.albumArtist) }
-        SortType.ALBUM -> Comparator { o1, o2 -> collator.compare(o1.album, o2.album) }
-        SortType.DURATION -> compareBy { it.duration }
-        SortType.RECENTLY_ADDED -> compareBy { it.dateAdded }
-        SortType.TRACK_NUMBER -> ComparatorUtils.getMediaEntityAscendingTrackNumberComparator()
-        SortType.CUSTOM -> compareBy { 0 }
+    private fun getAscendingComparator(sortType: SortType): Comparator<MediaEntity> {
+        return when (sortType) {
+            SortType.TITLE -> Comparator { o1, o2 -> collator.compare(o1.title, o2.title) }
+            SortType.ARTIST -> Comparator { o1, o2 -> collator.compare(o1.artist, o2.artist) }
+            SortType.ALBUM_ARTIST -> Comparator { o1, o2 -> collator.compare(o1.albumArtist, o2.albumArtist) }
+            SortType.ALBUM -> Comparator { o1, o2 -> collator.compare(o1.album, o2.album) }
+            SortType.DURATION -> compareBy { it.duration }
+            SortType.RECENTLY_ADDED -> compareBy { it.dateAdded }
+            SortType.TRACK_NUMBER -> ComparatorUtils.getMediaEntityAscendingTrackNumberComparator()
+            SortType.CUSTOM -> compareBy { 0 }
+        }
     }
-}
 
-private fun getDescendingComparator(sortType: SortType): Comparator<MediaEntity> {
-    return when (sortType) {
-        SortType.TITLE -> Comparator { o1, o2 -> collator.compare(o2.title, o1.title) }
-        SortType.ARTIST -> Comparator { o1, o2 -> collator.compare(o2.artist, o1.artist) }
-        SortType.ALBUM_ARTIST -> Comparator { o1, o2 -> collator.compare(o2.albumArtist, o1.albumArtist) }
-        SortType.ALBUM -> Comparator { o1, o2 -> collator.compare(o2.album, o1.album) }
-        SortType.DURATION -> compareByDescending { it.duration }
-        SortType.RECENTLY_ADDED -> compareByDescending { it.dateAdded }
-        SortType.TRACK_NUMBER -> ComparatorUtils.getMediaEntityDescendingTrackNumberComparator()
-        SortType.CUSTOM -> compareByDescending { 0 }
+    private fun getDescendingComparator(sortType: SortType): Comparator<MediaEntity> {
+        return when (sortType) {
+            SortType.TITLE -> Comparator { o1, o2 -> collator.compare(o2.title, o1.title) }
+            SortType.ARTIST -> Comparator { o1, o2 -> collator.compare(o2.artist, o1.artist) }
+            SortType.ALBUM_ARTIST -> Comparator { o1, o2 -> collator.compare(o2.albumArtist, o1.albumArtist) }
+            SortType.ALBUM -> Comparator { o1, o2 -> collator.compare(o2.album, o1.album) }
+            SortType.DURATION -> compareByDescending { it.duration }
+            SortType.RECENTLY_ADDED -> compareByDescending { it.dateAdded }
+            SortType.TRACK_NUMBER -> ComparatorUtils.getMediaEntityDescendingTrackNumberComparator()
+            SortType.CUSTOM -> compareByDescending { 0 }
+        }
     }
+
 }

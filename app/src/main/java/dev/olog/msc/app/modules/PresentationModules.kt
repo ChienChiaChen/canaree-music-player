@@ -46,4 +46,4 @@ import dev.olog.msc.presentation.tabs.foldertree.di.FolderTreeFragmentModule
         OfflineLyricsInjector::class
     ]
 )
-abstract class PresentationModule
+abstract class PresentationModules

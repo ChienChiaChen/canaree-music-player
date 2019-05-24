@@ -20,8 +20,10 @@ import dev.olog.msc.core.gateway.track.FolderGateway
 import dev.olog.msc.presentation.tabs.foldertree.utils.isAudioFile
 import dev.olog.msc.presentation.tabs.foldertree.utils.isStorageDir
 import dev.olog.msc.presentation.tabs.foldertree.utils.safeGetCanonicalFile
-import dev.olog.msc.shared.core.channel.combineLatest
-import dev.olog.msc.shared.extensions.*
+import dev.olog.msc.presentation.tabs.foldertree.utils.safeGetCanonicalPath
+import dev.olog.msc.shared.core.flow.combineLatest
+import dev.olog.msc.shared.extensions.startWith
+import dev.olog.msc.shared.extensions.startWithIfNotEmpty
 import dev.olog.msc.shared.ui.extensions.liveDataOf
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +31,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject

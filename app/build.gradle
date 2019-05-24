@@ -220,6 +220,8 @@ dependencies {
     implementation librariesNetwork.retrofitCoroutines
     implementation librariesUtils.gson
 
+    implementation librariesUtils.billing
+
     // debug
     debugImplementation librariesDebug.leakCanary
     debugImplementation librariesDebug.leakCanarySupport

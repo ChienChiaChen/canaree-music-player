@@ -12,7 +12,7 @@ import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
-import dev.olog.msc.presentation.tabs.foldertree.utils.safeGetCanonicalPath
+import dev.olog.msc.data.utils.safeGetCanonicalPath
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.BackpressureStrategy
 import kotlinx.coroutines.flow.Flow
