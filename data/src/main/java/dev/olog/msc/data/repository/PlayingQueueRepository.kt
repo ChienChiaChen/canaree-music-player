@@ -28,6 +28,7 @@ internal class PlayingQueueRepository @Inject constructor(
 
     override fun getAll(page: Page): List<PlayingQueueSong> {
         assertBackgroundThread()
+
         val allSongs = songGateway.getAll().getAll(Filter.NO_FILTER)
         val playingQueue =
             playingQueueDao.getAllAsSongs(allSongs, podcastGateway.getAll().getAll(Filter.NO_FILTER), page)
@@ -48,7 +49,8 @@ internal class PlayingQueueRepository @Inject constructor(
     }
 
     override suspend fun observeAll(page: Page): Flow<List<PlayingQueueSong>> {
-        return playingQueueDao.obsereveAllAsSongs(songGateway, podcastGateway, page)
+        return playingQueueDao
+            .obsereveAllAsSongs(songGateway, podcastGateway, page)
             .distinctUntilChanged()
     }
 
@@ -56,6 +58,7 @@ internal class PlayingQueueRepository @Inject constructor(
         return playingQueueDao.observeCount()
             .asFlow()
             .map { it == 0 }
+            .distinctUntilChanged()
     }
 
     private fun Song.toPlayingQueueSong(progressive: Int): PlayingQueueSong {
