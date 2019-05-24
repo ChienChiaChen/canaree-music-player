@@ -27,8 +27,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/vd_playlist_add"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="16dp"
-            tools:tint="@color/dark_grey"/>
+            android:layout_marginEnd="16dp"/>
 
         <FrameLayout
             android:id="@+id/content"
@@ -36,7 +35,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/list_margin_horizontal"
             android:paddingEnd="@dimen/list_margin_horizontal"
-            android:background="?android:windowBackground">
+            android:background="?colorSurface">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/root"
