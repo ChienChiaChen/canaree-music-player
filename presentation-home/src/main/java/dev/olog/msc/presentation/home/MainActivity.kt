@@ -260,8 +260,8 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     private fun tryPopFolderBack(): Boolean {
-        val categoriesFragment = supportFragmentManager.findFragmentByTag(FragmentTags.CATEGORIES)
-        val fragments = categoriesFragment!!.childFragmentManager.fragments
+        val categoriesFragment = supportFragmentManager.findFragmentByTag(FragmentTags.CATEGORIES) ?: return false
+        val fragments = categoriesFragment.childFragmentManager.fragments
         for (fragment in fragments) {
             if (fragment is CanHandleOnBackPressed &&
                 fragment.viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED && // ensure fragment is visible
