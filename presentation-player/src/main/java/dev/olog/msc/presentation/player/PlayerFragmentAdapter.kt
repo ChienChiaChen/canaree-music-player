@@ -29,6 +29,7 @@ import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.base.utils.*
 import dev.olog.msc.presentation.base.widgets.SwipeableView
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.player.animation.rotate
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
@@ -85,9 +86,6 @@ class PlayerFragmentAdapter(
                 val view = viewHolder.itemView
                 view.bigCover.observeProcessorColors().subscribe(viewHolder, viewModel::updateProcessorColors)
                 view.bigCover.observePaletteColors().subscribe(viewHolder, viewModel::updatePaletteColors)
-                bindPlayerControls(view, viewHolder)
-
-                appearanceDelegate.initViewHolderListeners(viewHolder, viewType)
             }
         }
 
@@ -99,6 +97,19 @@ class PlayerFragmentAdapter(
         val view = holder.itemView
         if (ImageViews.IMAGE_SHAPE == ImageShape.RECTANGLE) { // TODO check
             view.coverWrapper?.radius = 0f
+        }
+        val viewType = holder.itemViewType
+        when (viewType){
+            R.layout.fragment_player_controls,
+            R.layout.fragment_player_controls_spotify,
+            R.layout.fragment_player_controls_flat,
+            R.layout.fragment_player_controls_big_image,
+            R.layout.fragment_player_controls_fullscreen,
+            R.layout.fragment_player_controls_clean,
+            R.layout.fragment_player_controls_mini -> {
+                bindPlayerControls(view, holder)
+                appearanceDelegate.initViewHolderListeners(holder, viewType)
+            }
         }
     }
 
@@ -172,37 +183,25 @@ class PlayerFragmentAdapter(
 
         val replayView = view.findViewById<View>(R.id.replay)
         replayView.setOnClickListener {
-            replayView.animate().cancel()
-            replayView.animate().rotation(-30f)
-                .setDuration(200)
-                .withEndAction { replayView.animate().rotation(0f).setDuration(200) }
+            replayView.rotate(-30)
             mediaProvider.replayTenSeconds()
         }
 
         val replay30View = view.findViewById<View>(R.id.replay30)
         replay30View.setOnClickListener {
-            replay30View.animate().cancel()
-            replay30View.animate().rotation(-50f)
-                .setDuration(200)
-                .withEndAction { replay30View.animate().rotation(0f).setDuration(200) }
+            replay30View.rotate(-50)
             mediaProvider.replayThirtySeconds()
         }
 
         val forwardView = view.findViewById<View>(R.id.forward)
         forwardView.setOnClickListener {
-            forwardView.animate().cancel()
-            forwardView.animate().rotation(30f)
-                .setDuration(200)
-                .withEndAction { forwardView.animate().rotation(0f).setDuration(200) }
+            forwardView.rotate(30)
             mediaProvider.forwardTenSeconds()
         }
 
         val forward30View = view.findViewById<View>(R.id.forward30)
         forward30View.setOnClickListener {
-            forward30View.animate().cancel()
-            forward30View.animate().rotation(50f)
-                .setDuration(200)
-                .withEndAction { forward30View.animate().rotation(0f).setDuration(200) }
+            forward30View.rotate(50)
             mediaProvider.forwardThirtySeconds()
         }
 
