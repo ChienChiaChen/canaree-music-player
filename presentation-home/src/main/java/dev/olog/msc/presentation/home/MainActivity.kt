@@ -134,6 +134,10 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         handleFakeView(slidingPanel.panelState)
     }
 
+    /**
+     * View that prevent touches on views behind sliding panel when player appearance is 'Mini'
+     * and sliding panel is expanded
+     */
     private fun handleFakeView(state: PanelState) {
         when (state) {
             PanelState.EXPANDED,
