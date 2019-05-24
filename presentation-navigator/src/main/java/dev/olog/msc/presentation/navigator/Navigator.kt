@@ -37,7 +37,7 @@ interface Navigator {
 
     fun toCreatePlaylistDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String)
 
-    fun toAddToFavoriteDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String)
+    fun toAddToFavoriteDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String)
 
     fun toPlayLater(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String)
 

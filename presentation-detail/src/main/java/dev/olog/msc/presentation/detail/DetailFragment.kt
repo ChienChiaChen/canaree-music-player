@@ -13,7 +13,6 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.glide.GlideApp
@@ -28,12 +27,11 @@ import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.shared.extensions.debounceFirst
 import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -112,15 +110,15 @@ class DetailFragment : BaseFragment(),
         viewModel.relatedArtists.subscribe(viewLifecycleOwner, relatedArtistAdapter::submitList)
         viewModel.siblings.subscribe(viewLifecycleOwner, albumsAdapter::submitList)
 
-        RxTextView.afterTextChangeEvents(view.editText)
-                .map { it.view().text.toString() }
-                .filter { it.isBlank() || it.trim().length >= 2 }
-                .debounceFirst(250, TimeUnit.MILLISECONDS)
-                .distinctUntilChanged()
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) { text ->
-                    viewModel.updateFilter(text)
-                }
+//        RxTextView.afterTextChangeEvents(view.editText) TODO
+//                .map { it.view().text.toString() }
+//                .filter { it.isBlank() || it.trim().length >= 2 }
+//                .debounceFirst(250, TimeUnit.MILLISECONDS)
+//                .distinctUntilChanged()
+//                .asLiveData()
+//                .subscribe(viewLifecycleOwner) { text ->
+//                    viewModel.updateFilter(text)
+//                }
     }
 
     override fun onResume() {

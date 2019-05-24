@@ -7,8 +7,8 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.interactor.ObserveItemTitleUseCase
-import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.shared.ui.extensions.liveDataOf
 import kotlinx.coroutines.cancel
 import javax.inject.Inject
 

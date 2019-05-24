@@ -1,10 +1,10 @@
 package dev.olog.msc.presentation.edititem.domain
 
 import android.content.Context
-import dev.olog.msc.core.coroutines.CompletableFlowWithParam
-import dev.olog.msc.core.coroutines.ComputationDispatcher
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.UsedImageGateway
+import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import dev.olog.msc.presentation.edititem.utils.notifyItemChanged
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.FieldKey

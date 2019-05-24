@@ -13,8 +13,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.presentation.base.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.extensions.ctx
-import dev.olog.msc.presentation.base.extensions.distinctUntilChanged
-import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
@@ -25,32 +23,36 @@ import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
+import dev.olog.msc.shared.core.coroutines.flowInterval
 import dev.olog.msc.shared.extensions.extractBookmark
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.shared.ui.extensions.distinctUntilChanged
+import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.theme.HasPlayerTheme
 import dev.olog.msc.shared.utils.isMarshmallow
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_player.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
 import kotlinx.android.synthetic.main.fragment_player_toolbar.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 
 class PlayerFragment : BaseFragment(),
-        SlidingUpPanelLayout.PanelSlideListener,
-        OnStartDragListener {
+    SlidingUpPanelLayout.PanelSlideListener,
+    OnStartDragListener,
+    CoroutineScope by MainScope() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by lazyFast { viewModelProvider<PlayerFragmentViewModel>(viewModelFactory) }
-    @Inject
-    lateinit var presenter: PlayerFragmentPresenter
+
     @Inject
     lateinit var navigator: Navigator
 
@@ -58,22 +60,20 @@ class PlayerFragment : BaseFragment(),
 
     private lateinit var mediaProvider: MediaProvider
 
-    private var seekBarDisposable: Disposable? = null
-
-    private var lyricsDisposable: Disposable? = null
+    private var seekBarJob: Job? = null
 
     private var itemTouchHelper: ItemTouchHelper? = null
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         val adapter = PlayerFragmentAdapter(
-                viewLifecycleOwner.lifecycle,
-                activity as MediaProvider,
-                navigator, viewModel, presenter,
-                IPlayerAppearanceDelegate.get(
-                        ctx.applicationContext as HasPlayerTheme,
-                        viewModel
-                ),
-                this
+            viewLifecycleOwner.lifecycle,
+            activity as MediaProvider,
+            navigator, viewModel,
+            IPlayerAppearanceDelegate.get(
+                ctx.applicationContext as HasPlayerTheme,
+                viewModel
+            ),
+            this
         )
 
         layoutManager = LinearLayoutManager(context)
@@ -97,18 +97,18 @@ class PlayerFragment : BaseFragment(),
         mediaProvider = (activity as MediaProvider)
 
         mediaProvider.onQueueChanged()
-                .distinctUntilChanged()
-                .subscribe(viewLifecycleOwner) { viewModel.updateQueue(ctx, it) }
+            .distinctUntilChanged()
+            .subscribe(viewLifecycleOwner) { viewModel.updateQueue(ctx, it) }
 
         viewModel.observeMiniQueue()
-                .subscribe(viewLifecycleOwner, adapter::updateDataSet)
+            .subscribe(viewLifecycleOwner, adapter::updateDataSet)
 
         mediaProvider.onStateChanged()
-                .subscribe(viewLifecycleOwner) {
-                    val bookmark = it.extractBookmark()
-                    viewModel.updateProgress(bookmark)
-                    handleSeekBar(bookmark, it.isPlaying(), it.playbackSpeed)
-                }
+            .subscribe(viewLifecycleOwner) {
+                val bookmark = it.extractBookmark()
+                viewModel.updateProgress(bookmark)
+                handleSeekBar(bookmark, it.isPlaying(), it.playbackSpeed)
+            }
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
@@ -116,13 +116,16 @@ class PlayerFragment : BaseFragment(),
     }
 
     private fun handleSeekBar(bookmark: Int, isPlaying: Boolean, speed: Float) {
-        seekBarDisposable.unsubscribe()
+        seekBarJob?.cancel()
 
         if (isPlaying) {
-            seekBarDisposable = Observable.interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS, Schedulers.computation())
-                            .map { (it + 1) * PROGRESS_BAR_INTERVAL * speed + bookmark }
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ viewModel.updateProgress(it.toInt()) }, Throwable::printStackTrace)
+            seekBarJob = launch {
+                flowInterval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS)
+                    .map { (it + 1) * PROGRESS_BAR_INTERVAL * speed + bookmark }
+                    .collect {
+                        viewModel.updateProgress(it.toInt())
+                    }
+            }
         }
     }
 
@@ -139,8 +142,7 @@ class PlayerFragment : BaseFragment(),
 
     override fun onStop() {
         super.onStop()
-        seekBarDisposable.unsubscribe()
-        lyricsDisposable.unsubscribe()
+        seekBarJob?.cancel()
     }
 
     override fun onPanelSlide(panel: View?, slideOffset: Float) {
@@ -151,16 +153,14 @@ class PlayerFragment : BaseFragment(),
     }
 
     override fun onPanelStateChanged(
-            panel: View,
-            previousState: SlidingUpPanelLayout.PanelState,
-            newState: SlidingUpPanelLayout.PanelState
+        panel: View,
+        previousState: SlidingUpPanelLayout.PanelState,
+        newState: SlidingUpPanelLayout.PanelState
     ) {
         if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
             if (viewModel.showLyricsTutorialIfNeverShown()) {
                 lyrics?.let { Tutorial.lyrics(it) }
             }
-        } else {
-            lyricsDisposable.unsubscribe()
         }
     }
 

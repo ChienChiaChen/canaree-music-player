@@ -12,12 +12,11 @@ import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
-import dev.olog.msc.shared.extensions.asFlowable
 import dev.olog.msc.shared.extensions.safeGetCanonicalPath
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import dev.olog.msc.shared.utils.assertBackgroundThread
+import io.reactivex.BackpressureStrategy
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.flow.asFlow
 import java.io.File
 import javax.inject.Inject
@@ -270,34 +269,32 @@ internal class AppPreferencesImpl @Inject constructor(
         return preferences.getLong(SLEEP_FROM, -1)
     }
 
-    override fun observePlayerControlsVisibility(): Observable<Boolean> {
+    override fun observePlayerControlsVisibility(): Flow<Boolean> {
         val key = context.getString(prefsKeys.playerControlsVisibility())
         return rxPreferences.getBoolean(key, false)
             .asObservable()
-            .subscribeOn(Schedulers.io())
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
     }
 
-    override fun setDefault(): Completable {
-        return Completable.create { emitter ->
-            setLibraryCategories(getDefaultLibraryCategories())
-            setPodcastLibraryCategories(getDefaultPodcastLibraryCategories())
-            setBlackList(setOf())
-            hideQuickAction()
-            setDefaultVisibleSections()
-            hideClassicPlayerControls()
-            setDefaultAutoDownloadImages()
-            setDefaultTheme()
-            setLastFmCredentials(UserCredentials("", ""))
-            setDefaultFolderView()
-            setDefaultMusicFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC))
-            setDefaultAccentColor()
-            setDefaultLibraryAlbumArtistVisibility()
-            setDefaultPodcastVisibility()
-            setDefaultAdaptiveColors()
-            setDefaultLockscreenArtwork()
-
-            emitter.onComplete()
-        }
+    override fun setDefault() {
+        assertBackgroundThread()
+        setLibraryCategories(getDefaultLibraryCategories())
+        setPodcastLibraryCategories(getDefaultPodcastLibraryCategories())
+        setBlackList(setOf())
+        hideQuickAction()
+        setDefaultVisibleSections()
+        hideClassicPlayerControls()
+        setDefaultAutoDownloadImages()
+        setDefaultTheme()
+        setLastFmCredentials(UserCredentials("", ""))
+        setDefaultFolderView()
+        setDefaultMusicFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC))
+        setDefaultAccentColor()
+        setDefaultLibraryAlbumArtistVisibility()
+        setDefaultPodcastVisibility()
+        setDefaultAdaptiveColors()
+        setDefaultLockscreenArtwork()
     }
 
     private fun setDefaultLockscreenArtwork() {
@@ -401,7 +398,9 @@ internal class AppPreferencesImpl @Inject constructor(
                     it,
                     preferences.getString(LAST_FM_PASSWORD, "")!!
                 )
-            }.asFlowable().asFlow()
+            }
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
     }
 
     /*
@@ -436,9 +435,11 @@ internal class AppPreferencesImpl @Inject constructor(
         return startFolder.path
     }
 
-    override fun observeDefaultMusicFolder(): Observable<File> {
+    override fun observeDefaultMusicFolder(): Flow<File> {
         return rxPreferences.getString(DEFAULT_MUSIC_FOLDER, defaultFolder())
             .asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
             .map { File(it) }
     }
 
@@ -468,9 +469,8 @@ internal class AppPreferencesImpl @Inject constructor(
         return preferences.getBoolean(context.getString(prefsKeys.adaptiveColors()), false)
     }
 
-    override fun observeLockscreenArtworkEnabled(): Observable<Boolean> {
-        return rxPreferences.getBoolean(context.getString(prefsKeys.showLockscreenArtwork()), false)
-            .asObservable()
+    override fun isLockscreenArtworkEnabled(): Boolean {
+        return preferences.getBoolean(context.getString(prefsKeys.showLockscreenArtwork()), false)
     }
 
     override fun getShowFolderAsTreeView(): Boolean {

@@ -11,18 +11,19 @@ import dev.olog.msc.core.gateway.track.*
 import javax.inject.Inject
 
 class GetSongListChunkByParamUseCase @Inject constructor(
-    private val genreGateway: GenreGateway,
-    private val playlistGateway: PlaylistGateway,
-    private val albumGateway: AlbumGateway,
-    private val artistGateway: ArtistGateway,
-    private val folderGateway: FolderGateway,
-    private val podcastPlaylistGateway: PodcastPlaylistGateway,
-    private val podcastAlbumGateway: PodcastAlbumGateway,
-    private val podcastArtistGateway: PodcastArtistGateway,
-    private val songGateway: SongGateway,
-    private val podcastGateway: PodcastGateway
+        private val genreGateway: GenreGateway,
+        private val playlistGateway: PlaylistGateway,
+        private val albumGateway: AlbumGateway,
+        private val artistGateway: ArtistGateway,
+        private val folderGateway: FolderGateway,
+        private val podcastPlaylistGateway: PodcastPlaylistGateway,
+        private val podcastAlbumGateway: PodcastAlbumGateway,
+        private val podcastArtistGateway: PodcastArtistGateway,
+        private val songGateway: SongGateway,
+        private val podcastGateway: PodcastGateway
 
 ) {
+
 
     fun execute(mediaId: MediaId): DataRequest<*> {
         return when (mediaId.category) {

@@ -3,19 +3,29 @@ package dev.olog.msc.musicservice.equalizer.impl
 import android.media.audiofx.Equalizer
 import dev.olog.msc.core.equalizer.IEqualizer
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
-import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class EqualizerImpl @Inject constructor(
-        private val equalizerPrefsUseCase: EqualizerPreferencesGateway
+    private val equalizerPrefsUseCase: EqualizerPreferencesGateway
 
 ) : IEqualizer {
 
-    private var equalizer : Equalizer? = null
+    private var equalizer: Equalizer? = null
     private val listeners = mutableListOf<IEqualizer.Listener>()
 
-    private val availabilityPublisher = BehaviorSubject.createDefault(true)
+    private val availabilityPublisher = BroadcastChannel<Boolean>(Channel.CONFLATED)
+
+    init {
+        GlobalScope.launch { availabilityPublisher.send(true) }
+    }
 
     override fun addListener(listener: IEqualizer.Listener) {
         listeners.add(listener)
@@ -40,7 +50,7 @@ internal class EqualizerImpl @Inject constructor(
             equalizer!!.usePreset(position.toShort())
 
             listeners.forEach {
-                for (band in 0 until equalizer!!.numberOfBands){
+                for (band in 0 until equalizer!!.numberOfBands) {
                     val level = equalizer!!.getBandLevel(band.toShort()) / 100
                     it.onPresetChange(band, level.toFloat())
                 }
@@ -51,7 +61,7 @@ internal class EqualizerImpl @Inject constructor(
     override fun getPresets(): List<String> {
         return useOrDefault({
             (0 until equalizer!!.numberOfPresets)
-                    .map { equalizer!!.getPresetName(it.toShort()) }
+                .map { equalizer!!.getPresetName(it.toShort()) }
         }, emptyList())
     }
 
@@ -71,7 +81,8 @@ internal class EqualizerImpl @Inject constructor(
             val properties = equalizerPrefsUseCase.getEqualizerSettings()
             val settings = Equalizer.Settings(properties)
             equalizer!!.properties = settings
-        } catch (ex: Exception){}
+        } catch (ex: Exception) {
+        }
     }
 
     override fun setEnabled(enabled: Boolean) {
@@ -84,33 +95,34 @@ internal class EqualizerImpl @Inject constructor(
         equalizer?.let {
             try {
                 equalizerPrefsUseCase.saveEqualizerSettings(it.properties.toString())
-            } catch (ex: Exception){}
+            } catch (ex: Exception) {
+            }
             use {
                 it.release()
             }
         }
     }
 
-    override fun isAvailable(): Observable<Boolean> = availabilityPublisher.distinctUntilChanged()
+    override fun isAvailable(): Flow<Boolean> = availabilityPublisher.asFlow().distinctUntilChanged()
 
-    private fun use(action: () -> Unit){
+    private fun use(action: () -> Unit) {
         try {
             action()
-            availabilityPublisher.onNext(true)
-        } catch (ex: Exception){
+            GlobalScope.launch(Dispatchers.Main) { availabilityPublisher.send(true) }
+        } catch (ex: Exception) {
             ex.printStackTrace()
-            availabilityPublisher.onNext(false)
+            GlobalScope.launch(Dispatchers.Main) { availabilityPublisher.send(false) }
         }
     }
 
     private fun <T> useOrDefault(action: () -> T, default: T): T {
         return try {
             val v = action()
-            availabilityPublisher.onNext(true)
+            GlobalScope.launch(Dispatchers.Main) { availabilityPublisher.send(true) }
             v
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
-            availabilityPublisher.onNext(false)
+            GlobalScope.launch(Dispatchers.Main) { availabilityPublisher.send(false) }
             default
         }
     }

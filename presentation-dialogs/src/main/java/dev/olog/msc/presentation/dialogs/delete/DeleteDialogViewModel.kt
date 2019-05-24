@@ -4,16 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class DeleteDialogViewModel @Inject constructor(
-    private val deleteUseCase: DeleteUseCase
+        private val deleteUseCase: DeleteUseCase
 ) : ViewModel() {
 
 
-    fun execute(mediaId: MediaId) = viewModelScope.launch(Dispatchers.Default) {
+    fun executeAsync(mediaId: MediaId) = viewModelScope.async(Dispatchers.Default) {
         deleteUseCase.execute(mediaId)
     }
 

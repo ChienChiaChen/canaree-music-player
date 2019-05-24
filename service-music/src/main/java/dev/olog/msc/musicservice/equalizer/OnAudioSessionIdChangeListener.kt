@@ -11,11 +11,10 @@ import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.core.equalizer.IBassBoost
 import dev.olog.msc.core.equalizer.IEqualizer
 import dev.olog.msc.core.equalizer.IVirtualizer
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.Single
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @PerService
@@ -27,14 +26,14 @@ internal class OnAudioSessionIdChangeListener @Inject constructor(
 
 ) : AudioRendererEventListener, DefaultLifecycleObserver {
 
-    private var delayDisposable: Disposable? = null
+    private var job: Job? = null
 
     init {
         lifecycle.addObserver(this)
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        delayDisposable.unsubscribe()
+        job?.cancel()
     }
 
     override fun onAudioSinkUnderrun(bufferSize: Int, bufferSizeMs: Long, elapsedSinceLastFeedMs: Long) {}
@@ -48,10 +47,10 @@ internal class OnAudioSessionIdChangeListener @Inject constructor(
     override fun onAudioDisabled(counters: DecoderCounters?) {}
 
     override fun onAudioSessionId(audioSessionId: Int) {
-        delayDisposable.unsubscribe()
-        delayDisposable = Single.timer(500, TimeUnit.MILLISECONDS, Schedulers.computation())
-                .map { audioSessionId }
-                .subscribe(this::onAudioSessionIdInternal, Throwable::printStackTrace)
+        job = GlobalScope.launch {
+            delay(500)
+            onAudioSessionIdInternal(audioSessionId)
+        }
     }
 
     private fun onAudioSessionIdInternal(audioSessionId: Int){
@@ -61,6 +60,7 @@ internal class OnAudioSessionIdChangeListener @Inject constructor(
     }
 
     fun release(){
+        // TODO why not called?
         equalizer.release()
         virtualizer.release()
         bassBoost.release()

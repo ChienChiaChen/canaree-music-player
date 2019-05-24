@@ -97,11 +97,7 @@ class AlbumPopupListener @Inject constructor(
 
 
     private fun addToFavorite() {
-        if (song == null) {
-            navigator.toAddToFavoriteDialog(activity, getMediaId(), album.songs, album.title)
-        } else {
-            navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, song!!.title)
-        }
+        navigator.toAddToFavoriteDialog(activity, getMediaId(), song!!.title)
     }
 
     private fun delete() {

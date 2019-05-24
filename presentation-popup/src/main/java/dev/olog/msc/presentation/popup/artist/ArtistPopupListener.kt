@@ -15,10 +15,10 @@ import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import javax.inject.Inject
 
 class ArtistPopupListener @Inject constructor(
-    private val navigator: Navigator,
-    getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-    addToPlaylistUseCase: AddToPlaylistUseCase,
-    private val appShortcuts: AppShortcuts
+        private val navigator: Navigator,
+        getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
+        addToPlaylistUseCase: AddToPlaylistUseCase,
+        private val appShortcuts: AppShortcuts
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, false) {
 
@@ -98,11 +98,7 @@ class ArtistPopupListener @Inject constructor(
 
 
     private fun addToFavorite() {
-        if (song == null) {
-            navigator.toAddToFavoriteDialog(activity, getMediaId(), artist.songs, artist.name)
-        } else {
-            navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, song!!.title)
-        }
+        navigator.toAddToFavoriteDialog(activity, getMediaId(), song!!.title)
     }
 
     private fun delete() {

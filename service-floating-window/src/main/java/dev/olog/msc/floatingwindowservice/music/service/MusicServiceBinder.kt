@@ -8,60 +8,68 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.*
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.shared.MusicServiceConnectionState
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
+import dev.olog.msc.shared.ui.extensions.distinctUntilChanged
+import dev.olog.msc.shared.ui.extensions.filter
+import dev.olog.msc.shared.ui.extensions.map
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @PerService
 internal class MusicServiceBinder @Inject constructor(
-        @ApplicationContext private val context: Context,
-        @ServiceLifecycle lifecycle: Lifecycle,
-        classes: Classes
+    @ApplicationContext private val context: Context,
+    @ServiceLifecycle lifecycle: Lifecycle,
+    classes: Classes
 
-) : DefaultLifecycleObserver {
+) : DefaultLifecycleObserver, CoroutineScope by CustomScope() {
 
-    private val mediaBrowser = MediaBrowserCompat(context, ComponentName(context, classes.musicService()),
-            FloatingMusicConnection(this), null)
-    private val connectionDisposable: Disposable
-    private val publisher = BehaviorSubject.createDefault(MusicServiceConnectionState.NONE)
+    private val mediaBrowser = MediaBrowserCompat(
+        context, ComponentName(context, classes.musicService()),
+        FloatingMusicConnection(this), null
+    )
+    private val publisher = BroadcastChannel<MusicServiceConnectionState>(Channel.CONFLATED)
 
-    internal val metadataPublisher = BehaviorSubject.create<MediaMetadataCompat>()
-    internal val statePublisher = BehaviorSubject.create<PlaybackStateCompat>()
-    internal val repeatModePublisher = BehaviorSubject.create<Int>()
-    internal val shuffleModePublisher = BehaviorSubject.create<Int>()
-    internal val queuePublisher = BehaviorSubject.createDefault(mutableListOf<MediaSessionCompat.QueueItem>())
+    internal val metadataPublisher = MutableLiveData<MediaMetadataCompat>()
+    internal val statePublisher = MutableLiveData<PlaybackStateCompat>()
+    internal val repeatModePublisher = MutableLiveData<Int>()
+    internal val shuffleModePublisher = MutableLiveData<Int>()
+    internal val queuePublisher = MutableLiveData<List<MediaSessionCompat.QueueItem>>()
 
     private var mediaController: MediaControllerCompat? = null
     private val callback = FloatingMusicCallback(this)
 
     init {
         lifecycle.addObserver(this)
-        connectionDisposable = publisher.subscribe({
-            when (it){
-                MusicServiceConnectionState.CONNECTED -> onConnected()
-                MusicServiceConnectionState.FAILED -> onConnectionFailed()
-                else -> {}
+
+        launch {
+            publisher.send(MusicServiceConnectionState.NONE)
+            for (state in publisher.openSubscription()) {
+                when (state) {
+                    MusicServiceConnectionState.CONNECTED -> onConnected()
+                    MusicServiceConnectionState.FAILED -> onConnectionFailed()
+                    else -> {
+                    }
+                }
             }
-        }, Throwable::printStackTrace)
+        }
         mediaBrowser.connect()
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
         mediaController?.unregisterCallback(callback)
-        connectionDisposable.unsubscribe()
+        cancel()
         this.mediaBrowser.disconnect()
     }
 
@@ -76,15 +84,15 @@ internal class MusicServiceBinder @Inject constructor(
         }
     }
 
-    private fun onConnectionFailed(){
+    private fun onConnectionFailed() {
         mediaController?.unregisterCallback(callback)
     }
 
-    internal fun updateConnectionState(state: MusicServiceConnectionState){
-        publisher.onNext(state)
+    internal fun updateConnectionState(state: MusicServiceConnectionState) {
+        launch { publisher.send(state) }
     }
 
-    private fun initialize(mediaController : MediaControllerCompat){
+    private fun initialize(mediaController: MediaControllerCompat) {
         callback.onMetadataChanged(mediaController.metadata)
         callback.onPlaybackStateChanged(mediaController.playbackState)
         callback.onRepeatModeChanged(mediaController.repeatMode)
@@ -92,22 +100,22 @@ internal class MusicServiceBinder @Inject constructor(
         callback.onQueueChanged(mediaController.queue)
     }
 
-    fun onStateChanged(): Observable<PlaybackStateCompat> {
-        return statePublisher.observeOn(Schedulers.computation())
+    fun onStateChanged(): LiveData<PlaybackStateCompat> {
+        return statePublisher
     }
 
-    fun next(){
+    fun next() {
         mediaController?.transportControls?.skipToNext()
     }
 
-    fun previous(){
+    fun previous() {
         mediaController?.transportControls?.skipToPrevious()
     }
 
-    fun playPause(){
+    fun playPause() {
         val playbackState = mediaController?.playbackState
         playbackState?.let {
-            if (it.state == PlaybackStateCompat.STATE_PLAYING){
+            if (it.state == PlaybackStateCompat.STATE_PLAYING) {
                 mediaController?.transportControls?.pause()
             } else {
                 mediaController?.transportControls?.play()
@@ -115,7 +123,7 @@ internal class MusicServiceBinder @Inject constructor(
         }
     }
 
-    fun seekTo(progress: Long){
+    fun seekTo(progress: Long) {
         mediaController?.transportControls?.seekTo(progress)
     }
 
@@ -127,22 +135,25 @@ internal class MusicServiceBinder @Inject constructor(
         mediaController?.transportControls?.skipToPrevious()
     }
 
-    val animatePlayPauseLiveData: Observable<Int> = statePublisher
-            .filter { it.isPlaying() || it.isPaused() }
-            .map { it.state }
-            .distinctUntilChanged()
+    val animatePlayPauseLiveData: LiveData<Int> = statePublisher
+        .filter { it.isPlaying() || it.isPaused() }
+        .map { it.state }
+        .distinctUntilChanged()
 
-    val onBookmarkChangedLiveData: Observable<Long> = statePublisher
-            .filter { it.isPlaying() || it.isPaused() }
-            .map { it.position }
+    val onBookmarkChangedLiveData: LiveData<Long> = statePublisher
+        .filter { it.isPlaying() || it.isPaused() }
+        .map { it.position }
 
-    val onMetadataChanged : Observable<MusicServiceMetadata> = metadataPublisher
-            .map { MusicServiceMetadata(it.getId(), it.getTitle().toString(),
-                    it.getArtist().toString(), it.getMediaId(),
-                    it.getDuration(), it.isPodcast()
-            ) }
+    val onMetadataChanged: LiveData<MusicServiceMetadata> = metadataPublisher
+        .map {
+            MusicServiceMetadata(
+                it.getId(), it.getTitle().toString(),
+                it.getArtist().toString(), it.getMediaId(),
+                it.getDuration(), it.isPodcast()
+            )
+        }
 
-    val onMaxChangedLiveData: Observable<Long> = metadataPublisher
-            .map { it.getDuration() }
+    val onMaxChangedLiveData: LiveData<Long> = metadataPublisher
+        .map { it.getDuration() }
 
 }

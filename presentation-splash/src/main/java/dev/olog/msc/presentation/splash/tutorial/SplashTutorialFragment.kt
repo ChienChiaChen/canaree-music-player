@@ -18,10 +18,13 @@ import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.widgets.SwipeableView
 import dev.olog.msc.presentation.splash.R
 import dev.olog.msc.presentation.splash.widgets.StoppingViewPager
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-class SplashTutorialFragment : Fragment(), SwipeableView.SwipeListener {
+class SplashTutorialFragment : Fragment(), SwipeableView.SwipeListener, CoroutineScope by MainScope() {
 
     private var progressive = 0
 
@@ -31,7 +34,7 @@ class SplashTutorialFragment : Fragment(), SwipeableView.SwipeListener {
     private lateinit var swipeableView : SwipeableView
     private lateinit var viewPager : StoppingViewPager
 
-    private var touchDisposable : Disposable? = null
+    private var touchJob: Job? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_splash_tutorial, container, false)
@@ -46,19 +49,25 @@ class SplashTutorialFragment : Fragment(), SwipeableView.SwipeListener {
 
         loadPhoneImage(view)
         loadImage(cover, progressive)
+
+        touchJob = launch {
+            swipeableView.isTouching().collect { viewPager.isSwipeEnabled = !it }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         swipeableView.setOnSwipeListener(this)
-        touchDisposable = swipeableView.isTouching()
-                .subscribe({ viewPager.isSwipeEnabled = !it }, Throwable::printStackTrace)
     }
 
     override fun onPause() {
         super.onPause()
         swipeableView.setOnSwipeListener(null)
-        touchDisposable.unsubscribe()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        touchJob?.cancel()
     }
 
     override fun onSwipedLeft() {

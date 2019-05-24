@@ -29,7 +29,6 @@ import dev.olog.msc.shared.collator
 import dev.olog.msc.shared.extensions.swap
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.shared.utils.clamp
-import io.reactivex.functions.Function
 import kotlinx.coroutines.coroutineScope
 import java.util.*
 import javax.inject.Inject
@@ -54,7 +53,7 @@ internal class QueueManager @Inject constructor(
         assertBackgroundThread()
         val playingQueue = queueGateway.getAll(Page.NO_PAGING).map { it.toMediaEntity() }
         queueImpl.updatePlayingQueueAndPersist(playingQueue) // TODO why i'm saving at startup? try to remove
-        val (queue, index) = lastSessionSong.apply(playingQueue) // TODO change
+        val (queue, index) = lastSessionSong(playingQueue)
         queueImpl.updateCurrentSongPosition(queue, index) // TODO why i'm saving at startup?
 
         val positionInQueue = queueImpl.computePositionInQueue(queue, index)
@@ -124,9 +123,9 @@ internal class QueueManager @Inject constructor(
             .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
 
         songList = sortOnDemand(songList, extras)
-        songList = shuffleIfNeeded(songId).apply(songList)
+        songList = shuffleIfNeeded(songId, songList)
         queueImpl.updatePlayingQueueAndPersist(songList)
-        val (list, position) = getCurrentSongOnPlayFromId(songId).apply(songList)
+        val (list, position) = getCurrentSongOnPlayFromId(songId, songList)
 
         queueImpl.updateCurrentSongPosition(list, position)
 
@@ -163,9 +162,9 @@ internal class QueueManager @Inject constructor(
         var songList = recentlyAddedUseCase.get(mediaId).getAll(Filter.NO_FILTER)
             .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
 
-        songList = shuffleIfNeeded(songId).apply(songList)
+        songList = shuffleIfNeeded(songId, songList)
         queueImpl.updatePlayingQueueAndPersist(songList)
-        val (list, position) = getCurrentSongOnPlayFromId(songId).apply(songList)
+        val (list, position) = getCurrentSongOnPlayFromId(songId, songList)
         queueImpl.updateCurrentSongPosition(list, position)
 
         val bookmark = getPodcastBookmarkOrDefault(list[position])
@@ -180,9 +179,9 @@ internal class QueueManager @Inject constructor(
         var songList = mostPlayedSongsUseCase.get(mediaId).getAll(Filter.NO_FILTER)
             .mapIndexed { index, song -> song.toMediaEntity(index, mediaId) }
 
-        songList = shuffleIfNeeded(songId).apply(songList)
+        songList = shuffleIfNeeded(songId, songList)
         queueImpl.updatePlayingQueueAndPersist(songList)
-        val (list, position) = getCurrentSongOnPlayFromId(songId).apply(songList)
+        val (list, position) = getCurrentSongOnPlayFromId(songId, songList)
         queueImpl.updateCurrentSongPosition(list, position)
 
         val bookmark = getPodcastBookmarkOrDefault(list[position])
@@ -305,23 +304,22 @@ internal class QueueManager @Inject constructor(
         queueImpl.shuffle()
     }
 
-    private val lastSessionSong = Function<List<MediaEntity>, Pair<List<MediaEntity>, Int>> { list ->
+    private fun lastSessionSong(list: List<MediaEntity>): Pair<List<MediaEntity>, Int> {
         val idInPlaylist = musicPreferencesUseCase.getLastIdInPlaylist()
         val currentPosition = clamp(list.indexOfFirst { it.idInPlaylist == idInPlaylist }, 0, list.lastIndex)
-        Pair(list, currentPosition)
+        return list to currentPosition
     }
 
-    private fun getCurrentSongOnPlayFromId(songId: Long) =
-        Function<List<MediaEntity>, Pair<List<MediaEntity>, Int>> { list ->
+    private fun getCurrentSongOnPlayFromId(songId: Long, list: List<MediaEntity>) : Pair<List<MediaEntity>, Int> {
             if (shuffleMode.isEnabled() || songId == -1L) {
-                Pair(list, 0)
+                return list to 0
             } else {
                 val position = clamp(list.indexOfFirst { it.id == songId }, 0, list.lastIndex)
-                Pair(list, position)
+                return list to position
             }
         }
 
-    private fun shuffleIfNeeded(songId: Long) = Function<List<MediaEntity>, List<MediaEntity>> { l ->
+    private fun shuffleIfNeeded(songId: Long, l: List<MediaEntity>) : List<MediaEntity> {
         var list = l.toList()
         if (shuffleMode.isEnabled()) {
             val item = list.firstOrNull { it.id == songId } ?: l
@@ -331,7 +329,7 @@ internal class QueueManager @Inject constructor(
                 list.swap(0, songPosition)
             }
         }
-        list
+        return list
     }
 
     override fun getCurrentPositionInQueue(): PositionInQueue {

@@ -4,16 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ClearPlaylistDialogViewModel @Inject constructor(
-    private val useCase: ClearPlaylistUseCase
+        private val useCase: ClearPlaylistUseCase
 
 ) : ViewModel() {
 
-    fun execute(mediaId: MediaId) = viewModelScope.launch(Dispatchers.Default) {
+    fun executeAsync(mediaId: MediaId) = viewModelScope.async(Dispatchers.Default) {
         useCase.execute(mediaId)
     }
 

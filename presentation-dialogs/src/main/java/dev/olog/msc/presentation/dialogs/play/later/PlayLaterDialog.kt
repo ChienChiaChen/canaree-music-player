@@ -1,17 +1,19 @@
 package dev.olog.msc.presentation.dialogs.play.later
 
 import android.content.Context
-import android.content.DialogInterface
 import android.support.v4.media.session.MediaControllerCompat
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.dialogs.BaseDialog
+import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.asHtml
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
+import dev.olog.msc.presentation.dialogs.base.BaseDialog
 import dev.olog.msc.shared.extensions.lazyFast
-import io.reactivex.Completable
+import dev.olog.msc.shared.extensions.toast
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PlayLaterDialog : BaseDialog() {
@@ -41,36 +43,37 @@ class PlayLaterDialog : BaseDialog() {
     lateinit var factory: ViewModelProvider.Factory
     private val viewModel by lazyFast { viewModelProvider<PlayLaterDialogViewModel>(factory) }
 
-    override fun title(context: Context): CharSequence {
-        return context.getString(R.string.popup_play_later)
+    override fun extendBuilder(builder: AlertDialog.Builder): AlertDialog.Builder {
+        return builder.setTitle(R.string.popup_play_later)
+                .setMessage(createMessage().asHtml())
+                .setPositiveButton(R.string.common_ok, null)
+                .setNegativeButton(R.string.common_cancel, null)
     }
 
-    override fun message(context: Context): CharSequence {
-        return createMessage().asHtml()
+    override fun positionButtonAction(context: Context) {
+        launch {
+            var message: String
+            try {
+                val mediaController = MediaControllerCompat.getMediaController(activity!!)
+                viewModel.executeAsync(mediaId, mediaController).await()
+                message = successMessage(act)
+            } catch (ex: Exception) {
+                message = failMessage(act)
+            }
+            act.toast(message)
+            dismiss()
+
+        }
     }
 
-    override fun negativeButtonMessage(context: Context): Int {
-        return R.string.common_cancel
-    }
-
-    override fun positiveButtonMessage(context: Context): Int {
-        return R.string.common_ok
-    }
-
-    override fun successMessage(context: Context): CharSequence {
+    private fun successMessage(context: Context): String {
         return if (mediaId.isLeaf) {
             context.getString(R.string.song_x_added_to_play_later, title)
         } else context.resources.getQuantityString(R.plurals.xx_songs_added_to_play_later, listSize, listSize)
     }
 
-    override fun failMessage(context: Context): CharSequence {
+    private  fun failMessage(context: Context): String {
         return context.getString(R.string.popup_error_message)
-    }
-
-    override fun positiveAction(dialogInterface: DialogInterface, which: Int): Completable {
-        val mediaController = MediaControllerCompat.getMediaController(activity!!)
-//        return viewModel.execute(mediaId, mediaController)
-        return TODO()
     }
 
     private fun createMessage(): String {

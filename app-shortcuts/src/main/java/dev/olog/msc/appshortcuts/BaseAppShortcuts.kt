@@ -11,10 +11,10 @@ import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.shared.ShortcutsConstants
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.extensions.toast
 import kotlinx.coroutines.*
 

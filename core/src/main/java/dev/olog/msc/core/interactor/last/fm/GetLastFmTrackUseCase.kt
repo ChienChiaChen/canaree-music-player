@@ -1,9 +1,9 @@
 package dev.olog.msc.core.interactor.last.fm
 
-import dev.olog.msc.core.coroutines.ComputationDispatcher
-import dev.olog.msc.core.coroutines.SingleFlowWithParam
 import dev.olog.msc.core.entity.LastFmTrack
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.LastFmGateway
+import dev.olog.msc.core.interactor.base.SingleFlowWithParam
 import javax.inject.Inject
 
 class GetLastFmTrackUseCase @Inject constructor(

@@ -2,7 +2,6 @@ package dev.olog.msc.presentation.player.appearance
 
 import android.content.res.ColorStateList
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
-import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.utils.getDuration
 import dev.olog.msc.presentation.player.PlayerFragmentViewModel
@@ -11,6 +10,7 @@ import dev.olog.msc.presentation.player.widgets.audiowave.AudioWaveViewWrapper
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.ui.extensions.animateBackgroundColor
 import dev.olog.msc.shared.ui.extensions.animateTextColor
+import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.theme.HasPlayerTheme
 import kotlinx.android.synthetic.main.fragment_player_controls.view.*
 import kotlinx.android.synthetic.main.fragment_player_toolbar.view.*

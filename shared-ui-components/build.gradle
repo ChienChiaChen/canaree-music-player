@@ -24,4 +24,7 @@ dependencies {
     implementation librariesAndroidX.palette
 
     implementation librariesAndroidX.preference
+
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle"
+
 }

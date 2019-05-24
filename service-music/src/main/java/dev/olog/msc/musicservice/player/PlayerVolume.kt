@@ -8,10 +8,13 @@ import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.musicservice.volume.IPlayerVolume
 import dev.olog.msc.musicservice.volume.IVolume
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.flowInterval
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.map
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -27,11 +30,11 @@ internal class PlayerVolume @Inject constructor(
         @ServiceLifecycle lifecycle: Lifecycle,
         musicPreferencesUseCase: MusicPreferencesGateway
 
-) : IPlayerVolume, DefaultLifecycleObserver {
+) : IPlayerVolume, DefaultLifecycleObserver, CoroutineScope by CustomScope(
+    Dispatchers.Main
+) {
 
     override var listener: IPlayerVolume.Listener? = null
-    private var disposable: Disposable? = null
-    private var intervalDisposable: Disposable? = null
 
     private var volume: IVolume = Volume()
     private var isDucking = false
@@ -39,9 +42,10 @@ internal class PlayerVolume @Inject constructor(
     init {
         lifecycle.addObserver(this)
 
-        // observe to preferences
-        disposable = musicPreferencesUseCase.isMidnightMode()
-                .subscribe({ lowerAtNight ->
+        launch {
+            // observe to preferences
+            musicPreferencesUseCase.isMidnightMode()
+                .collect { lowerAtNight ->
                     if (!lowerAtNight) {
                         volume = provideVolumeManager(false)
                     } else {
@@ -49,20 +53,22 @@ internal class PlayerVolume @Inject constructor(
                     }
 
                     listener?.onVolumeChanged(getVolume())
-                }, Throwable::printStackTrace)
-
-        // observe at interval of 15 mins to detect if is day or night when
-        // settigs is on
-        intervalDisposable = musicPreferencesUseCase.isMidnightMode()
+                }
+        }
+        launch(Dispatchers.Default) {
+            // observe at interval of 15 mins to detect if is day or night when
+            // settigs is on
+            musicPreferencesUseCase.isMidnightMode()
                 .filter { it }
-                .flatMap { Observable.interval(15, TimeUnit.MINUTES) }
-                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapConcat { flowInterval(15, TimeUnit.MINUTES) }
                 .map { isNight() }
-                .subscribe({ isNight ->
-                    volume = provideVolumeManager(isNight)
-                    listener?.onVolumeChanged(getVolume())
-
-                }, Throwable::printStackTrace)
+                .collect { isNight ->
+                    withContext(Dispatchers.Main) {
+                        volume = provideVolumeManager(isNight)
+                        listener?.onVolumeChanged(getVolume())
+                    }
+                }
+        }
     }
 
     private fun isNight(): Boolean {
@@ -83,8 +89,7 @@ internal class PlayerVolume @Inject constructor(
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        disposable.unsubscribe()
-        intervalDisposable.unsubscribe()
+        cancel()
         listener = null
     }
 

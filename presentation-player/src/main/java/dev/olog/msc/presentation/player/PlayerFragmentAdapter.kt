@@ -11,15 +11,15 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.rxbinding2.view.RxView
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.base.adapter.ObservableAdapter
 import dev.olog.msc.presentation.base.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.drag.TouchableAdapter
-import dev.olog.msc.presentation.base.extensions.*
-import dev.olog.msc.presentation.base.interfaces.HasBilling
+import dev.olog.msc.presentation.base.extensions.elevateSongOnTouch
+import dev.olog.msc.presentation.base.extensions.isCollapsed
+import dev.olog.msc.presentation.base.extensions.isExpanded
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.model.DisplayableItem
@@ -32,22 +32,20 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
-import dev.olog.msc.shared.ui.extensions.toggleVisibility
+import dev.olog.msc.shared.ui.extensions.*
 import dev.olog.msc.shared.ui.theme.ImageShape
 import dev.olog.msc.shared.utils.TextUtils
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_player_controls.view.*
 import kotlinx.android.synthetic.main.fragment_player_toolbar.view.*
 import kotlinx.android.synthetic.main.player_controls.view.*
 
 class PlayerFragmentAdapter(
-        lifecycle: Lifecycle,
-        private val mediaProvider: MediaProvider,
-        private val navigator: Navigator,
-        private val viewModel: PlayerFragmentViewModel,
-        private val presenter: PlayerFragmentPresenter,
-        private val appearanceDelegate: IPlayerAppearanceDelegate,
-        private val onStartDragListener: OnStartDragListener
+    lifecycle: Lifecycle,
+    private val mediaProvider: MediaProvider,
+    private val navigator: Navigator,
+    private val viewModel: PlayerFragmentViewModel,
+    private val appearanceDelegate: IPlayerAppearanceDelegate,
+    private val onStartDragListener: OnStartDragListener
 
 ) : ObservableAdapter<DisplayableItem>(lifecycle), TouchableAdapter {
 
@@ -107,35 +105,35 @@ class PlayerFragmentAdapter(
     private fun bindPlayerControls(view: View, holder: DataBoundViewHolder) {
 
         mediaProvider.onMetadataChanged()
-                .subscribe(holder) {
-                    viewModel.updateCurrentTrackId(it.getId())
-                    updateMetadata(view, it)
-                    updateImage(view, it)
-                }
+            .subscribe(holder) {
+                viewModel.updateCurrentTrackId(it.getId())
+                updateMetadata(view, it)
+                updateImage(view, it)
+            }
 
         mediaProvider.onStateChanged()
-                .subscribe(holder) { onPlaybackStateChanged(view, it) }
+            .subscribe(holder) { onPlaybackStateChanged(view, it) }
 
         view.seekBar.setListener(
-                onProgressChanged = {
-                    view.bookmark.text = TextUtils.formatMillis(it)
-                }, onStartTouch = {
+            onProgressChanged = {
+                view.bookmark.text = TextUtils.formatMillis(it)
+            }, onStartTouch = {
 
-        }, onStopTouch = {
-            mediaProvider.seekTo(it.toLong())
-        })
+            }, onStopTouch = {
+                mediaProvider.seekTo(it.toLong())
+            })
 
         viewModel.observeProgress
-                .subscribe(holder) { view.seekBar.setProgress(it) }
+            .subscribe(holder) { view.seekBar.setProgress(it) }
 
         if (view.repeat != null) {
             mediaProvider.onRepeatModeChanged()
-                    .subscribe(holder, view.repeat::cycle)
+                .subscribe(holder, view.repeat::cycle)
             view.repeat.setOnClickListener { mediaProvider.toggleRepeatMode() }
         }
         if (view.shuffle != null) {
             mediaProvider.onShuffleModeChanged()
-                    .subscribe(holder, view.shuffle::cycle)
+                .subscribe(holder, view.shuffle::cycle)
 
             view.shuffle.setOnClickListener { mediaProvider.toggleShuffleMode() }
         }
@@ -165,7 +163,7 @@ class PlayerFragmentAdapter(
         })
 
         viewModel.onFavoriteStateChanged
-                .subscribe(holder, view.favorite::onNextState)
+            .subscribe(holder, view.favorite::onNextState)
 
         view.lyrics.setOnClickListener {
             val activity = view.context as FragmentActivity
@@ -176,8 +174,8 @@ class PlayerFragmentAdapter(
         replayView.setOnClickListener {
             replayView.animate().cancel()
             replayView.animate().rotation(-30f)
-                    .setDuration(200)
-                    .withEndAction { replayView.animate().rotation(0f).setDuration(200) }
+                .setDuration(200)
+                .withEndAction { replayView.animate().rotation(0f).setDuration(200) }
             mediaProvider.replayTenSeconds()
         }
 
@@ -185,8 +183,8 @@ class PlayerFragmentAdapter(
         replay30View.setOnClickListener {
             replay30View.animate().cancel()
             replay30View.animate().rotation(-50f)
-                    .setDuration(200)
-                    .withEndAction { replay30View.animate().rotation(0f).setDuration(200) }
+                .setDuration(200)
+                .withEndAction { replay30View.animate().rotation(0f).setDuration(200) }
             mediaProvider.replayThirtySeconds()
         }
 
@@ -194,8 +192,8 @@ class PlayerFragmentAdapter(
         forwardView.setOnClickListener {
             forwardView.animate().cancel()
             forwardView.animate().rotation(30f)
-                    .setDuration(200)
-                    .withEndAction { forwardView.animate().rotation(0f).setDuration(200) }
+                .setDuration(200)
+                .withEndAction { forwardView.animate().rotation(0f).setDuration(200) }
             mediaProvider.forwardTenSeconds()
         }
 
@@ -203,8 +201,8 @@ class PlayerFragmentAdapter(
         forward30View.setOnClickListener {
             forward30View.animate().cancel()
             forward30View.animate().rotation(50f)
-                    .setDuration(200)
-                    .withEndAction { forward30View.animate().rotation(0f).setDuration(200) }
+                .setDuration(200)
+                .withEndAction { forward30View.animate().rotation(0f).setDuration(200) }
             mediaProvider.forwardThirtySeconds()
         }
 
@@ -214,45 +212,42 @@ class PlayerFragmentAdapter(
         val context = view.context
 
         mediaProvider.onStateChanged()
-                .map { it.state }
-                .filter { state ->
-                    state == STATE_SKIPPING_TO_NEXT || state == STATE_SKIPPING_TO_PREVIOUS
-                }
-                .map { state -> state == STATE_SKIPPING_TO_NEXT }
-                .subscribe(holder) { animateSkipTo(view, it) }
+            .map { it.state }
+            .filter { state ->
+                state == STATE_SKIPPING_TO_NEXT || state == STATE_SKIPPING_TO_PREVIOUS
+            }
+            .map { state -> state == STATE_SKIPPING_TO_NEXT }
+            .subscribe(holder) { animateSkipTo(view, it) }
 
         mediaProvider.onStateChanged()
-                .map { it.state }
-                .filter { it == STATE_PLAYING || it == STATE_PAUSED }
-                .distinctUntilChanged()
-                .subscribe(holder) { state ->
-                    if (state == STATE_PLAYING) {
-                        playAnimation(view, true)
-                    } else {
-                        pauseAnimation(view, true)
-                    }
+            .map { it.state }
+            .filter { it == STATE_PLAYING || it == STATE_PAUSED }
+            .distinctUntilChanged()
+            .subscribe(holder) { state ->
+                if (state == STATE_PLAYING) {
+                    playAnimation(view, true)
+                } else {
+                    pauseAnimation(view, true)
                 }
+            }
 
         view.next.setOnClickListener { mediaProvider.skipToNext() }
         view.playPause.setOnClickListener { mediaProvider.playPause() }
         view.previous.setOnClickListener { mediaProvider.skipToPrevious() }
 
-        val disp = presenter.observePlayerControlsVisibility((view.context as HasBilling).billing)
-                .filter { !context.isFullscreen() && !context.isMini() }
-                .takeUntil(RxView.detaches(view))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ visible ->
-                    view.previous.toggleVisibility(visible, true)
-                    view.playPause.toggleVisibility(visible, true)
-                    view.next.toggleVisibility(visible, true)
-
-                }, Throwable::printStackTrace)
+        viewModel.observePlayerControlsVisibility()
+            .filter { !context.isFullscreen() && !context.isMini() }
+            .subscribe(holder) { visible ->
+                view.previous.toggleVisibility(visible, true)
+                view.playPause.toggleVisibility(visible, true)
+                view.next.toggleVisibility(visible, true)
+            }
 
         viewModel.skipToNextVisibility
-                .subscribe(holder, view.next::updateVisibility)
+            .subscribe(holder, view.next::updateVisibility)
 
         viewModel.skipToPreviousVisibility
-                .subscribe(holder, view.previous::updateVisibility)
+            .subscribe(holder, view.previous::updateVisibility)
     }
 
     private fun updateMetadata(view: View, metadata: MediaMetadataCompat) {
@@ -267,7 +262,7 @@ class PlayerFragmentAdapter(
 
         val isPodcast = metadata.isPodcast()
         val playerControlsRoot: ConstraintLayout = view.findViewById(R.id.playerControls)
-                ?: view.findViewById(R.id.playerRoot) as ConstraintLayout
+            ?: view.findViewById(R.id.playerRoot) as ConstraintLayout
         playerControlsRoot.findViewById<View>(R.id.replay).toggleVisibility(isPodcast, true)
         playerControlsRoot.findViewById<View>(R.id.forward).toggleVisibility(isPodcast, true)
         playerControlsRoot.findViewById<View>(R.id.replay30).toggleVisibility(isPodcast, true)

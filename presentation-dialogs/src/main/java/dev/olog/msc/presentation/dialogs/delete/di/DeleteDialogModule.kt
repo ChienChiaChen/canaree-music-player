@@ -5,9 +5,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.dialogs.delete.DeleteDialog
 import dev.olog.msc.presentation.dialogs.delete.DeleteDialogViewModel
+import dev.olog.msc.shared.dagger.ViewModelKey
 
 @Module
 abstract class DeleteDialogModule {

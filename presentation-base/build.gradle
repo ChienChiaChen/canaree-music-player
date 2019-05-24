@@ -24,6 +24,8 @@ dependencies {
     // data binding
     kapt librariesUi.dataBinding
 
+    implementation librariesCore.coroutinesRx
+
     implementation librariesAndroidX.core
     implementation librariesAndroidX.coreKtx
     implementation librariesAndroidX.material
@@ -34,9 +36,7 @@ dependencies {
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
-    implementation librariesCore.lifecycleRx
 
-    implementation librariesCore.rxAndroid
     implementation librariesCore.daggerAndroid
     implementation librariesCore.daggerAndroidSupport
     kapt librariesCore.daggerAndroidProcessor

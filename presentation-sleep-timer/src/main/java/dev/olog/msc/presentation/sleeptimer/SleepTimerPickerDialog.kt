@@ -11,25 +11,33 @@ import dev.olog.msc.core.Classes
 import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.shared.PendingIntents
+import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.flowInterval
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.TimeUtils
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.takeWhile
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class SleepTimerPickerDialog : ScrollHmsPickerDialog(), ScrollHmsPickerDialog.HmsPickHandler {
+class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
+    ScrollHmsPickerDialog.HmsPickHandler, CoroutineScope by CustomScope() {
 
-    private var countDownDisposable: Disposable? = null
+    private var countDownJob: Job? = null
 
     private lateinit var fakeView: View
     private lateinit var okButton: Button
 
-    @Inject lateinit var alarmManager: AlarmManager
-    @Inject lateinit var sleepTimerUseCase: SleepTimerUseCase
-    @Inject lateinit var classes: Classes
+    @Inject
+    lateinit var alarmManager: AlarmManager
+    @Inject
+    lateinit var sleepTimerUseCase: SleepTimerUseCase
+    @Inject
+    lateinit var classes: Classes
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = super.onCreateView(inflater, container, savedInstanceState)!!
@@ -45,17 +53,22 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(), ScrollHmsPickerDialog.Hm
 
         toggleButtons(sleepTime > 0)
 
-        if (sleepTime > 0){
-            countDownDisposable = Observable.interval(1, TimeUnit.SECONDS, Schedulers.computation())
-                    .map { sleepTime - (System.currentTimeMillis() - sleepFrom) }
-                    .takeWhile { it >= 0L }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        setTimeInMilliseconds(it, true)
-                    }, Throwable::printStackTrace, {
-                        resetPersistedValues()
-                        toggleButtons(false)
-                    })
+        if (sleepTime > 0) {
+            countDownJob?.cancel()
+            countDownJob = launch {
+                try {
+                    flowInterval(1, TimeUnit.SECONDS)
+                        .map { sleepTime - (System.currentTimeMillis() - sleepFrom) }
+                        .takeWhile { it >= 0L }
+                        .collect {
+                            setTimeInMilliseconds(it, true)
+                        }
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                    resetPersistedValues()
+                    toggleButtons(false)
+                }
+            }
         }
 
         pickListener = this
@@ -66,16 +79,16 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(), ScrollHmsPickerDialog.Hm
     override fun onResume() {
         super.onResume()
         okButton.setOnClickListener {
-            if (it.isSelected){
+            if (it.isSelected) {
                 // as reset button
                 setTimeInMilliseconds(0, true)
-                countDownDisposable?.dispose()
+                countDownJob?.cancel()
                 toggleButtons(false)
                 resetPersistedValues()
                 resetAlarmManager()
             } else {
                 // as ok button
-                if(TimeUtils.timeAsMillis(hmsPicker.hours, hmsPicker.minutes, hmsPicker.seconds) > 0){
+                if (TimeUtils.timeAsMillis(hmsPicker.hours, hmsPicker.minutes, hmsPicker.seconds) > 0) {
                     pickListener?.onHmsPick(reference, hmsPicker.hours, hmsPicker.minutes, hmsPicker.seconds)
                     act.toast(R.string.sleep_timer_set)
                     dismiss()
@@ -93,11 +106,11 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(), ScrollHmsPickerDialog.Hm
 
     override fun onDestroy() {
         super.onDestroy()
-        countDownDisposable?.dispose()
+        countDownJob?.cancel()
     }
 
-    private fun toggleButtons(isCountDown: Boolean){
-        val okText = if (isCountDown){
+    private fun toggleButtons(isCountDown: Boolean) {
+        val okText = if (isCountDown) {
             R.string.scroll_hms_picker_stop
         } else android.R.string.ok
 
@@ -106,7 +119,7 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(), ScrollHmsPickerDialog.Hm
         toggleVisibility(fakeView, isCountDown)
     }
 
-    private fun toggleVisibility(view: View, showCondition: Boolean){
+    private fun toggleVisibility(view: View, showCondition: Boolean) {
         val visibility = if (showCondition) View.VISIBLE else View.GONE
         view.visibility = visibility
     }
@@ -129,20 +142,20 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(), ScrollHmsPickerDialog.Hm
         setAlarmManager(hours, minutes, seconds)
     }
 
-    private fun resetPersistedValues(){
+    private fun resetPersistedValues() {
         persistValues(-1, -1)
     }
 
-    private fun persistValues(sleepFrom: Long, sleepTime: Long){
+    private fun persistValues(sleepFrom: Long, sleepTime: Long) {
         sleepTimerUseCase.set(sleepFrom, sleepTime)
     }
 
-    private fun resetAlarmManager(){
+    private fun resetAlarmManager() {
         val intent = PendingIntents.stopMusicServiceIntent(context!!, classes.musicService())
         alarmManager.cancel(intent)
     }
 
-    private fun setAlarmManager(hours: Int, minutes: Int, seconds: Int){
+    private fun setAlarmManager(hours: Int, minutes: Int, seconds: Int) {
         val nextSleep = SystemClock.elapsedRealtime() +
                 TimeUnit.HOURS.toMillis(hours.toLong()) +
                 TimeUnit.MINUTES.toMillis(minutes.toLong()) +

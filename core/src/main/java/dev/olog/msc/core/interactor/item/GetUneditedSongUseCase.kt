@@ -1,10 +1,10 @@
 package dev.olog.msc.core.interactor.item
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.coroutines.ComputationDispatcher
-import dev.olog.msc.core.coroutines.ObservableFlowWithParam
 import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.track.SongGateway
+import dev.olog.msc.core.interactor.base.ObservableFlowWithParam
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

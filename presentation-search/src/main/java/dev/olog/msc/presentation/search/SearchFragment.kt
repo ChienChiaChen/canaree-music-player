@@ -8,25 +8,25 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.core.Classes
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.adapter.SetupNestedList
 import dev.olog.msc.presentation.base.drag.TouchHelperAdapterCallback
-import dev.olog.msc.presentation.base.extensions.*
+import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.fragmentTransaction
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.utils.ImeUtils
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.search.adapters.SearchFragmentAdapter
 import dev.olog.msc.presentation.search.adapters.SearchFragmentNestedAdapter
-import dev.olog.msc.shared.extensions.debounceFirst
 import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.coroutines.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SearchFragment : BaseFragment(), SetupNestedList {
@@ -88,20 +88,20 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         viewModel.playlistData.subscribe(viewLifecycleOwner, playlistAdapter::submitList)
         viewModel.genreData.subscribe(viewLifecycleOwner, genreAdapter::submitList)
 
-        RxTextView.afterTextChangeEvents(view.editText)
-            .debounceFirst(250, TimeUnit.MILLISECONDS)
-            .map { it.editable()!!.toString() }
-            .filter { it.isBlank() || it.trim().length >= 2 }
-            .distinctUntilChanged()
-            .asLiveData()
-            .subscribe(viewLifecycleOwner) {
-                viewModel.updateFilter(it)
-            }
+//        RxTextView.afterTextChangeEvents(view.editText) TODO
+//            .debounceFirst(250, TimeUnit.MILLISECONDS)
+//            .map { it.editable()!!.toString() }
+//            .filter { it.isBlank() || it.trim().length >= 2 }
+//            .distinctUntilChanged()
+//            .asLiveData()
+//            .subscribe(viewLifecycleOwner) {
+//                viewModel.updateFilter(it)
+//            }
     }
 
     override fun onResume() {
         super.onResume()
-        act.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+//        act.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING) TOOD is needed?
         keyboard.setOnClickListener { ImeUtils.showIme(editText) }
 
         floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }

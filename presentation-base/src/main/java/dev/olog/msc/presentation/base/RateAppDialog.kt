@@ -1,18 +1,13 @@
 package dev.olog.msc.presentation.base
 
-import android.content.Context
 import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.ThemedDialog
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 private var counterAlreadyIncreased = false
@@ -25,7 +20,9 @@ class RateAppDialog @Inject constructor(
 
 ): DefaultLifecycleObserver {
 
-    private var disposable : Disposable? = null
+    private var job : Job? = null
+
+    private val prefs by lazyFast { PreferenceManager.getDefaultSharedPreferences(activity.applicationContext) }
 
     init {
         activity.lifecycle.addObserver(this)
@@ -33,61 +30,57 @@ class RateAppDialog @Inject constructor(
     }
 
     private fun check(){
-        disposable = updateCounter(activity)
-                .delay(2, TimeUnit.SECONDS, Schedulers.computation())
-                .filter { it }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-
-                    ThemedDialog.builder(activity)
-                            .setTitle(R.string.rate_app_title)
-                            .setMessage(R.string.rate_app_message)
-                            .setPositiveButton(R.string.rate_app_positive_button) { _, _ ->
-                                setNeverShowAgain()
-                                openPlayStore(activity)
-                            }
-                            .setNegativeButton(R.string.rate_app_negative_button) { _, _ -> setNeverShowAgain() }
-                            .setNeutralButton(R.string.rate_app_neutral_button) { _, _ ->  }
-                            .setCancelable(false)
-                            .show()
-
-                }, Throwable::printStackTrace)
+        job = GlobalScope.launch {
+            val canShow = updateCounter()
+            delay(2000) // small delay
+            if (canShow){
+                withContext(Dispatchers.Main){
+                    showDialog()
+                }
+            }
+        }
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        disposable.unsubscribe()
+        job?.cancel()
+    }
+
+    private fun showDialog(){
+        ThemedDialog.builder(activity)
+            .setTitle(R.string.rate_app_title)
+            .setMessage(R.string.rate_app_message)
+            .setPositiveButton(R.string.rate_app_positive_button) { _, _ ->
+                setNeverShowAgain()
+                openPlayStore(activity)
+            }
+            .setNegativeButton(R.string.rate_app_negative_button) { _, _ -> setNeverShowAgain() }
+            .setNeutralButton(R.string.rate_app_neutral_button) { _, _ ->  }
+            .setCancelable(false)
+            .show()
     }
 
     /**
      * @return true when is requested to show rate dialog
      */
-    private fun updateCounter(context: Context): Single<Boolean> {
-        return Single.fromCallable {
-            if (!counterAlreadyIncreased){
-                counterAlreadyIncreased = true
+    private fun updateCounter(): Boolean {
+        return if (!counterAlreadyIncreased){
+            counterAlreadyIncreased = true
 
-                val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+            val oldValue = prefs.getInt(PREFS_APP_STARTED_COUNT, 0)
+            val newValue = oldValue + 1
+            prefs.edit { putInt(PREFS_APP_STARTED_COUNT, newValue) }
 
-                val oldValue = prefs.getInt(PREFS_APP_STARTED_COUNT, 0)
-                val newValue = oldValue + 1
-                prefs.edit { putInt(PREFS_APP_STARTED_COUNT, newValue) }
-
-                newValue.rem(20) == 0 && !isNeverShowAgain()
-            } else {
-                false
-            }
-
-
-        }.subscribeOn(Schedulers.io())
+            newValue.rem(20) == 0 && !isNeverShowAgain()
+        } else {
+            false
+        }
     }
 
     private fun isNeverShowAgain(): Boolean{
-        val prefs = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
         return prefs.getBoolean(PREFS_APP_RATE_NEVER_SHOW_AGAIN, false)
     }
 
     private fun setNeverShowAgain(){
-        val prefs = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
         prefs.edit { putBoolean(PREFS_APP_RATE_NEVER_SHOW_AGAIN, true) }
     }
 

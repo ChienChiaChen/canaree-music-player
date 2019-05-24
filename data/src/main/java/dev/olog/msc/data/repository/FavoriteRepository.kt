@@ -5,7 +5,6 @@ import dev.olog.msc.core.entity.favorite.FavoriteStateEntity
 import dev.olog.msc.core.entity.favorite.FavoriteType
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.data.db.AppDatabase
-import io.reactivex.Flowable
 import io.reactivex.processors.BehaviorProcessor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.flow.asFlow
@@ -41,12 +40,12 @@ internal class FavoriteRepository @Inject constructor(
         return favoriteDao.getAllPodcast(limit, offset)
     }
 
-    override fun observeAll(): Flowable<List<Long>> {
-        return favoriteDao.observeAll()
+    override fun observeAll(): Flow<List<Long>> {
+        return favoriteDao.observeAll().asFlow()
     }
 
-    override fun observeAllPodcast(): Flowable<List<Long>> {
-        return favoriteDao.observeAllPodcast()
+    override fun observeAllPodcast(): Flow<List<Long>> {
+        return favoriteDao.observeAllPodcast().asFlow()
     }
 
     override fun countAll(): Int {
@@ -61,14 +60,6 @@ internal class FavoriteRepository @Inject constructor(
         favoriteDao.addToFavoriteSingle(type, songId)
         val id = favoriteStatePublisher.value?.songId ?: return
         if (songId == id) {
-            updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.FAVORITE, type))
-        }
-    }
-
-    override suspend fun addGroup(type: FavoriteType, songListId: List<Long>) {
-        favoriteDao.addToFavorite(type, songListId)
-        val songId = favoriteStatePublisher.value?.songId ?: return
-        if (songListId.contains(songId)) {
             updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.FAVORITE, type))
         }
     }

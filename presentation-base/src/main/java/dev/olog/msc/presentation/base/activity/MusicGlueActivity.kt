@@ -16,28 +16,32 @@ import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.presentation.base.extensions.filter
-import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.media.MediaServiceCallback
 import dev.olog.msc.presentation.base.media.MusicServiceConnection
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.MusicServiceConnectionState
 import dev.olog.msc.shared.Permissions
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.BehaviorSubject
+import dev.olog.msc.shared.ui.extensions.filter
+import dev.olog.msc.shared.ui.extensions.liveDataOf
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
+abstract class MusicGlueActivity : BaseActivity(), MediaProvider, CoroutineScope by MainScope() {
 
-    @Inject internal lateinit var classes: Classes
+    @Inject
+    internal lateinit var classes: Classes
 
     private lateinit var mediaBrowser: MediaBrowserCompat
-    private lateinit var callback : MediaControllerCompat.Callback
+    private lateinit var callback: MediaControllerCompat.Callback
 
-    private val publisher = BehaviorSubject.createDefault(MusicServiceConnectionState.NONE)
-    private var connectionDisposable: Disposable? = null
+    private val publisher = BroadcastChannel<MusicServiceConnectionState>(Channel.CONFLATED)
+    private var job: Job? = null
 
     internal val metadataPublisher = liveDataOf<MediaMetadataCompat>()
     internal val statePublisher = liveDataOf<PlaybackStateCompat>()
@@ -51,9 +55,13 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mediaBrowser = MediaBrowserCompat(this,
-                ComponentName(this, classes.musicService()),
-                MusicServiceConnection(this), null)
+        launch { publisher.send(MusicServiceConnectionState.NONE) }
+
+        mediaBrowser = MediaBrowserCompat(
+            this,
+            ComponentName(this, classes.musicService()),
+            MusicServiceConnection(this), null
+        )
 
         callback = MediaServiceCallback(this)
     }
@@ -62,15 +70,18 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
     override fun onStart() {
         super.onStart()
 
-        if (Permissions.canReadStorage(this)){
-            connectionDisposable = publisher.subscribe({
-                when (it){
-                    MusicServiceConnectionState.CONNECTED -> onConnected()
-                    MusicServiceConnectionState.FAILED -> onConnectionFailed()
-                    else -> {}
+        if (Permissions.canReadStorage(this)) {
+            job?.cancel()
+            job = launch {
+                for (state in publisher.openSubscription()) {
+                    when (state) {
+                        MusicServiceConnectionState.CONNECTED -> onConnected()
+                        MusicServiceConnectionState.FAILED -> onConnectionFailed()
+                        else -> {
+                        }
+                    }
                 }
-
-            }, Throwable::printStackTrace)
+            }
 
             mediaBrowser.connect()
         }
@@ -79,28 +90,28 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
     @CallSuper
     override fun onStop() {
         super.onStop()
-        connectionDisposable.unsubscribe()
+        job?.cancel()
         mediaBrowser.disconnect()
         val mediaController = MediaControllerCompat.getMediaController(this)
-        if (mediaController != null){
+        if (mediaController != null) {
             mediaController.unregisterCallback(callback)
             MediaControllerCompat.setMediaController(this, null)
         }
     }
 
-    private fun onConnected(){
+    private fun onConnected() {
         try {
             val mediaController = MediaControllerCompat(this, mediaBrowser.sessionToken)
             mediaController.registerCallback(callback)
             MediaControllerCompat.setMediaController(this, mediaController)
             initialize(mediaController)
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
             onConnectionFailed()
         }
     }
 
-    private fun initialize(mediaController : MediaControllerCompat){
+    private fun initialize(mediaController: MediaControllerCompat) {
         callback.onMetadataChanged(mediaController.metadata)
         callback.onPlaybackStateChanged(mediaController.playbackState)
         callback.onRepeatModeChanged(mediaController.repeatMode)
@@ -108,16 +119,16 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
         callback.onQueueChanged(mediaController.queue)
     }
 
-    private fun onConnectionFailed(){
+    private fun onConnectionFailed() {
         val mediaController = MediaControllerCompat.getMediaController(this)
-        if (mediaController != null){
+        if (mediaController != null) {
             mediaController.unregisterCallback(callback)
             MediaControllerCompat.setMediaController(this, null)
         }
     }
 
-    internal fun updateConnectionState(state: MusicServiceConnectionState){
-        publisher.onNext(state)
+    internal fun updateConnectionState(state: MusicServiceConnectionState) = launch {
+        publisher.send(state)
     }
 
     override fun onMetadataChanged(): LiveData<MediaMetadataCompat> = metadataPublisher.filter { it != null }
@@ -136,14 +147,14 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
 
     private fun getTransportControls(): MediaControllerCompat.TransportControls? {
         val mediaController = MediaControllerCompat.getMediaController(this)
-        if (mediaController != null){
+        if (mediaController != null) {
             return mediaController.transportControls
         }
         return null
     }
 
     override fun playFromMediaId(mediaId: MediaId, sortType: SortType?, sortArranging: SortArranging?) {
-        val bundle = if (sortType != null && sortArranging != null){
+        val bundle = if (sortType != null && sortArranging != null) {
             Bundle().apply {
                 putString(MusicConstants.ARGUMENT_SORT_TYPE, sortType.toString())
                 putString(MusicConstants.ARGUMENT_SORT_ARRANGING, sortArranging.toString())
@@ -187,10 +198,11 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
         val mediaController = MediaControllerCompat.getMediaController(this)
         mediaController?.playbackState?.let {
             val state = it.state
-            when (state){
+            when (state) {
                 PlaybackStateCompat.STATE_PLAYING -> getTransportControls()?.pause()
                 PlaybackStateCompat.STATE_PAUSED -> getTransportControls()?.play()
-                else -> { }
+                else -> {
+                }
             }
         }
     }
@@ -214,30 +226,30 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
 
     override fun swap(from: Int, to: Int) {
         val bundle = bundleOf(
-                MusicConstants.ARGUMENT_SWAP_FROM to from,
-                MusicConstants.ARGUMENT_SWAP_TO to to
+            MusicConstants.ARGUMENT_SWAP_FROM to from,
+            MusicConstants.ARGUMENT_SWAP_TO to to
         )
         getTransportControls()?.sendCustomAction(MusicConstants.ACTION_SWAP, bundle)
     }
 
     override fun swapRelative(from: Int, to: Int) {
         val bundle = bundleOf(
-                MusicConstants.ARGUMENT_SWAP_FROM to from,
-                MusicConstants.ARGUMENT_SWAP_TO to to
+            MusicConstants.ARGUMENT_SWAP_FROM to from,
+            MusicConstants.ARGUMENT_SWAP_TO to to
         )
         getTransportControls()?.sendCustomAction(MusicConstants.ACTION_SWAP_RELATIVE, bundle)
     }
 
     override fun remove(position: Int) {
         val bundle = bundleOf(
-                MusicConstants.ARGUMENT_REMOVE_POSITION to position
+            MusicConstants.ARGUMENT_REMOVE_POSITION to position
         )
         getTransportControls()?.sendCustomAction(MusicConstants.ACTION_REMOVE, bundle)
     }
 
     override fun removeRelative(position: Int) {
         val bundle = bundleOf(
-                MusicConstants.ARGUMENT_REMOVE_POSITION to position
+            MusicConstants.ARGUMENT_REMOVE_POSITION to position
         )
         getTransportControls()?.sendCustomAction(MusicConstants.ACTION_REMOVE_RELATIVE, bundle)
     }
@@ -245,9 +257,9 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider {
     override fun addToPlayNext(mediaId: MediaId) {
         val trackId = "${mediaId.leaf!!}"
         val item = MediaDescriptionCompat.Builder()
-                .setMediaId(trackId)
-                .setExtras(bundleOf(MusicConstants.IS_PODCAST to mediaId.isAnyPodcast))
-                .build()
+            .setMediaId(trackId)
+            .setExtras(bundleOf(MusicConstants.IS_PODCAST to mediaId.isAnyPodcast))
+            .build()
         MediaControllerCompat.getMediaController(this).addQueueItem(item, Int.MAX_VALUE)
     }
 

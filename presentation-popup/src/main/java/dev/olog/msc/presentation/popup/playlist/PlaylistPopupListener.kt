@@ -16,10 +16,10 @@ import dev.olog.msc.shared.extensions.toast
 import javax.inject.Inject
 
 class PlaylistPopupListener @Inject constructor(
-    private val navigator: Navigator,
-    getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-    addToPlaylistUseCase: AddToPlaylistUseCase,
-    private val appShortcuts: AppShortcuts
+        private val navigator: Navigator,
+        getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
+        addToPlaylistUseCase: AddToPlaylistUseCase,
+        private val appShortcuts: AppShortcuts
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, false) {
 
@@ -114,11 +114,8 @@ class PlaylistPopupListener @Inject constructor(
 
 
     private fun addToFavorite() {
-        if (song == null) {
-            navigator.toAddToFavoriteDialog(activity, getMediaId(), playlist.size, playlist.title)
-        } else {
-            navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, song!!.title)
-        }
+        navigator.toAddToFavoriteDialog(activity, getMediaId(), song!!.title)
+
     }
 
     private fun delete() {

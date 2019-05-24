@@ -1,20 +1,22 @@
 package dev.olog.msc.presentation.preferences.blacklist
 
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
+import androidx.fragment.app.DialogFragment
+import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.presentation.base.extensions.ctx
-import dev.olog.msc.presentation.base.extensions.subscribe
-import dev.olog.msc.presentation.base.fragment.BaseDialogFragment
 import dev.olog.msc.presentation.preferences.R
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.ThemedDialog
+import dev.olog.msc.shared.ui.extensions.subscribe
 import javax.inject.Inject
 
-class BlacklistFragment : BaseDialogFragment() {
+class BlacklistFragment : DialogFragment() {
 
     companion object {
         const val TAG = "BlacklistFragment"
@@ -27,6 +29,11 @@ class BlacklistFragment : BaseDialogFragment() {
     @Inject
     lateinit var presenter: BlacklistFragmentViewModel
     private lateinit var adapter: BlacklistFragmentAdapter
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

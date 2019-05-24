@@ -1,10 +1,10 @@
 package dev.olog.msc.core.interactor.scrobble
 
 import dev.olog.msc.core.IEncrypter
-import dev.olog.msc.core.coroutines.IoDispatcher
-import dev.olog.msc.core.coroutines.ObservableFlow
 import dev.olog.msc.core.entity.UserCredentials
+import dev.olog.msc.core.executors.IoDispatcher
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.interactor.base.ObservableFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

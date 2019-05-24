@@ -11,19 +11,19 @@ import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.floatingwindowservice.api.HoverMenu
 import dev.olog.msc.floatingwindowservice.api.view.TabView
 import dev.olog.msc.floatingwindowservice.music.service.MusicServiceBinder
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import java.net.URLEncoder
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
 internal class CustomHoverMenu @Inject constructor(
-        @ServiceContext private val context: Context,
-        @ServiceLifecycle lifecycle: Lifecycle,
-        musicServiceBinder: MusicServiceBinder,
-        private val musicPreferencesUseCase: MusicPreferencesGateway,
-        private val offlineLyricsContentPresenter: OfflineLyricsContentPresenter
+    @ServiceContext private val context: Context,
+    @ServiceLifecycle lifecycle: Lifecycle,
+    musicServiceBinder: MusicServiceBinder,
+    private val musicPreferencesUseCase: MusicPreferencesGateway,
+    private val offlineLyricsContentPresenter: OfflineLyricsContentPresenter
 
 ) : HoverMenu(), DefaultLifecycleObserver {
 
@@ -35,51 +35,54 @@ internal class CustomHoverMenu @Inject constructor(
     private val videoContent = VideoContent(context)
     private val offlineLyricsContent = OfflineLyricsContent(context, musicServiceBinder, offlineLyricsContentPresenter)
 
-    private val subscriptions = CompositeDisposable()
-
     private var item by Delegates.observable("", { _, _, new ->
         sections.forEach {
-            if (it.content is WebViewContent){
+            if (it.content is WebViewContent) {
                 (it.content as WebViewContent).item = URLEncoder.encode(new, "UTF-8")
             }
         }
     })
 
+    private var job: Job? = null
+
     init {
         lifecycle.addObserver(this)
     }
 
-    fun startObserving(){
-        musicPreferencesUseCase.observeLastMetadata()
+    fun startObserving() {
+        job?.cancel()
+        job = GlobalScope.launch {
+            musicPreferencesUseCase.observeLastMetadata()
                 .filter { it.isNotEmpty() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    item = it.description
-                }, Throwable::printStackTrace)
-                .addTo(subscriptions)
+                .collect {
+                    withContext(Dispatchers.Main) {
+                        item = it.description
+                    }
+                }
+        }
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        subscriptions.clear()
+        job?.cancel()
         offlineLyricsContentPresenter.onDestroy()
     }
 
     private val lyricsSection = Section(
-            SectionId("lyrics"),
-            createTabView(lyricsColors, R.drawable.vd_lyrics_wrapper),
-            lyricsContent
+        SectionId("lyrics"),
+        createTabView(lyricsColors, R.drawable.vd_lyrics_wrapper),
+        lyricsContent
     )
 
     private val videoSection = Section(
-            SectionId("video"),
-            createTabView(youtubeColors, R.drawable.vd_video_wrapper),
-            videoContent
+        SectionId("video"),
+        createTabView(youtubeColors, R.drawable.vd_video_wrapper),
+        videoContent
     )
 
     private val offlineLyricsSection = Section(
-            SectionId("offline_lyrics"),
-            createTabView(offlineLyricsColors, R.drawable.vd_offline_lyrics_wrapper),
-            offlineLyricsContent
+        SectionId("offline_lyrics"),
+        createTabView(offlineLyricsColors, R.drawable.vd_offline_lyrics_wrapper),
+        offlineLyricsContent
     )
 
     private val sections: List<Section> = listOf(

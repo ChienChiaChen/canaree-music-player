@@ -1,13 +1,27 @@
 apply plugin: 'com.android.library'
-apply from: '../presentation_module.gradle'
+apply from: '../base_module.gradle'
+
 
 android {
     lintOptions {
         disable 'MissingTranslation'
-        abortOnError false // fixes localization error
+        abortOnError false
     }
 }
 
 dependencies {
+    implementation project(':core')
+    implementation project(':shared')
+    implementation project(':shared-ui-components')
+    implementation project(':presentation-base')
+
+    implementation librariesCore.daggerAndroid
+    implementation librariesCore.daggerAndroidSupport
+    kapt librariesCore.daggerAndroidProcessor
+
     implementation librariesAndroidX.coreKtx
+    implementation librariesAndroidX.material
+    implementation librariesAndroidX.media
+
+    implementation librariesCore.lifecycleKtx
 }

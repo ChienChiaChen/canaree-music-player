@@ -8,18 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
+import dev.olog.msc.shared.core.coroutines.asFlow
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.findChild
 import dev.olog.msc.shared.ui.imageview.ForegroundImageView
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 private const val DEFAULT_SWIPED_THRESHOLD = 100
 
-class SwipeableView : View, SlidingUpPanelLayout.PanelSlideListener {
+class SwipeableView(
+    context: Context,
+    attrs: AttributeSet?
 
-
+) : View(context, attrs), SlidingUpPanelLayout.PanelSlideListener, CoroutineScope by MainScope() {
 
     private val swipedThreshold = DEFAULT_SWIPED_THRESHOLD
     private var xDown = 0f
@@ -27,38 +34,13 @@ class SwipeableView : View, SlidingUpPanelLayout.PanelSlideListener {
     private var yDown = 0f
     private var yUp = 0f
     private var swipeListener: SwipeListener? = null
-    private val isTouchingPublisher = PublishSubject.create<Boolean>()
+    private val isTouchingPublisher = Channel<Boolean>(Channel.CONFLATED)
 
     private var isTouchEnabled = true
 
     private val sixtyFourDip by lazy(LazyThreadSafetyMode.NONE) { context.dip(64) }
 
     private val cover by lazyFast { findCover() }
-
-    constructor(context: Context?) : super(context){
-        initialize()
-    }
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs){
-        initialize()
-
-    }
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
-        initialize()
-
-    }
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
-        context,
-        attrs,
-        defStyleAttr,
-        defStyleRes
-    ){
-        initialize()
-
-    }
-
-    private fun initialize(){
-
-    }
 
     private fun findCover() : ForegroundImageView? {
         if (parent is ViewGroup){
@@ -87,22 +69,22 @@ class SwipeableView : View, SlidingUpPanelLayout.PanelSlideListener {
         }
     }
 
-    fun isTouching(): Observable<Boolean> = isTouchingPublisher.distinctUntilChanged()
+    fun isTouching(): Flow<Boolean> = isTouchingPublisher.asFlow().distinctUntilChanged()
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
 
         return when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                isTouchingPublisher.onNext(true)
+                launch { isTouchingPublisher.send(true) }
                 onActionDown(event)
             }
             MotionEvent.ACTION_MOVE -> {
                 onActionMove(event)
-                isTouchingPublisher.onNext(true)
+                launch { isTouchingPublisher.send(true) }
                 return true
             }
             MotionEvent.ACTION_UP  -> {
-                isTouchingPublisher.onNext(false)
+                launch { isTouchingPublisher.send(false) }
                 onActionUp(event)
             }
             else -> super.onTouchEvent(event)

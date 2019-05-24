@@ -8,19 +8,19 @@ import dev.olog.msc.presentation.dialogs.play.later.di.PlayLaterDialogModule
 import dev.olog.msc.presentation.dialogs.playlist.di.ClearPlaylistDialogModule
 import dev.olog.msc.presentation.dialogs.playlist.di.NewPlaylistDialogModule
 import dev.olog.msc.presentation.dialogs.rename.di.RenameDialogModule
-import dev.olog.msc.presentation.dialogs.ringtone.di.SetRingtoneDialogInjector
+import dev.olog.msc.presentation.dialogs.ringtone.di.SetRingtoneDialogModule
 
 @Module(
-    includes = [
-        AddFavoriteDialogModule::class,
-        PlayLaterDialogModule::class,
-        PlayLaterDialogModule::class,
-        SetRingtoneDialogInjector::class,
-        RenameDialogModule::class,
-        ClearPlaylistDialogModule::class,
-        DeleteDialogModule::class,
-        NewPlaylistDialogModule::class,
-        RemoveDuplicatesDialogModule::class
-    ]
+        includes = [
+            AddFavoriteDialogModule::class,
+            PlayLaterDialogModule::class,
+            PlayLaterDialogModule::class,
+            SetRingtoneDialogModule::class,
+            RenameDialogModule::class,
+            ClearPlaylistDialogModule::class,
+            DeleteDialogModule::class,
+            NewPlaylistDialogModule::class,
+            RemoveDuplicatesDialogModule::class
+        ]
 )
 abstract class DialogModules

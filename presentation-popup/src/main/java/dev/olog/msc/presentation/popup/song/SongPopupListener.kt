@@ -64,7 +64,7 @@ class SongPopupListener @Inject constructor(
     }
 
     private fun addToFavorite(){
-        navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, song.title)
+        navigator.toAddToFavoriteDialog(activity, getMediaId(), song.title)
     }
 
     private fun delete(){

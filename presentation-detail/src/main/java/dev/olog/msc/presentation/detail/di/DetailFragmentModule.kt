@@ -5,9 +5,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel
+import dev.olog.msc.shared.dagger.ViewModelKey
 
 @Module
 class DetailFragmentModule(private val fragment: DetailFragment) {

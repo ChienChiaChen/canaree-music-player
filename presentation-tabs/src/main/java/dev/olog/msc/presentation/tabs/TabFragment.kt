@@ -7,7 +7,10 @@ import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.presentation.base.extensions.*
+import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.ctx
+import dev.olog.msc.presentation.base.extensions.parentViewModelProvider
+import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.model.DisplayableItem
@@ -15,6 +18,7 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.adapters.TabFragmentAdapter
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.utils.TextUtils
 import kotlinx.android.synthetic.main.fragment_tab.*

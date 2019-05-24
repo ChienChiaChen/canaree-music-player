@@ -8,11 +8,10 @@ import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
-import dev.olog.msc.shared.extensions.asFlowable
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.BackpressureStrategy
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
@@ -59,8 +58,10 @@ internal class MusicPreferencesImpl @Inject constructor(
         preferences.edit { putInt(ID_IN_PLAYLIST, idInPlaylist) }
     }
 
-    override fun observeLastIdInPlaylist(): Observable<Int> {
+    override fun observeLastIdInPlaylist(): Flow<Int> {
         return rxPreferences.getInteger(ID_IN_PLAYLIST).asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
     }
 
     override fun getRepeatMode(): Int {
@@ -85,8 +86,9 @@ internal class MusicPreferencesImpl @Inject constructor(
 
     override fun observeSkipToPreviousVisibility(): Flow<Boolean> {
         return rxPreferences.getBoolean(SKIP_PREVIOUS, true).asObservable()
-            .asFlowable()
+            .toFlowable(BackpressureStrategy.LATEST)
             .asFlow()
+            .distinctUntilChanged()
     }
 
     override fun setSkipToNextVisibility(visible: Boolean) {
@@ -95,14 +97,18 @@ internal class MusicPreferencesImpl @Inject constructor(
 
     override fun observeSkipToNextVisibility(): Flow<Boolean> {
         return rxPreferences.getBoolean(SKIP_NEXT, true).asObservable()
-            .asFlowable()
+            .toFlowable(BackpressureStrategy.LATEST)
             .asFlow()
+            .distinctUntilChanged()
     }
 
-    override fun isMidnightMode(): Observable<Boolean> {
+    override fun isMidnightMode(): Flow<Boolean> {
         val key = context.getString(prefsKeys.midnightMode())
         return rxPreferences.getBoolean(key, false)
             .asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
+            .distinctUntilChanged()
     }
 
     override fun getLastMetadata(): LastMetadata {
@@ -122,20 +128,18 @@ internal class MusicPreferencesImpl @Inject constructor(
         }
     }
 
-    override fun observeLastMetadata(): Observable<LastMetadata> {
+    override fun observeLastMetadata(): Flow<LastMetadata> {
         return rxPreferences.getString(LAST_TITLE)
             .asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
             .map { getLastMetadata() }
     }
 
-    override fun setDefault(): Completable {
-        return Completable.create { emitter ->
-            setMidnightMode(false)
-            setCrossFade(0)
-            setGapless(false)
-
-            emitter.onComplete()
-        }
+    override fun setDefault() {
+        setMidnightMode(false)
+        setCrossFade(0)
+        setGapless(false)
     }
 
     private fun setMidnightMode(enable: Boolean) {
@@ -149,17 +153,22 @@ internal class MusicPreferencesImpl @Inject constructor(
         preferences.edit { putInt(key, value) }
     }
 
-    override fun observeCrossFade(): Observable<Int> {
+    override fun observeCrossFade(): Flow<Int> {
         val key = context.getString(prefsKeys.crossfade())
         return rxPreferences.getInteger(key, 0)
             .asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
             .map { it * 1000 }
     }
 
-    override fun observeGapless(): Observable<Boolean> {
+    override fun observeGapless(): Flow<Boolean> {
         val key = context.getString(prefsKeys.gapless())
         return rxPreferences.getBoolean(key, false)
             .asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
+            .distinctUntilChanged()
     }
 
     private fun setGapless(enabled: Boolean) {
@@ -167,10 +176,11 @@ internal class MusicPreferencesImpl @Inject constructor(
         preferences.edit { putBoolean(key, enabled) }
     }
 
-    override fun observePlaybackSpeed(): Observable<Float> {
+    override fun observePlaybackSpeed(): Flow<Float> {
         return rxPreferences.getFloat(PLAYBACK_SPEED, 1f)
             .asObservable()
-            .subscribeOn(Schedulers.io())
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
     }
 
     override fun setPlaybackSpeed(speed: Float) {
@@ -192,7 +202,7 @@ internal class MusicPreferencesImpl @Inject constructor(
     override fun observeLastPositionInQueue(): Flow<Int> {
         return rxPreferences.getInteger(LAST_POSITION, -1)
             .asObservable()
-            .asFlowable()
+            .toFlowable(BackpressureStrategy.LATEST)
             .asFlow()
     }
 

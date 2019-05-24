@@ -14,9 +14,7 @@ import dev.olog.msc.presentation.categories.R
 import dev.olog.msc.presentation.categories.Tutorial
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_library_categories.*
 import kotlinx.android.synthetic.main.fragment_library_categories.view.*
 import javax.inject.Inject
@@ -46,8 +44,6 @@ class CategoriesFragment : BaseFragment() {
                 presenter.getCategories(), prefsGateway
         )
     }
-
-    private var floatingWindowTutorialDisposable: Disposable? = null
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         view.viewPager.adapter = pagerAdapter
@@ -96,7 +92,6 @@ class CategoriesFragment : BaseFragment() {
         viewPager.removeOnPageChangeListener(onPageChangeListener)
         more.setOnClickListener(null)
         floatingWindow.setOnClickListener(null)
-        floatingWindowTutorialDisposable.unsubscribe()
     }
 
     private fun createMediaId(): MediaIdCategory? {

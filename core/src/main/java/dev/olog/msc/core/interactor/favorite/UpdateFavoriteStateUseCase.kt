@@ -1,9 +1,9 @@
 package dev.olog.msc.core.interactor.favorite
 
-import dev.olog.msc.core.coroutines.CompletableFlowWithParam
-import dev.olog.msc.core.coroutines.ComputationDispatcher
 import dev.olog.msc.core.entity.favorite.FavoriteStateEntity
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.FavoriteGateway
+import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class UpdateFavoriteStateUseCase @Inject constructor(

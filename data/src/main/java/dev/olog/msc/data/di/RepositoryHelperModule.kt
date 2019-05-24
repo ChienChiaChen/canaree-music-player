@@ -32,6 +32,7 @@ internal object Migrations {
             database.execSQL("DROP TABLE last_fm_podcast")
             database.execSQL("DROP TABLE last_fm_podcast_album")
             database.execSQL("DROP TABLE last_fm_podcast_artist")
+            database.execSQL("DROP TABLE mini_queue")
         }
     }
 

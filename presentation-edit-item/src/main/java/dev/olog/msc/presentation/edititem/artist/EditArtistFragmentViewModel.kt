@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import org.jaudiotagger.tag.TagOptionSingleton
 import javax.inject.Inject
@@ -51,7 +50,7 @@ class EditArtistFragmentViewModel @Inject constructor(
     fun getArtist(): DisplayableArtist = presenter.getArtist()
 
     override fun onCleared() {
-        songListDisposable.unsubscribe()
+//        songListDisposable.unsubscribe()
     }
 
     fun observeData(): LiveData<DisplayableArtist> = displayedArtist

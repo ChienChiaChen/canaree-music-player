@@ -5,11 +5,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.categories.podcast.CategoriesPodcastFragment
 import dev.olog.msc.presentation.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.player.mini.MiniPlayerFragment
 import dev.olog.msc.presentation.player.mini.MiniPlayerFragmentViewModel
+import dev.olog.msc.shared.dagger.ViewModelKey
 
 @Module
 abstract class MainActivityFragmentsModule {

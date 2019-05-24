@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.presentation.edititem.DisplayableSong
-import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.utils.NetworkUtils
 import io.reactivex.disposables.Disposable
 import org.jaudiotagger.tag.TagOptionSingleton
@@ -66,7 +65,7 @@ class EditTrackFragmentViewModel @Inject constructor(
             return false
         }
 
-        fetchSongInfoDisposable.unsubscribe()
+//        fetchSongInfoDisposable.unsubscribe()
 //        fetchSongInfoDisposable = presenter.fetchData()
 //                .map { it.get()!! }
 //                .subscribe({ newValue ->
@@ -85,11 +84,11 @@ class EditTrackFragmentViewModel @Inject constructor(
     }
 
     fun stopFetching(){
-        fetchSongInfoDisposable.unsubscribe()
+//        fetchSongInfoDisposable.unsubscribe()
     }
 
     override fun onCleared() {
-        getSongDisposable.unsubscribe()
+//        getSongDisposable.unsubscribe()
         stopFetching()
     }
 

@@ -1,8 +1,6 @@
 package dev.olog.msc.core.gateway.prefs
 
 import dev.olog.msc.core.entity.LastMetadata
-import io.reactivex.Completable
-import io.reactivex.Observable
 import kotlinx.coroutines.flow.Flow
 
 interface MusicPreferencesGateway {
@@ -12,7 +10,7 @@ interface MusicPreferencesGateway {
 
     fun getLastIdInPlaylist(): Int
     fun setLastIdInPlaylist(idInPlaylist: Int)
-    fun observeLastIdInPlaylist(): Observable<Int>
+    fun observeLastIdInPlaylist(): Flow<Int>
 
     fun getRepeatMode(): Int
     fun setRepeatMode(repeatMode: Int)
@@ -26,18 +24,18 @@ interface MusicPreferencesGateway {
     fun setSkipToNextVisibility(visible: Boolean)
     fun observeSkipToNextVisibility(): Flow<Boolean>
 
-    fun isMidnightMode(): Observable<Boolean>
+    fun isMidnightMode(): Flow<Boolean>
 
     fun getLastMetadata(): LastMetadata
     fun setLastMetadata(metadata: LastMetadata)
-    fun observeLastMetadata(): Observable<LastMetadata>
+    fun observeLastMetadata(): Flow<LastMetadata>
 
-    fun setDefault(): Completable
+    fun setDefault()
 
-    fun observeCrossFade(): Observable<Int>
-    fun observeGapless(): Observable<Boolean>
+    fun observeCrossFade(): Flow<Int>
+    fun observeGapless(): Flow<Boolean>
 
-    fun observePlaybackSpeed(): Observable<Float>
+    fun observePlaybackSpeed(): Flow<Float>
     fun setPlaybackSpeed(speed: Float)
     fun getPlaybackSpeed(): Float
 

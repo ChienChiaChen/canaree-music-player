@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.create.playlist.CreatePlaylistViewModel
+import dev.olog.msc.shared.dagger.ViewModelKey
 
 @Module
 abstract class CreatePlaylistModule {

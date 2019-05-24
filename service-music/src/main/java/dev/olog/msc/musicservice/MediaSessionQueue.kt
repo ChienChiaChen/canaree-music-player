@@ -10,11 +10,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.WidgetClasses
-import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.shared.WidgetConstants
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel

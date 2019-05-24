@@ -11,11 +11,10 @@ import dagger.Lazy
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.musicservice.utils.dispatchEvent
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
@@ -27,15 +26,16 @@ internal class MediaButton @Inject internal constructor(
 
 ) : DefaultLifecycleObserver {
 
-    private var disposable : Disposable? = null
     private var clicks = AtomicInteger(0)
+
+    private var job : Job? = null
 
     init {
         lifecycle.addObserver(this)
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        disposable.unsubscribe()
+        job?.cancel()
     }
 
     fun onNextEvent(mediaButtonEvent: Intent) {
@@ -45,11 +45,11 @@ internal class MediaButton @Inject internal constructor(
             val current = clicks.incrementAndGet()
 
             if (current < 5){
-                disposable.unsubscribe()
-                disposable = Single.timer(300, TimeUnit.MILLISECONDS)
-                        .map { current }
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(this::dispatchEvent, Throwable::printStackTrace)
+                job?.cancel()
+                job = GlobalScope.launch {
+                    delay(300)
+                    dispatchEvent(current)
+                }
             }
         }
     }

@@ -1,13 +1,12 @@
 apply plugin: 'kotlin'
 
 dependencies {
+    implementation project(':shared-core')
+
     implementation librariesCore.kotlin
-    implementation librariesCore.rxJava
-    implementation librariesCore.rxKotlin
     implementation librariesCore.dagger
 
     implementation librariesCore.coroutines
-    implementation librariesCore.coroutinesRx
 }
 
 sourceCompatibility = "8"

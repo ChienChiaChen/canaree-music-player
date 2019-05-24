@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.coroutines.mapToList
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.interactor.all.ObserveAllPlaylistsUseCase
-import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.model.DisplayableItem
+import dev.olog.msc.shared.core.coroutines.mapToList
+import dev.olog.msc.shared.ui.extensions.liveDataOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

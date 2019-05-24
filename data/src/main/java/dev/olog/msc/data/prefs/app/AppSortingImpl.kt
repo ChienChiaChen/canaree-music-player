@@ -7,9 +7,9 @@ import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
-import dev.olog.msc.shared.extensions.asFlowable
+import dev.olog.msc.shared.core.coroutines.combineLatest
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import io.reactivex.rxkotlin.Observables
+import io.reactivex.BackpressureStrategy
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
@@ -43,35 +43,40 @@ internal class AppSortingImpl @Inject constructor(
         return rxPreferences.getInteger(DETAIL_SORT_FOLDER_ORDER, SortType.TITLE.ordinal)
             .asObservable()
             .map { ordinal -> SortType.values()[ordinal] }
-            .asFlowable().asFlow()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
     }
 
     override fun observePlaylistSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_PLAYLIST_ORDER, SortType.CUSTOM.ordinal)
             .asObservable()
             .map { ordinal -> SortType.values()[ordinal] }
-            .asFlowable().asFlow()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
     }
 
     override fun observeAlbumSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_ALBUM_ORDER, SortType.TITLE.ordinal)
             .asObservable()
             .map { ordinal -> SortType.values()[ordinal] }
-            .asFlowable().asFlow()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
     }
 
     override fun observeArtistSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_ARTIST_ORDER, SortType.TITLE.ordinal)
             .asObservable()
             .map { ordinal -> SortType.values()[ordinal] }
-            .asFlowable().asFlow()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
     }
 
     override fun observeGenreSortOrder(): Flow<SortType> {
         return rxPreferences.getInteger(DETAIL_SORT_GENRE_ORDER, SortType.TITLE.ordinal)
             .asObservable()
             .map { ordinal -> SortType.values()[ordinal] }
-            .asFlowable().asFlow()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
     }
 
     override fun getDetailFolderSortOrder(): SortType {
@@ -128,7 +133,8 @@ internal class AppSortingImpl @Inject constructor(
         return rxPreferences.getInteger(DETAIL_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
             .asObservable()
             .map { ordinal -> SortArranging.values()[ordinal] }
-            .asFlowable().asFlow()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
     }
 
     override fun getDetailSortArranging(): SortArranging {
@@ -167,45 +173,57 @@ internal class AppSortingImpl @Inject constructor(
     }
 
     override fun observeAllTracksSortOrder(): Flow<LibrarySortType> {
-        return Observables.run {
-            combineLatest(
-                rxPreferences.getInteger(ALL_SONGS_SORT_ORDER, SortType.TITLE.ordinal).asObservable(),
-                rxPreferences.getInteger(
-                    ALL_SONGS_SORT_ARRANGING,
-                    SortArranging.ASCENDING.ordinal
-                ).asObservable() //ascending default
-            ) { sort, arranging ->
-                LibrarySortType(
-                    SortType.values()[sort],
-                    SortArranging.values()[arranging]
-                )
-            }.asFlowable().asFlow()
+        val orderFlow = rxPreferences.getInteger(ALL_SONGS_SORT_ORDER, SortType.TITLE.ordinal).asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
+
+        val arrangingFlow = rxPreferences.getInteger(ALL_SONGS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
+            .asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
+
+        return combineLatest(orderFlow, arrangingFlow) { sort, arranging ->
+            LibrarySortType(
+                SortType.values()[sort],
+                SortArranging.values()[arranging]
+            )
         }
     }
 
     override fun observeAllAlbumsSortOrder(): Flow<LibrarySortType> {
-        return Observables.combineLatest(
-            rxPreferences.getInteger(ALL_ALBUMS_SORT_ORDER, SortType.TITLE.ordinal).asObservable(),
-            rxPreferences.getInteger(
-                ALL_ALBUMS_SORT_ARRANGING,
-                SortArranging.ASCENDING.ordinal
-            ).asObservable() //ascending default
-        ) { sort, arranging ->
+        val orderFlow = rxPreferences.getInteger(ALL_ALBUMS_SORT_ORDER, SortType.TITLE.ordinal).asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
+
+        val arrangingFlow = rxPreferences.getInteger(ALL_ALBUMS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
+            .asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
+
+        return combineLatest(orderFlow, arrangingFlow) { sort, arranging ->
             LibrarySortType(
                 SortType.values()[sort],
-                SortArranging.values()[arranging])
-        }.asFlowable().asFlow()
+                SortArranging.values()[arranging]
+            )
+        }
     }
 
     override fun observeAllArtistsSortOrder(): Flow<LibrarySortType> {
-        return Observables.combineLatest(
-            rxPreferences.getInteger(ALL_ARTISTS_SORT_ORDER, SortType.ARTIST.ordinal).asObservable(),
-            rxPreferences.getInteger(
-                ALL_ARTISTS_SORT_ARRANGING,
-                SortArranging.ASCENDING.ordinal
-            ).asObservable() //ascending default
-        ) { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
-            .asFlowable().asFlow()
+        val orderFlow = rxPreferences.getInteger(ALL_ARTISTS_SORT_ORDER, SortType.ARTIST.ordinal).asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
+
+        val arrangingFlow = rxPreferences.getInteger(ALL_ARTISTS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
+            .asObservable()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .asFlow()
+
+        return combineLatest(orderFlow, arrangingFlow) { sort, arranging ->
+            LibrarySortType(
+                SortType.values()[sort],
+                SortArranging.values()[arranging]
+            )
+        }
     }
 
     override suspend fun setAllTracksSortOrder(sortType: LibrarySortType) {

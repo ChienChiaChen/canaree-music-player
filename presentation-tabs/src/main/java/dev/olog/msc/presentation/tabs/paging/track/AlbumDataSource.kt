@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.tabs.paging.track
 
-import dev.olog.msc.core.coroutines.merge
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
@@ -10,6 +9,7 @@ import dev.olog.msc.presentation.base.paging.BaseDataSource
 import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.tabs.TabFragmentHeaders
 import dev.olog.msc.presentation.tabs.mapper.toTabDisplayableItem
+import dev.olog.msc.shared.core.coroutines.merge
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take

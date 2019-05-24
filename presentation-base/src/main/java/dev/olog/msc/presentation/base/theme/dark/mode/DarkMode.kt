@@ -10,19 +10,21 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.presentation.base.R
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.BackpressureStrategy
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
 class DarkMode @Inject constructor(
-        @ApplicationContext private val context: Context,
-        @ProcessLifecycle lifecycle: Lifecycle,
-        private val prefs: SharedPreferences,
-        private val rxPrefs: RxSharedPreferences
+    @ApplicationContext private val context: Context,
+    @ProcessLifecycle lifecycle: Lifecycle,
+    private val prefs: SharedPreferences,
+    private val rxPrefs: RxSharedPreferences
 ) : DefaultLifecycleObserver, IDarkMode {
 
-    private var disposable: Disposable? = null
+    private var job: Job? = null
 
     init {
         lifecycle.addObserver(this)
@@ -30,26 +32,32 @@ class DarkMode @Inject constructor(
 
     override fun onStart(owner: LifecycleOwner) {
         setInitialValue()
-        disposable = rxPrefs.getString(
+        job?.cancel()
+        job = GlobalScope.launch {
+            rxPrefs.getString(
                 context.getString(R.string.prefs_dark_mode_2_key),
                 context.getString(R.string.prefs_dark_mode_2_value_follow_system)
-        )
+            )
                 .asObservable()
-                .subscribeOn(Schedulers.io())
-                .skip(1) // skip initial emission
-                .subscribe({
-                    onThemeChanged(it)
-                }, Throwable::printStackTrace)
+                .toFlowable(BackpressureStrategy.LATEST)
+                .asFlow()
+                .drop(1) // skip initial emission
+                .collect {
+                    withContext(Dispatchers.Main) {
+                        onThemeChanged(it)
+                    }
+                }
+        }
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        disposable.unsubscribe()
+        job?.cancel()
     }
 
     private fun setInitialValue() {
         val initialTheme = prefs.getString(
-                context.getString(R.string.prefs_dark_mode_2_key),
-                context.getString(R.string.prefs_dark_mode_2_value_follow_system)
+            context.getString(R.string.prefs_dark_mode_2_key),
+            context.getString(R.string.prefs_dark_mode_2_value_follow_system)
         )
         onThemeChanged(initialTheme)
     }

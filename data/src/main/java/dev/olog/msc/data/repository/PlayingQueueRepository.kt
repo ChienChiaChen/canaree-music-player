@@ -13,6 +13,8 @@ import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
 internal class PlayingQueueRepository @Inject constructor(
@@ -48,6 +50,12 @@ internal class PlayingQueueRepository @Inject constructor(
     override suspend fun observeAll(page: Page): Flow<List<PlayingQueueSong>> {
         return playingQueueDao.obsereveAllAsSongs(songGateway, podcastGateway, page)
             .distinctUntilChanged()
+    }
+
+    override fun isEmpty(): Flow<Boolean> {
+        return playingQueueDao.observeCount()
+            .asFlow()
+            .map { it == 0 }
     }
 
     private fun Song.toPlayingQueueSong(progressive: Int): PlayingQueueSong {

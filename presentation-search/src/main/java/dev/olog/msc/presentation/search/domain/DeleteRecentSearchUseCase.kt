@@ -1,9 +1,9 @@
 package dev.olog.msc.presentation.search.domain
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.coroutines.CompletableFlowWithParam
-import dev.olog.msc.core.coroutines.ComputationDispatcher
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.RecentSearchesGateway
+import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class DeleteRecentSearchUseCase @Inject constructor(

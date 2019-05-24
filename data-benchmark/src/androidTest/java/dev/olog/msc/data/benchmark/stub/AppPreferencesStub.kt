@@ -3,8 +3,6 @@ package dev.olog.msc.data.benchmark.stub
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import io.reactivex.Completable
-import io.reactivex.Observable
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -16,6 +14,10 @@ class AppPreferencesStub : AppPreferencesGateway {
             "/storage/emulated/0/test",
             "/storage/emulated/0/test/test2"
         )
+    }
+
+    override fun observeDefaultMusicFolder(): Flow<File> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getLastBottomViewPage(): Int {
@@ -94,11 +96,15 @@ class AppPreferencesStub : AppPreferencesGateway {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun observePlayerControlsVisibility(): Observable<Boolean> {
+    override fun observePlayerControlsVisibility(): Flow<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun setDefault(): Completable {
+    override fun setDefault() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun isLockscreenArtworkEnabled(): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -126,9 +132,6 @@ class AppPreferencesStub : AppPreferencesGateway {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun observeDefaultMusicFolder(): Observable<File> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun getDefaultMusicFolder(): File {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -154,9 +157,7 @@ class AppPreferencesStub : AppPreferencesGateway {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun observeLockscreenArtworkEnabled(): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
 
     override fun getShowFolderAsTreeView(): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

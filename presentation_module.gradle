@@ -31,8 +31,6 @@ dependencies {
     implementation librariesCore.lifecycleJava8
     implementation librariesCore.lifecycleKtx
 
-    implementation librariesCore.rxAndroid
-
     implementation librariesCore.daggerAndroid
     implementation librariesCore.daggerAndroidSupport
     kapt librariesCore.daggerAndroidProcessor

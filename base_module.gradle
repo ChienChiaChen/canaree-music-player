@@ -35,18 +35,14 @@ android {
 }
 
 dependencies {
+    implementation project(':shared-core')
 //    kotlin
     implementation librariesCore.kotlin
 //    dagger
     implementation librariesCore.dagger
     kapt librariesCore.daggerProcessor
-//    rx
-    implementation librariesCore.rxJava
-    implementation librariesCore.rxKotlin
-    debugImplementation librariesCore.rxLint
 
     implementation librariesCore.coroutines
-    implementation librariesCore.coroutinesRx
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'

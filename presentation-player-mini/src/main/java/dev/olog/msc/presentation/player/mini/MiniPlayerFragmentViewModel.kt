@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
-import dev.olog.msc.presentation.base.extensions.filter
-import dev.olog.msc.presentation.base.extensions.liveDataOf
-import dev.olog.msc.presentation.base.extensions.map
+import dev.olog.msc.shared.ui.extensions.filter
+import dev.olog.msc.shared.ui.extensions.liveDataOf
+import dev.olog.msc.shared.ui.extensions.map
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect

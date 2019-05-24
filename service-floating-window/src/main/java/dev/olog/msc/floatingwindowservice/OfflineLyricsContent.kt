@@ -20,17 +20,16 @@ import dev.olog.msc.offlinelyrics.EditLyricsDialog
 import dev.olog.msc.offlinelyrics.NoScrollTouchListener
 import dev.olog.msc.offlinelyrics.OfflineLyricsSyncAdjustementDialog
 import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.core.coroutines.flowInterval
 import dev.olog.msc.shared.extensions.isPlaying
-import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.ui.extensions.animateBackgroundColor
 import dev.olog.msc.shared.ui.extensions.animateTextColor
+import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.ui.imageview.BlurImageView
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.addTo
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import java.util.concurrent.TimeUnit
 
 internal class OfflineLyricsContent(
@@ -40,8 +39,8 @@ internal class OfflineLyricsContent(
 
 ) : Content() {
 
-    private val subscriptions = CompositeDisposable()
-    private var updateDisposable: Disposable? = null
+    private var seekBarJob: Job? = null
+    private var lyricsJob: Job? = null
 
     val content: View = LayoutInflater.from(context).inflate(R.layout.content_offline_lyrics, null)
 
@@ -102,33 +101,33 @@ internal class OfflineLyricsContent(
             })
 
         musicServiceBinder.onMetadataChanged
-            .subscribe({
+            .subscribe(this) {
                 presenter.updateCurrentTrackId(it.id)
                 loadImage(it)
                 header.text = it.title
                 subHeader.text = it.artist
                 updateProgressBarMax(it.duration)
-            }, Throwable::printStackTrace)
-            .addTo(subscriptions)
+            }
 
         musicServiceBinder.onStateChanged()
-            .subscribe({
+            .subscribe(this) {
                 handleSeekBarState(it.isPlaying(), it.playbackSpeed)
-            }, Throwable::printStackTrace)
-            .addTo(subscriptions)
+            }
 
         musicServiceBinder.onBookmarkChangedLiveData
-            .subscribe({ seekBar.progress = it.toInt() }, Throwable::printStackTrace)
-            .addTo(subscriptions)
+            .subscribe(this) { seekBar.progress = it.toInt() }
 
-        presenter.observeLyrics()
-            .map { presenter.transformLyrics(context, seekBar.progress, it) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                emptyState.toggleVisibility(it.isEmpty(), true)
-                lyricsText.setText(it)
-            }, Throwable::printStackTrace)
-            .addTo(subscriptions)
+        lyricsJob = GlobalScope.launch {
+            presenter.observeLyrics()
+                .map { presenter.transformLyrics(context, seekBar.progress, it) }
+                .collect {
+                    withContext(Dispatchers.Main){
+                        emptyState.toggleVisibility(it.isEmpty(), true)
+                        lyricsText.setText(it)
+                    }
+                }
+
+        }
 
         setupSeekBar()
     }
@@ -141,13 +140,13 @@ internal class OfflineLyricsContent(
         fakePrev.setOnTouchListener(null)
         scrollView.setOnTouchListener(null)
 
-        subscriptions.clear()
-        updateDisposable.unsubscribe()
+        seekBarJob?.cancel()
+        lyricsJob?.cancel()
         presenter.onDestroy()
     }
 
     private fun handleSeekBarState(isPlaying: Boolean, speed: Float) {
-        updateDisposable.unsubscribe()
+        seekBarJob?.cancel()
         if (isPlaying) {
             resumeSeekBar(speed)
         }
@@ -158,11 +157,15 @@ internal class OfflineLyricsContent(
     }
 
     private fun resumeSeekBar(speed: Float) {
-        updateDisposable = Observable.interval(MusicConstants.PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS)
-            .subscribe(
-                { seekBar.incrementProgressBy((MusicConstants.PROGRESS_BAR_INTERVAL * speed).toInt()) },
-                Throwable::printStackTrace
+        seekBarJob = GlobalScope.launch(Dispatchers.Main) {
+            flowInterval(
+                MusicConstants.PROGRESS_BAR_INTERVAL,
+                TimeUnit.MILLISECONDS
             )
+                .collect {
+                    seekBar.incrementProgressBy((MusicConstants.PROGRESS_BAR_INTERVAL * speed).toInt())
+                }
+        }
     }
 
     private fun setupSeekBar() {

@@ -19,19 +19,20 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import dev.olog.msc.presentation.base.R
-import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.shared.core.coroutines.asFlow
 import dev.olog.msc.shared.ui.extensions.colorPrimary
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.processors.PublishProcessor
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import java.lang.Runnable
 
 private const val BUBBLE_ANIMATION_DURATION = 100
 private const val SCROLL_BAR_ANIMATION_DURATION = 300
 private const val SCROLL_BAR_HIDE_DELAY = 1000
 private const val TRACK_SNAP_RANGE = 5
-private const val TEXT_THROTTLE = 100L
-private const val SCROLL_THROTTLE = 50L
 
 class RxFastScroller : LinearLayout {
 
@@ -107,10 +108,10 @@ class RxFastScroller : LinearLayout {
     private var mBubbleImage: Drawable? = null
     private var mHandleImage: Drawable? = null
 
-    private val bubbleTextPublisher = PublishProcessor.create<String>()
-    private val scrollPublisher = PublishProcessor.create<Int>()
-    private var bubbleTextDisposable : Disposable? = null
-    private var scrollDisposable : Disposable? = null
+    private val bubbleTextPublisher = Channel<String>(Channel.CONFLATED)
+    private val scrollPublisher = Channel<Int>(Channel.CONFLATED)
+    private var bubbleTextJob : Job? = null
+    private var scrollJob: Job? = null
 
     private val mScrollbarHider = Runnable { hideScrollbar() }
 
@@ -225,35 +226,43 @@ class RxFastScroller : LinearLayout {
 
         if (!isInEditMode){
             if (showBubble){
-                bubbleTextDisposable = bubbleTextPublisher
-                        .onBackpressureLatest()
-                        .throttleLast(TEXT_THROTTLE, TimeUnit.MILLISECONDS)
+                bubbleTextJob?.cancel()
+                bubbleTextJob = GlobalScope.launch {
+                    bubbleTextPublisher.asFlow()
                         .distinctUntilChanged()
-                        .observeOn(AndroidSchedulers.mainThread())
                         .map {
                             when {
                                 it < "A" -> "#"
                                 it > "Z" -> "?"
                                 else -> it
                             }
-                        }.subscribe({ mBubbleView!!.text = it }, Throwable::printStackTrace)
+                        }
+                        .collect {
+                            withContext(Dispatchers.Main){
+                                mBubbleView!!.text = it
+                            }
+                        }
+                }
             }
 
-            scrollDisposable = scrollPublisher
-                    .onBackpressureLatest()
-                    .throttleLast(SCROLL_THROTTLE, TimeUnit.MILLISECONDS)
+            scrollJob?.cancel()
+            scrollJob = GlobalScope.launch {
+                scrollPublisher.asFlow()
                     .distinctUntilChanged()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ position ->
-                        mRecyclerView?.layoutManager?.scrollToPosition(position)
-                    }, Throwable::printStackTrace)
+                    .debounce(50)
+                    .collect {  position ->
+                        withContext(Dispatchers.Main){
+                            mRecyclerView?.layoutManager?.scrollToPosition(position)
+                        }
+                    }
+            }
         }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        bubbleTextDisposable.unsubscribe()
-        scrollDisposable.unsubscribe()
+        bubbleTextJob?.cancel()
+        scrollJob?.cancel()
     }
 
     fun detachRecyclerView() {
@@ -392,10 +401,14 @@ class RxFastScroller : LinearLayout {
             }
 
             val targetPos = getValueInRange(0, itemCount - 1, (proportion * itemCount.toFloat()).toInt())
-            scrollPublisher.onNext(targetPos)
-
             val letter = mSectionIndexer?.getSectionText(targetPos)
-            letter?.let { bubbleTextPublisher.onNext(it) }
+
+            GlobalScope.launch {
+                scrollPublisher.send(targetPos)
+                letter?.let { bubbleTextPublisher.send(it) }
+
+            }
+
         }
     }
 

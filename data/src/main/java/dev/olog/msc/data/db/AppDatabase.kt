@@ -14,7 +14,6 @@ import dev.olog.msc.data.entity.*
 
 @Database(entities = arrayOf(
         PlayingQueueEntity::class,
-        MiniQueueEntity::class,
         FolderMostPlayedEntity::class,
         PlaylistMostPlayedEntity::class,
         GenreMostPlayedEntity::class,

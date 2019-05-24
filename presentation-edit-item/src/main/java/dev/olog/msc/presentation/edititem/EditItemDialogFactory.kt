@@ -9,7 +9,6 @@ import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.core.interactor.item.GetPodcastUseCase
 import dev.olog.msc.core.interactor.item.GetSongUseCase
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.shared.extensions.unsubscribe
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.runBlocking
 import org.jaudiotagger.audio.AudioFileIO
@@ -30,7 +29,7 @@ class EditItemDialogFactory @Inject constructor(
     private var toDialogDisposable : Disposable? = null
 
     fun dispose(){
-        toDialogDisposable.unsubscribe()
+//        toDialogDisposable.unsubscribe()
     }
 
     fun toEditTrack(mediaId: MediaId, action: () -> Unit) = runBlocking{

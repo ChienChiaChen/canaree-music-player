@@ -5,9 +5,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.tabs.TabFragment
 import dev.olog.msc.presentation.tabs.TabFragmentViewModel
+import dev.olog.msc.shared.dagger.ViewModelKey
 
 // used by MainActivitySubComponent
 @Module

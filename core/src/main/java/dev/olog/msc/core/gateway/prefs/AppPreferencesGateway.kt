@@ -5,8 +5,6 @@ import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
-import io.reactivex.Completable
-import io.reactivex.Observable
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -25,12 +23,12 @@ interface AppPreferencesGateway {
     fun getViewPagerPodcastLastPage(): Int
     fun setViewPagerPodcastLastPage(lastPage: Int)
 
-    fun getLibraryCategories() : List<LibraryCategoryBehavior>
-    fun getDefaultLibraryCategories() : List<LibraryCategoryBehavior>
+    fun getLibraryCategories(): List<LibraryCategoryBehavior>
+    fun getDefaultLibraryCategories(): List<LibraryCategoryBehavior>
     fun setLibraryCategories(behavior: List<LibraryCategoryBehavior>)
 
-    fun getPodcastLibraryCategories() : List<LibraryCategoryBehavior>
-    fun getDefaultPodcastLibraryCategories() : List<LibraryCategoryBehavior>
+    fun getPodcastLibraryCategories(): List<LibraryCategoryBehavior>
+    fun getDefaultPodcastLibraryCategories(): List<LibraryCategoryBehavior>
     fun setPodcastLibraryCategories(behavior: List<LibraryCategoryBehavior>)
 
     fun getBlackList(): Set<String>
@@ -38,12 +36,12 @@ interface AppPreferencesGateway {
 
     fun resetSleepTimer()
     fun setSleepTimer(sleepFrom: Long, sleepTime: Long)
-    fun getSleepTime() : Long
-    fun getSleepFrom() : Long
+    fun getSleepTime(): Long
+    fun getSleepFrom(): Long
 
-    fun observePlayerControlsVisibility(): Observable<Boolean>
+    fun observePlayerControlsVisibility(): Flow<Boolean>
 
-    fun setDefault(): Completable
+    fun setDefault()
 
     fun canAutoCreateImages(): Boolean
 
@@ -54,7 +52,7 @@ interface AppPreferencesGateway {
     fun getSyncAdjustment(): Long
     fun setSyncAdjustment(value: Long)
 
-    fun observeDefaultMusicFolder(): Observable<File>
+    fun observeDefaultMusicFolder(): Flow<File>
     fun getDefaultMusicFolder(): File
     fun setDefaultMusicFolder(file: File)
 
@@ -64,7 +62,7 @@ interface AppPreferencesGateway {
     fun canShowPodcastCategory(): Boolean
     fun isAdaptiveColorEnabled(): Boolean
 
-    fun observeLockscreenArtworkEnabled(): Observable<Boolean>
+    fun isLockscreenArtworkEnabled(): Boolean
 
     fun getShowFolderAsTreeView(): Boolean
 
@@ -84,16 +82,16 @@ interface SortPreferencesGateway {
     suspend fun setAllAlbumsSortOrder(sortType: LibrarySortType)
     suspend fun setAllArtistsSortOrder(sortType: LibrarySortType)
 
-    fun observeFolderSortOrder() : Flow<SortType>
-    fun observePlaylistSortOrder() : Flow<SortType>
-    fun observeAlbumSortOrder() : Flow<SortType>
-    fun observeArtistSortOrder() : Flow<SortType>
-    fun observeGenreSortOrder() : Flow<SortType>
-    fun getDetailFolderSortOrder() : SortType
-    fun getDetailPlaylistSortOrder() : SortType
-    fun getDetailAlbumSortOrder() : SortType
-    fun getDetailArtistSortOrder() : SortType
-    fun getDetailGenreSortOrder() : SortType
+    fun observeFolderSortOrder(): Flow<SortType>
+    fun observePlaylistSortOrder(): Flow<SortType>
+    fun observeAlbumSortOrder(): Flow<SortType>
+    fun observeArtistSortOrder(): Flow<SortType>
+    fun observeGenreSortOrder(): Flow<SortType>
+    fun getDetailFolderSortOrder(): SortType
+    fun getDetailPlaylistSortOrder(): SortType
+    fun getDetailAlbumSortOrder(): SortType
+    fun getDetailArtistSortOrder(): SortType
+    fun getDetailGenreSortOrder(): SortType
 
     suspend fun setFolderSortOrder(sortType: SortType)
     suspend fun setPlaylistSortOrder(sortType: SortType)

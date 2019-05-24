@@ -7,24 +7,26 @@ import com.android.billingclient.api.*
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
+import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.combineLatest
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.Observables
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
+import dev.olog.msc.shared.utils.assertBackgroundThread
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
 internal class BillingImpl @Inject constructor(
-        private val activity: AppCompatActivity,
-        private val appPrefsUseCase: AppPreferencesGateway,
-        private val musicPreferencesUseCase: MusicPreferencesGateway,
-        private val equalizerPrefsUseCase: EqualizerPreferencesGateway
+    private val activity: AppCompatActivity,
+    private val appPrefsUseCase: AppPreferencesGateway,
+    private val musicPreferencesUseCase: MusicPreferencesGateway,
+    private val equalizerPrefsUseCase: EqualizerPreferencesGateway
 
-) : IBilling, PurchasesUpdatedListener, DefaultLifecycleObserver {
+) : IBilling, PurchasesUpdatedListener, DefaultLifecycleObserver, CoroutineScope by CustomScope() {
 
     companion object {
         private const val PRO_VERSION_ID = "pro_version"
@@ -38,43 +40,43 @@ internal class BillingImpl @Inject constructor(
 
     private var isConnected = false
 
-    private val premiumPublisher = BehaviorSubject.createDefault(DEFAULT_PREMIUM)
-    private val trialPublisher = BehaviorSubject.createDefault(DEFAULT_TRIAL)
-
-    private var setDefaultDisposable: Disposable? = null
+    private val premiumPublisher = BroadcastChannel<Boolean>(Channel.CONFLATED)
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    private val trialPublisher = BroadcastChannel<Boolean>(Channel.CONFLATED)
 
     private var isTrialState by Delegates.observable(DEFAULT_TRIAL) { _, _, new ->
-        trialPublisher.onNext(new)
-        if (!isPremium()){
+        launch { trialPublisher.send(new) }
+        if (!isPremium()) {
             setDefault()
         }
     }
 
     private var isPremiumState by Delegates.observable(DEFAULT_PREMIUM) { _, _, new ->
-        premiumPublisher.onNext(new)
-        if (!isPremium()){
+        launch { premiumPublisher.send(new) }
+        if (!isPremium()) {
             setDefault()
         }
     }
 
-
     private val billingClient = BillingClient.newBuilder(activity)
-            .setListener(this)
-            .build()
-
-    private var countDownDisposable : Disposable? = null
+        .setListener(this)
+        .build()
 
     init {
+        launch(Dispatchers.Main) {
+            premiumPublisher.send(DEFAULT_PREMIUM)
+            trialPublisher.send(DEFAULT_TRIAL)
+        }
         activity.lifecycle.addObserver(this)
         startConnection { checkPurchases() }
 
-        if (isStillTrial()){
-            isTrialState = true
-            countDownDisposable = Observable.interval(5, TimeUnit.MINUTES, Schedulers.computation())
-                    .map { isStillTrial() }
-                    .doOnNext { isTrialState = it }
-                    .takeWhile { it }
-                    .subscribe({}, Throwable::printStackTrace)
+        isTrialState = true
+        launch(Dispatchers.IO) {
+            while (isStillTrial()) {
+                isTrialState = true
+                delay(TimeUnit.MINUTES.toMillis(5))
+            }
+            isTrialState = false
         }
     }
 
@@ -85,15 +87,14 @@ internal class BillingImpl @Inject constructor(
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        if (billingClient.isReady){
+        if (billingClient.isReady) {
             billingClient.endConnection()
         }
-        countDownDisposable.unsubscribe()
-        setDefaultDisposable.unsubscribe()
+        cancel()
     }
 
-    private fun startConnection(func: (() -> Unit)?){
-        if (isConnected){
+    private fun startConnection(func: (() -> Unit)?) {
+        if (isConnected) {
             func?.invoke()
             return
         }
@@ -102,30 +103,33 @@ internal class BillingImpl @Inject constructor(
             override fun onBillingSetupFinished(responseCode: Int) {
 //                println("onBillingSetupFinished with response code:$responseCode")
 
-                when (responseCode){
+                when (responseCode) {
                     BillingClient.BillingResponse.OK -> isConnected = true
                     BillingClient.BillingResponse.BILLING_UNAVAILABLE -> activity.toast("Play store not found")
+                    // TODO
                 }
                 func?.invoke()
             }
+
             override fun onBillingServiceDisconnected() {
                 isConnected = false
             }
         })
     }
 
-    private fun checkPurchases(){
+    private fun checkPurchases() {
         val purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP)
-        if (purchases.responseCode == BillingClient.BillingResponse.OK){
+        if (purchases.responseCode == BillingClient.BillingResponse.OK) {
             isPremiumState = isProBought(purchases.purchasesList)
         }
     }
 
     override fun onPurchasesUpdated(responseCode: Int, purchases: MutableList<Purchase>?) {
-        when (responseCode){
+        when (responseCode) {
             BillingClient.BillingResponse.OK -> {
                 isPremiumState = isProBought(purchases)
             }
+            // TODO
 //            else -> Log.w("Billing", "billing response code=$responseCode")
         }
     }
@@ -141,33 +145,39 @@ internal class BillingImpl @Inject constructor(
 
     override fun isOnlyPremium(): Boolean = isPremiumState
 
-    override fun observeIsPremium(): Observable<Boolean> {
-        return Observables.combineLatest(premiumPublisher, trialPublisher)
-        { premium, trial -> premium || trial }
+    override fun observeIsPremium(): Flow<Boolean> {
+        return combineLatest(
+            premiumPublisher.openSubscription(),
+            trialPublisher.openSubscription()
+        ) { isPremium, isTrial ->
+            isPremium || isTrial
+        }.distinctUntilChanged()
     }
 
-    override fun observeTrialPremiumState(): Observable<BillingState> {
-        return Observables.combineLatest(premiumPublisher, trialPublisher)
-        { premium, trial -> BillingState(trial, premium) }
+    override fun observeTrialPremiumState(): Flow<BillingState> {
+        return combineLatest(
+            premiumPublisher.openSubscription(),
+            trialPublisher.openSubscription()
+        ) { isPremium, isTrial ->
+            BillingState(isTrial, isPremium)
+        }.distinctUntilChanged()
     }
 
     override fun purchasePremium() {
         startConnection {
             val params = BillingFlowParams.newBuilder()
-                    .setSku(PRO_VERSION_ID)
-                    .setType(BillingClient.SkuType.INAPP)
-                    .build()
+                .setSku(PRO_VERSION_ID)
+                .setType(BillingClient.SkuType.INAPP)
+                .build()
 
             billingClient.launchBillingFlow(activity, params)
         }
     }
 
-    private fun setDefault(){
-        setDefaultDisposable.unsubscribe()
-        setDefaultDisposable = appPrefsUseCase.setDefault()
-                .andThen(musicPreferencesUseCase.setDefault())
-                .andThen(equalizerPrefsUseCase.setDefault())
-                .subscribeOn(Schedulers.io())
-                .subscribe({}, Throwable::printStackTrace)
+    private fun setDefault() = launch {
+        assertBackgroundThread()
+        appPrefsUseCase.setDefault()
+        musicPreferencesUseCase.setDefault()
+        equalizerPrefsUseCase.setDefault()
     }
 }

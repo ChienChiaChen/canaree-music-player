@@ -20,6 +20,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     bundle {
@@ -84,12 +90,6 @@ android {
         preDexLibraries true
     }
 
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xmaxerrs" << "500" // or whatever number you want
-        }
-    }
-
 
     lintOptions {
         checkReleaseBuilds false
@@ -102,6 +102,10 @@ android {
             correctErrorTypes = true
         }
     }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
 }
 
 dependencies {
@@ -111,6 +115,7 @@ dependencies {
     implementation project(':tap-target-view')
 
     implementation project(':shared')
+    implementation project(':shared-core')
     implementation project(':shared-ui-components')
     implementation project(':offline-lyrics')
     implementation project(':image-provider')
@@ -161,11 +166,9 @@ dependencies {
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
-    implementation librariesCore.lifecycleRx
     implementation librariesCore.lifecycleKtx
 
     implementation librariesCore.coroutines
-    implementation librariesCore.coroutinesRx
 //    debugImplementation librariesCore.coroutinesDebug
 
     // support
@@ -193,11 +196,7 @@ dependencies {
     kapt librariesCore.daggerAndroidProcessor
 
     // rx
-    implementation librariesCore.rxJava
-    implementation librariesCore.rxAndroid
-    implementation librariesCore.rxKotlin
     implementation librariesCore.rxBinding
-    debugImplementation librariesCore.rxLint
 
     implementation librariesUi.slidingPanel
     implementation librariesUi.lottie

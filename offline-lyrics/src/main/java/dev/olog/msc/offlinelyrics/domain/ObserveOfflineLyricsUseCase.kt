@@ -1,9 +1,9 @@
 package dev.olog.msc.offlinelyrics.domain
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.coroutines.ComputationDispatcher
-import dev.olog.msc.core.coroutines.ObservableFlowWithParam
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.OfflineLyricsGateway
+import dev.olog.msc.core.interactor.base.ObservableFlowWithParam
 import dev.olog.msc.core.interactor.item.GetSongUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

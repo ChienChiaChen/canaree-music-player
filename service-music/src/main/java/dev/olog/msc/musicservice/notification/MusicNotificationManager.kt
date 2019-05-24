@@ -9,7 +9,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dagger.Lazy
-import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.core.entity.favorite.FavoriteEnum
@@ -17,6 +16,7 @@ import dev.olog.msc.core.interactor.favorite.ObserveFavoriteAnimationUseCase
 import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.musicservice.utils.dispatchEvent
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.shared.utils.isOreo
 import kotlinx.coroutines.*

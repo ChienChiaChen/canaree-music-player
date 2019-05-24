@@ -47,7 +47,7 @@ public class TrackSearch {
 
             @SerializedName("track")
             @Expose
-            public List<Track> track = new ArrayList<Track>();
+            public List<Track> track = new ArrayList<>();
 
             /**
              * No args constructor for use in serialization
@@ -82,7 +82,7 @@ public class TrackSearch {
 
                 @SerializedName("image")
                 @Expose
-                public List<Image> image = new ArrayList<Image>();
+                public List<Image> image = new ArrayList<>();
 
                 @SerializedName("mbid")
                 @Expose

@@ -19,7 +19,6 @@ dependencies {
 
     implementation librariesAndroidX.coreKtx
     implementation librariesAndroidX.material
-    implementation librariesCore.rxAndroid
 
     implementation librariesUi.glide
 

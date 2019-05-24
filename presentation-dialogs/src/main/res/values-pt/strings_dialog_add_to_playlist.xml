@@ -11,6 +11,5 @@
     <string name="popup_no_playlist">Ainda não tens listas de reprodução</string>
     <string name="new_playlist_hint">Nome da lista de reprodução</string>
     <string name="popup_playlist_name_not_valid">Nome da lista de reprodução não é válido</string>
-    <string name="popup_playlist_name_already_exist">A lista de reprodução já existe</string>
 
 </resources>

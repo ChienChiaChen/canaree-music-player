@@ -8,12 +8,13 @@ import android.widget.TextView
 import android.widget.ViewSwitcher
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.presentation.base.activity.BaseActivity
-import dev.olog.msc.presentation.base.extensions.subscribe
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.navigator.NavigatorAbout
-import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.activity_about.*
 import javax.inject.Inject
 
@@ -21,10 +22,11 @@ class AboutActivity : BaseActivity() {
 
     @Inject
     lateinit var navigator: NavigatorAbout
+
     @Inject
-    lateinit var billing: IBilling
-    private val presenter by lazyFast { AboutActivityPresenter(applicationContext, billing) }
-    private val adapter by lazyFast { AboutActivityAdapter(navigator, presenter) }
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel by lazyFast { viewModelProvider<AboutActivityViewModel>(viewModelFactory) }
+    private val adapter by lazyFast { AboutActivityAdapter(lifecycle, navigator, viewModel) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +39,7 @@ class AboutActivity : BaseActivity() {
         switcher?.setCurrentText(getString(R.string.about))
         setInAnimation()
 
-        presenter.observeData()
+        viewModel.observeData()
             .subscribe(this, adapter::updateDataSet)
 
     }

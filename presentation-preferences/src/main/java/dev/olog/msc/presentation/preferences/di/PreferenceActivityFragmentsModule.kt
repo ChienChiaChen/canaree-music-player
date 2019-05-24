@@ -5,12 +5,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.preferences.PreferencesFragment
 import dev.olog.msc.presentation.preferences.blacklist.BlacklistFragment
 import dev.olog.msc.presentation.preferences.blacklist.BlacklistFragmentViewModel
 import dev.olog.msc.presentation.preferences.categories.LibraryCategoriesFragment
 import dev.olog.msc.presentation.preferences.credentials.LastFmCredentialsFragment
+import dev.olog.msc.shared.dagger.ViewModelKey
 
 @Module
 abstract class PreferenceActivityFragmentsModule {

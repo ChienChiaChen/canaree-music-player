@@ -18,4 +18,6 @@ interface PlayingQueueGateway {
     // mediaId, trackId, idInPlaylist
     suspend fun update(list: List<Triple<MediaId, Long, Int>>)
 
+    fun isEmpty(): Flow<Boolean>
+
 }

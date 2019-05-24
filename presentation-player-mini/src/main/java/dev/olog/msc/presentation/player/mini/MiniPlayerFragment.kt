@@ -6,9 +6,11 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import androidx.core.math.MathUtils
 import androidx.lifecycle.ViewModelProvider
-import com.jakewharton.rxbinding2.view.RxView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dev.olog.msc.presentation.base.extensions.*
+import dev.olog.msc.presentation.base.extensions.expand
+import dev.olog.msc.presentation.base.extensions.isCollapsed
+import dev.olog.msc.presentation.base.extensions.isExpanded
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.theme.player.theme.isMini
@@ -17,20 +19,22 @@ import dev.olog.msc.presentation.base.utils.getDuration
 import dev.olog.msc.presentation.base.utils.getTitle
 import dev.olog.msc.presentation.base.utils.isPodcast
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
+import dev.olog.msc.shared.core.coroutines.flowInterval
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import dev.olog.msc.shared.ui.extensions.*
 import kotlinx.android.synthetic.main.fragment_mini_player.*
 import kotlinx.android.synthetic.main.fragment_mini_player.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
+class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener, CoroutineScope by MainScope() {
 
     companion object {
         private const val TAG = "MiniPlayerFragment"
@@ -42,7 +46,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
 
     private val presenter by lazyFast { viewModelProvider<MiniPlayerFragmentViewModel>(factory) }
 
-    private var seekBarDisposable: Disposable? = null
+    private var seekBarJob: Job? = null // TODO make this like a class, is also used in player fragment and floating window
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         savedInstanceState?.let {
@@ -104,17 +108,17 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
             .map { state -> state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT }
             .subscribe(viewLifecycleOwner, this::animateSkipTo)
 
-        RxView.clicks(view.next)
-            .asLiveData()
-            .subscribe(viewLifecycleOwner) { media.skipToNext() }
+//        RxView.clicks(view.next) TODO
+//            .asLiveData()
+//            .subscribe(viewLifecycleOwner) { media.skipToNext() }
 
-        RxView.clicks(view.playPause)
-            .asLiveData()
-            .subscribe(viewLifecycleOwner) { media.playPause() }
+//        RxView.clicks(view.playPause) TODO
+//            .asLiveData()
+//            .subscribe(viewLifecycleOwner) { media.playPause() }
 
-        RxView.clicks(view.previous)
-            .asLiveData()
-            .subscribe(viewLifecycleOwner) { media.skipToPrevious() }
+//        RxView.clicks(view.previous)
+//            .asLiveData()
+//            .subscribe(viewLifecycleOwner) { media.skipToPrevious() }
 
         presenter.skipToNextVisibility
             .subscribe(viewLifecycleOwner) {
@@ -142,7 +146,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
 
     override fun onStop() {
         super.onStop()
-        seekBarDisposable.unsubscribe()
+        seekBarJob?.cancel()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -184,19 +188,20 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
     }
 
     private fun handleProgressBar(isPlaying: Boolean, speed: Float) {
-        seekBarDisposable.unsubscribe()
+        seekBarJob?.cancel()
         if (isPlaying) {
             resumeProgressBar(speed)
         }
     }
 
     private fun resumeProgressBar(speed: Float) {
-        seekBarDisposable = Observable
-            .interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS, Schedulers.computation())
-            .subscribe({
-                progressBar.incrementProgressBy((PROGRESS_BAR_INTERVAL * speed).toInt())
-                presenter.updateProgress((progressBar.progress + (PROGRESS_BAR_INTERVAL * speed)).toLong())
-            }, Throwable::printStackTrace)
+        seekBarJob = launch {
+            flowInterval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS)
+                .collect {
+                    progressBar.incrementProgressBy((PROGRESS_BAR_INTERVAL * speed).toInt())
+                    presenter.updateProgress((progressBar.progress + (PROGRESS_BAR_INTERVAL * speed)).toLong())
+                }
+        }
     }
 
 

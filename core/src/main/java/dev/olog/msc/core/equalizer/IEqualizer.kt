@@ -1,6 +1,6 @@
 package dev.olog.msc.core.equalizer
 
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 interface IEqualizer {
 
@@ -24,7 +24,7 @@ interface IEqualizer {
 
     fun release()
 
-    fun isAvailable(): Observable<Boolean>
+    fun isAvailable(): Flow<Boolean>
 
     interface Listener {
         fun onPresetChange(band: Int, level: Float)

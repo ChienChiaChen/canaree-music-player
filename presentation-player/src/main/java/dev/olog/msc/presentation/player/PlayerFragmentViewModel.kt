@@ -13,9 +13,9 @@ import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.core.interactor.favorite.ObserveFavoriteAnimationUseCase
-import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.base.theme.player.theme.*
+import dev.olog.msc.shared.ui.extensions.liveDataOf
 import dev.olog.msc.shared.ui.imageview.adaptive.PaletteColors
 import dev.olog.msc.shared.ui.imageview.adaptive.ProcessorColors
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +44,8 @@ class PlayerFragmentViewModel @Inject constructor(
     private val skipToPreviousLiveData = liveDataOf<Boolean>()
     private val progressPublisher = liveDataOf<Int>()
 
+    private val showPlayerControlsLiveData = liveDataOf<Boolean>()
+
     init {
         viewModelScope.launch(Dispatchers.Default) {
             observeFavoriteAnimationUseCase.execute()
@@ -60,6 +62,12 @@ class PlayerFragmentViewModel @Inject constructor(
                 .distinctUntilChanged()
                 .collect { skipToPreviousLiveData.postValue(it) }
         }
+        viewModelScope.launch(Dispatchers.Default) {
+            appPreferencesUseCase.observePlayerControlsVisibility()
+                .collect {
+                    showPlayerControlsLiveData.postValue(it)
+                }
+        }
     }
 
     override fun onCleared() {
@@ -71,6 +79,8 @@ class PlayerFragmentViewModel @Inject constructor(
     val skipToNextVisibility: LiveData<Boolean> = skipToNextLiveData
 
     val skipToPreviousVisibility: LiveData<Boolean> = skipToPreviousLiveData
+
+    fun observePlayerControlsVisibility() = showPlayerControlsLiveData
 
     fun observeProcessorColors(): LiveData<ProcessorColors> = processorLiveData
 

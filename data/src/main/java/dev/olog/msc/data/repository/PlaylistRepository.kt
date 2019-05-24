@@ -135,7 +135,7 @@ internal class PlaylistRepository @Inject constructor(
                         .toList()
                 },
                 contentResolver = contentResolver,
-                changeNotification = { favoriteGateway.observeAll().asFlow() },
+                changeNotification = { favoriteGateway.observeAll() },
                 overrideSize = favoriteGateway.countAll()
             )
         }
@@ -162,7 +162,7 @@ internal class PlaylistRepository @Inject constructor(
                         .toList()
                 },
                 contentResolver = contentResolver,
-                changeNotification = { favoriteGateway.observeAll().asFlow() },
+                changeNotification = { favoriteGateway.observeAll() },
                 overrideSize = historyDao.countAll()
             )
         }

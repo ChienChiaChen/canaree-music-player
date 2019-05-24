@@ -10,19 +10,21 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.presentation.base.R
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.BackpressureStrategy
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
 class Immersive @Inject constructor(
-        @ApplicationContext private val context: Context,
-        @ProcessLifecycle lifecycle: Lifecycle,
-        private val prefs: SharedPreferences,
-        private val rxPrefs: RxSharedPreferences
+    @ApplicationContext private val context: Context,
+    @ProcessLifecycle lifecycle: Lifecycle,
+    private val prefs: SharedPreferences,
+    private val rxPrefs: RxSharedPreferences
 ) : DefaultLifecycleObserver, IImmersive {
 
-    private var disposable: Disposable? = null
+    private var job: Job? = null
     private var isEnabled = false
 
     private var currentActivity: Activity? = null
@@ -33,27 +35,33 @@ class Immersive @Inject constructor(
 
     override fun onStart(owner: LifecycleOwner) {
         setInitialValue()
-        disposable = rxPrefs.getBoolean(
+        job?.cancel()
+        job = GlobalScope.launch {
+            rxPrefs.getBoolean(
                 context.getString(R.string.prefs_immersive_key),
                 false
-        )
+            )
                 .asObservable()
-                .subscribeOn(Schedulers.io())
-                .skip(1) // skip initial emission
-                .subscribe({
-                    onThemeChanged(it)
-                    currentActivity?.recreate()
-                }, Throwable::printStackTrace)
+                .toFlowable(BackpressureStrategy.LATEST)
+                .asFlow()
+                .drop(1) // skip initial emission
+                .collect {
+                    withContext(Dispatchers.Main) {
+                        onThemeChanged(it)
+                        currentActivity?.recreate()
+                    }
+                }
+        }
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        disposable.unsubscribe()
+        job?.cancel()
     }
 
     private fun setInitialValue() {
         val initialValue = prefs.getBoolean(
-                context.getString(R.string.prefs_immersive_key),
-                false
+            context.getString(R.string.prefs_immersive_key),
+            false
         )
         onThemeChanged(initialValue)
     }

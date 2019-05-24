@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.provider.MediaStore
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.PrefsKeys
-import dev.olog.msc.core.coroutines.mapToList
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.data.request.DataRequest
 import dev.olog.msc.core.entity.data.request.Filter
@@ -28,6 +27,7 @@ import dev.olog.msc.data.entity.custom.PageRequestImpl
 import dev.olog.msc.data.mapper.toPodcast
 import dev.olog.msc.data.repository.queries.TrackQueries
 import dev.olog.msc.data.repository.util.ContentObserverFlow
+import dev.olog.msc.shared.core.coroutines.mapToList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -150,7 +150,7 @@ internal class PodcastPlaylistRepository @Inject constructor(
                         .toList()
                 },
                 contentResolver = contentResolver,
-                changeNotification = { favoriteGateway.observeAll().asFlow() },
+                changeNotification = { favoriteGateway.observeAll() },
                 overrideSize = favoriteGateway.countAll()
             )
         }
@@ -177,7 +177,7 @@ internal class PodcastPlaylistRepository @Inject constructor(
                         .toList()
                 },
                 contentResolver = contentResolver,
-                changeNotification = { favoriteGateway.observeAll().asFlow() },
+                changeNotification = { favoriteGateway.observeAll() },
                 overrideSize = historyDao.countAll()
             )
         }

@@ -4,15 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RemoveDuplicatesDialogViewModel @Inject constructor(
-    private val useCase: RemoveDuplicatesUseCase
+        private val useCase: RemoveDuplicatesUseCase
 ) : ViewModel() {
 
-    fun execute(mediaId: MediaId) = viewModelScope.launch(Dispatchers.Default) {
+    fun executeAsync(mediaId: MediaId) = viewModelScope.async(Dispatchers.Default) {
         useCase.execute(mediaId)
     }
 

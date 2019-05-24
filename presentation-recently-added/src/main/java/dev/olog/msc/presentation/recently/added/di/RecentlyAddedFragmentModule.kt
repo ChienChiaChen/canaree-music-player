@@ -5,9 +5,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.ViewModelKey
 import dev.olog.msc.presentation.recently.added.RecentlyAddedFragment
 import dev.olog.msc.presentation.recently.added.RecentlyAddedFragmentViewModel
+import dev.olog.msc.shared.dagger.ViewModelKey
 
 @Module
 class RecentlyAddedFragmentModule(

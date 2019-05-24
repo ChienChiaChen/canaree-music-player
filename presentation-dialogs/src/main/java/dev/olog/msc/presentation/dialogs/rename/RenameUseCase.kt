@@ -1,10 +1,10 @@
 package dev.olog.msc.presentation.dialogs.rename
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.coroutines.CompletableFlowWithParam
-import dev.olog.msc.core.coroutines.IoDispatcher
+import dev.olog.msc.core.executors.IoDispatcher
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
+import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class RenameUseCase @Inject constructor(

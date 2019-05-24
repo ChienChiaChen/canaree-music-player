@@ -42,7 +42,6 @@ dependencies {
     implementation project(':shared')
 
     implementation librariesCore.kotlin
-    implementation librariesCore.rxJava
     implementation librariesCore.coroutines
 
     androidTestImplementation 'androidx.test:runner:1.1.1'

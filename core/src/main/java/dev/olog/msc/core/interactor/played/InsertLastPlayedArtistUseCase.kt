@@ -1,10 +1,10 @@
 package dev.olog.msc.core.interactor.played
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.coroutines.CompletableFlowWithParam
-import dev.olog.msc.core.coroutines.IoDispatcher
+import dev.olog.msc.core.executors.IoDispatcher
 import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
 import dev.olog.msc.core.gateway.track.ArtistGateway
+import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class InsertLastPlayedArtistUseCase @Inject constructor(

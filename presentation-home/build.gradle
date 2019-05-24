@@ -18,7 +18,6 @@ dependencies {
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
-    implementation librariesCore.lifecycleRx
 
     implementation librariesUi.slidingPanel
 

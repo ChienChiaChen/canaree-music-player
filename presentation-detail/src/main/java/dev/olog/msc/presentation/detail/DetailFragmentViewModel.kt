@@ -15,7 +15,6 @@ import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.interactor.ObserveItemTitleUseCase
 import dev.olog.msc.core.interactor.sort.SetSortOrderRequestModel
 import dev.olog.msc.core.interactor.sort.SetSortOrderUseCase
-import dev.olog.msc.presentation.base.extensions.liveDataOf
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.domain.GetDetailSortDataUseCase
 import dev.olog.msc.presentation.detail.domain.MoveItemInPlaylistUseCase
@@ -24,6 +23,7 @@ import dev.olog.msc.presentation.detail.domain.RemoveFromPlaylistUseCase
 import dev.olog.msc.presentation.detail.domain.RemoveFromPlaylistUseCase.Input
 import dev.olog.msc.presentation.detail.paging.*
 import dev.olog.msc.presentation.detail.sort.DetailSort
+import dev.olog.msc.shared.ui.extensions.liveDataOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect

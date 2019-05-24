@@ -306,8 +306,8 @@ class NavigatorImpl @Inject internal constructor(
         fragment.show(activity.supportFragmentManager, SetRingtoneDialog.TAG)
     }
 
-    override fun toAddToFavoriteDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String) {
-        val fragment = AddFavoriteDialog.newInstance(mediaId, listSize, itemTitle)
+    override fun toAddToFavoriteDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String) {
+        val fragment = AddFavoriteDialog.newInstance(mediaId, itemTitle)
         fragment.show(activity.supportFragmentManager, AddFavoriteDialog.TAG)
     }
 

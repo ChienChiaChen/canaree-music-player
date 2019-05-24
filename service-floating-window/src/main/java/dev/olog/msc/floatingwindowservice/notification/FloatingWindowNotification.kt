@@ -14,18 +14,21 @@ import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.floatingwindowservice.FloatingWindowService
 import dev.olog.msc.floatingwindowservice.R
 import dev.olog.msc.shared.extensions.asServicePendingIntent
-import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.utils.isOreo
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val CHANNEL_ID = "0xfff"
 
 internal class FloatingWindowNotification @Inject constructor(
-        private val service: Service,
-        @ServiceLifecycle lifecycle: Lifecycle,
-        private val notificationManager: NotificationManager,
-        private val musicPreferencesUseCase: MusicPreferencesGateway
+    private val service: Service,
+    @ServiceLifecycle lifecycle: Lifecycle,
+    private val notificationManager: NotificationManager,
+    private val musicPreferencesUseCase: MusicPreferencesGateway
 
 ) : DefaultLifecycleObserver {
 
@@ -34,7 +37,7 @@ internal class FloatingWindowNotification @Inject constructor(
     }
 
     private val builder = NotificationCompat.Builder(service, CHANNEL_ID)
-    private var disposable : Disposable? = null
+    private var job: Job? = null
 
     private var notificationTitle = ""
 
@@ -44,37 +47,39 @@ internal class FloatingWindowNotification @Inject constructor(
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        disposable.unsubscribe()
+        job?.cancel()
     }
 
     internal fun startObserving() {
-        disposable = musicPreferencesUseCase.observeLastMetadata()
+        job = GlobalScope.launch {
+            musicPreferencesUseCase.observeLastMetadata()
                 .filter { it.isNotEmpty() }
-                .subscribe({
+                .collect {
                     notificationTitle = it.description
                     val notification = builder.setContentTitle(notificationTitle).build()
                     notificationManager.notify(NOTIFICATION_ID, notification)
-                }, Throwable::printStackTrace)
+                }
+        }
     }
 
     internal fun buildNotification(): Notification {
-        if (isOreo()){
+        if (isOreo()) {
             createChannel()
         }
 
         return builder
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setSmallIcon(R.drawable.vd_bird_singing)
-                .setContentTitle(notificationTitle)
-                .setContentText(service.getString(R.string.floating_window_notification_content_text))
-                .setColor(ContextCompat.getColor(service, R.color.dark_grey))
-                .setContentIntent(createContentIntent())
-                .build()
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setSmallIcon(R.drawable.vd_bird_singing)
+            .setContentTitle(notificationTitle)
+            .setContentText(service.getString(R.string.floating_window_notification_content_text))
+            .setColor(ContextCompat.getColor(service, R.color.dark_grey))
+            .setContentIntent(createContentIntent())
+            .build()
     }
 
     @TargetApi(Build.VERSION_CODES.O)
-    private fun createChannel(){
+    private fun createChannel() {
         // create notification channel
         val name = service.getString(R.string.floating_window_notification_channel_title)
         val description = service.getString(R.string.floating_window_notification_channel_description)
@@ -86,7 +91,7 @@ internal class FloatingWindowNotification @Inject constructor(
         notificationManager.createNotificationChannel(channel)
     }
 
-    private fun createContentIntent() : PendingIntent {
+    private fun createContentIntent(): PendingIntent {
         val intent = Intent(service, FloatingWindowService::class.java)
         intent.action = FloatingWindowService.ACTION_STOP
         return intent.asServicePendingIntent(service, PendingIntent.FLAG_UPDATE_CURRENT)

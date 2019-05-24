@@ -1,16 +1,16 @@
 package dev.olog.msc.presentation.popup.domain
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.coroutines.CompletableFlowWithParam
-import dev.olog.msc.core.coroutines.ComputationDispatcher
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.getAll
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
+import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class AddToPlaylistUseCase @Inject constructor(

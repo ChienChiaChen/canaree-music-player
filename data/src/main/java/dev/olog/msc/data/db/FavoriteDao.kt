@@ -65,12 +65,6 @@ internal abstract class FavoriteDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     internal abstract suspend fun insertOnePodcastImpl(item: FavoritePodcastEntity)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    internal abstract suspend fun insertGroupImpl(item: List<FavoriteEntity>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    internal abstract suspend fun insertGroupPodcastImpl(item: List<FavoritePodcastEntity>)
-
     @Delete
     internal abstract suspend fun deleteGroupImpl(item: List<FavoriteEntity>)
 
@@ -83,15 +77,6 @@ internal abstract class FavoriteDao {
             insertOneImpl(FavoriteEntity(id))
         } else {
             insertOnePodcastImpl(FavoritePodcastEntity(id))
-        }
-    }
-
-    @Transaction
-    internal open suspend fun addToFavorite(type: FavoriteType, songIds: List<Long>) {
-        if (type == FavoriteType.TRACK) {
-            insertGroupImpl(songIds.map { FavoriteEntity(it) })
-        } else {
-            insertGroupPodcastImpl(songIds.map { FavoritePodcastEntity(it) })
         }
     }
 

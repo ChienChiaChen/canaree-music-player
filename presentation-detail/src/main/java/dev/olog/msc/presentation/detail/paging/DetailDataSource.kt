@@ -5,7 +5,6 @@ import android.content.res.Resources
 import androidx.paging.DataSource
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.coroutines.merge
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
@@ -34,6 +33,7 @@ import dev.olog.msc.presentation.detail.domain.GetTotalSongDurationUseCase
 import dev.olog.msc.presentation.detail.domain.ObserveDetailSortDataUseCase
 import dev.olog.msc.presentation.detail.mapper.toDetailDisplayableItem
 import dev.olog.msc.presentation.detail.mapper.toHeaderItem
+import dev.olog.msc.shared.core.coroutines.merge
 import dev.olog.msc.shared.ui.TimeUtils
 import dev.olog.msc.shared.utils.TextUtils
 import kotlinx.coroutines.flow.collect

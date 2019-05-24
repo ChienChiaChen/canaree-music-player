@@ -6,33 +6,44 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.getAll
+import dev.olog.msc.core.entity.podcast.Podcast
+import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.shared.MusicConstants
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PlayLaterDialogViewModel @Inject constructor(
-    private val getSongListByParamUseCase: GetSongListChunkByParamUseCase
+        private val getSongListByParamUseCase: GetSongListChunkByParamUseCase
 ) : ViewModel() {
 
-    fun execute(mediaId: MediaId, mediaController: MediaControllerCompat) = viewModelScope.launch(Dispatchers.Default) {
-        //        return if (mediaId.isLeaf) {
-//            Single.fromCallable { "${mediaId.leaf!!}" }.subscribeOn(Schedulers.io())
-//        } else {
-//            getSongListByParamUseCase.execute(mediaId)
-//                .firstOrError()
-//                .map { songList -> songList.asSequence().map { it.id }.joinToString() }
-//        }.map { mediaController.addQueueItem(newMediaDescriptionItem(it)) }
-//            .ignoreElement()
+    fun executeAsync(mediaId: MediaId, mediaController: MediaControllerCompat) = viewModelScope.async(Dispatchers.Default) {
+        val itemsId = if (mediaId.isLeaf) {
+            mediaId.leaf!!.toString()
+        } else {
+            val songsIds = getSongListByParamUseCase.execute(mediaId).getAll(Filter.NO_FILTER)
+                    .map {
+                        when (it) {
+                            is Song -> it.id
+                            is Podcast -> it.id
+                            else -> Exception("not supposed not happen")
+                        }
+                    }
+            songsIds.joinToString()
+        }
+        mediaController.addQueueItem(newMediaDescriptionItem(mediaId, itemsId))
+
     }
 
     private fun newMediaDescriptionItem(mediaId: MediaId, songId: String): MediaDescriptionCompat {
         return MediaDescriptionCompat.Builder()
-            .setMediaId(songId)
-            .setExtras(bundleOf(MusicConstants.IS_PODCAST to mediaId.isAnyPodcast))
-            .build()
+                .setMediaId(songId)
+                .setExtras(bundleOf(MusicConstants.IS_PODCAST to mediaId.isAnyPodcast))
+                .build()
     }
 
     override fun onCleared() {

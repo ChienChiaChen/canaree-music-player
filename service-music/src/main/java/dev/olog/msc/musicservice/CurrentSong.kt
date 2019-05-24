@@ -4,7 +4,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.core.entity.favorite.FavoriteEnum
@@ -19,6 +18,7 @@ import dev.olog.msc.core.interactor.played.InsertLastPlayedArtistUseCase
 import dev.olog.msc.core.interactor.played.InsertMostPlayedUseCase
 import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel

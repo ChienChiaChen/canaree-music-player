@@ -7,13 +7,13 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.musicservice.interfaces.Queue
 import dev.olog.msc.musicservice.interfaces.SkipType
 import dev.olog.msc.musicservice.model.PlayerMediaEntity
 import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.shared.utils.assertMainThread
 import kotlinx.coroutines.*

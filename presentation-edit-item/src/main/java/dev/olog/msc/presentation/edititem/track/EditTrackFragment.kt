@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.extensions.*
+import dev.olog.msc.presentation.base.extensions.ctx
+import dev.olog.msc.presentation.base.extensions.extractText
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
+import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.edititem.*
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.C
 import kotlinx.android.synthetic.main.fragment_edit_track.*
-import kotlinx.android.synthetic.main.fragment_edit_track.view.*
 import javax.inject.Inject
 
 class EditTrackFragment : BaseEditItemFragment() {
@@ -60,11 +61,11 @@ class EditTrackFragment : BaseEditItemFragment() {
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
-        RxTextView.afterTextChangeEvents(view.title)
-            .map { it.view().text.toString() }
-            .map { it.isNotBlank() }
-            .asLiveData()
-            .subscribe(viewLifecycleOwner, view.okButton::setEnabled)
+//        RxTextView.afterTextChangeEvents(view.title)
+//            .map { it.view().text.toString() }
+//            .map { it.isNotBlank() }
+//            .asLiveData()
+//            .subscribe(viewLifecycleOwner, view.okButton::setEnabled)
     }
 
     override fun onResume() {

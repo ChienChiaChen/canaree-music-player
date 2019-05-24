@@ -8,20 +8,24 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
-import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.entity.OfflineLyrics
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.offlinelyrics.domain.InsertOfflineLyricsUseCase
 import dev.olog.msc.offlinelyrics.domain.ObserveOfflineLyricsUseCase
+import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.flowInterval
 import dev.olog.msc.shared.extensions.dpToPx
 import dev.olog.msc.shared.utils.clamp
 import dev.olog.msc.shared.utils.indexOfClosest
-import io.reactivex.Observable
-import io.reactivex.rxkotlin.Observables
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
-import kotlinx.coroutines.*
-import kotlinx.coroutines.rx2.asObservable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.combineLatest
+import kotlinx.coroutines.flow.switchMap
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 abstract class BaseOfflineLyricsPresenter constructor(
@@ -29,25 +33,22 @@ abstract class BaseOfflineLyricsPresenter constructor(
     private val observeUseCase: ObserveOfflineLyricsUseCase,
     private val insertUseCase: InsertOfflineLyricsUseCase
 
-) : CoroutineScope by CustomScope(Dispatchers.Default) {
+) : CoroutineScope by CustomScope() {
 
-    protected val currentTrackIdPublisher = BehaviorSubject.create<Long>()
+    protected val currentTrackIdPublisher = BroadcastChannel<Long>(Channel.CONFLATED)
 
     private var originalLyrics: String = ""
 
-    fun updateCurrentTrackId(trackId: Long) {
-        currentTrackIdPublisher.onNext(trackId)
+    fun updateCurrentTrackId(trackId: Long) = launch {
+        currentTrackIdPublisher.send(trackId)
     }
 
-    fun observeLyrics(): Observable<String> {
-        return Observables.combineLatest(
-            currentTrackIdPublisher.switchMap { id ->
-                runBlocking { observeUseCase.execute(id) }.asObservable()
-            }, Observable.interval(1, TimeUnit.SECONDS, Schedulers.io()).startWith(0)
-        ) { lyrics, _ ->
-            this.originalLyrics = lyrics
-            lyrics
-        }
+    fun observeLyrics(): Flow<String> {
+        return currentTrackIdPublisher.asFlow().switchMap { observeUseCase.execute(it) }
+            .combineLatest(flowInterval(1, TimeUnit.SECONDS)) { lyrics, _ ->
+                this.originalLyrics = lyrics
+                lyrics
+            }
     }
 
     fun onDestroy() {
@@ -186,7 +187,8 @@ abstract class BaseOfflineLyricsPresenter constructor(
     }
 
     fun updateLyrics(lyrics: String) = launch {
-        insertUseCase.execute(OfflineLyrics(currentTrackIdPublisher.value ?: -1, lyrics))
+        val trackId = currentTrackIdPublisher.openSubscription().poll() ?: -1
+        insertUseCase.execute(OfflineLyrics(trackId, lyrics))
     }
 
 }

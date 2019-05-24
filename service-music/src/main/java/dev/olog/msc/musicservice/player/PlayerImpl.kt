@@ -16,41 +16,50 @@ import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.interfaces.ServiceLifecycleController
 import dev.olog.msc.musicservice.interfaces.SkipType
 import dev.olog.msc.musicservice.model.PlayerMediaEntity
-import dev.olog.msc.shared.extensions.unsubscribe
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.utils.clamp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class PlayerImpl @Inject constructor(
-        @ServiceLifecycle lifecycle: Lifecycle,
-        private val playerState: PlayerState,
-        private val noisy: Lazy<Noisy>,
-        private val serviceLifecycle: ServiceLifecycleController,
-        private val audioFocus : AudioFocusBehavior,
-        private val player: CustomExoPlayer<PlayerMediaEntity>,
-        musicPrefsUseCase: MusicPreferencesGateway
+    @ServiceLifecycle lifecycle: Lifecycle,
+    private val playerState: PlayerState,
+    private val noisy: Lazy<Noisy>,
+    private val serviceLifecycle: ServiceLifecycleController,
+    private val audioFocus: AudioFocusBehavior,
+    private val player: CustomExoPlayer<PlayerMediaEntity>,
+    musicPrefsUseCase: MusicPreferencesGateway
 
-) : Player, DefaultLifecycleObserver, PlayerLifecycle, ActionManager.Callback {
+) : Player, DefaultLifecycleObserver, PlayerLifecycle, ActionManager.Callback,
+    CoroutineScope by CustomScope(Dispatchers.Main) {
 
     private val listeners = mutableListOf<PlayerLifecycle.Listener>()
 
     private var currentSpeed = 1f
 
-    private val playerVolumeDisposable = musicPrefsUseCase.observePlaybackSpeed()
-            .subscribe({
-                currentSpeed = it
-                player.setPlaybackSpeed(it)
-                playerState.updatePlaybackSpeed(it)
-            }, Throwable::printStackTrace)
 
     init {
         lifecycle.addObserver(this)
+
+        launch {
+            musicPrefsUseCase.observePlaybackSpeed()
+                .collect {
+                    currentSpeed = it
+                    player.setPlaybackSpeed(it)
+                    playerState.updatePlaybackSpeed(it)
+                }
+        }
 //        playerFading.setPlayerLifecycle(this)
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
+        cancel()
         listeners.clear()
-        playerVolumeDisposable.unsubscribe()
         releaseFocus()
     }
 
@@ -67,7 +76,7 @@ internal class PlayerImpl @Inject constructor(
     }
 
     override fun onPlayNext(playerModel: PlayerMediaEntity, skipType: SkipType) {
-        when (skipType){
+        when (skipType) {
             SkipType.SKIP_PREVIOUS -> playerState.skipTo(false)
             SkipType.SKIP_NEXT,
             SkipType.TRACK_ENDED -> playerState.skipTo(true)
@@ -81,15 +90,17 @@ internal class PlayerImpl @Inject constructor(
         playInternal(playerModel, SkipType.NONE)
     }
 
-    private fun playInternal(playerModel: PlayerMediaEntity, skipType: SkipType){
+    private fun playInternal(playerModel: PlayerMediaEntity, skipType: SkipType) {
         val hasFocus = requestFocus()
 
         val entity = playerModel.mediaEntity
 
         player.play(playerModel, hasFocus, skipType == SkipType.TRACK_ENDED)
 
-        val state = playerState.update(if (hasFocus) PlaybackStateCompat.STATE_PLAYING else PlaybackStateCompat.STATE_PAUSED,
-                playerModel.bookmark, entity.id, currentSpeed)
+        val state = playerState.update(
+            if (hasFocus) PlaybackStateCompat.STATE_PLAYING else PlaybackStateCompat.STATE_PAUSED,
+            playerModel.bookmark, entity.id, currentSpeed
+        )
 
         listeners.forEach {
             it.onStateChanged(state)
@@ -123,7 +134,7 @@ internal class PlayerImpl @Inject constructor(
         }
         noisy.get().unregister()
 
-        if (releaseFocus){
+        if (releaseFocus) {
             releaseFocus()
         }
 

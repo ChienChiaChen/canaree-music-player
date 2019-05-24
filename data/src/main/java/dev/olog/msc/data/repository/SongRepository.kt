@@ -26,7 +26,6 @@ import dev.olog.msc.data.repository.util.queryMaybe
 import dev.olog.msc.data.utils.getLong
 import dev.olog.msc.data.utils.getString
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import io.reactivex.Observable
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 import javax.inject.Inject
@@ -162,7 +161,7 @@ internal class SongRepository @Inject constructor(
 //            }).distinctUntilChanged()
     }
 
-    override fun getAllUnfiltered(): Observable<List<Song>> {
+    override fun getAllUnfiltered(): Flow<List<Song>> {
         return TODO()
 //        return rxContentResolver.createQuery(
 //            TrackQueries.MEDIA_STORE_URI,
@@ -200,7 +199,7 @@ internal class SongRepository @Inject constructor(
         }
     }
 
-    override fun deleteGroup(songList: List<Song>) {
+    override fun deleteGroup(songList: List<Long>) {
         // TODO check if works
         assertBackgroundThread()
 

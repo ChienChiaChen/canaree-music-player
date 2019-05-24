@@ -10,26 +10,31 @@ import android.provider.BaseColumns
 import android.provider.MediaStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.entity.data.request.Filter
+import dev.olog.msc.core.entity.data.request.getAll
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.core.interactor.all.ObserveAllFoldersUseCase
-import dev.olog.msc.presentation.base.extensions.asLiveData
+import dev.olog.msc.core.gateway.track.FolderGateway
+import dev.olog.msc.shared.core.coroutines.combineLatest
 import dev.olog.msc.shared.extensions.*
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.Observables
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.rx2.asObservable
+import dev.olog.msc.shared.ui.extensions.liveDataOf
+import dev.olog.msc.shared.utils.assertBackgroundThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
 class FolderTreeFragmentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val appPreferencesUseCase: AppPreferencesGateway,
-    private val getAllFoldersUseCase: ObserveAllFoldersUseCase
+    private val gateway: FolderGateway
 
 ) : ViewModel() {
 
@@ -39,13 +44,34 @@ class FolderTreeFragmentViewModel @Inject constructor(
 
     private val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
         override fun onChange(selfChange: Boolean) {
-            currentFile.onNext(currentFile.value!!)
+            viewModelScope.launch { currentFile.send(currentFile.openSubscription().poll()!!) }
         }
     }
 
-    private val currentFile = BehaviorSubject.createDefault(appPreferencesUseCase.getDefaultMusicFolder())
+    private val currentFile = BroadcastChannel<File>(Channel.CONFLATED)
+    private val currentFileLiveData = liveDataOf<File>()
+    private val childrenLiveData = liveDataOf<List<DisplayableFile>>()
+
+    private val defaultFolderLiveData = liveDataOf<Boolean>()
 
     init {
+        viewModelScope.launch { currentFile.send(appPreferencesUseCase.getDefaultMusicFolder()) }
+        viewModelScope.launch(Dispatchers.Default) {
+            for (file in currentFile.openSubscription()) {
+                currentFileLiveData.postValue(file)
+                childrenLiveData.postValue(getChildren(file))
+            }
+        }
+        viewModelScope.launch {
+            combineLatest(
+                appPreferencesUseCase.observeDefaultMusicFolder(),
+                currentFile.asFlow()
+            ) { default, current -> default.safeGetCanonicalPath() == current.safeGetCanonicalPath() }
+                .collect {
+                    defaultFolderLiveData.postValue(it)
+                }
+        }
+
         context.contentResolver.registerContentObserver(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
             true,
@@ -54,36 +80,31 @@ class FolderTreeFragmentViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        viewModelScope.cancel()
         context.contentResolver.unregisterContentObserver(observer)
     }
 
-    fun observeFileName(): LiveData<File> = currentFile
-        .asLiveData()
+    fun observeFile(): LiveData<File> = currentFileLiveData
+    fun observeChildren(): LiveData<List<DisplayableFile>> = childrenLiveData
 
-    fun observeChildrens(): LiveData<List<DisplayableFile>> = runBlocking {
-        currentFile.subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .flatMap { file ->
-                runBlocking { getAllFoldersUseCase.execute().asObservable() }.mapToList { it.path }.map { folderList ->
-                    val children = file.listFiles()
-                        ?.filter { current -> folderList.firstOrNull { it.contains(current.path) } != null || !current.isDirectory }
-                        ?: listOf()
+    private fun getChildren(file: File): List<DisplayableFile> {
+        assertBackgroundThread()
+        val folderList = gateway.getAll().getAll(Filter.NO_FILTER).map { it.path }
+        val children = file.listFiles()
+            ?.filter { current -> folderList.firstOrNull { it.contains(current.path) } != null || !current.isDirectory }
+            ?: listOf()
 
-                    val (directories, files) = children.partition { it.isDirectory }
-                    val sortedDirectory = filterFolders(directories)
-                    val sortedFiles = filterTracks(files)
+        val (directories, files) = children.partition { it.isDirectory }
+        val sortedDirectory = filterFolders(directories)
+        val sortedFiles = filterTracks(files)
 
-                    val displayableItems = sortedDirectory.plus(sortedFiles)
+        val displayableItems = sortedDirectory.plus(sortedFiles)
 
-                    if (file.path == "/") {
-                        displayableItems
-                    } else {
-                        displayableItems.startWith(backDisplableItem)
-                    }
-                }
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .asLiveData()
+        if (file.path == "/") {
+            return displayableItems
+        } else {
+            return displayableItems.startWith(backDisplableItem)
+        }
     }
 
     private fun filterFolders(files: List<File>): List<DisplayableFile> {
@@ -105,8 +126,8 @@ class FolderTreeFragmentViewModel @Inject constructor(
     }
 
     fun popFolder(): Boolean {
-        val current = currentFile.value!!
-        if (current == File(File.separator)) {
+        val current = currentFile.openSubscription().poll()!!
+        if (current.path == File.separator) {
             return false
         }
 
@@ -115,7 +136,7 @@ class FolderTreeFragmentViewModel @Inject constructor(
             return false
         }
         try {
-            currentFile.onNext(current.parentFile)
+            nextFolder(current.parentFile)
             return true
         } catch (e: Exception) {
             return false
@@ -123,28 +144,25 @@ class FolderTreeFragmentViewModel @Inject constructor(
     }
 
     fun goBack() {
-        val file = currentFile.value!!
+        val file = currentFile.openSubscription().poll()!!
         if (!file.isStorageDir()) {
-            currentFile.onNext(file.parentFile)
+            nextFolder(file.parentFile)
             return
         }
         val parent = file.parentFile
         if (parent.listFiles()?.isNotEmpty() == true) {
-            currentFile.onNext(parent)
+            nextFolder(parent)
         }
     }
 
     fun nextFolder(file: File) {
-        currentFile.onNext(file)
+        viewModelScope.launch { currentFile.send(file) }
     }
 
-    fun observeCurrentFolder(): Observable<Boolean> = Observables.combineLatest(
-        appPreferencesUseCase.observeDefaultMusicFolder(),
-        currentFile
-    ) { default, current -> default.safeGetCanonicalPath() == current.safeGetCanonicalPath() }
+    fun observeDefaultFolder(): LiveData<Boolean> = defaultFolderLiveData
 
     fun updateDefaultFolder() {
-        val currentFolder = currentFile.value!!
+        val currentFolder = currentFile.openSubscription().poll()!!
         appPreferencesUseCase.setDefaultMusicFolder(currentFolder.safeGetCanonicalFile())
     }
 

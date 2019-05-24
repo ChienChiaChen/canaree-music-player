@@ -1,5 +1,6 @@
 package dev.olog.msc.presentation.sleeptimer
 
+import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -11,9 +12,10 @@ import android.view.Window
 import android.widget.Button
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import dev.olog.msc.presentation.base.fragment.BaseDialogFragment
+import androidx.fragment.app.DialogFragment
+import dagger.android.support.AndroidSupportInjection
 
-open class ScrollHmsPickerDialog : BaseDialogFragment() {
+open class ScrollHmsPickerDialog : DialogFragment() {
     interface HmsPickHandler {
         fun onHmsPick(reference: Int, hours: Int, minutes: Int, seconds: Int)
     }
@@ -32,6 +34,11 @@ open class ScrollHmsPickerDialog : BaseDialogFragment() {
     var pickListener: HmsPickHandler? = null
 
     protected lateinit var hmsPicker: ScrollHmsPicker
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.picker_fragment, container, false)

@@ -3,13 +3,12 @@ package dev.olog.msc.data.prefs
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
-import io.reactivex.Completable
 import javax.inject.Inject
 
 internal class EqualizerPreferenceImpl @Inject constructor(
-        private val preferences: SharedPreferences
+    private val preferences: SharedPreferences
 
-): EqualizerPreferencesGateway {
+) : EqualizerPreferencesGateway {
 
     companion object {
         private const val TAG = "EqualizerPreferenceImpl"
@@ -53,11 +52,7 @@ internal class EqualizerPreferenceImpl @Inject constructor(
         preferences.edit { putString(VIRTUALIZER_SETTINGS, settings) }
     }
 
-    override fun setDefault(): Completable {
-        return Completable.create {
-            setEqualizerEnabled(false)
-
-            it.onComplete()
-        }
+    override fun setDefault() {
+        setEqualizerEnabled(false)
     }
 }

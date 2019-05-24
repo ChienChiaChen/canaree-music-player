@@ -114,11 +114,7 @@ class PodcastPlaylistPopupListener @Inject constructor(
 
 
     private fun addToFavorite() {
-        if (podcast == null) {
-            navigator.toAddToFavoriteDialog(activity, getMediaId(), playlist.size, playlist.title)
-        } else {
-            navigator.toAddToFavoriteDialog(activity, getMediaId(), -1, podcast!!.title)
-        }
+        navigator.toAddToFavoriteDialog(activity, getMediaId(), podcast!!.title)
     }
 
     private fun delete() {

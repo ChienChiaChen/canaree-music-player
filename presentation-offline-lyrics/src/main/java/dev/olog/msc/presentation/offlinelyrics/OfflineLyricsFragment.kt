@@ -19,20 +19,12 @@ import dev.olog.msc.presentation.base.utils.getArtist
 import dev.olog.msc.presentation.base.utils.getDuration
 import dev.olog.msc.presentation.base.utils.getId
 import dev.olog.msc.presentation.base.utils.getTitle
-import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.shared.extensions.unsubscribe
-import dev.olog.msc.shared.ui.extensions.animateBackgroundColor
-import dev.olog.msc.shared.ui.extensions.animateTextColor
-import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import dev.olog.msc.shared.ui.extensions.*
 import kotlinx.android.synthetic.main.fragment_offline_lyrics.*
 import kotlinx.android.synthetic.main.fragment_offline_lyrics.view.*
 import saschpe.android.customtabs.CustomTabsHelper
 import java.net.URLEncoder
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
@@ -47,8 +39,8 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
     }
 
     @Inject lateinit var presenter: OfflineLyricsFragmentPresenter
-    private var tutorialDisposable: Disposable? = null
-    private var updateDisposable : Disposable? = null
+//    private var tutorialDisposable: Disposable? = null TODO
+//    private var updateDisposable : Disposable? = null
 
     private val mediaProvider by lazy { activity as MediaProvider }
 
@@ -71,15 +63,15 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
                     seekBar.max = it.getDuration().toInt()
                 }
 
-        presenter.observeLyrics()
-                .map { presenter.transformLyrics(ctx, seekBar.progress, it) }
-                .map { text.precomputeText(it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) {
-                    emptyState.toggleVisibility(it.isEmpty(), true)
-                    text.text = it
-                }
+//        presenter.observeLyrics() TODO
+//                .map { presenter.transformLyrics(ctx, seekBar.progress, it) }
+//                .map { text.precomputeText(it) }
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .asLiveData()
+//                .subscribe(viewLifecycleOwner) {
+//                    emptyState.toggleVisibility(it.isEmpty(), true)
+//                    text.text = it
+//                }
 
         mediaProvider.onStateChanged()
                 .filter { it.state == PlaybackState.STATE_PLAYING || it.state == PlaybackState.STATE_PAUSED }
@@ -141,8 +133,8 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
 
     override fun onStop() {
         super.onStop()
-        tutorialDisposable.unsubscribe()
-        updateDisposable.unsubscribe()
+//        tutorialDisposable.unsubscribe()
+//        updateDisposable.unsubscribe()
         blurLayout.pauseBlur()
     }
 
@@ -174,15 +166,15 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
 
 
     private fun handleSeekBarState(isPlaying: Boolean, speed: Float){
-        updateDisposable.unsubscribe()
+//        updateDisposable.unsubscribe()
         if (isPlaying) {
             resumeSeekBar(speed)
         }
     }
 
     private fun resumeSeekBar(speed: Float){
-        updateDisposable = Observable.interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS)
-                .subscribe({ seekBar.incrementProgressBy((PROGRESS_BAR_INTERVAL * speed).toInt()) }, Throwable::printStackTrace)
+//        updateDisposable = Observable.interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS)
+//                .subscribe({ seekBar.incrementProgressBy((PROGRESS_BAR_INTERVAL * speed).toInt()) }, Throwable::printStackTrace)
     }
 
     private val seekBarListener = object : SeekBar.OnSeekBarChangeListener {

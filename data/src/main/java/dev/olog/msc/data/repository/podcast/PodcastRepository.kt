@@ -20,7 +20,7 @@ import dev.olog.msc.data.repository.queries.TrackQueries
 import dev.olog.msc.data.repository.util.ContentObserverFlow
 import dev.olog.msc.data.repository.util.queryAll
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 import java.io.File
 import javax.inject.Inject
 
@@ -71,7 +71,7 @@ internal class PodcastRepository @Inject constructor(
         )
     }
 
-    override fun getUneditedByParam(podcastId: Long): Observable<Podcast> {
+    override fun getUneditedByParam(podcastId: Long): Flow<Podcast> {
         return TODO()
 //        return rxContentResolver.createQuery(
 //            TrackQueries.MEDIA_STORE_URI,
@@ -90,7 +90,7 @@ internal class PodcastRepository @Inject constructor(
 //            }).distinctUntilChanged()
     }
 
-    override fun getAllUnfiltered(): Observable<List<Podcast>> {
+    override fun getAllUnfiltered(): Flow<List<Podcast>> {
         return TODO()
 //        return rxContentResolver.createQuery(
 //            TrackQueries.MEDIA_STORE_URI,

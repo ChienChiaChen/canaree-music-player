@@ -1,12 +1,12 @@
 package dev.olog.msc.offlinelyrics.domain
 
 import android.util.Log
-import dev.olog.msc.core.coroutines.CompletableFlowWithParam
-import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.entity.OfflineLyrics
 import dev.olog.msc.core.entity.track.Song
+import dev.olog.msc.core.executors.IoDispatcher
 import dev.olog.msc.core.gateway.OfflineLyricsGateway
 import dev.olog.msc.core.gateway.track.SongGateway
+import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import java.io.File
 import javax.inject.Inject
 

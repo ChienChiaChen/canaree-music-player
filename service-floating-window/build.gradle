@@ -22,8 +22,6 @@ dependencies {
     implementation librariesCore.daggerAndroid
     kapt librariesCore.daggerAndroidProcessor
 
-    implementation librariesCore.rxAndroid
-
     implementation librariesUi.glide
     kapt librariesUi.glideProcessor
     // mandatory for glide compatibility

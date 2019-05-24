@@ -1,35 +1,26 @@
 package dev.olog.msc.presentation.create.playlist
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.presentation.base.FragmentTags
-import dev.olog.msc.presentation.base.extensions.*
+import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.fragmentTransaction
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
+import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.base.utils.ImeUtils
-import dev.olog.msc.shared.extensions.debounceFirst
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.shared.extensions.unsubscribe
 import dev.olog.msc.shared.ui.ThemedDialog
-import dev.olog.msc.shared.ui.extensions.toggleSelected
+import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_playlist_track_chooser.*
 import kotlinx.android.synthetic.main.fragment_playlist_track_chooser.view.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
@@ -95,42 +86,31 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
 //            view.emptyStateText.toggleVisibility(it.isEmpty(), true)
 //        }) TODO
 
-        RxView.clicks(view.back)
-            .asLiveData()
-            .subscribe(viewLifecycleOwner) {
-                ImeUtils.hideIme(filter)
-                act.onBackPressed()
-            }
-
-        RxView.clicks(view.save)
-            .asLiveData()
-            .subscribe(viewLifecycleOwner) { showCreateDialog() }
-
-        RxView.clicks(view.filterList)
-            .asLiveData()
-            .subscribe(viewLifecycleOwner) {
-                if (viewModel.toggleShowOnlyFiltered()) {
-                    view.filterList.toggleSelected()
-
-                    toast?.cancel()
-
-                    if (view.filterList.isSelected) {
-                        toast = act.toast(R.string.playlist_tracks_chooser_show_only_selected)
-                    } else {
-                        toast = act.toast(R.string.playlist_tracks_chooser_show_all)
-                    }
-                } else {
-                    act.toast("No song selected")
-                }
-            }
-
-        RxTextView.afterTextChangeEvents(view.filter)
-            .map { it.editable().toString() }
-            .filter { it.isBlank() || it.trim().length >= 2 }
-            .debounceFirst(250, TimeUnit.MILLISECONDS)
-            .distinctUntilChanged()
-            .asLiveData()
-            .subscribe(this, viewModel::updateFilter)
+//        RxView.clicks(view.filterList) TODo
+//            .asLiveData()
+//            .subscribe(viewLifecycleOwner) {
+//                if (viewModel.toggleShowOnlyFiltered()) {
+//                    view.filterList.toggleSelected()
+//
+//                    toast?.cancel()
+//
+//                    if (view.filterList.isSelected) {
+//                        toast = act.toast(R.string.playlist_tracks_chooser_show_only_selected)
+//                    } else {
+//                        toast = act.toast(R.string.playlist_tracks_chooser_show_all)
+//                    }
+//                } else {
+//                    act.toast("No song selected")
+//                }
+//            }
+//
+//        RxTextView.afterTextChangeEvents(view.filter)
+//            .map { it.editable().toString() }
+//            .filter { it.isBlank() || it.trim().length >= 2 }
+//            .debounceFirst(250, TimeUnit.MILLISECONDS)
+//            .distinctUntilChanged()
+//            .asLiveData()
+//            .subscribe(this, viewModel::updateFilter)
 
         view.sidebar.scrollableLayoutId = R.layout.item_choose_track
     }
@@ -138,11 +118,20 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
     override fun onResume() {
         super.onResume()
 //        sidebar.setListener(letterTouchListener) TODO
+        back.setOnClickListener {
+            ImeUtils.hideIme(filter)
+            act.onBackPressed()
+        }
+        save.setOnClickListener {
+            showCreateDialog()
+        }
     }
 
     override fun onPause() {
         super.onPause()
         sidebar.setListener(null)
+        back.setOnClickListener(null)
+        save.setOnClickListener(null)
     }
 
     private fun showCreateDialog() {
@@ -152,52 +141,52 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
             .setPositiveButton(R.string.common_ok, null)
             .setNegativeButton(R.string.common_cancel, null)
 
-        val dialog = builder.show()
-
-        val editText = dialog.findViewById<TextInputEditText>(R.id.editText)!!
-        val editTextLayout = dialog.findViewById<TextInputLayout>(R.id.editTextLayout)!!
-        val clearButton = dialog.findViewById<View>(R.id.clear)!!
-        clearButton.setOnClickListener { editText.setText("") }
-
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            val editTextString = editText.text.toString()
-            when {
-                editTextString.isBlank() -> showError(editTextLayout, "Playlist name not valid")
-                else -> {
-                    viewModel.savePlaylist(playlistType, editTextString,
-                        onSuccess = {
-                            dialog.dismiss()
-                            act.onBackPressed()
-                        },
-                        onFail = {
-                            ctx.toast("Something wen wrong")
-                        })
-
-                }
-            }
-        }
-
-        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener { dialog.dismiss() }
-
-        dialog.show()
+//        val dialog = builder.show()
+//
+//        val editText = dialog.findViewById<TextInputEditText>(R.id.editText)!!
+//        val editTextLayout = dialog.findViewById<TextInputLayout>(R.id.editTextLayout)!!
+//        val clearButton = dialog.findViewById<View>(R.id.clear)!!
+//        clearButton.setOnClickListener { editText.setText("") }
+//
+//        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+//            val editTextString = editText.text.toString()
+//            when {
+//                editTextString.isBlank() -> showError(editTextLayout, "Playlist name not valid")
+//                else -> {
+//                    viewModel.savePlaylist(playlistType, editTextString,
+//                        onSuccess = {
+//                            dialog.dismiss()
+//                            act.onBackPressed()
+//                        },
+//                        onFail = {
+//                            ctx.toast("Something wen wrong")
+//                        })
+//
+//                }
+//            }
+//        }
+//
+//        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener { dialog.dismiss() }
+//
+//        dialog.show()
     }
 
     override fun onStop() {
         super.onStop()
-        errorDisposable.unsubscribe()
+//        errorDisposable.unsubscribe()
     }
 
-    private fun showError(editTextLayout: TextInputLayout, error: String) {
-        val shake = AnimationUtils.loadAnimation(context, R.anim.shake)
-        editTextLayout.startAnimation(shake)
-        editTextLayout.error = error
-        editTextLayout.isErrorEnabled = true
-
-        errorDisposable.unsubscribe()
-        errorDisposable = Single.timer(2, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ editTextLayout.isErrorEnabled = false }, Throwable::printStackTrace)
-    }
+//    private fun showError(editTextLayout: TextInputLayout, error: String) { TODO
+//        val shake = AnimationUtils.loadAnimation(context, R.anim.shake)
+//        editTextLayout.startAnimation(shake)
+//        editTextLayout.error = error
+//        editTextLayout.isErrorEnabled = true
+//
+//        errorDisposable.unsubscribe()
+//        errorDisposable = Single.timer(2, TimeUnit.SECONDS)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({ editTextLayout.isErrorEnabled = false }, Throwable::printStackTrace)
+//    }
 
 //    private val letterTouchListener = WaveSideBarView.OnTouchLetterChangeListener { letter -> TODO
 //        list.stopScroll()

@@ -19,6 +19,5 @@
     <string name="new_playlist_hint">Playlist name</string>
 
     <string name="popup_playlist_name_not_valid">Playlist name not valid</string>
-    <string name="popup_playlist_name_already_exist">Playlist already exist</string>
 
 </resources>

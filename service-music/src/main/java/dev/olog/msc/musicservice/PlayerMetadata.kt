@@ -5,12 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
-import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.imageprovider.glide.getBitmapAsync
@@ -19,31 +15,22 @@ import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.WidgetConstants
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 @PerService
 internal class PlayerMetadata @Inject constructor(
-    @ServiceLifecycle lifecycle: Lifecycle,
     @ApplicationContext private val context: Context,
     private val mediaSession: MediaSessionCompat,
     playerLifecycle: PlayerLifecycle,
     private val widgetClasses: WidgetClasses,
-    appPreferencesGateway: AppPreferencesGateway
+    private val prefsGateway: AppPreferencesGateway
 
-) : PlayerLifecycle.Listener, DefaultLifecycleObserver {
-
-    private var disposable: Disposable? = null
-    private var showLockscreenImage = false
+) : PlayerLifecycle.Listener {
 
     private val builder = MediaMetadataCompat.Builder()
 
     init {
-        lifecycle.addObserver(this)
         playerLifecycle.addListener(this)
-        disposable = appPreferencesGateway.observeLockscreenArtworkEnabled()
-            .subscribe({ showLockscreenImage = it }, Throwable::printStackTrace)
     }
 
     override fun onPrepare(entity: MediaEntity) {
@@ -52,10 +39,6 @@ internal class PlayerMetadata @Inject constructor(
 
     override fun onMetadataChanged(entity: MediaEntity) {
         update(entity)
-    }
-
-    override fun onDestroy(owner: LifecycleOwner) {
-        disposable.unsubscribe()
     }
 
     private fun update(entity: MediaEntity) {
@@ -72,7 +55,7 @@ internal class PlayerMetadata @Inject constructor(
             .putString(MusicConstants.PATH, entity.path)
             .putLong(MusicConstants.IS_PODCAST, if (entity.isPodcast) 1 else 0)
 
-        if (showLockscreenImage) {
+        if (prefsGateway.isLockscreenArtworkEnabled()) {
             context.getBitmapAsync(entity.mediaId, action = { bitmap ->
                 builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
                 mediaSession.setMetadata(builder.build())

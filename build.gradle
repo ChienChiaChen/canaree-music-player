@@ -41,7 +41,11 @@ allprojects {
     gradle.projectsEvaluated { // TODO remove
         tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
             kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.FlowPreview"]
+            kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"]
         }
+    }
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xmaxerrs" << "500" // or whatever number you want
     }
 }
 
@@ -68,11 +72,8 @@ ext {
 //    libs
     dagger = '2.22.1'
     rx_java = '2.2.8'
-    rx_android = '2.1.1'
     rx_binding = '2.2.0'
     rx_preferences = '2.0.0'
-    rx_kotlin = '2.3.0'
-    rx_lint = '1.7.0'
     lifecycle = '2.1.0-beta01'
     sliding_panel = '3.4.0'
     lottie = '3.0.0'
@@ -121,21 +122,17 @@ ext {
             daggerAndroidProcessor: "com.google.dagger:dagger-android-processor:$dagger",
             daggerAndroidSupport  : "com.google.dagger:dagger-android-support:$dagger",
 //            rx
-            rxJava                : "io.reactivex.rxjava2:rxjava:$rx_java",
-            rxKotlin              : "io.reactivex.rxjava2:rxkotlin:$rx_kotlin",
-            rxLint                : "nl.littlerobots.rxlint:rxlint:$rx_lint",
             rxBinding             : "com.jakewharton.rxbinding2:rxbinding:$rx_binding",
-            rxAndroid             : "io.reactivex.rxjava2:rxandroid:$rx_android",
 //            lifecycle
             lifecycleRuntime      : "androidx.lifecycle:lifecycle-runtime:$lifecycle",
             lifecycleExtensions   : "androidx.lifecycle:lifecycle-extensions:$lifecycle",
             lifecycleJava8        : "androidx.lifecycle:lifecycle-common-java8:$lifecycle",
-            lifecycleRx           : "androidx.lifecycle:lifecycle-reactivestreams:$lifecycle",
             lifecycleKtx          : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle",
+            lifecycleViewModel    : "androidx.lifecycle:lifecycle-viewmodel:$lifecycle",
 
             coroutines            : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines",
             coroutinesRx          : "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutines",
-            coroutinesDebug          : "org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutines",
+            coroutinesDebug       : "org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutines",
     ]
 
     librariesMusic = [
@@ -165,7 +162,8 @@ ext {
             room         : "androidx.room:room-runtime:$room",
             roomKtx      : "androidx.room:room-ktx:$room",
             roomProcessor: "androidx.room:room-compiler:$room",
-            roomRx       : "androidx.room:room-rxjava2:$room"
+            roomRx       : "androidx.room:room-rxjava2:$room",
+            roomTesting  : "androidx.room:room-testing:$room"
     ]
 
     librariesAndroidX = [

@@ -2,10 +2,10 @@ package dev.olog.msc.core.interactor.sort
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.coroutines.CompletableFlowWithParam
-import dev.olog.msc.core.coroutines.IoDispatcher
 import dev.olog.msc.core.entity.sort.SortType
+import dev.olog.msc.core.executors.IoDispatcher
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
+import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class SetSortOrderUseCase @Inject constructor(

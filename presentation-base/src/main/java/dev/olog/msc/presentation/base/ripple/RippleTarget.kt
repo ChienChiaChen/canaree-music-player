@@ -6,8 +6,8 @@ import android.widget.ImageView
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.bumptech.glide.request.transition.Transition
-import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.presentation.base.widgets.image.view.ParallaxImageView
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.ui.extensions.getBitmap
 import dev.olog.msc.shared.ui.imageview.ForegroundImageView
 import kotlinx.coroutines.*

@@ -9,10 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.presentation.about.R
 import dev.olog.msc.presentation.base.extensions.act
-import dev.olog.msc.presentation.base.extensions.asLiveData
-import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.shared.extensions.lazyFast
-import io.reactivex.Single
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.fragment_special_thanks.view.*
 
@@ -35,10 +32,7 @@ class SpecialThanksFragment : Fragment() {
         view.list.layoutManager = layoutManager
         view.list.setHasFixedSize(true)
 
-        Single.just(presenter.data)
-            .toFlowable()
-            .asLiveData()
-            .subscribe(viewLifecycleOwner, adapter::updateDataSet)
+        adapter.updateDataSet(presenter.data)
     }
 
     override fun onResume() {

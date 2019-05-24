@@ -19,7 +19,6 @@ import dev.olog.msc.presentation.base.drag.TouchableAdapter
 import dev.olog.msc.presentation.base.extensions.elevateSongOnTouch
 import dev.olog.msc.presentation.base.extensions.setOnClickListener
 import dev.olog.msc.presentation.base.extensions.setOnLongClickListener
-import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.model.DisplayableItem
 import dev.olog.msc.presentation.detail.*
@@ -27,6 +26,7 @@ import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.NESTED
 import dev.olog.msc.presentation.detail.sort.DetailSortDialog
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.toast
+import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.item_detail_header_all_song.view.*
 import kotlinx.android.synthetic.main.item_detail_item_image.view.*
 import kotlinx.coroutines.Dispatchers

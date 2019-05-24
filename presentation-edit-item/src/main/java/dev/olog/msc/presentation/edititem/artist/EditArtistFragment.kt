@@ -4,15 +4,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.base.extensions.*
+import dev.olog.msc.presentation.base.extensions.ctx
+import dev.olog.msc.presentation.base.extensions.extractText
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
+import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.edititem.*
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.C
+import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.fragment_edit_artist.*
-import kotlinx.android.synthetic.main.fragment_edit_artist.view.*
 import javax.inject.Inject
 
 class EditArtistFragment : BaseEditItemFragment() {
@@ -44,11 +46,11 @@ class EditArtistFragment : BaseEditItemFragment() {
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
-        RxTextView.afterTextChangeEvents(view.artist)
-            .map { it.view().text.toString() }
-            .map { it.isNotBlank() }
-            .asLiveData()
-            .subscribe(viewLifecycleOwner, view.okButton::setEnabled)
+//        RxTextView.afterTextChangeEvents(view.artist)
+//            .map { it.view().text.toString() }
+//            .map { it.isNotBlank() }
+//            .asLiveData()
+//            .subscribe(viewLifecycleOwner, view.okButton::setEnabled)
 
         viewModel.observeSongList()
             .subscribe(viewLifecycleOwner) {

@@ -40,6 +40,12 @@ abstract class PlayingQueueDao {
     )
     internal abstract fun getCount(): Int
 
+    @Query(
+        """
+        SELECT count(*) FROM playing_queue
+    """
+    )
+    internal abstract fun observeCount(): Flowable<Int>
 
     @Query(
         """

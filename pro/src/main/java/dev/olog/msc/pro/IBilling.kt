@@ -1,14 +1,14 @@
 package dev.olog.msc.pro
 
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 interface IBilling {
 
     fun isTrial(): Boolean
     fun isPremium(): Boolean
     fun isOnlyPremium(): Boolean
-    fun observeIsPremium(): Observable<Boolean>
-    fun observeTrialPremiumState(): Observable<BillingState>
+    fun observeIsPremium(): Flow<Boolean>
+    fun observeTrialPremiumState(): Flow<BillingState>
     fun purchasePremium()
 
 }

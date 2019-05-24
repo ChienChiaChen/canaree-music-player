@@ -14,12 +14,11 @@ import com.afollestad.materialdialogs.color.colorChooser
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
-import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.ImageViews
-import dev.olog.msc.presentation.base.extensions.*
-import dev.olog.msc.presentation.base.interfaces.HasBilling
+import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.ctx
+import dev.olog.msc.presentation.base.extensions.fragmentTransaction
 import dev.olog.msc.presentation.preferences.blacklist.BlacklistFragment
 import dev.olog.msc.presentation.preferences.categories.LibraryCategoriesFragment
 import dev.olog.msc.presentation.preferences.credentials.LastFmCredentialsFragment
@@ -28,15 +27,13 @@ import dev.olog.msc.presentation.preferences.utils.forEach
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.ThemedDialog
 import dev.olog.msc.shared.ui.extensions.colorPrimary
-import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import dev.olog.msc.shared.ui.extensions.subscribe
 import javax.inject.Inject
 
 class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Inject
-    lateinit var tutorialPrefsUseCase: TutorialPreferenceGateway
+    lateinit var presenter: PreferenceFragmentPresenter
 
     private lateinit var libraryCategories: Preference
     private lateinit var podcastCategories: Preference
@@ -62,7 +59,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
         deleteCache = preferenceScreen.findPreference(getString(R.string.prefs_delete_cached_images_key))
         lastFmCredentials = preferenceScreen.findPreference(getString(R.string.prefs_last_fm_credentials_key))
         autoCreateImages =
-                preferenceScreen.findPreference(getString(R.string.prefs_auto_create_images_key)) as SwitchPreference
+            preferenceScreen.findPreference(getString(R.string.prefs_auto_create_images_key)) as SwitchPreference
         accentColorChooser = preferenceScreen.findPreference(getString(R.string.prefs_accent_color_key))
         resetTutorial = preferenceScreen.findPreference(getString(R.string.prefs_reset_tutorial_key))
     }
@@ -71,22 +68,24 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.onAttach()
 
-        val billing = (act as HasBilling).billing
-        billing.observeIsPremium()
-                .take(2) // take current and after check values
-                .distinctUntilChanged()
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) { isPremium ->
-                    forEach(preferenceScreen) { it.isEnabled = isPremium }
+        presenter.observeIsPremium()
+            .subscribe(viewLifecycleOwner) { isPremium ->
+                forEach(preferenceScreen) { it.isEnabled = isPremium }
 
-                    if (!isPremium) {
-                        val v = act.window.decorView.findViewById<View>(android.R.id.content)
-                        Snackbar.make(v, R.string.prefs_not_premium, Snackbar.LENGTH_INDEFINITE)
-                                .setAction(R.string.prefs_not_premium_action) { billing.purchasePremium() }
-                                .show()
-                    }
+                if (!isPremium) {
+                    val v = act.window.decorView.findViewById<View>(android.R.id.content)
+                    Snackbar.make(v, R.string.prefs_not_premium, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.prefs_not_premium_action) { presenter.purchasePremium() }
+                        .show()
                 }
+            }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.onDetach()
     }
 
     override fun onResume() {
@@ -94,12 +93,12 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         libraryCategories.setOnPreferenceClickListener {
             LibraryCategoriesFragment.newInstance(MediaIdCategory.SONGS)
-                    .show(activity!!.supportFragmentManager, LibraryCategoriesFragment.TAG)
+                .show(activity!!.supportFragmentManager, LibraryCategoriesFragment.TAG)
             true
         }
         podcastCategories.setOnPreferenceClickListener {
             LibraryCategoriesFragment.newInstance(MediaIdCategory.PODCASTS)
-                    .show(activity!!.supportFragmentManager, LibraryCategoriesFragment.TAG)
+                .show(activity!!.supportFragmentManager, LibraryCategoriesFragment.TAG)
             true
         }
         blacklist.setOnPreferenceClickListener {
@@ -127,12 +126,12 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
             val initialSelection = prefs.getInt(getString(R.string.prefs_color_accent_key), ctx.colorPrimary())
 
             MaterialDialog(act)
-                    .colorChooser(
-                            colors = ColorPalette.ACCENT_COLORS,
-                            subColors = ColorPalette.ACCENT_COLORS_SUB,
-                            initialSelection = initialSelection,
-                            selection = act as PreferencesActivity
-                    ).show()
+                .colorChooser(
+                    colors = ColorPalette.ACCENT_COLORS,
+                    subColors = ColorPalette.ACCENT_COLORS_SUB,
+                    initialSelection = initialSelection,
+                    selection = act as PreferencesActivity
+                ).show()
             true
         }
         resetTutorial.setOnPreferenceClickListener {
@@ -180,39 +179,28 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
 
     private fun showDeleteAllCacheDialog() {
         ThemedDialog.builder(ctx)
-                .setTitle(R.string.prefs_delete_cached_images_title)
-                .setMessage(R.string.are_you_sure)
-                .setPositiveButton(R.string.common_ok) { _, _ ->
-                    GlideApp.get(ctx.applicationContext).clearMemory()
-                    @Suppress("UNUSED_VARIABLE")
-                    val disp = Completable.fromCallable {
-                        GlideApp.get(ctx.applicationContext).clearDiskCache()
-                        ImagesFolderUtils.getImageFolderFor(ctx, ImagesFolderUtils.FOLDER).listFiles()
-                                .forEach { it.delete() }
-                        ImagesFolderUtils.getImageFolderFor(ctx, ImagesFolderUtils.PLAYLIST).listFiles()
-                                .forEach { it.delete() }
-                        ImagesFolderUtils.getImageFolderFor(ctx, ImagesFolderUtils.GENRE).listFiles()
-                                .forEach { it.delete() }
-                    }.observeOn(AndroidSchedulers.mainThread())
-                            .subscribeOn(Schedulers.io())
-                            .subscribe({
-                                requestMainActivityToRecreate()
-                                ctx.applicationContext.toast(R.string.prefs_delete_cached_images_success)
-                            }, Throwable::printStackTrace)
+            .setTitle(R.string.prefs_delete_cached_images_title)
+            .setMessage(R.string.are_you_sure)
+            .setPositiveButton(R.string.common_ok) { _, _ ->
+                GlideApp.get(ctx.applicationContext).clearMemory()
+                presenter.clearCachedImages {
+                    requestMainActivityToRecreate()
+                    ctx.applicationContext.toast(R.string.prefs_delete_cached_images_success)
                 }
-                .setNegativeButton(R.string.common_no, null)
-                .show()
+            }
+            .setNegativeButton(R.string.common_no, null)
+            .show()
     }
 
     private fun showResetTutorialDialog() {
         ThemedDialog.builder(ctx)
-                .setTitle(R.string.prefs_reset_tutorial_title)
-                .setMessage(R.string.are_you_sure)
-                .setPositiveButton(R.string.common_ok) { _, _ ->
-                    tutorialPrefsUseCase.reset()
-                }
-                .setNegativeButton(R.string.common_no, null)
-                .show()
+            .setTitle(R.string.prefs_reset_tutorial_title)
+            .setMessage(R.string.are_you_sure)
+            .setPositiveButton(R.string.common_ok) { _, _ ->
+                presenter.resetTutorial()
+            }
+            .setNegativeButton(R.string.common_no, null)
+            .show()
     }
 
 }

@@ -1,9 +1,9 @@
 package dev.olog.msc.core.interactor
 
-import dev.olog.msc.core.coroutines.CompletableFlowWithParam
-import dev.olog.msc.core.coroutines.IoDispatcher
+import dev.olog.msc.core.executors.IoDispatcher
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
+import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class InsertHistorySongUseCase @Inject constructor(

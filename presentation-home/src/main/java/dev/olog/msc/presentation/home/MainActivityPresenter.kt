@@ -3,10 +3,13 @@ package dev.olog.msc.presentation.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.presentation.home.domain.IsRepositoryEmptyUseCase
-import dev.olog.msc.shared.extensions.unsubscribe
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivityPresenter @Inject constructor(
@@ -14,18 +17,16 @@ class MainActivityPresenter @Inject constructor(
     private val isRepositoryEmptyUseCase: IsRepositoryEmptyUseCase
 ) : ViewModel() {
 
-    private var disposable: Disposable? = null
     private val liveData = MutableLiveData<Boolean>()
 
     init {
-//        TODO
-//        disposable = isRepositoryEmptyUseCase.execute()
-//            .subscribe({
-//                liveData.value = it
-//            }, Throwable::printStackTrace)
+        viewModelScope.launch(Dispatchers.Default) {
+            isRepositoryEmptyUseCase.execute()
+                .collect { liveData.postValue(it) }
+        }
     }
 
-    fun observeIsRepositoryEmpty() : LiveData<Boolean> = liveData
+    fun observeIsRepositoryEmpty(): LiveData<Boolean> = liveData
 
     fun isFirstAccess(): Boolean {
         return appPreferencesUseCase.isFirstAccess()
@@ -42,7 +43,7 @@ class MainActivityPresenter @Inject constructor(
     }
 
     override fun onCleared() {
-        disposable.unsubscribe()
+        viewModelScope.cancel()
     }
 
 }

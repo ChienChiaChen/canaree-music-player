@@ -16,7 +16,10 @@ import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.RateAppDialog
 import dev.olog.msc.presentation.base.activity.MusicGlueActivity
 import dev.olog.msc.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
-import dev.olog.msc.presentation.base.extensions.*
+import dev.olog.msc.presentation.base.extensions.collapse
+import dev.olog.msc.presentation.base.extensions.expand
+import dev.olog.msc.presentation.base.extensions.getTopFragment
+import dev.olog.msc.presentation.base.extensions.isExpanded
 import dev.olog.msc.presentation.base.interfaces.*
 import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.categories.track.CategoriesFragment
@@ -24,6 +27,7 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.utils.clamp
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject

@@ -2,8 +2,8 @@ package dev.olog.msc.core.interactor
 
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.coroutines.ComputationDispatcher
-import dev.olog.msc.core.coroutines.ObservableFlowWithParam
+import dev.olog.msc.core.executors.ComputationDispatcher
+import dev.olog.msc.core.interactor.base.ObservableFlowWithParam
 import dev.olog.msc.core.interactor.item.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

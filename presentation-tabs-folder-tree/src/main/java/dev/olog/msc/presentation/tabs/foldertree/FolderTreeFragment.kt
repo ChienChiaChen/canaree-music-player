@@ -3,8 +3,6 @@ package dev.olog.msc.presentation.tabs.foldertree
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import dev.olog.msc.presentation.base.extensions.asLiveData
-import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
@@ -12,6 +10,7 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.foldertree.widgets.BreadCrumbLayout
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.extensions.safeGetCanonicalFile
+import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_folder_tree.*
 import kotlinx.android.synthetic.main.fragment_folder_tree.view.*
@@ -44,16 +43,15 @@ class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback,
 
 //            view.bread_crumbs.setBackgroundColor(ctx.colorSurface()) TODO check color on dark mode
 
-        viewModel.observeFileName()
+        viewModel.observeFile()
                 .subscribe(viewLifecycleOwner) {
                     bread_crumbs.setActiveOrAdd(BreadCrumbLayout.Crumb(it), false)
                 }
 
-        viewModel.observeChildrens()
+        viewModel.observeChildren()
                 .subscribe(viewLifecycleOwner, adapter::updateDataSet)
 
-        viewModel.observeCurrentFolder()
-                .asLiveData()
+        viewModel.observeDefaultFolder()
                 .subscribe(viewLifecycleOwner) { isInDefaultFolder ->
                     defaultFolder.toggleVisibility(!isInDefaultFolder, true)
                 }

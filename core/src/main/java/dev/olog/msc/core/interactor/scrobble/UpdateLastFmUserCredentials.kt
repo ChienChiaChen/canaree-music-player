@@ -1,10 +1,10 @@
 package dev.olog.msc.core.interactor.scrobble
 
 import dev.olog.msc.core.IEncrypter
-import dev.olog.msc.core.coroutines.CompletableFlowWithParam
-import dev.olog.msc.core.coroutines.ComputationDispatcher
 import dev.olog.msc.core.entity.UserCredentials
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class UpdateLastFmUserCredentials @Inject constructor(

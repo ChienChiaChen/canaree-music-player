@@ -1,8 +1,5 @@
 apply plugin: 'java-library'
 
-dependencies {
-    implementation librariesCore.rxJava
-}
 
 sourceCompatibility = "8"
 targetCompatibility = "8"

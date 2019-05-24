@@ -6,28 +6,28 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 
 internal class FloatingMusicCallback(
-        private val binder: MusicServiceBinder
+    private val binder: MusicServiceBinder
 
 ) : MediaControllerCompat.Callback() {
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-        metadata?.let { binder.metadataPublisher.onNext(it) }
+        binder.metadataPublisher.postValue(metadata)
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-        state?.let { binder.statePublisher.onNext(it) }
+        binder.statePublisher.postValue(state)
     }
 
     override fun onRepeatModeChanged(repeatMode: Int) {
-        binder.repeatModePublisher.onNext(repeatMode)
+        binder.repeatModePublisher.postValue(repeatMode)
     }
 
     override fun onShuffleModeChanged(shuffleMode: Int) {
-        binder.shuffleModePublisher.onNext(shuffleMode)
+        binder.shuffleModePublisher.postValue(shuffleMode)
     }
 
     override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
-        queue?.let { binder.queuePublisher.onNext(it) }
+        binder.queuePublisher.postValue(queue)
     }
 
 }

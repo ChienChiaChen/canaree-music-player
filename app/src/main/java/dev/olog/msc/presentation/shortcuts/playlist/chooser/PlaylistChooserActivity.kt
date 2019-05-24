@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import dev.olog.msc.R
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.presentation.base.activity.BaseActivity
-import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.shared.extensions.lazyFast
+import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.activity_playlist_chooser.*
 import javax.inject.Inject
 

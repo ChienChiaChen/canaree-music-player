@@ -14,7 +14,6 @@ import dagger.Lazy
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.musicservice.helper.CarHelper
 import dev.olog.msc.musicservice.helper.MediaIdHelper
@@ -24,6 +23,7 @@ import dev.olog.msc.musicservice.notification.MusicNotificationManager
 import dev.olog.msc.shared.FileProvider
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.extensions.asServicePendingIntent
 import dev.olog.msc.shared.extensions.toast
 import kotlinx.coroutines.*

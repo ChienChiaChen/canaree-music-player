@@ -10,8 +10,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.msc.core.coroutines.CustomScope
 import dev.olog.msc.presentation.base.model.BaseModel
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 

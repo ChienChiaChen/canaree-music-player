@@ -3,13 +3,10 @@ package dev.olog.msc.presentation.equalizer
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
-import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import dev.olog.msc.core.equalizer.IEqualizer
 import dev.olog.msc.presentation.base.bottom.sheet.BaseBottomSheetFragment
-import dev.olog.msc.presentation.base.extensions.asLiveData
-import dev.olog.msc.presentation.base.extensions.subscribe
 import dev.olog.msc.presentation.equalizer.widget.RadialKnob
-import io.reactivex.android.schedulers.AndroidSchedulers
+import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.fragment_equalizer.*
 import kotlinx.android.synthetic.main.fragment_equalizer.view.*
 import javax.inject.Inject
@@ -25,15 +22,16 @@ class EqualizerFragment : BaseBottomSheetFragment(), IEqualizer.Listener {
         }
     }
 
-    @Inject lateinit var presenter: EqualizerFragmentPresenter
-    private lateinit var adapter : PresetPagerAdapter
+    @Inject
+    lateinit var presenter: EqualizerFragmentPresenter
+    private lateinit var adapter: PresetPagerAdapter
     private var snackBar: Snackbar? = null
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         val presets = presenter.getPresets()
         adapter = PresetPagerAdapter(childFragmentManager, presets.toMutableList())
 
-        if (presets.isNotEmpty()){
+        if (presets.isNotEmpty()) {
             view.pager.adapter = adapter
             view.pager.currentItem = presenter.getCurrentPreset()
             view.pageIndicator.setViewPager(view.pager)
@@ -52,30 +50,29 @@ class EqualizerFragment : BaseBottomSheetFragment(), IEqualizer.Listener {
         view.band4.initializeBandHeight(presenter.getBandLevel(3))
         view.band5.initializeBandHeight(presenter.getBandLevel(4))
 
-        RxCompoundButton.checkedChanges(view.powerSwitch)
-                .observeOn(AndroidSchedulers.mainThread())
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) { isChecked ->
-                    val text = if(isChecked) R.string.common_switch_on else R.string.common_switch_off
-                    view.powerSwitch.text = getString(text)
-                    presenter.setEqualizerEnabled(isChecked)
-                }
+//        RxCompoundButton.checkedChanges(view.powerSwitch)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .asLiveData()
+//                .subscribe(viewLifecycleOwner) { isChecked ->
+//                    val text = if(isChecked) R.string.common_switch_on else R.string.common_switch_off
+//                    view.powerSwitch.text = getString(text)
+//                    presenter.setEqualizerEnabled(isChecked)
+//                }
 
         presenter.isEqualizerAvailable()
-                .asLiveData()
-                .subscribe(viewLifecycleOwner) { isEqAvailable ->
-                    if (snackBar != null){
-                        if (isEqAvailable){
-                            snackBar?.dismiss()
-                        } // else, already shown
-                    } else {
-                        // error snackBar now shown
-                        if (!isEqAvailable){
-                            snackBar = Snackbar.make(root, R.string.equalizer_error, Snackbar.LENGTH_INDEFINITE)
-                            snackBar!!.show()
-                        }
+            .subscribe(viewLifecycleOwner) { isEqAvailable ->
+                if (snackBar != null) {
+                    if (isEqAvailable) {
+                        snackBar?.dismiss()
+                    } // else, already shown
+                } else {
+                    // error snackBar now shown
+                    if (!isEqAvailable) {
+                        snackBar = Snackbar.make(root, R.string.equalizer_error, Snackbar.LENGTH_INDEFINITE)
+                        snackBar!!.show()
                     }
                 }
+            }
     }
 
     override fun onResume() {
@@ -128,7 +125,7 @@ class EqualizerFragment : BaseBottomSheetFragment(), IEqualizer.Listener {
         }
     }
 
-    private val onBandLevelChange = { band: Int, level : Float ->
+    private val onBandLevelChange = { band: Int, level: Float ->
         presenter.setBandLevel(band, level)
     }
 
