@@ -156,6 +156,7 @@ dependencies {
     implementation project(':presentation-create-playlist')
     debugImplementation project(':presentation-debug')
 
+
     // data binding
     kapt librariesUi.dataBinding
 

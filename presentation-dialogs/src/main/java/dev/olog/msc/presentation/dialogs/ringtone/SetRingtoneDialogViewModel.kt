@@ -9,13 +9,13 @@ import android.net.Uri
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.provider.Settings
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.presentation.dialogs.R
-import dev.olog.msc.shared.ui.ThemedDialog
 import dev.olog.msc.shared.utils.isMarshmallow
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
@@ -36,7 +36,7 @@ class SetRingtoneDialogViewModel @Inject constructor(
 
     @TargetApi(23)
     private fun requestWritingSettingsPermission(activity: FragmentActivity) {
-        ThemedDialog.builder(activity)
+        AlertDialog.Builder(activity)
                 .setTitle(R.string.popup_permission)
                 .setMessage(R.string.popup_request_permission_write_settings)
                 .setNegativeButton(R.string.common_cancel, null)

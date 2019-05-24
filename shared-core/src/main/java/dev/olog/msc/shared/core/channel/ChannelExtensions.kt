@@ -1,4 +1,4 @@
-package dev.olog.msc.shared.core.coroutines
+package dev.olog.msc.shared.core.channel
 
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.coroutineScope

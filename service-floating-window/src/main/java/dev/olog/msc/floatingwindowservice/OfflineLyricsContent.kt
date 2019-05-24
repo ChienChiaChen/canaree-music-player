@@ -20,7 +20,7 @@ import dev.olog.msc.offlinelyrics.EditLyricsDialog
 import dev.olog.msc.offlinelyrics.NoScrollTouchListener
 import dev.olog.msc.offlinelyrics.OfflineLyricsSyncAdjustementDialog
 import dev.olog.msc.shared.MusicConstants
-import dev.olog.msc.shared.core.coroutines.flowInterval
+import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.animateBackgroundColor
 import dev.olog.msc.shared.ui.extensions.animateTextColor

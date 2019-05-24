@@ -1,4 +1,4 @@
-package dev.olog.msc.shared.core.coroutines
+package dev.olog.msc.shared.core.flow
 
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow

@@ -19,7 +19,7 @@ import dev.olog.msc.presentation.base.utils.getDuration
 import dev.olog.msc.presentation.base.utils.getTitle
 import dev.olog.msc.presentation.base.utils.isPodcast
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
-import dev.olog.msc.shared.core.coroutines.flowInterval
+import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.lazyFast

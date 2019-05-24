@@ -3,11 +3,10 @@ apply from: '../base_module.gradle'
 
 dependencies {
     implementation project(':core')
-    implementation project(':shared')
 
     implementation librariesAndroidX.appcompat
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
-    api librariesUtils.billing
+    implementation librariesUtils.billing
 }

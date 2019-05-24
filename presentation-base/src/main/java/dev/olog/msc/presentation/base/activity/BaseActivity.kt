@@ -32,11 +32,6 @@ abstract class BaseActivity : AppCompatActivity(),
         window.setLightStatusBar()
     }
 
-    @Suppress("UNCHECKED_CAST")
-    fun <T : Fragment> findFragmentByTag(tag: String): T? {
-        return supportFragmentManager.findFragmentByTag(tag) as T?
-    }
-
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus && (applicationContext as HasImmersive).isEnabled()) {

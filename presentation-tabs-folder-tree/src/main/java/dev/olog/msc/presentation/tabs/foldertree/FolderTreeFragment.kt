@@ -9,7 +9,7 @@ import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.foldertree.widgets.BreadCrumbLayout
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.extensions.safeGetCanonicalFile
+import dev.olog.msc.presentation.tabs.foldertree.utils.safeGetCanonicalFile
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_folder_tree.*
@@ -73,7 +73,7 @@ class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback,
         viewModel.nextFolder(crumb.file.safeGetCanonicalFile())
     }
 
-    override fun handle(): Boolean {
+    override fun handleOnBackPressed(): Boolean {
         return viewModel.popFolder()
     }
 

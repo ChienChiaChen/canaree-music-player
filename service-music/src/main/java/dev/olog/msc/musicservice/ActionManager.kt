@@ -13,7 +13,7 @@ import dev.olog.msc.musicservice.interfaces.Queue
 import dev.olog.msc.musicservice.interfaces.SkipType
 import dev.olog.msc.musicservice.model.PlayerMediaEntity
 import dev.olog.msc.shared.MusicConstants
-import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.shared.utils.assertMainThread
 import kotlinx.coroutines.*
@@ -28,7 +28,7 @@ internal class ActionManager @Inject constructor(
     private val shuffleMode: ShuffleMode,
     private val playerState: PlayerState
 
-) : DefaultLifecycleObserver, CoroutineScope by CustomScope() {
+) : DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
     private val channel = Channel<Action>(capacity = Channel.UNLIMITED)
     lateinit var callback: Callback

@@ -14,7 +14,7 @@ import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.shared.MusicServiceConnectionState
-import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.distinctUntilChanged
@@ -33,7 +33,7 @@ internal class MusicServiceBinder @Inject constructor(
     @ServiceLifecycle lifecycle: Lifecycle,
     classes: Classes
 
-) : DefaultLifecycleObserver, CoroutineScope by CustomScope() {
+) : DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
     private val mediaBrowser = MediaBrowserCompat(
         context, ComponentName(context, classes.musicService()),

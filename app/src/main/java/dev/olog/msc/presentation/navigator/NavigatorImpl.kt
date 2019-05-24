@@ -12,6 +12,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.extensions.collapse
 import dev.olog.msc.presentation.base.extensions.fragmentTransaction
 import dev.olog.msc.presentation.base.extensions.hideFragmentsIfExists
@@ -94,12 +95,12 @@ class NavigatorImpl @Inject internal constructor(
                 return@fragmentTransaction replace(
                     R.id.fragmentContainer,
                     CategoriesFragment.newInstance(),
-                    CategoriesFragment.TAG
+                    FragmentTags.CATEGORIES
                 )
             }
-            val fragment = activity.supportFragmentManager.findFragmentByTag(CategoriesFragment.TAG)
+            val fragment = activity.supportFragmentManager.findFragmentByTag(FragmentTags.CATEGORIES)
             if (fragment == null) {
-                replace(R.id.fragmentContainer, CategoriesFragment.newInstance(), CategoriesFragment.TAG)
+                replace(R.id.fragmentContainer, CategoriesFragment.newInstance(), FragmentTags.CATEGORIES)
             } else {
                 show(fragment)
             }
@@ -117,7 +118,7 @@ class NavigatorImpl @Inject internal constructor(
                 activity, listOf(
                     SearchFragment.TAG,
                     PlayingQueueFragment.TAG,
-                    CategoriesFragment.TAG
+                    FragmentTags.CATEGORIES
                 )
             )
             if (forceRecreate) {
@@ -147,7 +148,7 @@ class NavigatorImpl @Inject internal constructor(
                 activity, listOf(
                     CategoriesPodcastFragment.TAG,
                     PlayingQueueFragment.TAG,
-                    CategoriesFragment.TAG
+                    FragmentTags.CATEGORIES
                 )
             )
             val fragment = activity.supportFragmentManager.findFragmentByTag(SearchFragment.TAG)
@@ -170,7 +171,7 @@ class NavigatorImpl @Inject internal constructor(
                 activity, listOf(
                     CategoriesPodcastFragment.TAG,
                     SearchFragment.TAG,
-                    CategoriesFragment.TAG
+                    FragmentTags.CATEGORIES
                 )
             )
             val fragment = activity.supportFragmentManager.findFragmentByTag(PlayingQueueFragment.TAG)

@@ -16,7 +16,7 @@ import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.interfaces.ServiceLifecycleController
 import dev.olog.msc.musicservice.interfaces.SkipType
 import dev.olog.msc.musicservice.model.PlayerMediaEntity
-import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.utils.clamp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +36,7 @@ internal class PlayerImpl @Inject constructor(
     musicPrefsUseCase: MusicPreferencesGateway
 
 ) : Player, DefaultLifecycleObserver, PlayerLifecycle, ActionManager.Callback,
-    CoroutineScope by CustomScope(Dispatchers.Main) {
+    CoroutineScope by DefaultScope(Dispatchers.Main) {
 
     private val listeners = mutableListOf<PlayerLifecycle.Listener>()
 

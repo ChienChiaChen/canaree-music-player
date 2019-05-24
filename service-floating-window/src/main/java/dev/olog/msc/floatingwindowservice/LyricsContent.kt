@@ -9,8 +9,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.floatingwindowservice.music.service.MusicServiceBinder
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
-import dev.olog.msc.shared.core.coroutines.CustomScope
-import dev.olog.msc.shared.core.coroutines.flowInterval
+import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.playpause.IPlayPauseBehavior
@@ -23,7 +23,7 @@ internal class LyricsContent(
     private val musicServiceBinder: MusicServiceBinder
 
 ) : WebViewContent(context, R.layout.content_web_view_with_player), DefaultLifecycleObserver,
-    CoroutineScope by CustomScope() {
+    CoroutineScope by DefaultScope() {
 
     private val playPauseBehavior = content.findViewById<ImageButton>(R.id.playPause) as IPlayPauseBehavior
     private val playPause = content.findViewById<ImageButton>(R.id.playPause)

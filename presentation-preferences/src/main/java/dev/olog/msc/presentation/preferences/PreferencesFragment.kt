@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -25,7 +26,6 @@ import dev.olog.msc.presentation.preferences.credentials.LastFmCredentialsFragme
 import dev.olog.msc.presentation.preferences.utils.ColorPalette
 import dev.olog.msc.presentation.preferences.utils.forEach
 import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.shared.ui.ThemedDialog
 import dev.olog.msc.shared.ui.extensions.colorPrimary
 import dev.olog.msc.shared.ui.extensions.subscribe
 import javax.inject.Inject
@@ -178,7 +178,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
     }
 
     private fun showDeleteAllCacheDialog() {
-        ThemedDialog.builder(ctx)
+        AlertDialog.Builder(ctx)
             .setTitle(R.string.prefs_delete_cached_images_title)
             .setMessage(R.string.are_you_sure)
             .setPositiveButton(R.string.common_ok) { _, _ ->
@@ -193,7 +193,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
     }
 
     private fun showResetTutorialDialog() {
-        ThemedDialog.builder(ctx)
+        AlertDialog.Builder(ctx)
             .setTitle(R.string.prefs_reset_tutorial_title)
             .setMessage(R.string.are_you_sure)
             .setPositiveButton(R.string.common_ok) { _, _ ->

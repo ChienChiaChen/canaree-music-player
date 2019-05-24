@@ -33,7 +33,7 @@ import dev.olog.msc.presentation.detail.domain.GetTotalSongDurationUseCase
 import dev.olog.msc.presentation.detail.domain.ObserveDetailSortDataUseCase
 import dev.olog.msc.presentation.detail.mapper.toDetailDisplayableItem
 import dev.olog.msc.presentation.detail.mapper.toHeaderItem
-import dev.olog.msc.shared.core.coroutines.merge
+import dev.olog.msc.shared.core.flow.merge
 import dev.olog.msc.shared.ui.TimeUtils
 import dev.olog.msc.shared.utils.TextUtils
 import kotlinx.coroutines.flow.collect

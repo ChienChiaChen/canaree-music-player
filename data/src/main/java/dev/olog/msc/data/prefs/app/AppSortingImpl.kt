@@ -7,7 +7,7 @@ import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
-import dev.olog.msc.shared.core.coroutines.combineLatest
+import dev.olog.msc.shared.core.channel.combineLatest
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.BackpressureStrategy
 import kotlinx.coroutines.flow.Flow

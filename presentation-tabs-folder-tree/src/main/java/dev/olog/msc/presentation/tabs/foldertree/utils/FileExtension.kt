@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package dev.olog.msc.shared.extensions
+package dev.olog.msc.presentation.tabs.foldertree.utils
 
 import android.os.Environment
 import android.webkit.MimeTypeMap

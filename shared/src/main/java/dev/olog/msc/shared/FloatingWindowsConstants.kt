@@ -1,5 +1,6 @@
 package dev.olog.msc.shared
 
+
 object FloatingWindowsConstants {
 
     private const val TAG = "FloatingWindowsConstants"

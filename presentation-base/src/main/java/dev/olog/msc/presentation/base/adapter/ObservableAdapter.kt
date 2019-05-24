@@ -11,7 +11,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.presentation.base.model.BaseModel
-import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.DefaultScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 
@@ -20,7 +20,7 @@ abstract class ObservableAdapter<T : BaseModel>(
 
 ) : RecyclerView.Adapter<DataBoundViewHolder>(),
     DefaultLifecycleObserver,
-    CoroutineScope by CustomScope() {
+    CoroutineScope by DefaultScope() {
 
     protected val data = mutableListOf<T>()
     private val channel = Channel<List<T>>(Channel.CONFLATED)

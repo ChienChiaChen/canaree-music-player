@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
-import dev.olog.msc.shared.core.coroutines.asFlow
+import dev.olog.msc.shared.core.channel.asFlow
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.lazyFast
 import dev.olog.msc.shared.ui.extensions.findChild

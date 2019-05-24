@@ -23,7 +23,7 @@ import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
-import dev.olog.msc.shared.core.coroutines.flowInterval
+import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.extensions.extractBookmark
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.extensions.lazyFast

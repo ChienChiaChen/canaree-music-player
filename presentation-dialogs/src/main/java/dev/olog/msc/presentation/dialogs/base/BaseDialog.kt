@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import dev.olog.msc.presentation.base.extensions.act
-import dev.olog.msc.shared.ui.ThemedDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 
@@ -14,7 +13,7 @@ abstract class BaseDialog : DaggerDialogFragment(), CoroutineScope by MainScope(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        var builder = ThemedDialog.builder(act)
+        var builder = AlertDialog.Builder(act)
         builder = extendBuilder(builder)
 
         val dialog = builder.show()

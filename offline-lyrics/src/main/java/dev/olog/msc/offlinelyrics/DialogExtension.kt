@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package dev.olog.msc.shared.ui.extensions
+package dev.olog.msc.offlinelyrics
 
 import android.app.AlertDialog
 import android.view.WindowManager

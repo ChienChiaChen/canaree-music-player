@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.presentation.home.MainActivity
-import dev.olog.msc.presentation.home.MainActivityPresenter
+import dev.olog.msc.presentation.home.MainActivityViewModel
 import dev.olog.msc.pro.ProModule
 import dev.olog.msc.shared.dagger.ViewModelKey
 
@@ -27,8 +27,8 @@ class MainActivityModule(
         @Provides
         @JvmStatic
         @IntoMap
-        @ViewModelKey(MainActivityPresenter::class)
-        internal fun provideViewModel(viewModel: MainActivityPresenter): ViewModel {
+        @ViewModelKey(MainActivityViewModel::class)
+        internal fun provideViewModel(viewModel: MainActivityViewModel): ViewModel {
             return viewModel
         }
 

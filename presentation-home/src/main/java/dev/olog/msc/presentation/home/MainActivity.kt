@@ -7,12 +7,12 @@ import android.provider.MediaStore
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
-import androidx.fragment.app.Fragment
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.ActivityCodes
 import dev.olog.msc.presentation.base.FloatingWindowHelper
+import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.RateAppDialog
 import dev.olog.msc.presentation.base.activity.MusicGlueActivity
 import dev.olog.msc.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
@@ -20,9 +20,11 @@ import dev.olog.msc.presentation.base.extensions.collapse
 import dev.olog.msc.presentation.base.extensions.expand
 import dev.olog.msc.presentation.base.extensions.getTopFragment
 import dev.olog.msc.presentation.base.extensions.isExpanded
-import dev.olog.msc.presentation.base.interfaces.*
+import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
+import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
+import dev.olog.msc.presentation.base.interfaces.HasBilling
+import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.presentation.base.theme.player.theme.isMini
-import dev.olog.msc.presentation.categories.track.CategoriesFragment
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
@@ -32,22 +34,15 @@ import dev.olog.msc.shared.utils.clamp
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-enum class LayoutType {
-    FULL,
-    NO_PLAYER
-}
-
 class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     companion object {
         private const val SPLASH_REQUEST_CODE = 0
     }
 
-    // for debug purposes
-    private val layoutType = LayoutType.FULL
 
     @Inject
-    lateinit var presenter: MainActivityPresenter
+    lateinit var presenter: MainActivityViewModel
     @Inject
     lateinit var navigator: Navigator
     @Inject
@@ -65,11 +60,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (layoutType == LayoutType.FULL){
-            setContentView(R.layout.activity_main)
-        } else {
-            setContentView(R.layout.activity_main_no_player)
-        }
+        setContentView(R.layout.activity_main)
 
         slidingPanel.panelHeight = dimen(R.dimen.sliding_panel_peek) + dimen(R.dimen.bottom_navigation_height)
 
@@ -118,10 +109,10 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     private fun handleOnActivityResumed() {
-        if (!presenter.canShowPodcastCategory()){
+        if (!presenter.canShowPodcastCategory()) {
             val currentId = presenter.getLastBottomViewPage()
             bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
-            if (currentId == R.id.navigation_podcasts){
+            if (currentId == R.id.navigation_podcasts) {
                 bottomNavigation.selectedItemId = R.id.navigation_songs
                 presenter.setLastBottomViewPage(R.id.navigation_songs)
                 bottomNavigate(bottomNavigation.selectedItemId, true)
@@ -257,36 +248,39 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     override fun onBackPressed() {
         try {
-            if (tryPopFolderBack()) {
-                return
-            }
+
 
             val topFragment = getTopFragment()
 
             when {
-                topFragment is HasSafeTransition && topFragment.isAnimating() -> {
-//                  prevents circular reveal crash
+                topFragment is DrawsOnTop || topFragment is DimBottomSheetDialogFragment -> {
+                    super.onBackPressed()
+                    return
                 }
-                topFragment is DrawsOnTop -> super.onBackPressed()
-                topFragment is DimBottomSheetDialogFragment -> supportFragmentManager.popBackStack()
-                slidingPanel.isExpanded() -> slidingPanel.collapse()
-                else -> super.onBackPressed()
+                slidingPanel.isExpanded() -> {
+                    slidingPanel.collapse()
+                    return
+                }
             }
+            if (tryPopFolderBack()) {
+                return
+            }
+
+            super.onBackPressed()
         } catch (ex: IllegalStateException) { /*random fragment manager crashes */
         }
 
     }
 
     private fun tryPopFolderBack(): Boolean {
-        val categories = findFragmentByTag<CategoriesFragment>(CategoriesFragment.TAG)
-        categories?.view?.findViewById<androidx.viewpager.widget.ViewPager>(R.id.viewPager)?.let { pager ->
-            val currentItem = pager.adapter?.instantiateItem(pager, pager.currentItem) as Fragment
-
-            return if (currentItem is CanHandleOnBackPressed) {
-                currentItem.handle()
-            } else false
-
-        } ?: return false
+        val categoriesFragment = supportFragmentManager.findFragmentByTag(FragmentTags.CATEGORIES)
+        val fragments = categoriesFragment!!.childFragmentManager.fragments
+        for (fragment in fragments) {
+            if (fragment is CanHandleOnBackPressed && fragment.handleOnBackPressed()) {
+                return true
+            }
+        }
+        return true
     }
 
     override fun getSlidingPanel(): SlidingUpPanelLayout? = slidingPanel

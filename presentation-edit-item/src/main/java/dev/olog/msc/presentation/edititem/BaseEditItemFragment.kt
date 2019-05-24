@@ -9,6 +9,7 @@ import android.net.Uri
 import android.widget.ImageView
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Priority
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.CoverUtils
@@ -17,18 +18,12 @@ import dev.olog.msc.presentation.base.bottom.sheet.BaseBottomSheetFragment
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.shared.Permissions
-import dev.olog.msc.shared.ui.ThemedDialog
 
 private const val PICK_IMAGE_CODE = 456
 
 abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
 
     private var progressDialog: ProgressDialog? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Permissions.requestReadStorage(act)
-    }
 
     @CallSuper
     override fun onDestroy() {
@@ -75,7 +70,7 @@ abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
     }
 
     protected fun changeImage() {
-        ThemedDialog.builder(ctx)
+        AlertDialog.Builder(ctx)
                 .setItems(R.array.edit_item_image_dialog) { _, which ->
                     when (which) {
                         0 -> openImagePicker()

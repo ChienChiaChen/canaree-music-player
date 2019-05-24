@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import dagger.android.support.AndroidSupportInjection
@@ -16,7 +17,6 @@ import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.preferences.R
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.ui.ThemedDialog
 import javax.inject.Inject
 
 class LibraryCategoriesFragment : DialogFragment() {
@@ -52,7 +52,7 @@ class LibraryCategoriesFragment : DialogFragment() {
         val title = if (category == MediaIdCategory.SONGS) R.string.prefs_library_categories_title
                     else R.string.prefs_library_categories_title_podcasts
 
-        val builder = ThemedDialog.builder(ctx)
+        val builder = AlertDialog.Builder(ctx)
                 .setTitle(title)
                 .setView(view)
                 .setNeutralButton(R.string.common_reset, null)

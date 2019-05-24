@@ -5,16 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.presentation.home.domain.IsRepositoryEmptyUseCase
+import dev.olog.msc.presentation.home.domain.IsPlayingQueueEmptyUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainActivityPresenter @Inject constructor(
+class MainActivityViewModel @Inject constructor(
     private val appPreferencesUseCase: AppPreferencesGateway,
-    private val isRepositoryEmptyUseCase: IsRepositoryEmptyUseCase
+    private val isRepositoryEmptyUseCase: IsPlayingQueueEmptyUseCase
 ) : ViewModel() {
 
     private val liveData = MutableLiveData<Boolean>()

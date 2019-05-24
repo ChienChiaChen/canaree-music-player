@@ -19,7 +19,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import dev.olog.msc.presentation.base.R
-import dev.olog.msc.shared.core.coroutines.asFlow
+import dev.olog.msc.shared.core.channel.asFlow
 import dev.olog.msc.shared.ui.extensions.colorPrimary
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -283,9 +283,9 @@ class RxFastScroller : LinearLayout {
     }
 
     /**
-     * Set the color for the scroll handle.
+     * Set the color for the scroll handleOnBackPressed.
      *
-     * @param color The color for the scroll handle
+     * @param color The color for the scroll handleOnBackPressed
      */
     fun setHandleColor(@ColorInt color: Int) {
         mHandleColor = color

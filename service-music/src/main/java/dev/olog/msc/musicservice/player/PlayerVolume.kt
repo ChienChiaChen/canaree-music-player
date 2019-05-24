@@ -8,8 +8,8 @@ import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.musicservice.volume.IPlayerVolume
 import dev.olog.msc.musicservice.volume.IVolume
-import dev.olog.msc.shared.core.coroutines.CustomScope
-import dev.olog.msc.shared.core.coroutines.flowInterval
+import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.flow.flowInterval
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
@@ -30,7 +30,7 @@ internal class PlayerVolume @Inject constructor(
         @ServiceLifecycle lifecycle: Lifecycle,
         musicPreferencesUseCase: MusicPreferencesGateway
 
-) : IPlayerVolume, DefaultLifecycleObserver, CoroutineScope by CustomScope(
+) : IPlayerVolume, DefaultLifecycleObserver, CoroutineScope by DefaultScope(
     Dispatchers.Main
 ) {
 

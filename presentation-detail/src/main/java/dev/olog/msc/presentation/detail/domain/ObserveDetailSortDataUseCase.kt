@@ -7,9 +7,8 @@ import dev.olog.msc.core.executors.IoDispatcher
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.interactor.base.ObservableFlowWithParam
 import dev.olog.msc.presentation.detail.sort.DetailSort
-import dev.olog.msc.shared.core.coroutines.combineLatest
+import dev.olog.msc.shared.core.channel.combineLatest
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 class ObserveDetailSortDataUseCase @Inject constructor(

@@ -68,6 +68,7 @@ class StatusBarColorBehavior @Inject constructor(
 
         when (newState) {
             SlidingUpPanelLayout.PanelState.EXPANDED -> {
+                // TODO check if it does
                 if (context.isFullscreen() || context.isBigImage()) {
                     activity.window.removeLightStatusBar()
                 } else {

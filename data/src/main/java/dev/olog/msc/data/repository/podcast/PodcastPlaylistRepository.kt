@@ -27,7 +27,7 @@ import dev.olog.msc.data.entity.custom.PageRequestImpl
 import dev.olog.msc.data.mapper.toPodcast
 import dev.olog.msc.data.repository.queries.TrackQueries
 import dev.olog.msc.data.repository.util.ContentObserverFlow
-import dev.olog.msc.shared.core.coroutines.mapToList
+import dev.olog.msc.shared.core.flow.mapToList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop

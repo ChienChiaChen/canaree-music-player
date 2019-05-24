@@ -10,7 +10,7 @@ import dev.olog.msc.presentation.base.paging.BaseDataSource
 import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.tabs.TabFragmentHeaders
 import dev.olog.msc.presentation.tabs.mapper.toTabDisplayableItem
-import dev.olog.msc.shared.core.coroutines.merge
+import dev.olog.msc.shared.core.flow.merge
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take

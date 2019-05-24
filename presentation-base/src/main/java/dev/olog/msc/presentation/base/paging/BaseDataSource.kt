@@ -5,7 +5,7 @@ import androidx.paging.PositionalDataSource
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Page
 import dev.olog.msc.core.entity.data.request.Request
-import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.DefaultScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlin.math.abs
@@ -15,7 +15,7 @@ import kotlin.math.abs
  */
 abstract class BaseDataSource<PresentationModel> :
     PositionalDataSource<PresentationModel>(),
-    CoroutineScope by CustomScope() {
+    CoroutineScope by DefaultScope() {
 
     abstract fun onAttach()
 

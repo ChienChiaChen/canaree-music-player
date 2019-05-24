@@ -19,7 +19,7 @@ import dev.olog.msc.musicservice.player.DefaultPlayer
 import dev.olog.msc.musicservice.player.media.source.ClippedSourceFactory
 import dev.olog.msc.musicservice.utils.dispatchEvent
 import dev.olog.msc.musicservice.volume.IPlayerVolume
-import dev.olog.msc.shared.core.coroutines.flowInterval
+import dev.olog.msc.shared.core.flow.flowInterval
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.util.concurrent.TimeUnit

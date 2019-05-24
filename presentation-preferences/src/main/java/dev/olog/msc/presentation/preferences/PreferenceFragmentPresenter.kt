@@ -8,7 +8,7 @@ import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.OnSuccess
 import dev.olog.msc.pro.IBilling
-import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.ui.extensions.liveDataOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ class PreferenceFragmentPresenter @Inject constructor(
     @ApplicationContext private val context: Context,
     private val billing: IBilling,
     private val tutorialPrefsUseCase: TutorialPreferenceGateway
-) : CoroutineScope by CustomScope() {
+) : CoroutineScope by DefaultScope() {
 
     private val isPremiumLiveData = liveDataOf<Boolean>()
 

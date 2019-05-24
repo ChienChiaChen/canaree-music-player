@@ -14,7 +14,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.shared.ShortcutsConstants
-import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.extensions.toast
 import kotlinx.coroutines.*
 
@@ -23,7 +23,7 @@ internal abstract class BaseAppShortcuts(
     @ProcessLifecycle lifecycle: Lifecycle,
     protected val classes: Classes
 
-) : AppShortcuts, DefaultLifecycleObserver, CoroutineScope by CustomScope() {
+) : AppShortcuts, DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
     private var job: Job? = null
 

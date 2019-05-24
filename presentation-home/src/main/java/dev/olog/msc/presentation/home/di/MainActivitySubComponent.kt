@@ -4,15 +4,12 @@ import dagger.Subcomponent
 import dagger.android.AndroidInjector
 import dev.olog.msc.core.dagger.scope.PerActivity
 import dev.olog.msc.presentation.home.MainActivity
-import dev.olog.msc.presentation.tabs.di.TabFragmentModule
 import dev.olog.msc.pro.ProModule
 
 @Subcomponent(
     modules = arrayOf(
         MainActivityModule::class,
-        MainActivityFragmentsModule::class,
-        ProModule::class,
-        TabFragmentModule::class
+        ProModule::class
     )
 )
 @PerActivity

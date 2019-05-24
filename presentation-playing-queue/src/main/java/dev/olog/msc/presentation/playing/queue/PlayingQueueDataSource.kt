@@ -9,7 +9,7 @@ import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.presentation.base.paging.BaseDataSource
 import dev.olog.msc.presentation.base.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
-import dev.olog.msc.shared.core.coroutines.merge
+import dev.olog.msc.shared.core.flow.merge
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take

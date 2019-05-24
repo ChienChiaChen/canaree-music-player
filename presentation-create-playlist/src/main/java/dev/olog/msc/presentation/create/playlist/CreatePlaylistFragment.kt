@@ -3,6 +3,7 @@ package dev.olog.msc.presentation.create.playlist
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.core.entity.PlaylistType
@@ -15,7 +16,6 @@ import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.base.utils.ImeUtils
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.ui.ThemedDialog
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import io.reactivex.disposables.Disposable
@@ -135,13 +135,13 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
     }
 
     private fun showCreateDialog() {
-        val builder = ThemedDialog.builder(act)
+        val builder = AlertDialog.Builder(act)
             .setTitle("New playlist")
             .setView(R.layout.layout_edit_text)
             .setPositiveButton(R.string.common_ok, null)
             .setNegativeButton(R.string.common_cancel, null)
 
-//        val dialog = builder.show()
+//        val dialog = builder.show() TODO
 //
 //        val editText = dialog.findViewById<TextInputEditText>(R.id.editText)!!
 //        val editTextLayout = dialog.findViewById<TextInputLayout>(R.id.editTextLayout)!!

@@ -22,6 +22,7 @@ dependencies {
     kapt librariesUi.dataBinding
 
     implementation librariesAndroidX.core
+    implementation librariesAndroidX.coreKtx
     implementation librariesAndroidX.material
     implementation librariesAndroidX.recycler
     implementation librariesUi.constraintLayout

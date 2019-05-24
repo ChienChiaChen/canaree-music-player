@@ -1,5 +1,6 @@
 package dev.olog.msc.pro
 
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -7,10 +8,8 @@ import com.android.billingclient.api.*
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
-import dev.olog.msc.shared.core.coroutines.CustomScope
-import dev.olog.msc.shared.core.coroutines.combineLatest
-import dev.olog.msc.shared.extensions.toast
-import dev.olog.msc.shared.utils.assertBackgroundThread
+import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.channel.combineLatest
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
@@ -26,7 +25,7 @@ internal class BillingImpl @Inject constructor(
     private val musicPreferencesUseCase: MusicPreferencesGateway,
     private val equalizerPrefsUseCase: EqualizerPreferencesGateway
 
-) : IBilling, PurchasesUpdatedListener, DefaultLifecycleObserver, CoroutineScope by CustomScope() {
+) : IBilling, PurchasesUpdatedListener, DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
     companion object {
         private const val PRO_VERSION_ID = "pro_version"
@@ -41,7 +40,6 @@ internal class BillingImpl @Inject constructor(
     private var isConnected = false
 
     private val premiumPublisher = BroadcastChannel<Boolean>(Channel.CONFLATED)
-    @UseExperimental(ExperimentalCoroutinesApi::class)
     private val trialPublisher = BroadcastChannel<Boolean>(Channel.CONFLATED)
 
     private var isTrialState by Delegates.observable(DEFAULT_TRIAL) { _, _, new ->
@@ -105,7 +103,7 @@ internal class BillingImpl @Inject constructor(
 
                 when (responseCode) {
                     BillingClient.BillingResponse.OK -> isConnected = true
-                    BillingClient.BillingResponse.BILLING_UNAVAILABLE -> activity.toast("Play store not found")
+                    BillingClient.BillingResponse.BILLING_UNAVAILABLE -> Log.w("Billing", "Play store not found")
                     // TODO
                 }
                 func?.invoke()
@@ -175,7 +173,6 @@ internal class BillingImpl @Inject constructor(
     }
 
     private fun setDefault() = launch {
-        assertBackgroundThread()
         appPrefsUseCase.setDefault()
         musicPreferencesUseCase.setDefault()
         equalizerPrefsUseCase.setDefault()

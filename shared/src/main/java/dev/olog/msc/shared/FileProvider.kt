@@ -7,19 +7,15 @@ import java.io.File
 
 object FileProvider {
 
-    private const val authority = "${BuildConfig.APPLICATION_ID}.fileprovider"
+    private const val authority = "dev.olog.msc.fileprovider"
 
-    fun getUriForFile(context: Context, file: File): Uri {
+    fun getUriForPath(context: Context, path: String): Uri {
         return try {
-            FileProvider.getUriForFile(context, authority, file)
-        } catch (ex: Exception){
+            FileProvider.getUriForFile(context, authority, File(path))
+        } catch (ex: Exception) {
             ex.printStackTrace()
             return Uri.EMPTY
         }
-    }
-
-    fun getUriForPath(context: Context, path: String): Uri {
-        return getUriForFile(context, File(path))
     }
 
 }

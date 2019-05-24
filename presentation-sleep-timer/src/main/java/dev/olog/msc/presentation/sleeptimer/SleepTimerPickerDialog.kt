@@ -11,8 +11,8 @@ import dev.olog.msc.core.Classes
 import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.shared.PendingIntents
-import dev.olog.msc.shared.core.coroutines.CustomScope
-import dev.olog.msc.shared.core.coroutines.flowInterval
+import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.TimeUtils
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
-    ScrollHmsPickerDialog.HmsPickHandler, CoroutineScope by CustomScope() {
+    ScrollHmsPickerDialog.HmsPickHandler, CoroutineScope by DefaultScope() {
 
     private var countDownJob: Job? = null
 

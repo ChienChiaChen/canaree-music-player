@@ -11,7 +11,7 @@ import dev.olog.msc.shared.ui.extensions.colorSurface
 import dev.olog.msc.shared.ui.theme.HasImmersive
 
 /**
- * Custom status bar to handle device notch
+ * Custom status bar to handleOnBackPressed device notch
  */
 class StatusBarView : View {
 

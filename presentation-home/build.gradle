@@ -1,25 +1,36 @@
 apply plugin: 'com.android.library'
-apply from: '../presentation_module.gradle'
+apply from: '../base_module.gradle'
+apply plugin: 'kotlin-android-extensions'
 
 android {
+    dataBinding.enabled = true
+
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+
     lintOptions {
         disable 'MissingTranslation'
     }
 }
 
 dependencies {
+    implementation project(':core')
     implementation project(':pro')
-    implementation project(':presentation-player')
-    implementation project(':presentation-player-mini')
+    implementation project(':shared')
+    implementation project(':shared-ui-components')
+    implementation project(':presentation-base')
+    implementation project(':presentation-navigator')
 
-    implementation project(':presentation-categories')
-    implementation project(':presentation-tabs')
+    implementation librariesCore.daggerAndroid
 
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
-
-    implementation librariesUi.slidingPanel
+    implementation librariesCore.lifecycleKtx
 
     implementation librariesAndroidX.coreKtx
+    implementation librariesAndroidX.material
+
+    implementation librariesUi.slidingPanel
 }

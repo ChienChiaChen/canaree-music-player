@@ -1,12 +1,12 @@
 package dev.olog.msc.presentation.base
 
 import android.preference.PreferenceManager
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.shared.extensions.lazyFast
-import dev.olog.msc.shared.ui.ThemedDialog
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -46,7 +46,7 @@ class RateAppDialog @Inject constructor(
     }
 
     private fun showDialog(){
-        ThemedDialog.builder(activity)
+        AlertDialog.Builder(activity)
             .setTitle(R.string.rate_app_title)
             .setMessage(R.string.rate_app_message)
             .setPositiveButton(R.string.rate_app_positive_button) { _, _ ->

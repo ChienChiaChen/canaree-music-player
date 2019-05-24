@@ -16,7 +16,7 @@ import dev.olog.msc.core.interactor.favorite.ObserveFavoriteAnimationUseCase
 import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.musicservice.utils.dispatchEvent
-import dev.olog.msc.shared.core.coroutines.CustomScope
+import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import dev.olog.msc.shared.utils.isOreo
 import kotlinx.coroutines.*
@@ -39,7 +39,7 @@ internal class MusicNotificationManager @Inject constructor(
         observeFavoriteUseCase: ObserveFavoriteAnimationUseCase,
         playerLifecycle: PlayerLifecycle
 
-) : DefaultLifecycleObserver, CoroutineScope by CustomScope() {
+) : DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
     private var publishNotificationJob : Job? = null
     private var delayedStopNotificationJob : Job? = null

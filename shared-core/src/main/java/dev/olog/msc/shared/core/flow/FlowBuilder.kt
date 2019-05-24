@@ -1,4 +1,4 @@
-package dev.olog.msc.shared.core.coroutines
+package dev.olog.msc.shared.core.flow
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
