@@ -30,8 +30,6 @@ abstract class BaseWidget : AbsWidgetApp() {
     internal lateinit var musicPrefsUseCase: MusicPreferencesGateway
     @Inject
     internal lateinit var widgetClasses: WidgetClasses
-    @Inject
-    internal lateinit var classes: Classes
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -109,13 +107,13 @@ abstract class BaseWidget : AbsWidgetApp() {
     }
 
     private fun buildPendingIntent(context: Context, action: String): PendingIntent? {
-        val intent = Intent(context, classes.musicService())
+        val intent = Intent(context, Classes.musicService)
         intent.action = action
         return intent.asServicePendingIntent(context, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun buildContentIntent(context: Context): PendingIntent {
-        val intent = Intent(context, classes.mainActivity())
+        val intent = Intent(context, Classes.mainActivity)
         intent.action = PendingIntents.ACTION_CONTENT_VIEW
         return PendingIntent.getActivity(
             context, 0,

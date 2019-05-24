@@ -27,8 +27,6 @@ class CategoriesPodcastFragment : BaseFragment() {
     }
 
     @Inject
-    lateinit var classes: Classes
-    @Inject
     lateinit var navigator: Navigator
     @Inject
     lateinit var presenter: CategoriesPodcastFragmentPresenter
@@ -74,7 +72,7 @@ class CategoriesPodcastFragment : BaseFragment() {
     }
 
     private fun startServiceOrRequestOverlayPermission() {
-        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, classes.floatingWindowService())
+        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Classes.floatingWindowService)
     }
 
     private val onPageChangeListener = object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {

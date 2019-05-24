@@ -44,9 +44,6 @@ class SearchFragment : BaseFragment(), SetupNestedList {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by lazyFast { viewModelProvider<SearchFragmentViewModel>(viewModelFactory) }
 
-    @Inject
-    lateinit var classes: Classes
-
     private lateinit var layoutManager: LinearLayoutManager
 
     @Inject
@@ -207,7 +204,7 @@ class SearchFragment : BaseFragment(), SetupNestedList {
     }
 
     private fun startServiceOrRequestOverlayPermission() {
-        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, classes.floatingWindowService())
+        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Classes.floatingWindowService)
     }
 
 

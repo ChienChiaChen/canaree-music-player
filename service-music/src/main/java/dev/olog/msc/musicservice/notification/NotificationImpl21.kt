@@ -28,8 +28,7 @@ import javax.inject.Inject
 internal open class NotificationImpl21 @Inject constructor(
     protected val service: Service,
     private val token: MediaSessionCompat.Token,
-    protected val notificationManager: Lazy<NotificationManager>,
-    private val classes: Classes
+    protected val notificationManager: Lazy<NotificationManager>
 
 ) : INotification {
 
@@ -139,7 +138,7 @@ internal open class NotificationImpl21 @Inject constructor(
     }
 
     private fun buildContentIntent(): PendingIntent {
-        val intent = Intent(service, classes.mainActivity())
+        val intent = Intent(service, Classes.mainActivity)
         intent.action = PendingIntents.ACTION_CONTENT_VIEW
         return intent.asActivityPendingIntent(service)
     }

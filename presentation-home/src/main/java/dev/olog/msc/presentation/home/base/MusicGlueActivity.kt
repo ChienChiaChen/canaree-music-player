@@ -29,12 +29,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 abstract class MusicGlueActivity : BaseActivity(), MediaProvider, CoroutineScope by MainScope() {
-
-    @Inject
-    internal lateinit var classes: Classes
 
     private lateinit var mediaBrowser: MediaBrowserCompat
     private lateinit var callback: MediaControllerCompat.Callback
@@ -58,7 +54,7 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider, CoroutineScope
 
         mediaBrowser = MediaBrowserCompat(
             this,
-            ComponentName(this, classes.musicService()),
+            ComponentName(this, Classes.musicService),
             MusicServiceConnection(this), null
         )
 

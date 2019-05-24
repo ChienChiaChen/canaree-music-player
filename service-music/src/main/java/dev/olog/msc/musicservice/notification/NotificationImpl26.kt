@@ -8,7 +8,6 @@ import android.support.v4.media.session.MediaSessionCompat
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import dagger.Lazy
-import dev.olog.msc.core.Classes
 import dev.olog.msc.musicservice.R
 import javax.inject.Inject
 
@@ -16,10 +15,9 @@ import javax.inject.Inject
 internal class NotificationImpl26 @Inject constructor(
     service: Service,
     token: MediaSessionCompat.Token,
-    notificationManager: Lazy<NotificationManager>,
-    classes: Classes
+    notificationManager: Lazy<NotificationManager>
 
-) : NotificationImpl24(service, token, notificationManager, classes) {
+) : NotificationImpl24(service, token, notificationManager) {
 
     override fun extendInitialization() {
         builder.setColorized(true)

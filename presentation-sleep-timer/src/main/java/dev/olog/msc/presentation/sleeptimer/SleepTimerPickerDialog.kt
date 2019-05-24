@@ -36,8 +36,6 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
     lateinit var alarmManager: AlarmManager
     @Inject
     lateinit var sleepTimerUseCase: SleepTimerUseCase
-    @Inject
-    lateinit var classes: Classes
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = super.onCreateView(inflater, container, savedInstanceState)!!
@@ -151,7 +149,7 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
     }
 
     private fun resetAlarmManager() {
-        val intent = PendingIntents.stopMusicServiceIntent(context!!, classes.musicService())
+        val intent = PendingIntents.stopMusicServiceIntent(context!!, Classes.musicService)
         alarmManager.cancel(intent)
     }
 
@@ -161,7 +159,7 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
                 TimeUnit.MINUTES.toMillis(minutes.toLong()) +
                 TimeUnit.SECONDS.toMillis(seconds.toLong())
 
-        val intent = PendingIntents.stopMusicServiceIntent(context!!, classes.musicService())
+        val intent = PendingIntents.stopMusicServiceIntent(context!!, Classes.musicService)
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, nextSleep, intent)
     }
 

@@ -20,8 +20,7 @@ import kotlinx.coroutines.*
 
 internal abstract class BaseAppShortcuts(
     protected val context: Context,
-    @ProcessLifecycle lifecycle: Lifecycle,
-    protected val classes: Classes
+    @ProcessLifecycle lifecycle: Lifecycle
 
 ) : AppShortcuts, DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
@@ -36,7 +35,7 @@ internal abstract class BaseAppShortcuts(
 
             job?.cancel()
             job = launch {
-                val intent = Intent(context, classes.mainActivity())
+                val intent = Intent(context, Classes.mainActivity)
                 intent.action = ShortcutsConstants.SHORTCUT_DETAIL
                 intent.putExtra(ShortcutsConstants.SHORTCUT_DETAIL_MEDIA_ID, mediaId.toString())
 

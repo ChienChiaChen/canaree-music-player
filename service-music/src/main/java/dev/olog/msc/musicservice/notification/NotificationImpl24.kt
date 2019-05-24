@@ -7,7 +7,6 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.text.SpannableString
 import androidx.annotation.RequiresApi
 import dagger.Lazy
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.shared.utils.TextUtils
@@ -17,10 +16,9 @@ import javax.inject.Inject
 internal open class NotificationImpl24 @Inject constructor(
     service: Service,
     token: MediaSessionCompat.Token,
-    notificationManager: Lazy<NotificationManager>,
-    classes: Classes
+    notificationManager: Lazy<NotificationManager>
 
-) : NotificationImpl21(service, token, notificationManager, classes) {
+) : NotificationImpl21(service, token, notificationManager) {
 
     override fun startChronometer(bookmark: Long) {
         builder.setWhen(System.currentTimeMillis() - bookmark)

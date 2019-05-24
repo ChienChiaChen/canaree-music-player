@@ -39,8 +39,7 @@ class PlayingQueueFragment : BaseFragment(), OnStartDragListener {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject
     lateinit var navigator: Navigator
-    @Inject
-    lateinit var classes: Classes
+
     private lateinit var layoutManager: LinearLayoutManager
 
     private val adapter by lazyFast { PlayingQueueFragmentAdapter(navigator, this) }
@@ -69,7 +68,7 @@ class PlayingQueueFragment : BaseFragment(), OnStartDragListener {
 
         viewModel.data.subscribe(viewLifecycleOwner) {
             adapter.submitList(it) {
-                if (!emitted){
+                if (!emitted) {
                     layoutManager.scrollToPositionWithOffset(viewModel.getCurrentPosition(), ctx.dip(20))
                     emitted = true
                 }
@@ -97,7 +96,7 @@ class PlayingQueueFragment : BaseFragment(), OnStartDragListener {
     }
 
     private fun startServiceOrRequestOverlayPermission() {
-        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, classes.floatingWindowService())
+        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Classes.floatingWindowService)
     }
 
     override fun provideLayoutId(): Int = R.layout.fragment_playing_queue

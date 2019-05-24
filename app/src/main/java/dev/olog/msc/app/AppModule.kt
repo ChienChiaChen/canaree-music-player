@@ -12,14 +12,11 @@ import dagger.Provides
 import dev.olog.msc.LastFmEncrypter
 import dev.olog.msc.LyricsFromMetadata
 import dev.olog.msc.PrefsKeysImpl
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.IEncrypter
 import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
-import dev.olog.msc.floatingwindowservice.FloatingWindowService
-import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.offlinelyrics.domain.ILyricsFromMetadata
 import dev.olog.msc.presentation.base.theme.dark.mode.DarkMode
 import dev.olog.msc.presentation.base.theme.dark.mode.IDarkMode
@@ -27,9 +24,6 @@ import dev.olog.msc.presentation.base.theme.immersive.IImmersive
 import dev.olog.msc.presentation.base.theme.immersive.Immersive
 import dev.olog.msc.presentation.base.theme.player.theme.IPlayerTheme
 import dev.olog.msc.presentation.base.theme.player.theme.PlayerTheme
-import dev.olog.msc.presentation.home.MainActivity
-import dev.olog.msc.presentation.shortcuts.ShortcutsActivity
-import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivity
 import javax.inject.Singleton
 
 @Module
@@ -76,18 +70,6 @@ class AppModule(private val app: App) {
     @Singleton
     fun provideEncryoter(impl: LastFmEncrypter): IEncrypter {
         return impl
-    }
-
-    @Provides
-    fun provideClasses(): Classes {
-        return object : Classes {
-            override fun mainActivity(): Class<*> = MainActivity::class.java
-            override fun musicService(): Class<*> = MusicService::class.java
-            override fun floatingWindowService(): Class<*> = FloatingWindowService::class.java
-            override fun shortcutActivity(): Class<*> = ShortcutsActivity::class.java
-            override fun playlistChooser(): Class<*> = PlaylistChooserActivity::class.java
-
-        }
     }
 
     @Provides

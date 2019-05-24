@@ -61,8 +61,6 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService(), CoroutineScop
     @Suppress("unused")
     @Inject
     internal lateinit var lastFmScrobbling: LastFmScrobbling
-    @Inject
-    internal lateinit var classes: Classes
 
     override fun onCreate() {
         super.onCreate()
@@ -229,7 +227,7 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService(), CoroutineScop
     private fun buildSessionActivityPendingIntent(): PendingIntent {
         return PendingIntent.getActivity(
             this, 0,
-            Intent(this, classes.mainActivity()::class.java), PendingIntent.FLAG_CANCEL_CURRENT
+            Intent(this, Classes.mainActivity), PendingIntent.FLAG_CANCEL_CURRENT
         )
     }
 }

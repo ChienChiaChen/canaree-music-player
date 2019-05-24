@@ -23,6 +23,7 @@ dependencies {
     implementation project(':presentation-navigator')
 
     implementation librariesCore.daggerAndroid
+    implementation librariesCore.daggerAndroidSupport
 
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions

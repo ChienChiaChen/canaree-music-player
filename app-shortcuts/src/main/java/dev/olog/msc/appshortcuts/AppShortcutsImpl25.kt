@@ -18,10 +18,9 @@ import dev.olog.msc.shared.utils.isNougat_MR1
 @RequiresApi(Build.VERSION_CODES.N_MR1)
 internal open class AppShortcutsImpl25(
         context: Context,
-        @ProcessLifecycle lifecycle: Lifecycle,
-        classes: Classes
+        @ProcessLifecycle lifecycle: Lifecycle
 
-) : BaseAppShortcuts(context, lifecycle, classes) {
+) : BaseAppShortcuts(context, lifecycle) {
 
     protected val shortcutManager : ShortcutManager = context.getSystemService<ShortcutManager>()!!
 
@@ -77,25 +76,25 @@ internal open class AppShortcutsImpl25(
     }
 
     private fun createSearchIntent(): Intent {
-        val intent = Intent(context, classes.mainActivity())
+        val intent = Intent(context, Classes.mainActivity)
         intent.action = ShortcutsConstants.SHORTCUT_SEARCH
         return intent
     }
 
     private fun createPlayIntent(): Intent {
-        val intent = Intent(context, classes.shortcutActivity())
+        val intent = Intent(context, Classes.shortcutActivity)
         intent.action = MusicConstants.ACTION_PLAY
         return intent
     }
 
     private fun createShuffleIntent(): Intent {
-        val intent = Intent(context, classes.shortcutActivity())
+        val intent = Intent(context, Classes.shortcutActivity)
         intent.action = MusicConstants.ACTION_SHUFFLE
         return intent
     }
 
     private fun createPlaylistChooserIntent(): Intent {
-        val intent = Intent(context, classes.playlistChooser())
+        val intent = Intent(context, Classes.playlistChooser)
         intent.action = ShortcutsConstants.SHORTCUT_PLAYLIST_CHOOSER
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         return intent

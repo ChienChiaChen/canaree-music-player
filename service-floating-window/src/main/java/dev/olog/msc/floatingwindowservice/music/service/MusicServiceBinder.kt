@@ -30,13 +30,12 @@ import javax.inject.Inject
 @PerService
 internal class MusicServiceBinder @Inject constructor(
     @ApplicationContext private val context: Context,
-    @ServiceLifecycle lifecycle: Lifecycle,
-    classes: Classes
+    @ServiceLifecycle lifecycle: Lifecycle
 
 ) : DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
     private val mediaBrowser = MediaBrowserCompat(
-        context, ComponentName(context, classes.musicService()),
+        context, ComponentName(context, Classes.musicService),
         FloatingMusicConnection(this), null
     )
     private val publisher = BroadcastChannel<MusicServiceConnectionState>(Channel.CONFLATED)

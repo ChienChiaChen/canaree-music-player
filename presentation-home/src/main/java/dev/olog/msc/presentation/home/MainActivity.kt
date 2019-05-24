@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.*
+import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.FragmentTags
@@ -184,7 +185,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     private fun handleIntent(intent: Intent) {
         when (intent.action) {
             FloatingWindowsConstants.ACTION_START_SERVICE -> {
-                FloatingWindowHelper.startServiceIfHasOverlayPermission(this, classes.musicService())
+                FloatingWindowHelper.startServiceIfHasOverlayPermission(this, Classes.musicService)
             }
             ShortcutsConstants.SHORTCUT_SEARCH -> {
                 bottomNavigation.selectedItemId = R.id.navigation_search
@@ -192,7 +193,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
             }
             PendingIntents.ACTION_CONTENT_VIEW -> slidingPanel.expand()
             MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH -> {
-                val serviceIntent = Intent(this, classes.musicService())
+                val serviceIntent = Intent(this, Classes.musicService)
                 serviceIntent.action = MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH
                 ContextCompat.startForegroundService(this, serviceIntent)
             }
@@ -202,7 +203,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
                 navigator.toDetailFragment(this, mediaId)
             }
             Intent.ACTION_VIEW -> {
-                val serviceIntent = Intent(this, classes.musicService())
+                val serviceIntent = Intent(this, Classes.musicService)
                 serviceIntent.action = MusicConstants.ACTION_PLAY_FROM_URI
                 serviceIntent.data = intent.data
                 ContextCompat.startForegroundService(this, serviceIntent)
@@ -221,7 +222,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == FloatingWindowHelper.REQUEST_CODE_HOVER_PERMISSION) {
-            FloatingWindowHelper.startServiceIfHasOverlayPermission(this, classes.floatingWindowService())
+            FloatingWindowHelper.startServiceIfHasOverlayPermission(this, Classes.floatingWindowService)
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }

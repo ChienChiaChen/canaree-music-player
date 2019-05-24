@@ -35,13 +35,12 @@ class CategoriesFragment : BaseFragment() {
     @Inject
     lateinit var navigator: Navigator
     @Inject
-    lateinit var classes: Classes
-    @Inject lateinit var prefsGateway: AppPreferencesGateway
+    lateinit var prefsGateway: AppPreferencesGateway
 
     private val pagerAdapter by lazyFast {
         CategoriesViewPager(
-                act.applicationContext, childFragmentManager,
-                presenter.getCategories(), prefsGateway
+            act.applicationContext, childFragmentManager,
+            presenter.getCategories(), prefsGateway
         )
     }
 
@@ -53,10 +52,10 @@ class CategoriesFragment : BaseFragment() {
 
         view.pagerEmptyState.toggleVisibility(pagerAdapter.isEmpty(), true)
 
-        if (BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             view.header.setOnClickListener {
                 val current = AppCompatDelegate.getDefaultNightMode()
-                if (current == AppCompatDelegate.MODE_NIGHT_NO){
+                if (current == AppCompatDelegate.MODE_NIGHT_NO) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -64,7 +63,7 @@ class CategoriesFragment : BaseFragment() {
                 activity?.recreate()
             }
             view.header.setOnLongClickListener {
-//                DebugProbes.dumpCoroutines()
+                //                DebugProbes.dumpCoroutines()
                 true
             }
         }
@@ -76,7 +75,7 @@ class CategoriesFragment : BaseFragment() {
         more.setOnClickListener {
             try {
                 navigator.toMainPopup(requireActivity(), it, createMediaId())
-            } catch (ex: Exception){
+            } catch (ex: Exception) {
                 ex.printStackTrace()
             }
         }
@@ -99,7 +98,7 @@ class CategoriesFragment : BaseFragment() {
     }
 
     private fun startServiceOrRequestOverlayPermission() {
-        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, classes.floatingWindowService())
+        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Classes.floatingWindowService)
     }
 
     private val onPageChangeListener = object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
