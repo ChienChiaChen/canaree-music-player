@@ -7,7 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dev.olog.msc.presentation.base.R
-import dev.olog.msc.presentation.base.utils.ImeUtils
+import dev.olog.msc.presentation.base.utils.showKeyboard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -35,7 +35,7 @@ abstract class BaseEditTextDialog : BaseDialog() {
         showJeyboardJob?.cancel()
         showJeyboardJob = launch {
             delay(500)
-            ImeUtils.showIme(editText)
+            editText.showKeyboard()
         }
     }
 

@@ -14,7 +14,7 @@ import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
-import dev.olog.msc.presentation.base.utils.ImeUtils
+import dev.olog.msc.presentation.base.utils.hideKeyboard
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
@@ -123,7 +123,7 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
         super.onResume()
 //        sidebar.setListener(letterTouchListener) TODO
         back.setOnClickListener {
-            ImeUtils.hideIme(filter)
+            filter.hideKeyboard()
             act.onBackPressed()
         }
         save.setOnClickListener {

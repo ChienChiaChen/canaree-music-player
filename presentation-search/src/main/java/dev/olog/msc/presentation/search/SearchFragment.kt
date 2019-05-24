@@ -17,19 +17,25 @@ import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.list.SetupNestedList
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
-import dev.olog.msc.presentation.base.utils.ImeUtils
+import dev.olog.msc.presentation.base.utils.hideKeyboard
+import dev.olog.msc.presentation.base.utils.showKeyboard
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.search.adapters.SearchFragmentAdapter
 import dev.olog.msc.presentation.search.adapters.SearchFragmentNestedAdapter
+import dev.olog.msc.shared.core.flow.debounceFirst
 import dev.olog.msc.shared.core.lazyFast
+import dev.olog.msc.shared.ui.bindinds.afterTextChange
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import javax.inject.Inject
 
-class SearchFragment : BaseFragment(), SetupNestedList {
+class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainScope() {
 
     companion object {
         const val TAG = "SearchFragment"
@@ -42,11 +48,7 @@ class SearchFragment : BaseFragment(), SetupNestedList {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazyFast {
-        viewModelProvider<SearchFragmentViewModel>(
-            viewModelFactory
-        )
-    }
+    private val viewModel by lazyFast { viewModelProvider<SearchFragmentViewModel>(viewModelFactory) }
 
     private lateinit var layoutManager: LinearLayoutManager
 
@@ -57,12 +59,7 @@ class SearchFragment : BaseFragment(), SetupNestedList {
     private val albumAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
     private val artistAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
     private val genreAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
-    private val playlistAdapter by lazyFast {
-        SearchFragmentNestedAdapter(
-            navigator,
-            viewModel
-        )
-    }
+    private val playlistAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
     private val folderAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
 
     private val mainDataObserver by lazyFast { MainDataObserver() }
@@ -71,7 +68,7 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         val fragmentManager = activity?.supportFragmentManager
         act.fragmentTransaction {
             fragmentManager?.findFragmentByTag(FragmentTags.DETAIL)?.let { show(it) }
-                ?: fragmentManager!!.findFragmentByTag(FragmentTags.CATEGORIES)?.let { show(it) }
+                    ?: fragmentManager!!.findFragmentByTag(FragmentTags.CATEGORIES)?.let { show(it) }
             setReorderingAllowed(true)
         }
         super.onDetach()
@@ -94,21 +91,23 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         viewModel.playlistData.subscribe(viewLifecycleOwner, playlistAdapter::submitList)
         viewModel.genreData.subscribe(viewLifecycleOwner, genreAdapter::submitList)
 
-//        RxTextView.afterTextChangeEvents(view.editText) TODO
-//            .debounceFirst(250, TimeUnit.MILLISECONDS)
-//            .map { it.editable()!!.toString() }
-//            .filter { it.isBlank() || it.trim().length >= 2 }
-//            .distinctUntilChanged()
-//            .asLiveData()
-//            .subscribe(viewLifecycleOwner) {
-//                viewModel.updateFilter(it)
-//            }
+        launch {
+            view.editText.afterTextChange()
+                    .debounceFirst(250)
+                    .filter { it.isBlank() || it.trim().length >= 2 }
+                    .distinctUntilChanged()
+                    .collect { viewModel.updateFilter(it) }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cancel()
     }
 
     override fun onResume() {
         super.onResume()
-//        act.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING) TOOD is needed?
-        keyboard.setOnClickListener { ImeUtils.showIme(editText) }
+        keyboard.setOnClickListener { editText.showKeyboard() }
 
         floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
         more.setOnClickListener { navigator.toMainPopup(requireActivity(), it, null) }
@@ -148,8 +147,8 @@ class SearchFragment : BaseFragment(), SetupNestedList {
 
     private fun setupHorizontalList(list: RecyclerView, adapter: RecyclerView.Adapter<*>) {
         val layoutManager = LinearLayoutManager(
-            list.context,
-            LinearLayoutManager.HORIZONTAL, false
+                list.context,
+                LinearLayoutManager.HORIZONTAL, false
         )
         list.layoutManager = layoutManager
         list.adapter = adapter
@@ -213,7 +212,7 @@ class SearchFragment : BaseFragment(), SetupNestedList {
 
     override fun onStop() {
         super.onStop()
-        ImeUtils.hideIme(editText)
+        editText.hideKeyboard()
     }
 
     override fun provideLayoutId(): Int = R.layout.fragment_search
