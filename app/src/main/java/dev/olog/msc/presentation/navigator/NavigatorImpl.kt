@@ -293,7 +293,11 @@ class NavigatorImpl @Inject internal constructor(
     }
 
     override fun toMainPopup(activity: FragmentActivity, anchor: View, category: MediaIdCategory?) {
-        mainPopup.show(activity, anchor, category)
+        try {
+            mainPopup.show(activity, anchor, category)
+        } catch (ex: Exception){
+            ex.printStackTrace()
+        }
     }
 
     private fun allowed(): Boolean {

@@ -56,13 +56,7 @@ class CategoriesPodcastFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        more.setOnClickListener {
-            try {
-                navigator.toMainPopup(requireActivity(), it, createMediaId())
-            } catch (ex: Exception) {
-                ex.printStackTrace()
-            }
-        }
+        more.setOnClickListener { navigator.toMainPopup(requireActivity(), it, createMediaId()) }
         floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
         viewPager.addOnPageChangeListener(onPageChangeListener)
     }

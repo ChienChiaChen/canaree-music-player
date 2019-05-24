@@ -83,13 +83,7 @@ class PlayingQueueFragment : BaseFragment(), OnStartDragListener {
 
     override fun onResume() {
         super.onResume()
-        more.setOnClickListener {
-            try {
-                navigator.toMainPopup(requireActivity(), it, MediaIdCategory.PLAYING_QUEUE)
-            } catch (ex: Throwable) {
-                ex.printStackTrace()
-            }
-        }
+        more.setOnClickListener { navigator.toMainPopup(requireActivity(), it, MediaIdCategory.PLAYING_QUEUE) }
         floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
     }
 

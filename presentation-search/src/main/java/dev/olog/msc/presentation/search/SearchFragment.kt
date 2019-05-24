@@ -111,13 +111,7 @@ class SearchFragment : BaseFragment(), SetupNestedList {
         keyboard.setOnClickListener { ImeUtils.showIme(editText) }
 
         floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
-        more.setOnClickListener {
-            try {
-                navigator.toMainPopup(requireActivity(), it, null)
-            } catch (ex: Throwable) {
-                ex.printStackTrace()
-            }
-        }
+        more.setOnClickListener { navigator.toMainPopup(requireActivity(), it, null) }
 
         adapter.registerAdapterDataObserver(mainDataObserver)
     }
