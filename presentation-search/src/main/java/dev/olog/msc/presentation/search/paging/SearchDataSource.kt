@@ -68,11 +68,9 @@ internal class SearchDataSource @Inject constructor(
         } else {
             val headers = mutableListOf<DisplayableItem>()
 
-            val albumsSize = albumGateway.getAll()
-                .getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ALBUM, Filter.By.ARTIST)))
+            val albumsSize = albumGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ALBUM, Filter.By.ARTIST)))
             val artistsSize = artistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ARTIST)))
-            val playlistsSize =
-                playlistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
+            val playlistsSize = playlistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
             val foldersSize = folderGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
             val genresSize = genreGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
             val songsSize = songGateway.getAll().getCount(filterRequest)
@@ -81,7 +79,7 @@ internal class SearchDataSource @Inject constructor(
                 headers.addAll(displayableHeaders.albumsHeaders(albumsSize))
             }
             if (artistsSize > 0) {
-                headers.addAll(displayableHeaders.artistsHeaders(albumsSize))
+                headers.addAll(displayableHeaders.artistsHeaders(artistsSize))
             }
             if (playlistsSize > 0) {
                 headers.addAll(displayableHeaders.playlistsHeaders(albumsSize))
@@ -93,7 +91,7 @@ internal class SearchDataSource @Inject constructor(
                 headers.addAll(displayableHeaders.genreHeaders(genresSize))
             }
             if (songsSize > 0) {
-                headers.add(displayableHeaders.songsHeaders(genresSize))
+                headers.add(displayableHeaders.songsHeaders(songsSize))
             }
             return headers
         }
