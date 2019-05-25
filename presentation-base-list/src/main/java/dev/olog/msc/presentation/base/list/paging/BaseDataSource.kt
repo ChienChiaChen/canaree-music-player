@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.base.list.paging
 
 import androidx.annotation.CallSuper
+import androidx.core.math.MathUtils
 import androidx.paging.PositionalDataSource
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Page
@@ -19,7 +20,7 @@ abstract class BaseDataSource<PresentationModel> :
 
     abstract fun onAttach()
 
-    fun onDetach(){
+    fun onDetach() {
         cancel()
     }
 
@@ -47,14 +48,19 @@ abstract class BaseDataSource<PresentationModel> :
 
             val result = mutableListOf<PresentationModel>()
             result.addAll(headers)
-            result.addAll(
-                loadInternal(
-                    Request(
-                        Page(params.requestedStartPosition, params.requestedLoadSize - headers.size),
-                        Filter.NO_FILTER
-                    )
-                )
+
+            val safeStartPosition = MathUtils.clamp(
+                params.requestedStartPosition,
+                0,
+                mainDataSize
             )
+            val safeLoadSize = MathUtils.clamp(
+                params.requestedLoadSize - headers.size,
+                0,
+                mainDataSize
+            )
+
+            result.addAll(loadInternal(Request(Page(safeStartPosition, safeLoadSize), Filter.NO_FILTER)))
             tryAddFooter(result, params.requestedLoadSize)
             callback.onResult(result, 0, mainDataSize + headers.size + footerSize)
         }
