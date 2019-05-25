@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
-
+apply from: '../kapt.gradle'
 
 android {
 
@@ -72,14 +72,6 @@ android {
     lintOptions {
         checkReleaseBuilds false
         disable 'MissingTranslation'
-    }
-
-    kapt {
-        javacOptions {
-            option("-Xmaxerrs", 500)
-            correctErrorTypes = true
-            option("-Adagger.gradle.incremental")
-        }
     }
 
 }
