@@ -34,18 +34,6 @@ android {
         }
     }
 
-    flavorDimensions "version"
-
-    productFlavors {
-        dev {
-            resConfigs "en", "xxhdpi"
-            dimension "version"
-        }
-        prod {
-            dimension "version"
-        }
-    }
-
     buildTypes {
 
         release {
@@ -90,6 +78,7 @@ android {
         javacOptions {
             option("-Xmaxerrs", 500)
             correctErrorTypes = true
+            option("-Adagger.gradle.incremental")
         }
     }
 

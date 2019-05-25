@@ -32,6 +32,14 @@ android {
         preDexLibraries true
     }
 
+    kapt {
+        javacOptions {
+            option("-Xmaxerrs", 500)
+            correctErrorTypes = true
+            option("-Adagger.gradle.incremental")
+        }
+    }
+
 }
 
 dependencies {
