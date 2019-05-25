@@ -24,6 +24,7 @@ import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.SetupNestedList
 import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
+import dev.olog.msc.presentation.base.ripple.RippleTarget
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
@@ -45,10 +46,10 @@ import javax.inject.Inject
 import kotlin.properties.Delegates
 
 class DetailFragment : BaseFragment(),
-        CanChangeStatusBarColor,
-        SetupNestedList,
-        OnStartDragListener,
-        CoroutineScope by MainScope() {
+    CanChangeStatusBarColor,
+    SetupNestedList,
+    OnStartDragListener,
+    CoroutineScope by MainScope() {
 
     companion object {
         const val TAG = "DetailFragment"
@@ -57,7 +58,7 @@ class DetailFragment : BaseFragment(),
         @JvmStatic
         fun newInstance(mediaId: MediaId): DetailFragment {
             return DetailFragment().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString()
+                ARGUMENTS_MEDIA_ID to mediaId.toString()
             )
         }
     }
@@ -122,10 +123,10 @@ class DetailFragment : BaseFragment(),
 
         launch {
             view.editText.afterTextChange()
-                    .filter { it.isBlank() || it.trim().length >= 2 }
-                    .debounceFirst(200)
-                    .distinctUntilChanged()
-                    .collect { viewModel.updateFilter(it) }
+                .filter { it.isBlank() || it.trim().length >= 2 }
+                .debounceFirst(200)
+                .distinctUntilChanged()
+                .collect { viewModel.updateFilter(it) }
         }
     }
 
@@ -156,32 +157,36 @@ class DetailFragment : BaseFragment(),
         postponeEnterTransition()
         val context = view.context
         GlideApp.with(context)
-                .load(mediaId)
-                .priority(Priority.IMMEDIATE)
-                .onlyRetrieveFromCache(true)
-                .error(CoverUtils.getGradient(context, mediaId))
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                    ): Boolean {
-                        startPostponedEnterTransition()
-                        return false
-                    }
+            .load(mediaId)
+            .priority(Priority.IMMEDIATE)
+            .onlyRetrieveFromCache(true)
+            .error(CoverUtils.getGradient(context, mediaId))
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    startPostponedEnterTransition()
+                    return false
+                }
 
-                    override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                    ): Boolean {
-                        startPostponedEnterTransition()
-                        return false
-                    }
-                }).into(view.cover)
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    startPostponedEnterTransition()
+                    return false
+                }
+            })
+            .into(RippleTarget(view.cover))
+
+        // setup for parallax
+        view.list.setView(view.cover)
     }
 
     override fun setupNestedList(layoutId: Int, recyclerView: RecyclerView) {
@@ -203,8 +208,8 @@ class DetailFragment : BaseFragment(),
 
     private fun setupHorizontalListAsGrid(list: RecyclerView, adapter: BasePagedAdapter<*>) {
         val layoutManager = GridLayoutManager(
-                list.context, DetailFragmentViewModel.NESTED_SPAN_COUNT,
-                GridLayoutManager.HORIZONTAL, false
+            list.context, DetailFragmentViewModel.NESTED_SPAN_COUNT,
+            GridLayoutManager.HORIZONTAL, false
         )
         list.layoutManager = layoutManager
         list.adapter = adapter

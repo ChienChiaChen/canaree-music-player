@@ -37,7 +37,7 @@
             android:padding="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/detail_see_all"
-            android:textColor="?attr/colorAccent"
+            android:textColor="?attr/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{item.extra.getBoolean(`visible`) ? View.VISIBLE : View.GONE }"

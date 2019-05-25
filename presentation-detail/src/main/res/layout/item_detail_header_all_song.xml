@@ -34,9 +34,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sortImage"
             android:text="@{item.subtitle}"
-            tools:text="@string/detail_sort_by"
+            tools:text="sort by"
             android:textSize="@dimen/item_header_sec_text_size"
-            android:textColor="?attr/colorAccent"
+            android:textColor="?attr/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="12dp"
@@ -54,8 +54,7 @@
             tools:src="@drawable/vd_arrow_up"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:tint="?attr/colorAccent"
-            android:padding="6dp"
+            android:tint="?attr/colorPrimary"
             android:layout_marginEnd="12dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ParallaxView">
-        <attr name="parallax" format="float"/>
+    <declare-styleable name="ParallaxImageView">
+        <attr name="parallax" format="integer"/>
+        <attr name="max_scrim_alpha_255" format="integer"/>
     </declare-styleable>
 </resources>
