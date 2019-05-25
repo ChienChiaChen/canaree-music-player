@@ -56,10 +56,8 @@ internal class TabFragmentViewModel @Inject constructor(
     fun observeData(category: MediaIdCategory): LiveData<PagedList<DisplayableItem>> {
         return liveDataList.getOrPut(category) {
             val isLongList = category == MediaIdCategory.SONGS || category == MediaIdCategory.PODCASTS
-            val pageSize = if (isLongList) 30 else 15
             val config = PagedList.Config.Builder()
-                .setPageSize(pageSize)
-                .setInitialLoadSizeHint(pageSize * 2)
+                .setPageSize(if (isLongList) 30 else 15)
                 .setEnablePlaceholders(true)
                 .build()
             LivePagedListBuilder(getFactory(category), config).build()

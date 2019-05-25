@@ -67,13 +67,11 @@ internal class DetailFragmentViewModel @Inject constructor(
 
     init {
         val config = PagedList.Config.Builder()
-            .setPageSize(20)
-            .setInitialLoadSizeHint(20)
+            .setPageSize(30)
             .setEnablePlaceholders(true)
             .build()
         val miniConfig = PagedList.Config.Builder()
-            .setInitialLoadSizeHint(8)
-            .setPageSize(4)
+            .setPageSize(10)
             .setEnablePlaceholders(true)
             .build()
         data = LivePagedListBuilder(detailDataSource, config).build()
