@@ -25,6 +25,8 @@ import dev.olog.msc.presentation.base.list.SetupNestedList
 import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.ripple.RippleTarget
+import dev.olog.msc.presentation.base.utils.hideKeyboard
+import dev.olog.msc.presentation.base.utils.showKeyboard
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
@@ -142,6 +144,11 @@ class DetailFragment : BaseFragment(),
         more.setOnClickListener { navigator.toDialog(viewModel.mediaId, more) }
         filter.setOnClickListener {
             searchWrapper.toggleVisibility(!searchWrapper.isVisible, true)
+            if (searchWrapper.isVisible){
+                editText.showKeyboard()
+            } else {
+                editText.hideKeyboard()
+            }
         }
     }
 
