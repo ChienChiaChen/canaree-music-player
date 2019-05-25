@@ -20,12 +20,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
-            }
-        }
     }
 
     bundle {
@@ -56,8 +50,6 @@ android {
 
         release {
             minifyEnabled true
-            useProguard true
-            multiDexEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [enableCrashReporting:"true"]
@@ -68,8 +60,6 @@ android {
 
         debug {
             minifyEnabled false
-            useProguard false
-            multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
             manifestPlaceholders = [enableCrashReporting:"false"]
@@ -103,9 +93,6 @@ android {
         }
     }
 
-    sourceSets {
-        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
-    }
 }
 
 dependencies {
