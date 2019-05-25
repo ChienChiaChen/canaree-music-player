@@ -94,9 +94,6 @@ class SwipeableView(
     private fun onActionDown(event: MotionEvent) : Boolean{
         xDown = event.x
         yDown = event.y
-        cover?.dispatchTouchEvent(event)
-        val upEvent = MotionEvent.obtain(event).apply { this.action = MotionEvent.ACTION_UP }
-        cover?.dispatchTouchEvent(upEvent)
         return true
     }
 
@@ -135,6 +132,7 @@ class SwipeableView(
                 ((width - xDown) < sixtyFourDip) && isTouchEnabled-> swipeListener?.onRightEdgeClick()
                 else -> {
                     if (isTouchEnabled){
+                        requestRipple(event)
                         swipeListener?.onClick()
                     }
                 }
@@ -142,6 +140,13 @@ class SwipeableView(
             return true
         }
         return false
+    }
+
+    private fun requestRipple(event: MotionEvent){
+        val downEvent = MotionEvent.obtain(event).apply { this.action = MotionEvent.ACTION_DOWN }
+        cover?.dispatchTouchEvent(downEvent)
+        downEvent.recycle()
+        cover?.dispatchTouchEvent(event)
     }
 
     override fun onPanelSlide(panel: View?, slideOffset: Float) {
