@@ -1,25 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
-apply from: '../kapt.gradle'
+apply from: '../base_module.gradle'
 
 android {
 
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
-
     defaultConfig {
         applicationId "dev.olog.msc"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        vectorDrawables.useSupportLibrary = true
     }
 
     bundle {
@@ -53,20 +42,13 @@ android {
             manifestPlaceholders = [enableCrashReporting:"false"]
 //            debuggable false
 
+            ext.enableCrashlytics = false
+
             buildConfigField 'String', "AES_PASSWORD", aes_password
         }
     }
 
     dataBinding.enabled = true
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    dexOptions {
-        preDexLibraries true
-    }
 
 
     lintOptions {
@@ -127,7 +109,7 @@ dependencies {
 
 
     // data binding
-//    kapt librariesUi.dataBinding
+    kapt librariesUi.dataBinding // TODO remove after moving playlist chooser actiivty
 
     // kotlin
     implementation librariesCore.kotlin
