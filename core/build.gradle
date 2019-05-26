@@ -1,2 +1,13 @@
-apply plugin: 'com.android.library'
-apply from: '../base_module.gradle'
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation project(':shared-core')
+
+    implementation librariesCore.kotlin
+    implementation librariesCore.dagger
+
+    implementation librariesCore.coroutines
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
