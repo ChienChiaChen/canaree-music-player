@@ -5,7 +5,6 @@ import dagger.android.HasActivityInjector
 import dagger.android.HasBroadcastReceiverInjector
 import dagger.android.HasServiceInjector
 import dagger.android.support.DaggerApplication
-import dev.olog.msc.app.app
 
 abstract class BaseApp : DaggerApplication(),
     HasActivityInjector,
@@ -17,7 +16,6 @@ abstract class BaseApp : DaggerApplication(),
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return
         }
-        app = this
         initializeApp()
     }
 
