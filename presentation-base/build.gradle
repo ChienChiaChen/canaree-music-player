@@ -22,7 +22,7 @@ dependencies {
     implementation project(':pro')
 
     // data binding
-    kapt librariesUi.dataBinding
+//    kapt librariesUi.dataBinding
 
     implementation librariesCore.coroutinesRx
 
