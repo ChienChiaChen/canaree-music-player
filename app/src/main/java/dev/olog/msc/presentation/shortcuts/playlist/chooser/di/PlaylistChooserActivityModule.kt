@@ -5,7 +5,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivityAdapter
+import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivity
 import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivityViewModel
 import dev.olog.msc.shared.dagger.ViewModelKey
 
@@ -13,7 +13,7 @@ import dev.olog.msc.shared.dagger.ViewModelKey
 abstract class PlaylistChooserActivityModule {
 
     @ContributesAndroidInjector
-    abstract fun provideActivity(): PlaylistChooserActivityAdapter
+    abstract fun provideActivity(): PlaylistChooserActivity
 
     @Binds
     @IntoMap
