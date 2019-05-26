@@ -127,7 +127,7 @@ dependencies {
 
 
     // data binding
-    kapt librariesUi.dataBinding
+//    kapt librariesUi.dataBinding
 
     // kotlin
     implementation librariesCore.kotlin

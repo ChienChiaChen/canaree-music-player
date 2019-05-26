@@ -14,7 +14,7 @@ dependencies {
     implementation project(':shared-ui-components')
 
     // data binding
-    kapt librariesUi.dataBinding
+//    kapt librariesUi.dataBinding
 
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleJava8
