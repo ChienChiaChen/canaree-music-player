@@ -6,8 +6,7 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dev.olog.msc.NavigatorModule
 import dev.olog.msc.apilastfm.LastFmModule
-import dev.olog.msc.app.modules.DialogModules
-import dev.olog.msc.app.modules.PresentationModules
+import dev.olog.msc.app.modules.*
 import dev.olog.msc.appshortcuts.AppShortcutsModule
 import dev.olog.msc.appwidgets.di.WidgetBindingModule
 import dev.olog.msc.data.di.PreferenceModule
@@ -17,7 +16,7 @@ import dev.olog.msc.floatingwindowservice.di.FloatingWindowServiceInjector
 import dev.olog.msc.musicservice.di.EqualizerModule
 import dev.olog.msc.musicservice.di.MusicServiceInjector
 import dev.olog.msc.presentation.ViewModelModule
-import dev.olog.msc.presentation.sleeptimer.di.SleepTimerInjector
+import dev.olog.msc.presentation.sleeptimer.di.SleepTimerModule
 import javax.inject.Singleton
 
 @Component(
@@ -35,7 +34,7 @@ import javax.inject.Singleton
         PreferenceModule::class,
 //
 //        // presentation
-        SleepTimerInjector::class,
+        SleepTimerModule::class,
         DialogModules::class,
         PresentationModules::class,
         NavigatorModule::class,

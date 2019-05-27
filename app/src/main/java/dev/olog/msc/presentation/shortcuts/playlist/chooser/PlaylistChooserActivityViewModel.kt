@@ -1,11 +1,13 @@
 package dev.olog.msc.presentation.shortcuts.playlist.chooser
 
+import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.interactor.all.ObserveAllPlaylistsUseCase
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
@@ -18,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PlaylistChooserActivityViewModel @Inject constructor(
-    resources: Resources,
+    @ApplicationContext private val context: Context,
     private val getAllPlaylistsUseCase: ObserveAllPlaylistsUseCase
 ) : ViewModel() {
 
@@ -27,7 +29,7 @@ class PlaylistChooserActivityViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.Default) {
             getAllPlaylistsUseCase.execute()
-                .mapToList { it.toDisplayableItem(resources) }
+                .mapToList { it.toDisplayableItem(context.resources) }
                 .collect { data.value = it }
         }
     }

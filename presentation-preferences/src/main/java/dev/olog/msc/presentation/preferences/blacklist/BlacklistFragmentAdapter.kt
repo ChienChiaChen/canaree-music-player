@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import dev.olog.msc.presentation.base.BR
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
+import dev.olog.msc.presentation.preferences.BR
 import javax.inject.Inject
 
 class BlacklistFragmentAdapter @Inject constructor()

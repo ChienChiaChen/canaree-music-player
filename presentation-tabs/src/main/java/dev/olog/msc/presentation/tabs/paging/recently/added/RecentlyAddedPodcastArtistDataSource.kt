@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.tabs.paging.recently.added
 
-import android.content.res.Resources
+import android.content.Context
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
@@ -15,10 +16,11 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 internal class RecentlyAddedPodcastArtistDataSource @Inject constructor(
-    private val resources: Resources,
+    @ApplicationContext context: Context,
     private val gateway: PodcastArtistGateway
 ) : BaseDataSource<DisplayableItem>() {
 
+    private val resources = context.resources
     private val chunked = gateway.getRecentlyAdded()
 
     override fun onAttach() {

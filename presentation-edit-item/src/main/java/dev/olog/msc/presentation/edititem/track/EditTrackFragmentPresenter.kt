@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.edititem.track
 
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.track.Song
@@ -9,16 +8,12 @@ import dev.olog.msc.core.interactor.item.GetPodcastUseCase
 import dev.olog.msc.core.interactor.item.GetUneditedSongUseCase
 import dev.olog.msc.core.interactor.last.fm.GetLastFmTrackUseCase
 import dev.olog.msc.presentation.edititem.DisplayableSong
-import dev.olog.msc.presentation.edititem.utils.get
 import io.reactivex.Single
 import kotlinx.coroutines.runBlocking
-import org.jaudiotagger.audio.AudioFileIO
-import org.jaudiotagger.tag.FieldKey
 import java.io.File
 import javax.inject.Inject
 
 class EditTrackFragmentPresenter @Inject constructor(
-    private val mediaId: MediaId,
     private val getSongUseCase: GetUneditedSongUseCase,
     private val getPodcastUseCase: GetPodcastUseCase,
     private val getLastFmTrackUseCase: GetLastFmTrackUseCase,
@@ -29,9 +24,9 @@ class EditTrackFragmentPresenter @Inject constructor(
     private lateinit var originalSong: DisplayableSong
 
     fun observeSong(): Single<DisplayableSong> {
-        if (mediaId.isPodcast) {
-            return observePodcastInternal()
-        }
+//        if (mediaId.isPodcast) {
+//            return observePodcastInternal()
+//        }
         return observeSongInternal()
     }
 

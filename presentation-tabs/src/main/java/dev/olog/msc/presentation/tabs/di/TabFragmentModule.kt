@@ -9,7 +9,6 @@ import dev.olog.msc.presentation.tabs.TabFragment
 import dev.olog.msc.presentation.tabs.TabFragmentViewModel
 import dev.olog.msc.shared.dagger.ViewModelKey
 
-// used by MainActivitySubComponent
 @Module
 abstract class TabFragmentModule {
 

@@ -7,10 +7,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.extensions.ctx
-import dev.olog.msc.presentation.base.extensions.extractText
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
-import dev.olog.msc.presentation.edititem.*
+import dev.olog.msc.presentation.edititem.BaseEditItemFragment
+import dev.olog.msc.presentation.edititem.EditItemViewModel
+import dev.olog.msc.presentation.edititem.R
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.C
@@ -44,8 +45,8 @@ class EditAlbumFragment : BaseEditItemFragment() {
             viewModelFactory
         )
     }
-    @Inject
-    lateinit var mediaId: MediaId
+//    @Inject
+//    lateinit var mediaId: MediaId
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
 //        RxTextView.afterTextChangeEvents(view.album)
@@ -82,27 +83,26 @@ class EditAlbumFragment : BaseEditItemFragment() {
     override fun onResume() {
         super.onResume()
         okButton.setOnClickListener {
-            val result = editItemViewModel.updateAlbum(
-                UpdateAlbumInfo(
-                    mediaId,
-                    album.extractText().trim(),
-                    artist.extractText().trim(),
-                    albumArtist.extractText().trim(),
-                    genre.extractText().trim(),
-                    year.extractText().trim(),
-                    viewModel.getNewImage()
-                )
-            )
-
-            when (result) {
-                UpdateResult.OK -> dismiss()
-                UpdateResult.EMPTY_TITLE -> ctx.toast(R.string.edit_song_invalid_title)
-                UpdateResult.ILLEGAL_YEAR -> ctx.toast(R.string.edit_song_invalid_year)
-                UpdateResult.ILLEGAL_DISC_NUMBER,
-                UpdateResult.ILLEGAL_TRACK_NUMBER -> {
-                }
-            }
+//            val result = editItemViewModel.updateAlbum(
+//                UpdateAlbumInfo(
+//                    mediaId,
+//                    album.extractText().trim(),
+//                    artist.extractText().trim(),
+//                    albumArtist.extractText().trim(),
+//                    genre.extractText().trim(),
+//                    year.extractText().trim(),
+//                    viewModel.getNewImage()
+//                )
+//            )
+//
+//            when (result) {
+//                UpdateResult.OK -> dismiss()
+//                UpdateResult.EMPTY_TITLE -> ctx.toast(R.string.edit_song_invalid_title)
+//                UpdateResult.ILLEGAL_YEAR -> ctx.toast(R.string.edit_song_invalid_year)
+//                UpdateResult.ILLEGAL_DISC_NUMBER,
+//                UpdateResult.ILLEGAL_TRACK_NUMBER -> {
         }
+
         cancelButton.setOnClickListener { dismiss() }
         picker.setOnClickListener { changeImage() }
     }

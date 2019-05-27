@@ -1,16 +1,18 @@
 package dev.olog.msc.presentation.tabs
 
-import android.content.res.Resources
-
+import android.content.Context
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class TabFragmentHeaders @Inject constructor(
-        resources: Resources
+        @ApplicationContext context: Context
 ) {
+
+    private val resources = context.resources
 
     val allPlaylistHeader = DisplayableItem(R.layout.item_tab_header,
             MediaId.headerId("all playlist"), resources.getString(R.string.tab_all_playlists))

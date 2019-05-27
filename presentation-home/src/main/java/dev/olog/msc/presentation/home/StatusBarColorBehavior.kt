@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.home
 
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -9,6 +10,7 @@ import dev.olog.msc.presentation.base.extensions.isExpanded
 import dev.olog.msc.presentation.base.extensions.removeLightStatusBar
 import dev.olog.msc.presentation.base.extensions.setLightStatusBar
 import dev.olog.msc.presentation.base.interfaces.CanChangeStatusBarColor
+import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.presentation.base.theme.player.theme.isBigImage
 import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
 import dev.olog.msc.shared.utils.isMarshmallow
@@ -21,7 +23,7 @@ import javax.inject.Inject
  * 2) Entering a CanChangeStatusBarColor fragment (probably only DetailFragment)
  */
 class StatusBarColorBehavior @Inject constructor(
-        private val activity: MainActivity
+        private val activity: AppCompatActivity
 
 ) : DefaultLifecycleObserver,
         SlidingUpPanelLayout.PanelSlideListener,
@@ -36,7 +38,9 @@ class StatusBarColorBehavior @Inject constructor(
             return
         }
 
-        activity.addPanelSlideListener(this)
+        if (activity is HasSlidingPanel){
+            activity.addPanelSlideListener(this)
+        }
         activity.supportFragmentManager.addOnBackStackChangedListener(this)
     }
 
@@ -45,7 +49,9 @@ class StatusBarColorBehavior @Inject constructor(
             return
         }
 
-        activity.removePanelSlideListener(this)
+        if (activity is HasSlidingPanel){
+            activity.removePanelSlideListener(this)
+        }
         activity.supportFragmentManager.removeOnBackStackChangedListener(this)
     }
 

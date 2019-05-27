@@ -1,7 +1,9 @@
 package dev.olog.msc.presentation.related.artists
 
+import android.content.Context
 import android.content.res.Resources
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.core.entity.track.Artist
@@ -17,12 +19,12 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 internal class RelatedArtistsDataSource @Inject constructor(
-    private val resources: Resources,
+    @ApplicationContext context: Context,
     private val relatedArtistsUseCase: GetRelatedArtistsUseCase,
     private val mediaId: MediaId
 
 ) : BaseDataSource<DisplayableItem>() {
-
+    private val resources = context.resources
     private val chunked by lazy { relatedArtistsUseCase.get(mediaId) }
 
     override fun onAttach() {

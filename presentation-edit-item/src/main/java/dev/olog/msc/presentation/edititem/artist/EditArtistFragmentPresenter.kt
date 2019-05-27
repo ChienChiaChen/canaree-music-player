@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.edititem.artist
 
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.podcast.PodcastArtist
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Song
@@ -12,7 +11,6 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class EditArtistFragmentPresenter @Inject constructor(
-    private val mediaId: MediaId,
     private val getArtistUseCase: GetArtistUseCase,
     private val getPodcastArtistUseCase: GetPodcastArtistUseCase,
     private val getSongListByParamUseCase: GetSongListChunkByParamUseCase
@@ -23,9 +21,9 @@ class EditArtistFragmentPresenter @Inject constructor(
     lateinit var songList: List<Song>
 
     fun observeArtist(): Single<DisplayableArtist> {
-        if (mediaId.isPodcastArtist) {
-            return getPodcastArtistInternal()
-        }
+//        if (mediaId.isPodcastArtist) {
+//            return getPodcastArtistInternal()
+//        }
         return getArtistInternal()
     }
 

@@ -5,7 +5,7 @@ import dagger.android.ContributesAndroidInjector
 import dev.olog.msc.presentation.offlinelyrics.OfflineLyricsFragment
 
 @Module
-abstract class OfflineLyricsInjector {
+abstract class OfflineLyricsModule {
     @ContributesAndroidInjector
     abstract fun provideOfflineLyricsFragment(): OfflineLyricsFragment
 }

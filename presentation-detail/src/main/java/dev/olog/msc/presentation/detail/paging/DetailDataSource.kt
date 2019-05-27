@@ -1,7 +1,6 @@
 package dev.olog.msc.presentation.detail.paging
 
 import android.content.Context
-import android.content.res.Resources
 import androidx.paging.DataSource
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
@@ -45,48 +44,47 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 internal class DetailDataSource @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val mediaId: MediaId,
-        private val resources: Resources,
-        private val displayableHeaders: DetailFragmentHeaders,
-        private val folderGateway: FolderGateway,
-        private val playlistGateway: PlaylistGateway,
-        private val albumGateway: AlbumGateway,
-        private val artistGateway: ArtistGateway,
-        private val genreGateway: GenreGateway,
-        private val podcastPlaylistGateway: PodcastPlaylistGateway,
-        private val podcastAlbumGateway: PodcastAlbumGateway,
-        private val podcastArtistGateway: PodcastArtistGateway,
-        private val mostPlayedUseCase: GetMostPlayedSongsUseCase,
-        songListByParamUseCase: GetSongListChunkByParamUseCase,
-        private val recentlyAddedSongUseCase: GetRecentlyAddedSongsUseCase,
-        private val siblingsUseCase: GetSiblingsUseCase,
-        private val relatedArtistsUseCase: GetRelatedArtistsUseCase,
-        private val songDurationUseCase: GetTotalSongDurationUseCase,
-        private val getSortUseCase: GetDetailSortDataUseCase,
-        private val observeSortUseCase: ObserveDetailSortDataUseCase
+    private val mediaId: MediaId,
+    @ApplicationContext private val context: Context,
+    private val displayableHeaders: DetailFragmentHeaders,
+    private val folderGateway: FolderGateway,
+    private val playlistGateway: PlaylistGateway,
+    private val albumGateway: AlbumGateway,
+    private val artistGateway: ArtistGateway,
+    private val genreGateway: GenreGateway,
+    private val podcastPlaylistGateway: PodcastPlaylistGateway,
+    private val podcastAlbumGateway: PodcastAlbumGateway,
+    private val podcastArtistGateway: PodcastArtistGateway,
+    private val mostPlayedUseCase: GetMostPlayedSongsUseCase,
+    songListByParamUseCase: GetSongListChunkByParamUseCase,
+    private val recentlyAddedSongUseCase: GetRecentlyAddedSongsUseCase,
+    private val siblingsUseCase: GetSiblingsUseCase,
+    private val relatedArtistsUseCase: GetRelatedArtistsUseCase,
+    private val songDurationUseCase: GetTotalSongDurationUseCase,
+    private val getSortUseCase: GetDetailSortDataUseCase,
+    private val observeSortUseCase: ObserveDetailSortDataUseCase
 
 
 ) : BaseDataSource<DisplayableItem>() {
-
+    private val resources = context.resources
     private val chunked = songListByParamUseCase.execute(mediaId)
 
     override fun onAttach() {
         launch {
             chunked.observeNotification()
-                    .merge(observeSortUseCase.execute(mediaId).drop(1))
-                    .take(1)
-                    .collect {
-                        invalidate()
-                    }
+                .merge(observeSortUseCase.execute(mediaId).drop(1))
+                .take(1)
+                .collect {
+                    invalidate()
+                }
         }
     }
 
     var filterBy: String = ""
     private val filterRequest by lazy {
         Filter(
-                filterBy,
-                arrayOf(Filter.By.TITLE, Filter.By.ARTIST, Filter.By.ALBUM)
+            filterBy,
+            arrayOf(Filter.By.TITLE, Filter.By.ARTIST, Filter.By.ALBUM)
         )
     }
 
@@ -112,10 +110,10 @@ internal class DetailDataSource @Inject constructor(
         if (recentlyAddedSongUseCase.canShow(mediaId) && filterBy.isBlank()) {
             val recentlyAddedSize = recentlyAddedSongUseCase.get(mediaId).getCount(Filter.NO_FILTER)
             headers.addAll(
-                    this.displayableHeaders.recent(
-                            recentlyAddedSize,
-                            recentlyAddedSize > RECENTLY_ADDED_VISIBLE_PAGES
-                    )
+                this.displayableHeaders.recent(
+                    recentlyAddedSize,
+                    recentlyAddedSize > RECENTLY_ADDED_VISIBLE_PAGES
+                )
             )
         }
 
@@ -169,32 +167,39 @@ internal class DetailDataSource @Inject constructor(
         title += TextUtils.MIDDLE_DOT_SPACED + TimeUtils.formatMillis(context, duration)
 
         return DisplayableItem(
-                R.layout.item_detail_footer, MediaId.headerId("duration footer"), title
+            R.layout.item_detail_footer, MediaId.headerId("duration footer"), title
         )
     }
 
     private fun generateHeader(mainListSize: Int): DisplayableItem {
         return when (mediaId.category) {
             MediaIdCategory.FOLDERS -> folderGateway.getByParam(mediaId.categoryValue).getItem()!!.toHeaderItem(
-                    resources, mainListSize
+                resources, mainListSize
             )
             MediaIdCategory.PLAYLISTS -> playlistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(
-                    resources, mainListSize
+                resources, mainListSize
             )
             MediaIdCategory.ALBUMS -> albumGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem()
             MediaIdCategory.ARTISTS -> {
                 val siblingsCount = siblingsUseCase.getData(mediaId).getCount(filterRequest)
-                artistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(resources, mainListSize, siblingsCount)
+                artistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(
+                    resources,
+                    mainListSize,
+                    siblingsCount
+                )
             }
-            MediaIdCategory.GENRES -> genreGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(resources, mainListSize)
+            MediaIdCategory.GENRES -> genreGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(
+                resources,
+                mainListSize
+            )
             MediaIdCategory.PODCASTS_PLAYLIST -> podcastPlaylistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(
-                    resources, mainListSize
+                resources, mainListSize
             )
             MediaIdCategory.PODCASTS_ALBUMS -> podcastAlbumGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem()
             MediaIdCategory.PODCASTS_ARTISTS -> {
                 val siblingsCount = siblingsUseCase.getData(mediaId).getCount(filterRequest)
                 podcastArtistGateway.getByParam(mediaId.categoryId).getItem()!!.toHeaderItem(
-                        resources, mainListSize, siblingsCount
+                    resources, mainListSize, siblingsCount
                 )
             }
             else -> throw IllegalArgumentException("invalid category ${mediaId.category}")
@@ -204,7 +209,7 @@ internal class DetailDataSource @Inject constructor(
 }
 
 internal class DetailDataSourceFactory @Inject constructor(
-        dataSourceProvider: Provider<DetailDataSource>
+    dataSourceProvider: Provider<DetailDataSource>
 ) : BaseDataSourceFactory<DisplayableItem, DetailDataSource>(dataSourceProvider) {
 
     private var filterBy: String = ""

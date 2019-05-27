@@ -1,9 +1,7 @@
-package dev.olog.msc.app
+package dev.olog.msc.app.modules
 
 import android.app.AlarmManager
-import android.app.Application
 import android.content.Context
-import android.content.res.Resources
 import android.net.ConnectivityManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -13,6 +11,7 @@ import dagger.Provides
 import dev.olog.msc.LastFmEncrypter
 import dev.olog.msc.LyricsFromMetadata
 import dev.olog.msc.PrefsKeysImpl
+import dev.olog.msc.app.App
 import dev.olog.msc.appwidgets.base.WidgetColored
 import dev.olog.msc.core.IEncrypter
 import dev.olog.msc.core.PrefsKeys
@@ -46,12 +45,6 @@ class AppModule2 {
             }
         }
     }
-
-    @Provides
-    internal fun provideResources(app: App): Resources = app.resources
-
-    @Provides
-    internal fun provideApplication(app: App): Application = app
 
     @Provides
     fun provideConnectivityManager(app: App): ConnectivityManager {

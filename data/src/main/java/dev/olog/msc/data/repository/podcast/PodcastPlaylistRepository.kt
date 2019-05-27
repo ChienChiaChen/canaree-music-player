@@ -1,7 +1,6 @@
 package dev.olog.msc.data.repository.podcast
 
 import android.content.Context
-import android.content.res.Resources
 import android.provider.MediaStore
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.PrefsKeys
@@ -37,7 +36,6 @@ import javax.inject.Inject
 
 internal class PodcastPlaylistRepository @Inject constructor(
     @ApplicationContext private val context: Context,
-    resources: Resources,
     appDatabase: AppDatabase,
     private val favoriteGateway: FavoriteGateway,
     prefsKeys: PrefsKeys,
@@ -61,7 +59,7 @@ internal class PodcastPlaylistRepository @Inject constructor(
         )
     }
 
-    private val autoPlaylistTitles = resources.getStringArray(prefsKeys.autoPlaylist())
+    private val autoPlaylistTitles = context.resources.getStringArray(prefsKeys.autoPlaylist())
 
     private fun createAutoPlaylist(id: Long, title: String): PodcastPlaylist {
         return PodcastPlaylist(id, title, 0)

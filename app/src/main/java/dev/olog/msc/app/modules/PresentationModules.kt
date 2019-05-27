@@ -6,9 +6,9 @@ import dev.olog.msc.presentation.categories.di.CategoriesFragmentsModule
 import dev.olog.msc.presentation.create.playlist.di.CreatePlaylistModule
 import dev.olog.msc.presentation.detail.di.DetailFragmentInjector
 import dev.olog.msc.presentation.edititem.di.EditItemInjector
-import dev.olog.msc.presentation.equalizer.di.EqualizerInjector
+import dev.olog.msc.presentation.equalizer.di.EqualizerModule
 import dev.olog.msc.presentation.home.di.MainActivityInjector
-import dev.olog.msc.presentation.offlinelyrics.di.OfflineLyricsInjector
+import dev.olog.msc.presentation.offlinelyrics.di.OfflineLyricsModule
 import dev.olog.msc.presentation.player.di.PlayerFragmentModule
 import dev.olog.msc.presentation.player.mini.di.MiniPlayerFragmentModule
 import dev.olog.msc.presentation.playing.queue.di.PlayingQueueFragmentModule
@@ -42,8 +42,8 @@ import dev.olog.msc.presentation.tabs.foldertree.di.FolderTreeFragmentModule
         PlayingQueueFragmentModule::class,
         RecentlyAddedFragmentInjector::class,
         RelatedArtistFragmentInjector::class,
-        EqualizerInjector::class,
-        OfflineLyricsInjector::class
+        EqualizerModule::class,
+        OfflineLyricsModule::class
     ]
 )
 abstract class PresentationModules

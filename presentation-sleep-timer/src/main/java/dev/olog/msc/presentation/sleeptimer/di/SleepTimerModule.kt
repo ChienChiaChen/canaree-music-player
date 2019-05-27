@@ -5,7 +5,8 @@ import dagger.android.ContributesAndroidInjector
 import dev.olog.msc.presentation.sleeptimer.SleepTimerPickerDialog
 
 @Module
-abstract class SleepTimerInjector {
+abstract class SleepTimerModule {
+
     @ContributesAndroidInjector
     abstract fun provideSleepTimerDialog() : SleepTimerPickerDialog
 }

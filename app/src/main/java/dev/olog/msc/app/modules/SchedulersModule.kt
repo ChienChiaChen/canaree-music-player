@@ -1,4 +1,4 @@
-package dev.olog.msc.app
+package dev.olog.msc.app.modules
 
 import dagger.Binds
 import dagger.Module

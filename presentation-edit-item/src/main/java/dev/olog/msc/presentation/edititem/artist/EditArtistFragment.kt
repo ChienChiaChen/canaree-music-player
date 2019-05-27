@@ -44,8 +44,7 @@ class EditArtistFragment : BaseEditItemFragment() {
         )
     }
 
-    @Inject
-    lateinit var mediaId: MediaId
+    private lateinit var mediaId: MediaId
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
