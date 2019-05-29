@@ -2,6 +2,7 @@ package dev.olog.msc.presentation.related.artists
 
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.presentation.base.BR
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
@@ -10,7 +11,6 @@ import dev.olog.msc.presentation.base.list.extensions.elevateAlbumOnTouch
 import dev.olog.msc.presentation.base.list.extensions.setOnClickListener
 import dev.olog.msc.presentation.base.list.extensions.setOnLongClickListener
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
-import dev.olog.msc.presentation.navigator.Navigator
 
 class RelatedArtistFragmentAdapter(
     private val navigator: Navigator

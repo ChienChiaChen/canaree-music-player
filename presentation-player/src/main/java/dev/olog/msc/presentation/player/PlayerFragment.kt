@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
@@ -20,7 +21,6 @@ import dev.olog.msc.presentation.base.theme.player.theme.isBigImage
 import dev.olog.msc.presentation.base.theme.player.theme.isClean
 import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
 import dev.olog.msc.presentation.base.theme.player.theme.isMini
-import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.core.flow.flowInterval

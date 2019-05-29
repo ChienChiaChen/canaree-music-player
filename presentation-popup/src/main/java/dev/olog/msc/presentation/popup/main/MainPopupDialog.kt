@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentActivity
+import dev.olog.msc.app.injection.navigator.IPopupNavigator
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.LibrarySortType
@@ -13,7 +14,6 @@ import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.presentation.base.interfaces.HasBilling
-import dev.olog.msc.presentation.navigator.IPopupNavigator
 import dev.olog.msc.presentation.popup.BuildConfig
 import dev.olog.msc.presentation.popup.R
 import kotlinx.coroutines.GlobalScope

@@ -4,23 +4,22 @@ import android.content.Context
 import android.content.res.Resources
 import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.presentation.base.R
 import dev.olog.msc.shared.ui.extensions.colorPrimary
 import dev.olog.msc.shared.ui.theme.HasImmersive
 
 interface ThemedActivity {
 
-    fun themeAccentColor(context: Context, theme: Resources.Theme, prefsKeys: PrefsKeys){
+    fun themeAccentColor(context: Context, theme: Resources.Theme){
         if ((context.applicationContext as HasImmersive).isEnabled()){
             theme.applyStyle(R.style.ThemeImmersive, true)
         }
-        theme.applyStyle(getAccentStyle(context.applicationContext, prefsKeys), true)
+        theme.applyStyle(getAccentStyle(context.applicationContext), true)
     }
 
-    private fun getAccentStyle(context: Context, prefsKeys: PrefsKeys): Int {
+    private fun getAccentStyle(context: Context): Int {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val color = prefs.getInt(context.getString(prefsKeys.colorAccent()), context.colorPrimary())
+        val color = prefs.getInt(context.getString(R.string.prefs_color_accent_key), context.colorPrimary())
 
         return when (color){
             ContextCompat.getColor(context, R.color.md_red_A100) -> R.style.ThemeAccentRed100

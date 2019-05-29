@@ -7,7 +7,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.data.HttpUrlFetcher
 import com.bumptech.glide.load.model.GlideUrl
-import dev.olog.msc.core.PrefsKeys
+import dev.olog.msc.imageprovider.R
 import dev.olog.msc.shared.utils.NetworkUtils
 import kotlinx.coroutines.*
 import java.io.InputStream
@@ -18,8 +18,7 @@ import java.util.concurrent.atomic.AtomicLong
  * Because LastFm allows 5 request per second for every IP
  */
 abstract class BaseDataFetcher(
-    private val context: Context,
-    private val prefsKeys: PrefsKeys
+    private val context: Context
 
 ) : DataFetcher<InputStream> {
 
@@ -91,23 +90,18 @@ abstract class BaseDataFetcher(
     private fun networkSafeAction(): Boolean {
 
         val downloadMode = prefs.getString(
-            context.getString(prefsKeys.autoDownloadImages()),
-            context.getString(prefsKeys.defaultAutoDownloadImages())
+            context.getString(R.string.prefs_auto_download_images_key),
+            context.getString(R.string.prefs_auto_download_images_entry_value_wifi)
         )
 
         val isWifiActive = NetworkUtils.isOnWiFi(context)
 
-        when (downloadMode) {
-            context.getString(prefsKeys.autoDownloadImageNever()) -> {
-            }
-            context.getString(prefsKeys.autoDownloadImageWifiOnly()) -> {
-                if (isWifiActive) {
-                    return true
-                }
-            }
-            context.getString(prefsKeys.autoDownloadImageAlways()) -> return true
+        return when (downloadMode) {
+            context.getString(R.string.prefs_auto_download_images_entry_value_never) -> false
+            context.getString(R.string.prefs_auto_download_images_entry_value_wifi) -> isWifiActive
+            context.getString(R.string.prefs_auto_download_images_entry_value_always) -> true
+            else -> throw IllegalArgumentException("not supposed to happen, key not valid=$downloadMode")
         }
-        return false
     }
 
     protected abstract suspend fun execute(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>): String

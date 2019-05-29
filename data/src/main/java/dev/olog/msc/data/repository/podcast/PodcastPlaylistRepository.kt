@@ -3,7 +3,6 @@ package dev.olog.msc.data.repository.podcast
 import android.content.Context
 import android.provider.MediaStore
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.data.request.DataRequest
 import dev.olog.msc.core.entity.data.request.Filter
@@ -38,7 +37,6 @@ internal class PodcastPlaylistRepository @Inject constructor(
     @ApplicationContext private val context: Context,
     appDatabase: AppDatabase,
     private val favoriteGateway: FavoriteGateway,
-    prefsKeys: PrefsKeys,
     prefsGateway: AppPreferencesGateway,
     private val contentObserverFlow: ContentObserverFlow,
     sortGateway: SortPreferencesGateway
@@ -59,7 +57,8 @@ internal class PodcastPlaylistRepository @Inject constructor(
         )
     }
 
-    private val autoPlaylistTitles = context.resources.getStringArray(prefsKeys.autoPlaylist())
+    // TODO map names in presentation
+    private val autoPlaylistTitles = (0..3).map { "TODO map names in presentation" }
 
     private fun createAutoPlaylist(id: Long, title: String): PodcastPlaylist {
         return PodcastPlaylist(id, title, 0)

@@ -93,7 +93,7 @@
             android:key="@string/prefs_appearance_key" />
 
         <Preference
-            android:key="@string/prefs_accent_color_key"
+            android:key="@string/prefs_color_accent_key"
             android:summary="@string/prefs_accent_color_summary"
             android:title="@string/prefs_accent_color_title" />
 

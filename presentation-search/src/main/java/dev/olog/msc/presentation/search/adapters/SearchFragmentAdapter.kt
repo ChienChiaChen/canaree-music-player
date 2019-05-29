@@ -3,6 +3,7 @@ package dev.olog.msc.presentation.search.adapters
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
@@ -13,7 +14,6 @@ import dev.olog.msc.presentation.base.list.extensions.elevateSongOnTouch
 import dev.olog.msc.presentation.base.list.extensions.setOnClickListener
 import dev.olog.msc.presentation.base.list.extensions.setOnLongClickListener
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
-import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.search.BR
 import dev.olog.msc.presentation.search.R
 import dev.olog.msc.presentation.search.SearchFragmentViewModel

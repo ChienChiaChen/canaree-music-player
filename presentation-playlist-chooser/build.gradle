@@ -1,0 +1,9 @@
+apply plugin: 'com.android.library'
+apply from: '../base_presentation.gradle'
+apply from: '../dagger.gradle'
+apply from: '../data_binding.gradle'
+
+dependencies {
+    implementation project(':presentation-base-list')
+    implementation project(':app-injection')
+}

@@ -20,6 +20,7 @@ dependencies {
     implementation project(':presentation-navigator')
     implementation project(':image-provider')
     implementation project(':pro')
+    implementation project(':preferences-keys')
 
     // data binding
 //    kapt librariesUi.dataBinding

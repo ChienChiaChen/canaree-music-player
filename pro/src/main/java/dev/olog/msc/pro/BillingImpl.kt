@@ -1,15 +1,19 @@
 package dev.olog.msc.pro
 
+import android.content.Context
+import android.graphics.Color
 import android.util.Log
+import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.android.billingclient.api.*
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
-import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.core.channel.combineLatest
+import dev.olog.msc.shared.core.coroutines.DefaultScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
@@ -173,8 +177,18 @@ internal class BillingImpl @Inject constructor(
     }
 
     private fun setDefault() = launch {
-        appPrefsUseCase.setDefault()
+        appPrefsUseCase.setDefault(activity.themeAttributeToColor(com.google.android.material.R.attr.colorPrimary))
         musicPreferencesUseCase.setDefault()
         equalizerPrefsUseCase.setDefault()
+    }
+
+    private fun Context.themeAttributeToColor(themeAttributeId: Int, fallbackColor: Int = Color.WHITE): Int {
+        val outValue = TypedValue()
+        val theme = this.theme
+        val resolved = theme.resolveAttribute(themeAttributeId, outValue, true)
+        if (resolved) {
+            return ContextCompat.getColor(this, outValue.resourceId)
+        }
+        return fallbackColor
     }
 }

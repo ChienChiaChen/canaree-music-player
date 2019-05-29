@@ -4,30 +4,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.presentation.base.extensions.setLightStatusBar
 import dev.olog.msc.shared.ui.theme.HasImmersive
-import javax.inject.Inject
 
-abstract class BaseActivity : AppCompatActivity(),
-    ThemedActivity,
-    HasSupportFragmentInjector {
-
-    @Inject
-    lateinit var prefsKeys: PrefsKeys
-
-    @Inject
-    internal lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
+abstract class BaseActivity : AppCompatActivity(), ThemedActivity {
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
-        themeAccentColor(this, theme, prefsKeys)
+        themeAccentColor(this, theme)
         super.onCreate(savedInstanceState)
         window.setLightStatusBar()
     }
@@ -42,8 +28,8 @@ abstract class BaseActivity : AppCompatActivity(),
         }
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return supportFragmentInjector
+    protected open fun injectComponents(){
+        // TODO make abstract
     }
 
 }

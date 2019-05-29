@@ -10,9 +10,9 @@ import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import dev.olog.msc.app.injection.navigator.NavigatorAbout
 import dev.olog.msc.presentation.base.activity.BaseActivity
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
-import dev.olog.msc.presentation.navigator.NavigatorAbout
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.activity_about.*

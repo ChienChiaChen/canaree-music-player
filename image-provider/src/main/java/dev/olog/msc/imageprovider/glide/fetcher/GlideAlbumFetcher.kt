@@ -4,17 +4,15 @@ import android.content.Context
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.data.DataFetcher
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.gateway.LastFmGateway
 import java.io.InputStream
 
 class GlideAlbumFetcher(
     context: Context,
     mediaId: MediaId,
-    private val lastFmGateway: LastFmGateway,
-    prefsKeys: PrefsKeys
+    private val lastFmGateway: LastFmGateway
 
-) : BaseDataFetcher(context, prefsKeys) {
+) : BaseDataFetcher(context) {
 
     private val id = mediaId.resolveId
 

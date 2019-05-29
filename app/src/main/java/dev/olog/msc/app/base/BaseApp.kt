@@ -1,23 +1,20 @@
 package dev.olog.msc.app.base
 
+import android.app.Application
 import com.squareup.leakcanary.LeakCanary
-import dagger.android.HasActivityInjector
-import dagger.android.HasBroadcastReceiverInjector
-import dagger.android.HasServiceInjector
-import dagger.android.support.DaggerApplication
 
-abstract class BaseApp : DaggerApplication(),
-    HasActivityInjector,
-    HasServiceInjector,
-    HasBroadcastReceiverInjector {
+abstract class BaseApp : Application(){
 
     override fun onCreate() {
         super.onCreate()
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return
         }
+        injectComponenet()
         initializeApp()
     }
+
+    protected abstract fun injectComponenet()
 
     protected abstract fun initializeApp()
 

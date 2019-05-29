@@ -2,6 +2,19 @@ apply plugin: 'com.android.library'
 apply from: '../base_module_2.gradle'
 apply from: '../dagger.gradle'
 
+android {
+    buildTypes {
+
+        release {
+            buildConfigField 'String', "AES_PASSWORD", aes_password
+        }
+
+        debug {
+            buildConfigField 'String', "AES_PASSWORD", aes_password
+        }
+    }
+}
+
 dependencies {
     implementation project(':core')
 
@@ -15,7 +28,6 @@ dependencies {
     implementation project(':image-provider')
 
     implementation project(':api-lastfm')
-
     implementation project(':data')
 
     implementation project(':service-music')
@@ -51,5 +63,22 @@ dependencies {
     implementation project(':presentation-create-playlist')
     debugImplementation project(':presentation-debug')
 
+    implementation librariesCore.daggerAndroid // TODO remove
+    implementation librariesCore.daggerAndroidSupport // TODO remove
+
+    implementation librariesAndroidX.material
+
+    implementation librariesPersistency.room
+    implementation librariesPersistency.rxPrefs
+
+    // paging
+    implementation librariesAndroidX.paging
+
+    implementation librariesCore.lifecycleRuntime
+    implementation librariesCore.lifecycleExtensions
+    implementation librariesCore.lifecycleJava8
+    implementation librariesCore.lifecycleKtx
+    implementation librariesUtils.aesCrypto
+    implementation librariesUi.slidingPanel
 
 }

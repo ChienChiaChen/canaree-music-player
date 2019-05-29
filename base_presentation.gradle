@@ -6,9 +6,12 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
     }
+    lintOptions {
+        disable 'MissingTranslation'
+    }
 }
 
-dependecies {
+dependencies {
     implementation project(':core')
     implementation project(':shared')
     implementation project(':shared-ui-components')
@@ -21,4 +24,9 @@ dependecies {
     implementation librariesAndroidX.recycler
     implementation librariesAndroidX.material
     implementation librariesUi.constraintLayout
+
+    implementation librariesCore.lifecycleRuntime
+    implementation librariesCore.lifecycleExtensions
+    implementation librariesCore.lifecycleJava8
+    implementation librariesCore.lifecycleKtx
 }

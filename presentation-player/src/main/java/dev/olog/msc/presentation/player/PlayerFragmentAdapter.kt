@@ -11,6 +11,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.presentation.base.extensions.isCollapsed
@@ -28,7 +29,6 @@ import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
 import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.base.utils.*
 import dev.olog.msc.presentation.base.widgets.SwipeableView
-import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.player.animation.rotate
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
 import dev.olog.msc.shared.extensions.isPaused

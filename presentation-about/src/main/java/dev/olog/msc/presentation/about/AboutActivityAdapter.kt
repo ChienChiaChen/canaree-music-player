@@ -4,10 +4,10 @@ import android.content.res.ColorStateList
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
+import dev.olog.msc.app.injection.navigator.NavigatorAbout
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
 import dev.olog.msc.presentation.base.list.ObservableAdapter
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
-import dev.olog.msc.presentation.navigator.NavigatorAbout
 import dev.olog.msc.shared.ui.extensions.colorPrimary
 import kotlinx.android.synthetic.main.item_about.view.*
 

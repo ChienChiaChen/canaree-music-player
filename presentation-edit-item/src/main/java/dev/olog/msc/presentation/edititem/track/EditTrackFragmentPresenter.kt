@@ -8,8 +8,11 @@ import dev.olog.msc.core.interactor.item.GetPodcastUseCase
 import dev.olog.msc.core.interactor.item.GetUneditedSongUseCase
 import dev.olog.msc.core.interactor.last.fm.GetLastFmTrackUseCase
 import dev.olog.msc.presentation.edititem.DisplayableSong
+import dev.olog.msc.presentation.edititem.utils.get
 import io.reactivex.Single
 import kotlinx.coroutines.runBlocking
+import org.jaudiotagger.audio.AudioFileIO
+import org.jaudiotagger.tag.FieldKey
 import java.io.File
 import javax.inject.Inject
 

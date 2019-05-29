@@ -6,7 +6,6 @@ import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.imageprovider.glide.fetcher.GlideAlbumFetcher
 import dev.olog.msc.imageprovider.glide.fetcher.GlideArtistFetcher
@@ -15,8 +14,7 @@ import java.io.InputStream
 
 internal class GlideLastFmImageLoader(
     private val context: Context,
-    private val lastFmGateway: LastFmGateway,
-    private val prefsKeys: PrefsKeys
+    private val lastFmGateway: LastFmGateway
 
 ) : ModelLoader<MediaId, InputStream> {
 
@@ -41,8 +39,7 @@ internal class GlideLastFmImageLoader(
                 GlideSongFetcher(
                     context,
                     mediaId,
-                    lastFmGateway,
-                    prefsKeys
+                    lastFmGateway
                 )
             )
         } else if (mediaId.isAlbum) {
@@ -52,8 +49,7 @@ internal class GlideLastFmImageLoader(
                 GlideAlbumFetcher(
                     context,
                     mediaId,
-                    lastFmGateway,
-                    prefsKeys
+                    lastFmGateway
                 )
             )
         } else {
@@ -63,8 +59,7 @@ internal class GlideLastFmImageLoader(
                 GlideArtistFetcher(
                     context,
                     mediaId,
-                    lastFmGateway,
-                    prefsKeys
+                    lastFmGateway
                 )
             )
         }
@@ -72,16 +67,14 @@ internal class GlideLastFmImageLoader(
 
     class Factory(
         private val context: Context,
-        private val lastFmGateway: LastFmGateway,
-        private val prefsKeys: PrefsKeys
+        private val lastFmGateway: LastFmGateway
 
     ) : ModelLoaderFactory<MediaId, InputStream> {
 
         override fun build(multiFactory: MultiModelLoaderFactory): ModelLoader<MediaId, InputStream> {
             return GlideLastFmImageLoader(
                 context,
-                lastFmGateway,
-                prefsKeys
+                lastFmGateway
             )
         }
 

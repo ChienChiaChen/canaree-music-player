@@ -5,6 +5,7 @@ dependencies {
     implementation project(':core')
 
     implementation librariesAndroidX.appcompat
+    implementation librariesAndroidX.material
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8

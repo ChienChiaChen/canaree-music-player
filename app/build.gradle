@@ -31,8 +31,6 @@ android {
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [enableCrashReporting:"true"]
             debuggable false
-
-            buildConfigField 'String', "AES_PASSWORD", aes_password
         }
 
         debug {
@@ -43,8 +41,6 @@ android {
 //            debuggable false
 
             ext.enableCrashlytics = false
-
-            buildConfigField 'String', "AES_PASSWORD", aes_password
         }
     }
 
@@ -80,6 +76,7 @@ dependencies {
 
     implementation project(':app-widgets')
     implementation project(':app-shortcuts')
+    implementation project(':offline-lyrics')
 
     implementation project(':pro')
     implementation project(':presentation-base')

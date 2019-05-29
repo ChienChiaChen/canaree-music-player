@@ -15,7 +15,6 @@ import com.bumptech.glide.load.engine.executor.GlideExecutor.UncaughtThrowableSt
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
@@ -64,10 +63,9 @@ class GlideModule : AppGlideModule() {
         val playlistGateway = context.getClass<PlaylistGateway>("playlistGateway")
         val prefsGateway = context.getClass<AppPreferencesGateway>("prefsGateway")
         val usedImageGateway = context.getClass<UsedImageGateway>("usedImageGateway")
-        val prefsKeys = context.getClass<PrefsKeys>("prefsKeys")
 
         val lastFmFactory =
-            GlideLastFmImageLoader.Factory(context, lastFmGateway, prefsKeys)
+            GlideLastFmImageLoader.Factory(context, lastFmGateway)
         val originalFactory =
             GlideOriginalImageLoader.Factory(songGateway, podcastGateway)
         val mergedFactory = GlideMergedImageLoader.Factory(context, folderGateway,

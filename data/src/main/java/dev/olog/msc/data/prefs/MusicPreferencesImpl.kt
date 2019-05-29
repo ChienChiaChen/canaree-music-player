@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
+import dev.olog.msc.data.R
 import io.reactivex.BackpressureStrategy
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -37,8 +37,7 @@ private const val LAST_POSITION = "$TAG.last_position"
 internal class MusicPreferencesImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val preferences: SharedPreferences,
-    private val rxPreferences: RxSharedPreferences,
-    private val prefsKeys: PrefsKeys
+    private val rxPreferences: RxSharedPreferences
 
 ) : MusicPreferencesGateway {
 
@@ -103,7 +102,7 @@ internal class MusicPreferencesImpl @Inject constructor(
     }
 
     override fun isMidnightMode(): Flow<Boolean> {
-        val key = context.getString(prefsKeys.midnightMode())
+        val key = context.getString(R.string.prefs_midnight_mode_key)
         return rxPreferences.getBoolean(key, false)
             .asObservable()
             .toFlowable(BackpressureStrategy.LATEST)
@@ -144,17 +143,17 @@ internal class MusicPreferencesImpl @Inject constructor(
 
     private fun setMidnightMode(enable: Boolean) {
         preferences.edit {
-            putBoolean(context.getString(prefsKeys.midnightMode()), enable)
+            putBoolean(context.getString(R.string.prefs_midnight_mode_key), enable)
         }
     }
 
     private fun setCrossFade(value: Int) {
-        val key = context.getString(prefsKeys.crossfade())
+        val key = context.getString(R.string.prefs_cross_fade_key)
         preferences.edit { putInt(key, value) }
     }
 
     override fun observeCrossFade(): Flow<Int> {
-        val key = context.getString(prefsKeys.crossfade())
+        val key = context.getString(R.string.prefs_cross_fade_key)
         return rxPreferences.getInteger(key, 0)
             .asObservable()
             .toFlowable(BackpressureStrategy.LATEST)
@@ -163,7 +162,7 @@ internal class MusicPreferencesImpl @Inject constructor(
     }
 
     override fun observeGapless(): Flow<Boolean> {
-        val key = context.getString(prefsKeys.gapless())
+        val key = context.getString(R.string.prefs_gapless_key)
         return rxPreferences.getBoolean(key, false)
             .asObservable()
             .toFlowable(BackpressureStrategy.LATEST)
@@ -172,7 +171,7 @@ internal class MusicPreferencesImpl @Inject constructor(
     }
 
     private fun setGapless(enabled: Boolean) {
-        val key = context.getString(prefsKeys.gapless())
+        val key = context.getString(R.string.prefs_gapless_key)
         preferences.edit { putBoolean(key, enabled) }
     }
 

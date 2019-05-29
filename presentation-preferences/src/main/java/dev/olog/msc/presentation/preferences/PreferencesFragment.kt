@@ -60,7 +60,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
         lastFmCredentials = preferenceScreen.findPreference(getString(R.string.prefs_last_fm_credentials_key))
         autoCreateImages =
             preferenceScreen.findPreference(getString(R.string.prefs_auto_create_images_key)) as SwitchPreference
-        accentColorChooser = preferenceScreen.findPreference(getString(R.string.prefs_accent_color_key))
+        accentColorChooser = preferenceScreen.findPreference(getString(R.string.prefs_color_accent_key))
         resetTutorial = preferenceScreen.findPreference(getString(R.string.prefs_reset_tutorial_key))
     }
 

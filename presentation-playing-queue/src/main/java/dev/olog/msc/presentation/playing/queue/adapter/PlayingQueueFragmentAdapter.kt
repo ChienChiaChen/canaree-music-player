@@ -4,6 +4,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
@@ -12,7 +13,6 @@ import dev.olog.msc.presentation.base.list.drag.TouchableAdapter
 import dev.olog.msc.presentation.base.list.extensions.elevateSongOnTouch
 import dev.olog.msc.presentation.base.list.extensions.setOnClickListener
 import dev.olog.msc.presentation.base.list.extensions.setOnLongClickListener
-import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.playing.queue.BR
 import dev.olog.msc.presentation.playing.queue.BindingAdapter
 import dev.olog.msc.presentation.playing.queue.R

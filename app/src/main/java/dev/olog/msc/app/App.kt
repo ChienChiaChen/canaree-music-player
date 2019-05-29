@@ -1,14 +1,13 @@
 package dev.olog.msc.app
 
 import android.app.AlarmManager
+import android.content.Context
 import androidx.preference.PreferenceManager
-import dagger.android.AndroidInjector
-import dagger.android.support.DaggerApplication
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
 import dev.olog.msc.app.base.ThemedApp
+import dev.olog.msc.app.injection.AppComponent
 import dev.olog.msc.core.AppShortcuts
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
@@ -56,12 +55,6 @@ class App : ThemedApp() {
     lateinit var usedImageGateway: UsedImageGateway
 
     @Inject
-    lateinit var prefsKeys: PrefsKeys
-
-    @Inject
-    lateinit var alarmManager: AlarmManager
-
-    @Inject
     lateinit var sleepTimerUseCase: SleepTimerUseCase
 
     override fun onCreate() {
@@ -100,11 +93,13 @@ class App : ThemedApp() {
 
     private fun resetSleepTimer() {
         sleepTimerUseCase.reset()
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.cancel(PendingIntents.stopMusicServiceIntent(this, MusicService::class.java))
     }
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.factory().create(this)
+    override fun injectComponenet() {
+        AppComponent.appComponent(this).inject(this)
+//        DaggerAppComponent.factory().create(this)
     }
 
 }

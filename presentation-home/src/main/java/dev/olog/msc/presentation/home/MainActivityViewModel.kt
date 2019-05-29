@@ -36,7 +36,7 @@ class MainActivityViewModel @Inject constructor(
         return appPreferencesUseCase.isFirstAccess()
     }
 
-    fun getLastBottomViewPage(): Int = appPreferencesUseCase.getLastBottomViewPage()
+    fun getLastBottomViewPage(defaultId: Int): Int = appPreferencesUseCase.getLastBottomViewPage(defaultId)
 
     fun setLastBottomViewPage(page: Int) {
         appPreferencesUseCase.setLastBottomViewPage(page)

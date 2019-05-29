@@ -6,13 +6,13 @@ import android.os.Environment
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.SearchFilters
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
+import dev.olog.msc.data.R
 import dev.olog.msc.data.utils.safeGetCanonicalPath
 import dev.olog.msc.shared.utils.assertBackgroundThread
 import io.reactivex.BackpressureStrategy
@@ -25,8 +25,7 @@ import javax.inject.Inject
 internal class AppPreferencesImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val preferences: SharedPreferences,
-    private val rxPreferences: RxSharedPreferences,
-    private val prefsKeys: PrefsKeys
+    private val rxPreferences: RxSharedPreferences
 
 ) : AppPreferencesGateway,
     SortPreferencesGateway by AppSortingImpl(preferences, rxPreferences) {
@@ -105,8 +104,8 @@ internal class AppPreferencesImpl @Inject constructor(
         preferences.edit { putInt(VIEW_PAGER_PODCAST_LAST_PAGE, lastPage) }
     }
 
-    override fun getLastBottomViewPage(): Int {
-        return preferences.getInt(BOTTOM_VIEW_LAST_PAGE, prefsKeys.defaultBottomNavigationPage())
+    override fun getLastBottomViewPage(defaultId: Int): Int {
+        return preferences.getInt(BOTTOM_VIEW_LAST_PAGE, defaultId)
     }
 
     override fun setLastBottomViewPage(page: Int) {
@@ -114,8 +113,12 @@ internal class AppPreferencesImpl @Inject constructor(
     }
 
     override fun getVisibleTabs(): BooleanArray {
-        val visibleSections = preferences.getStringSet(context.getString(prefsKeys.visibleDetailSections()), setOf())!!
-        val prefsDefault = prefsKeys.defaultDetailSections()
+        val visibleSections = preferences.getStringSet(context.getString(R.string.prefs_detail_sections_key), setOf())!!
+        val prefsDefault = listOf(
+            R.string.prefs_detail_section_entry_value_most_played,
+            R.string.prefs_detail_section_entry_value_recently_added,
+            R.string.prefs_detail_section_entry_value_related_artists
+        )
         return booleanArrayOf(
             visibleSections.contains(context.getString(prefsDefault[0])), // most played
             visibleSections.contains(context.getString(prefsDefault[1])), // recently added
@@ -273,14 +276,14 @@ internal class AppPreferencesImpl @Inject constructor(
     }
 
     override fun observePlayerControlsVisibility(): Flow<Boolean> {
-        val key = context.getString(prefsKeys.playerControlsVisibility())
+        val key = context.getString(R.string.prefs_player_controls_visibility_key)
         return rxPreferences.getBoolean(key, false)
             .asObservable()
             .toFlowable(BackpressureStrategy.LATEST)
             .asFlow()
     }
 
-    override fun setDefault() {
+    override fun setDefault(defaultAccentColor: Int) {
         assertBackgroundThread()
         setLibraryCategories(getDefaultLibraryCategories())
         setPodcastLibraryCategories(getDefaultPodcastLibraryCategories())
@@ -293,7 +296,7 @@ internal class AppPreferencesImpl @Inject constructor(
         setLastFmCredentials(UserCredentials("", ""))
         setDefaultFolderView()
         setDefaultMusicFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC))
-        setDefaultAccentColor()
+        setDefaultAccentColor(defaultAccentColor)
         setDefaultLibraryAlbumArtistVisibility()
         setDefaultPodcastVisibility()
         setDefaultAdaptiveColors()
@@ -302,81 +305,81 @@ internal class AppPreferencesImpl @Inject constructor(
 
     private fun setDefaultLockscreenArtwork() {
         preferences.edit {
-            putBoolean(context.getString(prefsKeys.showLockscreenArtwork()), false)
+            putBoolean(context.getString(R.string.prefs_lockscreen_artwork_key), false)
         }
     }
 
     private fun setDefaultAdaptiveColors() {
         preferences.edit {
-            putBoolean(context.getString(prefsKeys.adaptiveColors()), false)
+            putBoolean(context.getString(R.string.prefs_adaptive_colors_key), false)
         }
     }
 
     private fun setDefaultLibraryAlbumArtistVisibility() {
         preferences.edit {
-            putBoolean(context.getString(prefsKeys.showNewAlbumsArtists()), true)
-            putBoolean(context.getString(prefsKeys.showRecentAlbumsArtists()), true)
+            putBoolean(context.getString(R.string.prefs_show_new_albums_artists_key), true)
+            putBoolean(context.getString(R.string.prefs_show_recent_albums_artists_key), true)
         }
     }
 
     private fun setDefaultPodcastVisibility() {
         preferences.edit {
-            putBoolean(context.getString(prefsKeys.showPodcast()), true)
+            putBoolean(context.getString(R.string.prefs_show_podcasts_key), true)
         }
     }
 
-    private fun setDefaultAccentColor() {
+    private fun setDefaultAccentColor(default: Int) {
         preferences.edit {
-            putInt(context.getString(prefsKeys.colorAccent()), prefsKeys.defaultColorAccent())
+            putInt(context.getString(R.string.prefs_color_accent_key), default)
         }
     }
 
     override fun canAutoCreateImages(): Boolean {
-        return preferences.getBoolean(context.getString(prefsKeys.autoCreateImages()), true)
+        return preferences.getBoolean(context.getString(R.string.prefs_auto_create_images_key), true)
     }
 
     private fun setDefaultFolderView() {
         preferences.edit {
-            putBoolean(context.getString(prefsKeys.showFoldersAsTree()), false)
+            putBoolean(context.getString(R.string.prefs_folder_tree_view_key), false)
         }
     }
 
     private fun setDefaultAutoDownloadImages() {
         preferences.edit {
             putString(
-                context.getString(prefsKeys.autoDownloadImages()),
-                context.getString(prefsKeys.defaultAutoDownloadImages())
+                context.getString(R.string.prefs_auto_download_images_key),
+                context.getString(R.string.prefs_auto_download_images_entry_value_wifi)
             )
-            putBoolean(context.getString(prefsKeys.autoCreateImages()), true)
+            putBoolean(context.getString(R.string.prefs_auto_create_images_key), true)
         }
     }
 
     private fun hideQuickAction() {
         preferences.edit {
-            putString(context.getString(prefsKeys.quickAction()), context.getString(prefsKeys.defaultQuickAction()))
+            putString(context.getString(R.string.prefs_quick_action_key), context.getString(R.string.prefs_quick_action_entry_value_hide))
         }
     }
 
     private fun setDefaultVisibleSections() {
         preferences.edit {
-            val default = context.resources.getStringArray(prefsKeys.defaultVisibleDetailSections()).toSet()
-            putStringSet(context.getString(prefsKeys.visibleDetailSections()), default)
+            val default = context.resources.getStringArray(R.array.prefs_detail_sections_entry_values_default).toSet()
+            putStringSet(context.getString(R.string.prefs_detail_sections_key), default)
         }
     }
 
     private fun hideClassicPlayerControls() {
         preferences.edit {
-            putBoolean(context.getString(prefsKeys.playerControlsVisibility()), false)
+            putBoolean(context.getString(R.string.prefs_player_controls_visibility_key), false)
         }
     }
 
     private fun setDefaultTheme() {
         preferences.edit {
             putString(
-                context.getString(prefsKeys.playerAppearance()),
-                context.getString(prefsKeys.defaultPlayerAppearance())
+                context.getString(R.string.prefs_appearance_key),
+                context.getString(R.string.prefs_appearance_entry_value_default)
             )
-            putString(context.getString(prefsKeys.darkMode()), context.getString(prefsKeys.defaultDarkMode()))
+            putString(context.getString(R.string.prefs_dark_mode_2_key), context.getString(R.string.prefs_dark_mode_2_value_follow_system))
         }
     }
 
@@ -457,27 +460,27 @@ internal class AppPreferencesImpl @Inject constructor(
     }
 
     override fun canShowLibraryNewVisibility(): Boolean {
-        return preferences.getBoolean(context.getString(prefsKeys.showNewAlbumsArtists()), true)
+        return preferences.getBoolean(context.getString(R.string.prefs_show_new_albums_artists_key), true)
     }
 
     override fun canShowLibraryRecentPlayedVisibility(): Boolean {
-        return preferences.getBoolean(context.getString(prefsKeys.showRecentAlbumsArtists()), true)
+        return preferences.getBoolean(context.getString(R.string.prefs_show_recent_albums_artists_key), true)
     }
 
     override fun canShowPodcastCategory(): Boolean {
-        return preferences.getBoolean(context.getString(prefsKeys.showPodcast()), true)
+        return preferences.getBoolean(context.getString(R.string.prefs_show_podcasts_key), true)
     }
 
     override fun isAdaptiveColorEnabled(): Boolean {
-        return preferences.getBoolean(context.getString(prefsKeys.adaptiveColors()), false)
+        return preferences.getBoolean(context.getString(R.string.prefs_adaptive_colors_key), false)
     }
 
     override fun isLockscreenArtworkEnabled(): Boolean {
-        return preferences.getBoolean(context.getString(prefsKeys.showLockscreenArtwork()), false)
+        return preferences.getBoolean(context.getString(R.string.prefs_lockscreen_artwork_key), false)
     }
 
     override fun getShowFolderAsTreeView(): Boolean {
-        return preferences.getBoolean(context.getString(prefsKeys.showFolderAsTreeView()), false)
+        return preferences.getBoolean(context.getString(R.string.prefs_folder_tree_view_key), false)
     }
 
     override fun getSearchFilters(): Set<SearchFilters> {

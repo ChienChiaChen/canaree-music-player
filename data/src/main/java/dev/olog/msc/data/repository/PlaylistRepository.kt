@@ -4,7 +4,6 @@ import android.content.Context
 import android.provider.MediaStore.Audio.Media
 import android.provider.MediaStore.Audio.Playlists
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.PrefsKeys
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.data.request.DataRequest
 import dev.olog.msc.core.entity.data.request.Filter
@@ -39,7 +38,6 @@ internal class PlaylistRepository @Inject constructor(
     appDatabase: AppDatabase,
     helper: PlaylistRepositoryHelper,
     private val prefsGateway: AppPreferencesGateway,
-    prefsKeys: PrefsKeys,
     private val contentObserverFlow: ContentObserverFlow,
     private val songGateway: SongGateway,
     sortGateway: SortPreferencesGateway
@@ -55,7 +53,8 @@ internal class PlaylistRepository @Inject constructor(
     private val mostPlayedDao = appDatabase.playlistMostPlayedDao()
     private val historyDao = appDatabase.historyDao()
 
-    private val autoPlaylistTitles = resources.getStringArray(prefsKeys.autoPlaylist())
+    // TODO map names in presentation
+    private val autoPlaylistTitles = (0..3).map { "TODO map names in presentation" }
 
     private fun createAutoPlaylist(id: Long, title: String): Playlist {
         return Playlist(id, title, 0)

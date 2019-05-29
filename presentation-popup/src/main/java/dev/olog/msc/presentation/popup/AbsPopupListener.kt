@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentActivity
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.GetPlaylistsBlockingUseCase
 import dev.olog.msc.presentation.base.extensions.asHtml
-import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import dev.olog.msc.shared.FileProvider
 import dev.olog.msc.shared.core.lazyFast

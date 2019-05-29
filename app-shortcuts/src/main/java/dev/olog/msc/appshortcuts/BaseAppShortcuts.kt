@@ -6,12 +6,11 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.shared.ShortcutsConstants
 import dev.olog.msc.shared.core.coroutines.DefaultScope
@@ -19,15 +18,14 @@ import dev.olog.msc.shared.extensions.toast
 import kotlinx.coroutines.*
 
 internal abstract class BaseAppShortcuts(
-    protected val context: Context,
-    @ProcessLifecycle lifecycle: Lifecycle
+    protected val context: Context
 
 ) : AppShortcuts, DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
     private var job: Job? = null
 
     init {
-        lifecycle.addObserver(this)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
 
     override fun addDetailShortcut(mediaId: MediaId, title: String) {

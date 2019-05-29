@@ -8,19 +8,16 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
-import androidx.lifecycle.Lifecycle
 import dev.olog.msc.core.Classes
-import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.ShortcutsConstants
 import dev.olog.msc.shared.utils.isNougat_MR1
 
 @RequiresApi(Build.VERSION_CODES.N_MR1)
 internal open class AppShortcutsImpl25(
-        context: Context,
-        @ProcessLifecycle lifecycle: Lifecycle
+        context: Context
 
-) : BaseAppShortcuts(context, lifecycle) {
+) : BaseAppShortcuts(context) {
 
     protected val shortcutManager : ShortcutManager = context.getSystemService<ShortcutManager>()!!
 

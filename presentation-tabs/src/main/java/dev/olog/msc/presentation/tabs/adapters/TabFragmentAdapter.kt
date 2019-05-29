@@ -3,6 +3,7 @@ package dev.olog.msc.presentation.tabs.adapters
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
@@ -15,7 +16,6 @@ import dev.olog.msc.presentation.base.list.extensions.elevateSongOnTouch
 import dev.olog.msc.presentation.base.list.extensions.setOnClickListener
 import dev.olog.msc.presentation.base.list.extensions.setOnLongClickListener
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
-import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.BR
 import dev.olog.msc.presentation.tabs.R
 import dev.olog.msc.presentation.tabs.TabFragmentViewModel

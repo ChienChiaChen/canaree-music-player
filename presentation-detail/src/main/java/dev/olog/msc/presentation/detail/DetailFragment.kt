@@ -13,6 +13,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.glide.GlideApp
@@ -29,7 +30,6 @@ import dev.olog.msc.presentation.base.utils.hideKeyboard
 import dev.olog.msc.presentation.base.utils.showKeyboard
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
-import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.core.flow.debounceFirst
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.bindinds.afterTextChange

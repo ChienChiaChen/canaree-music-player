@@ -1,13 +1,13 @@
 package dev.olog.msc.presentation.popup.artist
 
 import android.view.MenuItem
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.GetPlaylistsBlockingUseCase
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
-import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
 import dev.olog.msc.presentation.popup.R

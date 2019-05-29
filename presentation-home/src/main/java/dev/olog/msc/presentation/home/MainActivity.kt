@@ -9,6 +9,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Lifecycle
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.*
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.FloatingWindowHelper
@@ -25,7 +26,6 @@ import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.home.base.MusicGlueActivity
-import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.extensions.dimen
@@ -94,7 +94,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     private fun handleOnActivityCreated() {
-        var navigateTo = presenter.getLastBottomViewPage()
+        var navigateTo = presenter.getLastBottomViewPage(R.id.navigation_songs)
         if (!presenter.canShowPodcastCategory()) {
             bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
             if (navigateTo == R.id.navigation_podcasts) {
@@ -108,7 +108,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     private fun handleOnActivityResumed() {
         if (!presenter.canShowPodcastCategory()) {
-            val currentId = presenter.getLastBottomViewPage()
+            val currentId = presenter.getLastBottomViewPage(R.id.navigation_songs)
             bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
             if (currentId == R.id.navigation_podcasts) {
                 bottomNavigation.selectedItemId = R.id.navigation_songs

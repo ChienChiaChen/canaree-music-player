@@ -11,7 +11,7 @@ import java.io.File
 
 interface AppPreferencesGateway {
 
-    fun getLastBottomViewPage(): Int
+    fun getLastBottomViewPage(defaultId: Int): Int
     fun setLastBottomViewPage(page: Int)
 
     fun isFirstAccess(): Boolean
@@ -42,7 +42,7 @@ interface AppPreferencesGateway {
 
     fun observePlayerControlsVisibility(): Flow<Boolean>
 
-    fun setDefault()
+    fun setDefault(defaultAccentColor: Int)
 
     fun canAutoCreateImages(): Boolean
 

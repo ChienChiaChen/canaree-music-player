@@ -3,6 +3,7 @@ package dev.olog.msc.presentation.categories.track
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
+import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
@@ -13,7 +14,6 @@ import dev.olog.msc.presentation.categories.BuildConfig
 import dev.olog.msc.presentation.categories.FragmentFactory
 import dev.olog.msc.presentation.categories.R
 import dev.olog.msc.presentation.categories.Tutorial
-import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.core.lazyFast
 import kotlinx.android.synthetic.main.fragment_library_categories.*
 import kotlinx.android.synthetic.main.fragment_library_categories.view.*

@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.sleeptimer
 
 import android.app.AlarmManager
+import android.content.Context
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -32,8 +33,6 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
     private lateinit var fakeView: View
     private lateinit var okButton: Button
 
-    @Inject
-    lateinit var alarmManager: AlarmManager
     @Inject
     lateinit var sleepTimerUseCase: SleepTimerUseCase
 
@@ -150,6 +149,7 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
 
     private fun resetAlarmManager() {
         val intent = PendingIntents.stopMusicServiceIntent(context!!, Classes.musicService)
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.cancel(intent)
     }
 
@@ -160,6 +160,7 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
                 TimeUnit.SECONDS.toMillis(seconds.toLong())
 
         val intent = PendingIntents.stopMusicServiceIntent(context!!, Classes.musicService)
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, nextSleep, intent)
     }
 
