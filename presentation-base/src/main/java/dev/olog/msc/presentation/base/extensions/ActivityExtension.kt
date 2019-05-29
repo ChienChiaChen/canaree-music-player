@@ -2,12 +2,9 @@
 
 package dev.olog.msc.presentation.base.extensions
 
-import android.annotation.SuppressLint
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
-import dev.olog.msc.shared.utils.isP
 
 inline fun FragmentActivity.fragmentTransaction(crossinline func: FragmentTransaction.() -> FragmentTransaction) {
     supportFragmentManager
@@ -30,12 +27,4 @@ fun FragmentActivity.getTopFragment(): Fragment? {
         return supportFragmentManager.findFragmentByTag(tag)
     }
     return null
-}
-
-@SuppressLint("NewApi")
-inline fun View.hasNotch(): Boolean {
-    if (isP()){
-        return rootWindowInsets?.displayCutout != null
-    }
-    return false
 }

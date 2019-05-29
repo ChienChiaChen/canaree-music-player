@@ -29,3 +29,8 @@ fun isOreo_MR1(): Boolean {
 fun isP(): Boolean {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
 }
+
+fun isQ(): Boolean {
+    return false //TODO
+//    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+}

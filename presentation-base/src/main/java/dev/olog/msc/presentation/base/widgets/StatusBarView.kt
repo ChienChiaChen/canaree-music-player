@@ -3,12 +3,11 @@ package dev.olog.msc.presentation.base.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import dev.olog.msc.presentation.base.extensions.hasNotch
 import dev.olog.msc.shared.extensions.dimen
-import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.ui.R
 import dev.olog.msc.shared.ui.extensions.colorSurface
 import dev.olog.msc.shared.ui.theme.HasImmersive
+import dev.olog.msc.shared.utils.isP
 
 /**
  * Custom status bar to handleOnBackPressed device notch
@@ -22,18 +21,23 @@ class StatusBarView : View {
 
 
     private val defaultStatusBarHeight = context.dimen(R.dimen.status_bar)
-    private val statusBarHeightPlusNotch = context.dip(48)
-    private var hasNotch = false
+    private val statusBarHeightPlusNotch by lazy {
+        if (isP()) {
+            rootWindowInsets.consumeStableInsets().stableInsetTop
+        } else {
+            TODO("VERSION.SDK_INT < M")
+        }
+    }
+    private val View.hasNotch by lazy {
+        if (isP()){
+            rootWindowInsets?.displayCutout != null
+        } else {
+            false
+        }
+    }
 
     private fun init() {
         setBackgroundColor(context.colorSurface())
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        if (!isInEditMode) {
-            hasNotch = this.hasNotch()
-        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
