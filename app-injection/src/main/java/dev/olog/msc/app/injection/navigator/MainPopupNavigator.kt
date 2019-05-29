@@ -4,6 +4,7 @@ import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.preference.PreferenceManager
 import androidx.fragment.app.FragmentActivity
+import dev.olog.msc.app.injection.R
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.about.AboutActivity
 import dev.olog.msc.presentation.base.interfaces.HasBilling

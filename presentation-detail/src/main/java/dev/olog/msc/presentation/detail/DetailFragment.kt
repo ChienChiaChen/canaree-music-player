@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.CoverUtils
+import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.CanChangeStatusBarColor
