@@ -1,14 +1,15 @@
 package dev.olog.msc.app.injection
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import dagger.BindsInstance
 import dagger.Component
 import dev.olog.msc.apilastfm.LastFmModule
 import dev.olog.msc.app.injection.viewmodel.ViewModelModule
-import dev.olog.msc.appshortcuts.AppShortcutsModule
-import dev.olog.msc.appwidgets.di.WidgetBindingModule
-import dev.olog.msc.core.AppShortcuts
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.gateway.LastFmGateway
+import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
 import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
@@ -20,17 +21,13 @@ import dev.olog.msc.core.gateway.track.*
 import dev.olog.msc.data.di.PreferenceModule
 import dev.olog.msc.data.di.RepositoryHelperModule
 import dev.olog.msc.data.di.RepositoryModule
-import dev.olog.msc.floatingwindowservice.di.FloatingWindowServiceInjector
-import dev.olog.msc.musicservice.di.EqualizerModule
-import dev.olog.msc.musicservice.di.MusicServiceInjector
-import dev.olog.msc.presentation.sleeptimer.di.SleepTimerModule
 import javax.inject.Singleton
 
 @Component(
     modules = arrayOf(
         AppModule::class,
         SchedulersModule::class,
-        AppShortcutsModule::class,
+//        AppShortcutsModule::class,
         LastFmModule::class,
 
 //        // data
@@ -39,23 +36,26 @@ import javax.inject.Singleton
         PreferenceModule::class,
 //
 //        // presentation
-        SleepTimerModule::class,
+//        SleepTimerModule::class,
         DialogModules::class,
-        PresentationModules::class,
+//        PresentationModules::class,
         NavigatorModule::class,
-        WidgetBindingModule::class,
-        ViewModelModule::class,
+//        WidgetBindingModule::class,
+        ViewModelModule::class
 
 //        // music service
-        MusicServiceInjector::class,
-        EqualizerModule::class,
+//        MusicServiceInjector::class,
+//        EqualizerModule::class,
 
 //        // floating info service
-        FloatingWindowServiceInjector::class
+//        FloatingWindowServiceInjector::class
     )
 )
 @Singleton
 interface AppComponent : InjectionHelper<Application> {
+
+    @ApplicationContext
+    fun context(): Context
 
     fun viewModelFactory(): ViewModelProvider.Factory
 
@@ -74,8 +74,10 @@ interface AppComponent : InjectionHelper<Application> {
     fun podcastAlbumGateway(): PodcastAlbumGateway
     fun podcastArtistGateway(): PodcastArtistGateway
 
-    fun appShortcuts(): AppShortcuts
+    fun lastFmGateway(): LastFmGateway
+    fun usedImageGateway(): UsedImageGateway
 
+//    fun appShortcuts(): AppShortcuts TODO restore
 
     @Component.Factory
     interface Factory {

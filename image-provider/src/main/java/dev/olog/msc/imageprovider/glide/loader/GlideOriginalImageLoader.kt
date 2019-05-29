@@ -10,6 +10,7 @@ import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.imageprovider.glide.fetcher.GlideOriginalImageFetcher
 import java.io.InputStream
+import javax.inject.Inject
 
 internal class GlideOriginalImageLoader(
     private val uriLoader: ModelLoader<Uri, InputStream>,
@@ -50,7 +51,7 @@ internal class GlideOriginalImageLoader(
         return uriLoader.buildLoadData(Uri.EMPTY, width, height, options)
     }
 
-    class Factory(
+    class Factory @Inject constructor(
         private val songGateway: SongGateway,
         private val podcastGateway: PodcastGateway
 

@@ -1,8 +1,6 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
-apply from: '../base_module.gradle'
+apply from: '../base_module_2.gradle'
 
 android {
 
@@ -44,7 +42,7 @@ android {
         }
     }
 
-    dataBinding.enabled = true
+    dataBinding.enabled = true // TODO try remove
 
 
     lintOptions {
@@ -55,129 +53,38 @@ android {
 }
 
 dependencies {
-    implementation project(':core')
     implementation project(':app-injection')
-
-    implementation project(':jaudiotagger')
-    implementation project(':tap-target-view')
-
     implementation project(':shared')
-    implementation project(':shared-core')
     implementation project(':shared-ui-components')
-    implementation project(':offline-lyrics')
-    implementation project(':image-provider')
 
-    implementation project(':api-lastfm')
-
-    implementation project(':data')
-
+    // used in manifest do display services
     implementation project(':service-music')
     implementation project(':service-floating-window')
 
-    implementation project(':app-widgets')
+    // need to initialize at app startup
     implementation project(':app-shortcuts')
-    implementation project(':offline-lyrics')
 
     implementation project(':pro')
     implementation project(':presentation-base')
-    implementation project(':presentation-base-list')
-    implementation project(':presentation-navigator')
-    implementation project(':presentation-search')
-    implementation project(':presentation-offline-lyrics')
-    implementation project(':presentation-equalizer')
-    implementation project(':presentation-edit-item')
+    // used in manifest do diplay activities
     implementation project(':presentation-home')
-    implementation project(':presentation-player')
-    implementation project(':presentation-player-mini')
-    implementation project(':presentation-sleep-timer')
-    implementation project(':presentation-tabs')
-    implementation project(':presentation-tabs-folder-tree')
-    implementation project(':presentation-categories')
-    implementation project(':presentation-detail')
-    implementation project(':presentation-playing-queue')
     implementation project(':presentation-splash')
     implementation project(':presentation-preferences')
-    implementation project(':presentation-recently-added')
-    implementation project(':presentation-related-artists')
-    implementation project(':presentation-popup')
-    implementation project(':presentation-about')
-    implementation project(':presentation-dialogs')
     implementation project(':presentation-create-playlist')
     debugImplementation project(':presentation-debug')
 
-
-    // data binding
-    kapt librariesUi.dataBinding // TODO remove after moving playlist chooser actiivty
-
-    // kotlin
-    implementation librariesCore.kotlin
-
-    // google architecture components
-    implementation librariesCore.lifecycleRuntime
-    implementation librariesCore.lifecycleExtensions
-    implementation librariesCore.lifecycleJava8
-    implementation librariesCore.lifecycleKtx
-
-    implementation librariesCore.coroutines
 //    debugImplementation librariesCore.coroutinesDebug
 
-    // support
-    implementation librariesAndroidX.core
-    implementation librariesAndroidX.coreKtx
-    implementation librariesAndroidX.legacyV4
-    implementation librariesAndroidX.appcompat
-    implementation librariesAndroidX.media
-    implementation librariesAndroidX.recycler
-    implementation librariesAndroidX.cardview
-    implementation librariesAndroidX.browser
-    implementation librariesAndroidX.material
-    implementation librariesAndroidX.preference
-    implementation librariesAndroidX.palette
-    implementation librariesUi.constraintLayout
-
-    // paging
-    implementation librariesAndroidX.paging
-
-    // dagger
-    implementation librariesCore.dagger
-    kapt librariesCore.daggerProcessor
-    implementation librariesCore.daggerAndroid
-    implementation librariesCore.daggerAndroidSupport
-    kapt librariesCore.daggerAndroidProcessor
-
-    // rx
-    implementation librariesCore.rxBinding
-
-    implementation librariesUi.slidingPanel
-    implementation librariesUi.lottie
-
-    implementation librariesUi.glide
-    kapt librariesUi.glideProcessor
-    // mandatory for glide compatibility
-    kapt librariesUi.androidSupportAnnotation
-
-    implementation librariesUtils.fuzzywuzzy
-    implementation librariesUtils.aesCrypto
-    implementation librariesUtils.customTabs
+    implementation librariesCore.lifecycleRuntime
+    implementation librariesCore.lifecycleJava8
     implementation librariesUi.blurkit
+    implementation librariesUtils.customTabs
 
-//    db
-    implementation librariesPersistency.room
-    implementation librariesPersistency.rxPrefs
-
-    implementation librariesNetwork.retrofit
-    implementation librariesNetwork.retrofitCoroutines
-    implementation librariesUtils.gson
-
-    implementation librariesUtils.billing
-
-    // debug
     debugImplementation librariesDebug.leakCanary
     debugImplementation librariesDebug.leakCanarySupport
     releaseImplementation librariesDebug.leakCanaryStub
 //    debugImplementation librariesDebug.stetho
 
-    // firebase
     implementation librariesFirebase.core
     implementation(librariesFirebase.crashlytics) {
         transitive = true

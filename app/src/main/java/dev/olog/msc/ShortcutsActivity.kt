@@ -1,4 +1,4 @@
-package dev.olog.msc.presentation.shortcuts
+package dev.olog.msc
 
 import android.content.Intent
 import android.os.Bundle

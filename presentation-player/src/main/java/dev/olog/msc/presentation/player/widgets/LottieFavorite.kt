@@ -4,25 +4,19 @@ import android.content.Context
 import android.util.AttributeSet
 import com.airbnb.lottie.LottieAnimationView
 import dev.olog.msc.core.entity.favorite.FavoriteEnum
-import dev.olog.msc.presentation.base.theme.player.theme.isClean
-import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
 import dev.olog.msc.presentation.player.R
+import dev.olog.msc.shared.ui.theme.playerTheme
 
-class LottieFavorite : LottieAnimationView {
-
-    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init(attrs)
-    }
+class LottieFavorite(context: Context, attrs: AttributeSet?) : LottieAnimationView(context, attrs) {
 
     private var state: FavoriteEnum? = null
 
-    private fun init(attrs: AttributeSet?) {
-        var useWhiteIcon = context.isFullscreen()
+    init {
+        var useWhiteIcon = context.playerTheme().isFullscreen()
         val isDark = context.resources.getBoolean(R.bool.is_dark_mode)
         useWhiteIcon = useWhiteIcon || isDark
         val icon = when {
-            context.isClean() && !isDark -> "favorite_gray"
+            context.playerTheme().isClean() && !isDark -> "favorite_gray"
             useWhiteIcon -> "favorite_white"
             else -> "favorite"
         }

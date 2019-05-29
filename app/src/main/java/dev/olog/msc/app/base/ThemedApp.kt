@@ -3,11 +3,11 @@ package dev.olog.msc.app.base
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import dev.olog.msc.presentation.base.theme.dark.mode.IDarkMode
-import dev.olog.msc.presentation.base.theme.immersive.IImmersive
-import dev.olog.msc.presentation.base.theme.player.theme.IPlayerTheme
 import dev.olog.msc.shared.ui.theme.HasImmersive
 import dev.olog.msc.shared.ui.theme.HasPlayerTheme
+import dev.olog.msc.theme.DarkMode
+import dev.olog.msc.theme.Immersive
+import dev.olog.msc.theme.PlayerTheme
 import javax.inject.Inject
 
 abstract class ThemedApp : BaseApp(),
@@ -17,11 +17,11 @@ abstract class ThemedApp : BaseApp(),
 
     @Suppress("unused")
     @Inject
-    lateinit var darkMode: IDarkMode
+    lateinit var darkMode: DarkMode
     @Inject
-    lateinit var playerTheme: IPlayerTheme
+    lateinit var playerTheme: PlayerTheme
     @Inject
-    lateinit var immersive: IImmersive
+    lateinit var immersive: Immersive
 
     override fun onActivityStarted(activity: Activity?) {
     }

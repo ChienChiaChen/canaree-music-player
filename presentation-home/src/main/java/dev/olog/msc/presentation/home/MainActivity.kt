@@ -23,13 +23,13 @@ import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
-import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.home.base.MusicGlueActivity
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.ui.extensions.subscribe
+import dev.olog.msc.shared.ui.theme.playerTheme
 import dev.olog.msc.shared.utils.clamp
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -81,7 +81,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     private fun adjustSlidingPanel() {
-        if (isMini()) {
+        if (playerTheme().isMini()) {
             slidingPanel.setParallaxOffset(0)
             playerLayout.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         }

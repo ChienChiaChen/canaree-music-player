@@ -104,7 +104,7 @@
         <activity android:name=".presentation.preferences.PreferencesActivity" />
 
         <!--dummy shortcuts activity-->
-        <activity android:name=".presentation.shortcuts.ShortcutsActivity" />
+        <activity android:name=".ShortcutsActivity" />
 
         <!--app shortcust playlist chooser-->
         <activity android:name="dev.olog.msc.presentation.playlist.chooser.PlaylistChooserActivity" />
@@ -135,17 +135,17 @@
 
 
         <!--widget -->
-        <receiver
-            android:name=".appwidgets.base.WidgetColored"
-            android:label="@string/app_widget_default">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
+<!--        <receiver TODO-->
+<!--            android:name=".appwidgets.base.WidgetColored"-->
+<!--            android:label="@string/app_widget_default">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+<!--            </intent-filter>-->
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_colored" />
-        </receiver>
+<!--            <meta-data-->
+<!--                android:name="android.appwidget.provider"-->
+<!--                android:resource="@xml/widget_colored" />-->
+<!--        </receiver>-->
 
         <!--provide storage permission to share intents-->
         <provider

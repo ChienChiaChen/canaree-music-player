@@ -11,8 +11,7 @@ import dev.olog.msc.presentation.base.extensions.removeLightStatusBar
 import dev.olog.msc.presentation.base.extensions.setLightStatusBar
 import dev.olog.msc.presentation.base.interfaces.CanChangeStatusBarColor
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
-import dev.olog.msc.presentation.base.theme.player.theme.isBigImage
-import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
+import dev.olog.msc.shared.ui.theme.playerTheme
 import dev.olog.msc.shared.utils.isMarshmallow
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -92,7 +91,8 @@ class StatusBarColorBehavior @Inject constructor(
         when (newState) {
             SlidingUpPanelLayout.PanelState.EXPANDED -> {
                 // TODO check if it needed
-                if (context.isFullscreen() || context.isBigImage()) {
+                val playerTheme = context.playerTheme()
+                if (playerTheme.isFullscreen() || playerTheme.isBigImage()) {
                     activity.window.removeLightStatusBar()
                 } else {
                     activity.window.setLightStatusBar()

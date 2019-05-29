@@ -1,13 +1,14 @@
 apply plugin: 'com.android.library'
-apply from: '../base_module.gradle'
-
+apply from: '../base_module_2.gradle'
+apply from: '../dagger.gradle'
+apply from: '../kapt.gradle'
 
 dependencies {
     implementation project(':core')
     implementation project(':shared')
-    implementation project(':shared-ui-components')
     implementation project(':jaudiotagger')
     implementation project(':preferences-keys')
+    implementation project(':app-injection')
 
     implementation librariesAndroidX.coreKtx
 
@@ -15,6 +16,4 @@ dependencies {
     kapt librariesUi.glideProcessor
     // mandatory for glide compatibility
     kapt librariesUi.androidSupportAnnotation
-
-    implementation librariesAndroidX.appcompat
 }

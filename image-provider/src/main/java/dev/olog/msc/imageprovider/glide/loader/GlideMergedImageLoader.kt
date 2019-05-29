@@ -7,12 +7,14 @@ import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.track.FolderGateway
 import dev.olog.msc.core.gateway.track.GenreGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.imageprovider.glide.fetcher.GlideMergedImageFetcher
 import java.io.InputStream
+import javax.inject.Inject
 
 class GlideMergedImageLoader(
     private val context: Context,
@@ -52,8 +54,8 @@ class GlideMergedImageLoader(
         )
     }
 
-    class Factory(
-        private val context: Context,
+    class Factory @Inject constructor(
+        @ApplicationContext private val context: Context,
         private val folderGateway: FolderGateway,
         private val playlistGateway: PlaylistGateway,
         private val genreGateway: GenreGateway,

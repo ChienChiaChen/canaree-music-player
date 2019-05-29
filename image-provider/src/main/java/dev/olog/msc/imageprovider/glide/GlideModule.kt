@@ -15,26 +15,37 @@ import com.bumptech.glide.load.engine.executor.GlideExecutor.UncaughtThrowableSt
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.gateway.LastFmGateway
-import dev.olog.msc.core.gateway.UsedImageGateway
-import dev.olog.msc.core.gateway.podcast.PodcastGateway
-import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.core.gateway.track.FolderGateway
-import dev.olog.msc.core.gateway.track.GenreGateway
-import dev.olog.msc.core.gateway.track.PlaylistGateway
-import dev.olog.msc.core.gateway.track.SongGateway
+import dev.olog.msc.imageprovider.di.inject
 import dev.olog.msc.imageprovider.glide.loader.GlideLastFmImageLoader
 import dev.olog.msc.imageprovider.glide.loader.GlideMergedImageLoader
 import dev.olog.msc.imageprovider.glide.loader.GlideOriginalImageLoader
 import dev.olog.msc.imageprovider.glide.loader.GlideOverridenImageLoader
 import java.io.InputStream
+import javax.inject.Inject
 
 @GlideModule
 @Keep
 class GlideModule : AppGlideModule() {
 
-    override fun applyOptions(context: Context, builder: GlideBuilder) {
+    @Inject
+    internal lateinit var lastFmFactory: GlideLastFmImageLoader.Factory
+    @Inject
+    internal lateinit var originalFactory: GlideOriginalImageLoader.Factory
+    @Inject
+    internal lateinit var mergedFactory: GlideMergedImageLoader.Factory
+    @Inject
+    internal lateinit var overrideFactory: GlideOverridenImageLoader.Factory
 
+    private var injected = false
+
+    private fun injectIfNeeded(context: Context) {
+        if (!injected) {
+            injected = true
+            inject(context)
+        }
+    }
+
+    override fun applyOptions(context: Context, builder: GlideBuilder) {
         builder.setLogLevel(Log.ERROR)
             .setDefaultRequestOptions(defaultRequestOptions(context))
             .setDiskCacheExecutor(GlideExecutor.newDiskCacheExecutor(IGNORE))
@@ -55,24 +66,7 @@ class GlideModule : AppGlideModule() {
     }
 
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
-        val lastFmGateway = context.getClass<LastFmGateway>("lastFmGateway")
-        val songGateway = context.getClass<SongGateway>("songGateway")
-        val podcastGateway = context.getClass<PodcastGateway>("podcastGateway")
-        val folderGateway = context.getClass<FolderGateway>("folderGateway")
-        val genreGateway = context.getClass<GenreGateway>("genreGateway")
-        val playlistGateway = context.getClass<PlaylistGateway>("playlistGateway")
-        val prefsGateway = context.getClass<AppPreferencesGateway>("prefsGateway")
-        val usedImageGateway = context.getClass<UsedImageGateway>("usedImageGateway")
-
-        val lastFmFactory =
-            GlideLastFmImageLoader.Factory(context, lastFmGateway)
-        val originalFactory =
-            GlideOriginalImageLoader.Factory(songGateway, podcastGateway)
-        val mergedFactory = GlideMergedImageLoader.Factory(context, folderGateway,
-            playlistGateway, genreGateway, prefsGateway)
-        val overrideFactory = GlideOverridenImageLoader.Factory(
-            usedImageGateway, songGateway, podcastGateway
-        )
+        injectIfNeeded(context)
 
         registry.prepend(MediaId::class.java, InputStream::class.java, lastFmFactory)
         registry.prepend(MediaId::class.java, InputStream::class.java, mergedFactory)
@@ -81,16 +75,6 @@ class GlideModule : AppGlideModule() {
 
         // TODO check if has to be prepend or append
         registry.append(AudioFileCover::class.java, InputStream::class.java, AudioFileCoverLoader.Factory())
-    }
-
-    private fun <T> Context.getClass(className: String): T {
-        // TODO test performance
-        return javaClass.getDeclaredField(className).let {
-            it.isAccessible = true
-            val value = it.get(this)
-            @Suppress("UNCHECKED_CAST")
-            return@let value as T
-        }
     }
 
     override fun isManifestParsingEnabled(): Boolean = false

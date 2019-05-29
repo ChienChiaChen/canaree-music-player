@@ -1,4 +1,4 @@
-package dev.olog.msc.presentation.base.theme.player.theme
+package dev.olog.msc.theme
 
 import android.content.Context
 import dev.olog.msc.shared.ui.theme.HasPlayerTheme

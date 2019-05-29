@@ -16,10 +16,6 @@ import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
-import dev.olog.msc.presentation.base.theme.player.theme.isBigImage
-import dev.olog.msc.presentation.base.theme.player.theme.isClean
-import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
-import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
@@ -30,6 +26,7 @@ import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.distinctUntilChanged
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.theme.HasPlayerTheme
+import dev.olog.msc.shared.ui.theme.playerTheme
 import dev.olog.msc.shared.utils.isMarshmallow
 import kotlinx.android.synthetic.main.fragment_player.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
@@ -91,7 +88,7 @@ class PlayerFragment : BaseFragment(),
         val statusBarAlpha = if (!isMarshmallow()) 1f else 0f
         view.statusBar?.alpha = statusBarAlpha
 
-        if (context.isBigImage()) {
+        if (requireContext().playerTheme().isBigImage()) {
             val set = ConstraintSet()
             set.clone(view as ConstraintLayout)
             set.connect(view.list.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
@@ -169,10 +166,11 @@ class PlayerFragment : BaseFragment(),
     }
 
     override fun provideLayoutId(): Int {
+        val playerTheme = requireContext().playerTheme()
         return when {
-            context.isFullscreen() -> R.layout.fragment_player_fullscreen
-            context.isClean() -> R.layout.fragment_player_clean
-            context.isMini() -> R.layout.fragment_player_mini
+            playerTheme.isFullscreen() -> R.layout.fragment_player_fullscreen
+            playerTheme.isClean() -> R.layout.fragment_player_clean
+            playerTheme.isMini() -> R.layout.fragment_player_mini
             else -> R.layout.fragment_player
         }
     }

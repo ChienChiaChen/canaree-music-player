@@ -10,6 +10,7 @@ import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.imageprovider.glide.fetcher.GlideOverridenImageFetcher
 import java.io.InputStream
+import javax.inject.Inject
 
 internal class GlideOverridenImageLoader(
     private val usedImageGateway: UsedImageGateway,
@@ -39,7 +40,7 @@ internal class GlideOverridenImageLoader(
                 mediaId.isPodcastAlbum || mediaId.isPodcastArtist
     }
 
-    class Factory(
+    class Factory @Inject constructor(
         private val usedImageGateway: UsedImageGateway,
         private val songGateway: SongGateway,
         private val podcastGateway: PodcastGateway

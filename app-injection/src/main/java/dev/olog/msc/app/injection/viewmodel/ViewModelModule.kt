@@ -16,13 +16,26 @@
 
 package dev.olog.msc.app.injection.viewmodel
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
+import dagger.multibindings.IntoMap
+import dev.olog.msc.shared.dagger.ViewModelKey
+import javax.inject.Inject
 
 @Module
 abstract class ViewModelModule {
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: AppViewModelFactory): ViewModelProvider.Factory
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StubViewModel::class)
+    internal abstract fun bindViewModel(impl: StubViewModel): ViewModel
+
 }
+
+// TODO remove
+class StubViewModel @Inject constructor() : ViewModel()

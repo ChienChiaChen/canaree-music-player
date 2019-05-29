@@ -23,9 +23,6 @@ import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.list.drag.TouchableAdapter
 import dev.olog.msc.presentation.base.list.extensions.elevateSongOnTouch
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
-import dev.olog.msc.presentation.base.theme.player.theme.isClean
-import dev.olog.msc.presentation.base.theme.player.theme.isFullscreen
-import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.base.utils.*
 import dev.olog.msc.presentation.base.widgets.SwipeableView
 import dev.olog.msc.presentation.navigator.Navigator
@@ -35,6 +32,7 @@ import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.*
 import dev.olog.msc.shared.ui.theme.ImageShape
+import dev.olog.msc.shared.ui.theme.playerTheme
 import dev.olog.msc.shared.utils.TextUtils
 import kotlinx.android.synthetic.main.fragment_player_controls.view.*
 import kotlinx.android.synthetic.main.fragment_player_toolbar.view.*
@@ -235,7 +233,7 @@ class PlayerFragmentAdapter(
         view.previous.setOnClickListener { mediaProvider.skipToPrevious() }
 
         viewModel.observePlayerControlsVisibility()
-            .filter { !context.isFullscreen() && !context.isMini() }
+            .filter { !context.playerTheme().isFullscreen() && !context.playerTheme().isMini() }
             .subscribe(holder) { visible ->
                 view.previous.toggleVisibility(visible, true)
                 view.playPause.toggleVisibility(visible, true)
@@ -287,7 +285,7 @@ class PlayerFragmentAdapter(
         val isPlaying = playbackState.isPlaying()
         if (isPlaying || playbackState.isPaused()) {
             view.nowPlaying?.isActivated = isPlaying
-            if (view.context.isClean()) {
+            if (view.context.playerTheme().isClean()) {
                 view.bigCover?.isActivated = isPlaying
             } else {
                 view.coverWrapper?.isActivated = isPlaying

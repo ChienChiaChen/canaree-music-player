@@ -13,7 +13,6 @@ import dev.olog.msc.presentation.base.extensions.isExpanded
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
-import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.base.utils.getArtist
 import dev.olog.msc.presentation.base.utils.getDuration
 import dev.olog.msc.presentation.base.utils.getTitle
@@ -24,6 +23,7 @@ import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.isPaused
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.*
+import dev.olog.msc.shared.ui.theme.playerTheme
 import kotlinx.android.synthetic.main.fragment_mini_player.*
 import kotlinx.android.synthetic.main.fragment_mini_player.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -59,7 +59,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
         view.artist.text = modelSubtitle
 
 
-        view.coverWrapper.toggleVisibility(context.isMini(), true)
+        view.coverWrapper.toggleVisibility(requireContext().playerTheme().isMini(), true)
 
         mediaProvider.onMetadataChanged()
             .subscribe(viewLifecycleOwner) {
@@ -176,7 +176,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
     }
 
     private fun updateImage(metadata: MediaMetadataCompat) {
-        if (!context.isMini()) {
+        if (!requireContext().playerTheme().isMini()) {
             return
         }
         bigCover.loadImage(metadata)

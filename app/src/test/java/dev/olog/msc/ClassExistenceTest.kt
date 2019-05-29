@@ -4,8 +4,6 @@ import dev.olog.msc.core.Classes
 import dev.olog.msc.floatingwindowservice.FloatingWindowService
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.presentation.home.MainActivity
-import dev.olog.msc.presentation.shortcuts.ShortcutsActivity
-import dev.olog.msc.presentation.shortcuts.playlist.chooser.PlaylistChooserActivity
 import org.junit.Assert
 import org.junit.Test
 

@@ -6,9 +6,9 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.shared.ui.extensions.tint
 
 object CoverUtils {
 
@@ -54,7 +54,7 @@ object CoverUtils {
         val icon = drawable.getDrawable(1) as Drawable
 
         val iconColorOverride = ContextCompat.getColor(context, R.color.icon_override)
-        icon.tint(iconColorOverride)
+        DrawableCompat.setTint(icon, iconColorOverride)
         val gradientColorOverride = ContextCompat.getColor(context, R.color.gradient_override)
         if (gradientColorOverride == 0) {
             // use custom color for light theme

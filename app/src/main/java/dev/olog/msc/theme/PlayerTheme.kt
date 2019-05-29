@@ -1,58 +1,44 @@
-package dev.olog.msc.presentation.base.theme.player.theme
+package dev.olog.msc.theme
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.presentation.base.R
-import io.reactivex.BackpressureStrategy
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.reactive.flow.asFlow
 import javax.inject.Inject
 
 class PlayerTheme @Inject constructor(
     @ApplicationContext private val context: Context,
     @ProcessLifecycle lifecycle: Lifecycle,
-    private val prefs: SharedPreferences,
-    private val rxPrefs: RxSharedPreferences
-) : DefaultLifecycleObserver, IPlayerTheme {
+    private val prefs: SharedPreferences
+) : DefaultLifecycleObserver, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private var job: Job? = null
     private var THEME = PlayerThemeEnum.DEFAULT
 
     init {
         lifecycle.addObserver(this)
-
     }
 
     override fun onStart(owner: LifecycleOwner) {
+        prefs.registerOnSharedPreferenceChangeListener(this)
         setInitialValue()
-        job?.cancel()
-        job = GlobalScope.launch {
-            rxPrefs.getString(
-                context.getString(R.string.prefs_appearance_key),
-                context.getString(R.string.prefs_appearance_entry_value_default)
-            )
-                .asObservable()
-                .toFlowable(BackpressureStrategy.LATEST)
-                .asFlow()
-                .drop(1) // skip initial emission
-                .collect {
-                    withContext(Dispatchers.Main) {
-                        onThemeChanged(it)
-                    }
-                }
-        }
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        job?.cancel()
+        prefs.unregisterOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        when (key){
+            context.getString(R.string.prefs_appearance_key) -> {
+                val value = context.getString(R.string.prefs_appearance_key)
+                val default = context.getString(R.string.prefs_appearance_entry_value_default)
+                onThemeChanged(prefs.getString(value, default)!!)
+            }
+        }
     }
 
     private fun setInitialValue() {
@@ -76,31 +62,31 @@ class PlayerTheme @Inject constructor(
         }
     }
 
-    override fun isDefault(): Boolean {
+    fun isDefault(): Boolean {
         return THEME == PlayerThemeEnum.DEFAULT
     }
 
-    override fun isFlat(): Boolean {
+    fun isFlat(): Boolean {
         return THEME == PlayerThemeEnum.FLAT
     }
 
-    override fun isSpotify(): Boolean {
+    fun isSpotify(): Boolean {
         return THEME == PlayerThemeEnum.SPOTIFY
     }
 
-    override fun isFullscreen(): Boolean {
+    fun isFullscreen(): Boolean {
         return THEME == PlayerThemeEnum.FULLSCREEN
     }
 
-    override fun isBigImage(): Boolean {
+    fun isBigImage(): Boolean {
         return THEME == PlayerThemeEnum.BIG_IMAGE
     }
 
-    override fun isClean(): Boolean {
+    fun isClean(): Boolean {
         return THEME == PlayerThemeEnum.CLEAN
     }
 
-    override fun isMini(): Boolean {
+    fun isMini(): Boolean {
         return THEME == PlayerThemeEnum.MINI
     }
 }
