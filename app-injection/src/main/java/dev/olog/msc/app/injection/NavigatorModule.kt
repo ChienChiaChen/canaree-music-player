@@ -11,7 +11,7 @@ import dev.olog.msc.presentation.navigator.NavigatorAbout
 import javax.inject.Singleton
 
 @Module
-abstract class NavigatorModule {
+internal abstract class NavigatorModule {
 
     @Binds
     @Singleton

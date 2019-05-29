@@ -1,3 +1,5 @@
+apply plugin: 'kotlin-kapt'
+
 kapt {
     useBuildCache = true
     correctErrorTypes = true

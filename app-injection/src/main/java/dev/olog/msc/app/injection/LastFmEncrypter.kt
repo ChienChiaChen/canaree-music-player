@@ -10,7 +10,7 @@ private val SALT = byteArrayOf(
         -45, 77, -117, -36, -113, -11, 32, -64, 89
 )
 
-class LastFmEncrypter @Inject constructor() : IEncrypter {
+internal class LastFmEncrypter @Inject constructor() : IEncrypter {
 
     private val key by lazy { AesCbcWithIntegrity.generateKeyFromPassword(
         BuildConfig.AES_PASSWORD,

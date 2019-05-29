@@ -5,7 +5,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.navigator.IPopupNavigator
 import javax.inject.Inject
 
-class MainPopupNavigator @Inject constructor() : IPopupNavigator {
+internal class MainPopupNavigator @Inject constructor() : IPopupNavigator {
 
 //    override fun toAboutActivity(activity: FragmentActivity) {
 //        val intent = Intent(activity, AboutActivity::class.java)

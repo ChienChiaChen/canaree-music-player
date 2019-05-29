@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.drawable.toBitmap
 import com.bumptech.glide.Priority
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
@@ -35,14 +36,17 @@ suspend fun Context.getCachedBitmap(
         .priority(Priority.IMMEDIATE)
         .extend(extension)
         .onlyRetrieveFromCache(true)
-        .into(object : SimpleTarget<Bitmap>() {
+        .into(object : CustomTarget<Bitmap>() {
+
+            override fun onLoadCleared(placeholder: Drawable?) {}
+
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                 continuation.resume(resource)
             }
 
             override fun onLoadFailed(errorDrawable: Drawable?) {
                 if (withError) {
-                    error.into(object : SimpleTarget<Bitmap>() {
+                    error.into(object : CustomTarget<Bitmap>() {
                         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                             continuation.resume(resource)
                         }
@@ -50,6 +54,8 @@ suspend fun Context.getCachedBitmap(
                         override fun onLoadFailed(errorDrawable: Drawable?) {
                             continuation.resume(null)
                         }
+
+                        override fun onLoadCleared(placeholder: Drawable?) {}
                     })
 
                 } else {

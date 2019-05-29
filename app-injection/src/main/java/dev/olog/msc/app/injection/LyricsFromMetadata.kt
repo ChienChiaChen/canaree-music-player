@@ -2,12 +2,10 @@ package dev.olog.msc.app.injection
 
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.offlinelyrics.domain.ILyricsFromMetadata
-import org.jaudiotagger.audio.AudioFileIO
-import org.jaudiotagger.tag.FieldKey
 import java.io.File
 import javax.inject.Inject
 
-class LyricsFromMetadata @Inject constructor() : ILyricsFromMetadata {
+internal class LyricsFromMetadata @Inject constructor() : ILyricsFromMetadata {
 
     override fun getLyrics(song: Song): String {
         try {

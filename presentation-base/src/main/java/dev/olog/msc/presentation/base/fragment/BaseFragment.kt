@@ -1,22 +1,28 @@
 package dev.olog.msc.presentation.base.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dagger.android.support.DaggerFragment
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import javax.inject.Inject
 
-abstract class BaseFragment : DaggerFragment() {
+abstract class BaseFragment : Fragment() {
 
     // workaround to avoid duplicated classes
     @Inject
     internal lateinit var songGateway: SongGateway
+
+    override fun onAttach(context: Context) {
+        injectComponent()
+        super.onAttach(context)
+    }
 
     @CallSuper
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -32,6 +38,10 @@ abstract class BaseFragment : DaggerFragment() {
 
     fun getSlidingPanel(): SlidingUpPanelLayout? {
         return (activity as HasSlidingPanel).getSlidingPanel()
+    }
+
+    protected open fun injectComponent(){
+
     }
 
 }

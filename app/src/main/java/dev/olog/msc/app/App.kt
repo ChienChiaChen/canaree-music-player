@@ -6,8 +6,9 @@ import android.preference.PreferenceManager
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
 import dev.olog.msc.app.base.ThemedApp
-import dev.olog.msc.app.injection.AppComponent
+import dev.olog.msc.app.injection.CoreComponent
 import dev.olog.msc.core.interactor.SleepTimerUseCase
+import dev.olog.msc.dagger.DaggerAppComponent
 import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.shared.TrackUtils
 import io.alterac.blurkit.BlurKit
@@ -64,7 +65,8 @@ class App : ThemedApp() {
     }
 
     override fun injectComponenet() {
-        AppComponent.appComponent(this).inject(this)
+        val coreComponent = CoreComponent.appComponent(this)
+        DaggerAppComponent.factory().create(coreComponent).inject(this)
     }
 
 }

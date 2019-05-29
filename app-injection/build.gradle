@@ -74,6 +74,7 @@ dependencies {
     implementation librariesCore.lifecycleJava8
     implementation librariesCore.lifecycleKtx
     implementation librariesUtils.aesCrypto
+    implementation librariesUtils.billing
     implementation librariesUi.slidingPanel
 
 }

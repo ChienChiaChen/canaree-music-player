@@ -24,6 +24,7 @@ import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.presentation.home.base.MusicGlueActivity
+import dev.olog.msc.presentation.home.di.inject
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
@@ -50,6 +51,10 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     @Suppress("unused")
     @Inject
     lateinit var rateAppDialog: RateAppDialog
+
+    override fun injectComponents() {
+        inject()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

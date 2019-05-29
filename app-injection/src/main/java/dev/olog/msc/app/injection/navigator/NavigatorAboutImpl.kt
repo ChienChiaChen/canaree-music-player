@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
 
-class NavigatorAboutImpl @Inject constructor() : NavigatorAbout {
+internal class NavigatorAboutImpl @Inject constructor() : NavigatorAbout {
 
 //    private var lastRequest: Long = -1
 //

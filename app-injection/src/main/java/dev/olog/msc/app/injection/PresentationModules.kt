@@ -4,14 +4,12 @@ import dagger.Module
 
 @Module(
     includes = [
-//        MainActivityInjector::class,
 //        AboutActivityInjector::class,
 //        PreferencesActivityInjector::class,
 //        SplashActivityModule::class,
 //
 //        MiniPlayerFragmentModule::class,
 //        CategoriesFragmentsModule::class,
-//        TabFragmentModule::class,
 //
 //        CreatePlaylistModule::class,
 //        FolderTreeFragmentModule::class,
@@ -26,4 +24,4 @@ import dagger.Module
 //        OfflineLyricsModule::class
     ]
 )
-abstract class PresentationModules
+internal abstract class PresentationModules

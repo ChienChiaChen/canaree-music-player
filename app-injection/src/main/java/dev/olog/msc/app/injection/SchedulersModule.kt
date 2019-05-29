@@ -10,7 +10,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 @Module
-abstract class SchedulersModule {
+internal abstract class SchedulersModule {
 
     @Binds
     @Singleton

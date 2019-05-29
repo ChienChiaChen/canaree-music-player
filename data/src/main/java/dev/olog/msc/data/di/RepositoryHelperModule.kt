@@ -12,15 +12,19 @@ import dev.olog.msc.data.di.Migrations.MIGRATION_15_16
 import javax.inject.Singleton
 
 @Module
-class RepositoryHelperModule {
+abstract class RepositoryHelperModule {
 
-    @Provides
-    @Singleton
-    internal fun provideRoomDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(context, AppDatabase::class.java, "db")
+    @Module
+    companion object {
+        @Provides
+        @JvmStatic
+        @Singleton
+        internal fun provideRoomDatabase(@ApplicationContext context: Context): AppDatabase {
+            return Room.databaseBuilder(context, AppDatabase::class.java, "db")
 //            .fallbackToDestructiveMigration()
-            .addMigrations(MIGRATION_15_16)
-            .build()
+                .addMigrations(MIGRATION_15_16)
+                .build()
+        }
     }
 
 }

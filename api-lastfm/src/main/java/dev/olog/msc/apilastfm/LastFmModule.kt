@@ -2,6 +2,7 @@ package dev.olog.msc.apilastfm
 
 import android.content.Context
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dev.olog.msc.apilastfm.annotation.Impl
@@ -18,16 +19,19 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
-class LastFmModule {
+abstract class LastFmModule {
+
+    @Binds
+    @Singleton
+    internal abstract fun provideLastFmRepository(repository: LastFmRepository): LastFmGateway
+
+    @Binds
+    @Singleton
+    @Proxy
+    internal abstract fun provideLastFmProxy(proxy: LastFmProxy): LastFmService
 
     @Module
     companion object {
-        @Provides
-        @JvmStatic
-        @Singleton
-        internal fun provideLastFmRepository(repository: LastFmRepository): LastFmGateway {
-            return repository
-        }
 
         @Provides
         @JvmStatic
@@ -45,12 +49,7 @@ class LastFmModule {
             return retrofit.create(LastFmService::class.java)
         }
 
-        @Provides
-        @Singleton
         @JvmStatic
-        @Proxy
-        internal fun provideLastFmProxy(proxy: LastFmProxy): LastFmService = proxy
-
         private fun provideOkHttp(context: Context): OkHttpClient {
             return OkHttpClient.Builder()
                 .addNetworkInterceptor(logInterceptor())
@@ -60,6 +59,7 @@ class LastFmModule {
                 .build()
         }
 
+        @JvmStatic
         private fun logInterceptor(): Interceptor {
             val loggingInterceptor = HttpLoggingInterceptor()
             if (BuildConfig.DEBUG) {
@@ -71,6 +71,7 @@ class LastFmModule {
             return loggingInterceptor
         }
 
+        @JvmStatic
         private fun headerInterceptor(context: Context): Interceptor {
             return Interceptor {
                 val original = it.request()

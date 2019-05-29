@@ -16,45 +16,45 @@ import dev.olog.msc.data.prefs.app.AppPreferencesImpl
 import dev.olog.msc.data.prefs.app.AppSortingImpl
 import javax.inject.Singleton
 
-@Module(includes = [PreferenceModule.Bindings::class])
-class PreferenceModule{
+@Module
+abstract class PreferenceModule{
 
-
-    @Provides
-    @Singleton
-    internal fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(context)
-    }
-
-    @Provides
-    @Singleton
-    internal fun provideRxPreferences(preferences: SharedPreferences): RxSharedPreferences {
-        return RxSharedPreferences.create(preferences)
-    }
 
     @Module
-    internal interface Bindings {
-
-        @Binds
+    companion object {
+        @Provides
+        @JvmStatic
         @Singleton
-        fun provideEqualizerPreferences(dataStore: EqualizerPreferenceImpl): EqualizerPreferencesGateway
+        internal fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+            return PreferenceManager.getDefaultSharedPreferences(context)
+        }
 
-        @Binds
+        @Provides
+        @JvmStatic
         @Singleton
-        fun provideTutorialPreferences(dataStore: TutorialPreferenceImpl): TutorialPreferenceGateway
-
-        @Binds
-        @Singleton
-        fun provideAppPreferences(dataStore: AppPreferencesImpl): AppPreferencesGateway
-
-        @Binds
-        @Singleton
-        fun provideMusicPreferences(dataStore: MusicPreferencesImpl): MusicPreferencesGateway
-
-        @Binds
-        @Singleton
-        fun provideSortingPrefs(impl: AppSortingImpl): SortPreferencesGateway
-
+        internal fun provideRxPreferences(preferences: SharedPreferences): RxSharedPreferences {
+            return RxSharedPreferences.create(preferences)
+        }
     }
+
+    @Binds
+    @Singleton
+    internal abstract fun provideEqualizerPreferences(dataStore: EqualizerPreferenceImpl): EqualizerPreferencesGateway
+
+    @Binds
+    @Singleton
+    internal abstract fun provideTutorialPreferences(dataStore: TutorialPreferenceImpl): TutorialPreferenceGateway
+
+    @Binds
+    @Singleton
+    internal abstract fun provideAppPreferences(dataStore: AppPreferencesImpl): AppPreferencesGateway
+
+    @Binds
+    @Singleton
+    internal abstract fun provideMusicPreferences(dataStore: MusicPreferencesImpl): MusicPreferencesGateway
+
+    @Binds
+    @Singleton
+    internal abstract fun provideSortingPrefs(impl: AppSortingImpl): SortPreferencesGateway
 
 }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
-import dagger.android.AndroidInjection
 import dev.olog.msc.presentation.base.extensions.setLightStatusBar
 import dev.olog.msc.shared.ui.theme.immersive
 
@@ -12,7 +11,7 @@ abstract class BaseActivity : AppCompatActivity(), ThemedActivity {
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        injectComponents()
         themeAccentColor(this, theme)
         super.onCreate(savedInstanceState)
         window.setLightStatusBar()

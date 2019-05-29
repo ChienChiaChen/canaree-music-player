@@ -2,7 +2,6 @@ package dev.olog.msc.presentation.tabs
 
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.MediaIdCategory
@@ -20,6 +19,7 @@ import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.adapters.TabFragmentAdapter
 import dev.olog.msc.presentation.tabs.adapters.TabFragmentNestedAdapter
+import dev.olog.msc.presentation.tabs.di.inject
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.ui.extensions.subscribe
@@ -68,7 +68,10 @@ class TabFragment : BaseFragment(), SetupNestedList {
                 category == MediaIdCategory.PODCASTS_ALBUMS || category == MediaIdCategory.PODCASTS_ARTISTS
     }
 
-    @CallSuper
+    override fun injectComponent() {
+        inject()
+    }
+
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         val gridLayoutManager = LayoutManagerFactory.get(act, category, adapter)
         view.list.layoutManager = gridLayoutManager

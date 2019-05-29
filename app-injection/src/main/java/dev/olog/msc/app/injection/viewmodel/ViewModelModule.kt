@@ -20,22 +20,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
-import dagger.multibindings.IntoMap
-import dev.olog.msc.shared.dagger.ViewModelKey
-import javax.inject.Inject
+import dagger.multibindings.Multibinds
 
 @Module
-abstract class ViewModelModule {
+internal abstract class ViewModelModule {
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: AppViewModelFactory): ViewModelProvider.Factory
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(StubViewModel::class)
-    internal abstract fun bindViewModel(impl: StubViewModel): ViewModel
+    @Multibinds
+    abstract fun viewModels(): Map<Class<out ViewModel>, ViewModel>
 
 }
-
-// TODO remove
-class StubViewModel @Inject constructor() : ViewModel()

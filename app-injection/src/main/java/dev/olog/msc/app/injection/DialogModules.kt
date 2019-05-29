@@ -15,4 +15,4 @@ import dagger.Module
 //            RemoveDuplicatesDialogModule::class
 //        ]
 )
-abstract class DialogModules
+internal abstract class DialogModules

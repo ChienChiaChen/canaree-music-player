@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply from: '../base_module_2.gradle'
+apply from: '../dagger.gradle'
 
 android {
 

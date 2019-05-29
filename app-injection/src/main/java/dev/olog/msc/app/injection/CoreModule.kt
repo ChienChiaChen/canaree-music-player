@@ -15,7 +15,7 @@ import dev.olog.msc.offlinelyrics.domain.ILyricsFromMetadata
 import javax.inject.Singleton
 
 @Module
-abstract class AppModule {
+internal abstract class CoreModule {
 
     @Binds
     @ApplicationContext
@@ -31,12 +31,14 @@ abstract class AppModule {
     @Module
     companion object {
         @Provides
+        @JvmStatic
         @ProcessLifecycle
         internal fun provideAppLifecycle(): Lifecycle {
             return ProcessLifecycleOwner.get().lifecycle
         }
 
         @Provides
+        @JvmStatic
         internal fun provideWidgetsClasses(): WidgetClasses {
             return object : WidgetClasses {
                 override fun get(): List<Class<*>> {

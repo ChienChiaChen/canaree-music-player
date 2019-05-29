@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
 
-class NavigatorImpl @Inject internal constructor(
+internal class NavigatorImpl @Inject internal constructor(
     @ProcessLifecycle lifecycle: Lifecycle
 //    private val popupFactory: PopupMenuFactory,
 //    private val mainPopup: MainPopupDialog,
