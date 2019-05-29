@@ -1,0 +1,7 @@
+apply plugin: 'kotlin-kapt'
+apply from: '../kapt.gradle'
+
+dependencies {
+    implementation librariesCore.dagger
+    kapt librariesCore.daggerProcessor
+}

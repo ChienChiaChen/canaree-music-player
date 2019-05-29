@@ -1,0 +1,24 @@
+apply from: '../base_module_2.gradle'
+apply from: '../dagger.gradle'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+}
+
+dependecies {
+    implementation project(':core')
+    implementation project(':shared')
+    implementation project(':shared-ui-components')
+    implementation project(':presentation-base')
+    implementation project(':presentation-navigator')
+
+    implementation librariesAndroidX.core
+    implementation librariesAndroidX.coreKtx
+    implementation librariesAndroidX.material
+    implementation librariesAndroidX.recycler
+    implementation librariesAndroidX.material
+    implementation librariesUi.constraintLayout
+}

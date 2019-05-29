@@ -1,0 +1,55 @@
+apply plugin: 'com.android.library'
+apply from: '../base_module_2.gradle'
+apply from: '../dagger.gradle'
+
+dependencies {
+    implementation project(':core')
+
+    implementation project(':jaudiotagger')
+    implementation project(':tap-target-view')
+
+    implementation project(':shared')
+    implementation project(':shared-core')
+    implementation project(':shared-ui-components')
+    implementation project(':offline-lyrics')
+    implementation project(':image-provider')
+
+    implementation project(':api-lastfm')
+
+    implementation project(':data')
+
+    implementation project(':service-music')
+    implementation project(':service-floating-window')
+
+    implementation project(':app-widgets')
+    implementation project(':app-shortcuts')
+
+    implementation project(':pro')
+    implementation project(':presentation-base')
+    implementation project(':presentation-base-list')
+    implementation project(':presentation-navigator')
+    implementation project(':presentation-search')
+    implementation project(':presentation-offline-lyrics')
+    implementation project(':presentation-equalizer')
+    implementation project(':presentation-edit-item')
+    implementation project(':presentation-home')
+    implementation project(':presentation-player')
+    implementation project(':presentation-player-mini')
+    implementation project(':presentation-sleep-timer')
+    implementation project(':presentation-tabs')
+    implementation project(':presentation-tabs-folder-tree')
+    implementation project(':presentation-categories')
+    implementation project(':presentation-detail')
+    implementation project(':presentation-playing-queue')
+    implementation project(':presentation-splash')
+    implementation project(':presentation-preferences')
+    implementation project(':presentation-recently-added')
+    implementation project(':presentation-related-artists')
+    implementation project(':presentation-popup')
+    implementation project(':presentation-about')
+    implementation project(':presentation-dialogs')
+    implementation project(':presentation-create-playlist')
+    debugImplementation project(':presentation-debug')
+
+
+}
