@@ -1,5 +1,6 @@
 package dev.olog.msc.presentation.player.appearance
 
+import android.content.Context
 import android.content.res.ColorStateList
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
@@ -11,7 +12,7 @@ import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.ui.extensions.animateBackgroundColor
 import dev.olog.msc.shared.ui.extensions.animateTextColor
 import dev.olog.msc.shared.ui.extensions.subscribe
-import dev.olog.msc.shared.ui.theme.HasPlayerTheme
+import dev.olog.msc.shared.ui.theme.playerTheme
 import kotlinx.android.synthetic.main.fragment_player_controls.view.*
 import kotlinx.android.synthetic.main.fragment_player_toolbar.view.*
 import kotlinx.android.synthetic.main.player_controls.view.*
@@ -19,15 +20,16 @@ import kotlinx.android.synthetic.main.player_controls.view.*
 interface IPlayerAppearanceDelegate {
 
     companion object {
-        fun get(hasPlayerTheme: HasPlayerTheme, viewModel: PlayerFragmentViewModel): IPlayerAppearanceDelegate {
+        fun get(context: Context, viewModel: PlayerFragmentViewModel): IPlayerAppearanceDelegate {
+            val playerTheme = context.playerTheme()
             return when {
-                hasPlayerTheme.isDefault() -> AppearanceDefault(viewModel)
-                hasPlayerTheme.isFlat() -> AppearanceFlat(viewModel)
-                hasPlayerTheme.isSpotify() -> AppearanceSpotify(viewModel)
-                hasPlayerTheme.isFullscreen() -> AppearanceFullscreen(viewModel)
-                hasPlayerTheme.isBigImage() -> AppearanceBigImage(viewModel)
-                hasPlayerTheme.isClean() -> AppearanceClean(viewModel)
-                hasPlayerTheme.isMini() -> AppearanceMini(viewModel)
+                playerTheme.isDefault() -> AppearanceDefault(viewModel)
+                playerTheme.isFlat() -> AppearanceFlat(viewModel)
+                playerTheme.isSpotify() -> AppearanceSpotify(viewModel)
+                playerTheme.isFullscreen() -> AppearanceFullscreen(viewModel)
+                playerTheme.isBigImage() -> AppearanceBigImage(viewModel)
+                playerTheme.isClean() -> AppearanceClean(viewModel)
+                playerTheme.isMini() -> AppearanceMini(viewModel)
                 else -> throw IllegalArgumentException("invalid theme")
             }
         }

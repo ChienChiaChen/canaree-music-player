@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.view.View
 import android.view.Window
 import dev.olog.msc.presentation.base.R
-import dev.olog.msc.shared.ui.theme.HasImmersive
+import dev.olog.msc.shared.ui.theme.immersive
 import dev.olog.msc.shared.utils.isMarshmallow
 import dev.olog.msc.shared.utils.isOreo
 
@@ -16,7 +16,7 @@ fun Window.setLightStatusBar(){
 
     var flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
 
-    if ((context.applicationContext as HasImmersive).isEnabled()){
+    if (context.immersive().isEnabled()){
         flags = flags or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -41,7 +41,7 @@ fun Window.removeLightStatusBar(){
 
     var flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
 
-    if ((context.applicationContext as HasImmersive).isEnabled()){
+    if (context.immersive().isEnabled()){
         flags = flags or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY

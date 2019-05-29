@@ -25,7 +25,6 @@ import dev.olog.msc.shared.extensions.extractBookmark
 import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.distinctUntilChanged
 import dev.olog.msc.shared.ui.extensions.subscribe
-import dev.olog.msc.shared.ui.theme.HasPlayerTheme
 import dev.olog.msc.shared.ui.theme.playerTheme
 import dev.olog.msc.shared.utils.isMarshmallow
 import kotlinx.android.synthetic.main.fragment_player.*
@@ -70,11 +69,7 @@ class PlayerFragment : BaseFragment(),
             viewLifecycleOwner.lifecycle,
             activity as MediaProvider,
             navigator, viewModel,
-            IPlayerAppearanceDelegate.get(
-                ctx.applicationContext as HasPlayerTheme,
-                viewModel
-            ),
-            this
+            IPlayerAppearanceDelegate.get(requireContext(), viewModel), this
         )
 
         layoutManager = LinearLayoutManager(context)

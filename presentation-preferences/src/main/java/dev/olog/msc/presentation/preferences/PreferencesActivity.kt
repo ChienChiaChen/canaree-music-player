@@ -15,7 +15,7 @@ import dev.olog.msc.presentation.base.activity.ThemedActivity
 import dev.olog.msc.presentation.base.extensions.setLightStatusBar
 import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.pro.IBilling
-import dev.olog.msc.shared.ui.theme.HasImmersive
+import dev.olog.msc.shared.ui.theme.immersive
 import kotlinx.android.synthetic.main.activity_preferences.*
 import javax.inject.Inject
 
@@ -72,7 +72,7 @@ class PreferencesActivity : DaggerAppCompatActivity(),
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && (applicationContext as HasImmersive).isEnabled()){
+        if (hasFocus && immersive().isEnabled()){
             window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or
                     View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or

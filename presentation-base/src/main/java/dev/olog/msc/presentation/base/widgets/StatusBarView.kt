@@ -6,7 +6,7 @@ import android.view.View
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.ui.R
 import dev.olog.msc.shared.ui.extensions.colorSurface
-import dev.olog.msc.shared.ui.theme.HasImmersive
+import dev.olog.msc.shared.ui.theme.immersive
 import dev.olog.msc.shared.utils.isP
 
 /**
@@ -43,7 +43,7 @@ class StatusBarView : View {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         if (!isInEditMode) {
             val height = when {
-                (context.applicationContext as HasImmersive).isEnabled() -> 0
+                context.immersive().isEnabled() -> 0
                 hasNotch -> statusBarHeightPlusNotch
                 else -> defaultStatusBarHeight
             }
