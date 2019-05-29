@@ -1,30 +1,30 @@
-package dev.olog.msc.musicservice.equalizer.impl
+package dev.olog.msc.app.injection.equalizer
 
-import android.media.audiofx.Virtualizer
-import dev.olog.msc.core.equalizer.IVirtualizer
+import android.media.audiofx.BassBoost
+import dev.olog.msc.core.equalizer.IBassBoost
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
 import javax.inject.Inject
 
-internal class VirtualizerImpl @Inject constructor(
+internal class BassBoostImpl @Inject constructor(
         private val equalizerPrefsUseCase: EqualizerPreferencesGateway
 
-) : IVirtualizer {
+) : IBassBoost {
 
-    private var virtualizer : Virtualizer? = null
+    private var bassBoost : BassBoost? = null
 
     override fun getStrength(): Int {
-        return useOrDefault({ virtualizer!!.roundedStrength.toInt() }, 0)
+        return useOrDefault({ bassBoost!!.roundedStrength.toInt() }, 0)
     }
 
     override fun setStrength(value: Int) {
         use {
-            virtualizer!!.setStrength(value.toShort())
+            bassBoost!!.setStrength(value.toShort())
         }
     }
 
     override fun setEnabled(enabled: Boolean) {
         use {
-            virtualizer!!.enabled = enabled
+            bassBoost!!.enabled = enabled
         }
     }
 
@@ -32,21 +32,21 @@ internal class VirtualizerImpl @Inject constructor(
         release()
 
         use {
-            virtualizer = Virtualizer(0, audioSessionId)
-            virtualizer!!.enabled = equalizerPrefsUseCase.isEqualizerEnabled()
+            bassBoost = BassBoost(0, audioSessionId)
+            bassBoost!!.enabled = equalizerPrefsUseCase.isEqualizerEnabled()
         }
 
         try {
-            val properties = equalizerPrefsUseCase.getVirtualizerSettings()
-            val settings = Virtualizer.Settings(properties)
-            virtualizer!!.properties = settings
+            val properties = equalizerPrefsUseCase.getBassBoostSettings()
+            val settings = BassBoost.Settings(properties)
+            bassBoost!!.properties = settings
         } catch (ex: Exception){}
     }
 
     override fun release() {
-        virtualizer?.let {
+        bassBoost?.let {
             try {
-                equalizerPrefsUseCase.saveVirtualizerSettings(it.properties.toString())
+                equalizerPrefsUseCase.saveBassBoostSettings(it.properties.toString())
             } catch (ex: Exception){}
             use {
                 it.release()

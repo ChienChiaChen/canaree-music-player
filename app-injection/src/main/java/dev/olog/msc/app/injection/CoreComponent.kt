@@ -10,14 +10,18 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.BindsInstance
 import dagger.Component
 import dev.olog.msc.apilastfm.LastFmModule
+import dev.olog.msc.app.injection.equalizer.EqualizerModule
 import dev.olog.msc.app.injection.viewmodel.ViewModelModule
+import dev.olog.msc.core.IEncrypter
+import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
+import dev.olog.msc.core.equalizer.IBassBoost
+import dev.olog.msc.core.equalizer.IEqualizer
+import dev.olog.msc.core.equalizer.IVirtualizer
 import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.executors.IoDispatcher
-import dev.olog.msc.core.gateway.LastFmGateway
-import dev.olog.msc.core.gateway.PlayingQueueGateway
-import dev.olog.msc.core.gateway.UsedImageGateway
+import dev.olog.msc.core.gateway.*
 import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
 import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
@@ -52,11 +56,8 @@ import javax.inject.Singleton
 //        PresentationModules::class,
         NavigatorModule::class,
 //        WidgetBindingModule::class,
-        ViewModelModule::class
-
-//        // music service
-//        MusicServiceInjector::class,
-//        EqualizerModule::class,
+        ViewModelModule::class,
+        EqualizerModule::class
 
 //        // floating info service
 //        FloatingWindowServiceInjector::class
@@ -92,8 +93,17 @@ interface CoreComponent {
     fun lastFmGateway(): LastFmGateway
     fun usedImageGateway(): UsedImageGateway
     fun playingQueueGateway(): PlayingQueueGateway
+    fun favoriteGateway(): FavoriteGateway
+    fun searchGateway(): SearchGateway
+    fun widgetClasses(): WidgetClasses
 
     fun sharedPreferences(): SharedPreferences
+
+    fun equalizer(): IEqualizer
+    fun virtualizer(): IVirtualizer
+    fun bassBoost(): IBassBoost
+
+    fun encrypter(): IEncrypter
 
 //    fun appShortcuts(): AppShortcuts TODO restore
 
@@ -116,7 +126,7 @@ interface CoreComponent {
         private var coreComponent: CoreComponent? = null
 
         fun appComponent(app: Application): CoreComponent {
-            if (coreComponent == null){
+            if (coreComponent == null) {
                 // not double checking because it will be created in App.kt on main thread at app startup
                 coreComponent = DaggerCoreComponent.factory().create(app)
             }

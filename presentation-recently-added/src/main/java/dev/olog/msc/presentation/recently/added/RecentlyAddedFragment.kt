@@ -11,6 +11,7 @@ import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.recently.added.di.inject
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.fragment_recently_added.*
@@ -43,6 +44,10 @@ class RecentlyAddedFragment : BaseFragment() {
         viewModelProvider<RecentlyAddedFragmentViewModel>(
             viewModelFactory
         )
+    }
+
+    override fun injectComponent() {
+        inject()
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {

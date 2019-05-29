@@ -6,16 +6,20 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import dev.olog.msc.presentation.base.activity.BaseActivity
+import androidx.appcompat.app.AppCompatActivity
+import dev.olog.msc.presentation.base.activity.ThemedActivity
 import dev.olog.msc.shared.Permissions
 import dev.olog.msc.shared.core.lazyFast
 import kotlinx.android.synthetic.main.activity_splash.*
 
-class SplashActivity : BaseActivity(), View.OnClickListener {
+class SplashActivity : AppCompatActivity(),
+    View.OnClickListener,
+    ThemedActivity{
 
     private val adapter by lazyFast { SplashActivityViewPagerAdapter(supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        themeAccentColor(this, theme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 

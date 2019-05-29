@@ -23,6 +23,7 @@ import dev.olog.msc.presentation.base.utils.showKeyboard
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.search.adapters.SearchFragmentAdapter
 import dev.olog.msc.presentation.search.adapters.SearchFragmentNestedAdapter
+import dev.olog.msc.presentation.search.di.inject
 import dev.olog.msc.shared.core.flow.debounceFirst
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.bindinds.afterTextChange
@@ -73,6 +74,10 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
             setReorderingAllowed(true)
         }
         super.onDetach()
+    }
+
+    override fun injectComponent() {
+        inject()
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {

@@ -25,7 +25,7 @@ import dev.olog.msc.presentation.player.widgets.shadow.PlayerShadowImageView.Com
 import dev.olog.msc.shared.extensions.dpToPx
 import kotlin.properties.Delegates
 
-class PlayerShadowImageView : PlayerImageView {
+class PlayerShadowImageView(context: Context, attrs: AttributeSet?) : PlayerImageView(context, attrs) {
 
     companion object {
         private const val DEFAULT_RADIUS = 0.5f
@@ -37,10 +37,6 @@ class PlayerShadowImageView : PlayerImageView {
         internal const val DOWNSCALE_FACTOR = 0.2f
     }
 
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init(attrs)
-    }
-
 
     var radiusOffset by Delegates.vetoable(DEFAULT_RADIUS) { _, _, newValue ->
         newValue > 0F || newValue <= 1
@@ -48,7 +44,7 @@ class PlayerShadowImageView : PlayerImageView {
 
     var shadowColor = DEFAULT_COLOR
 
-    private fun init(attrs: AttributeSet?) {
+    init {
         if (!isInEditMode) {
             BlurShadow.init(context.applicationContext)
             cropToPadding = false

@@ -16,6 +16,7 @@ import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.interactor.SleepTimerUseCase
+import dev.olog.msc.musicservice.di.inject
 import dev.olog.msc.musicservice.helper.CarHelper
 import dev.olog.msc.musicservice.helper.MediaIdHelper
 import dev.olog.msc.musicservice.helper.MediaItemGenerator
@@ -62,6 +63,7 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService(), CoroutineScop
     internal lateinit var lastFmScrobbling: LastFmScrobbling
 
     override fun onCreate() {
+        inject()
         super.onCreate()
 
         sessionToken = mediaSession.sessionToken

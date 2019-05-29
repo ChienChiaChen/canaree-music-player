@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-apply from: '../base_module.gradle'
+apply from: '../base_module_2.gradle'
+apply from: '../dagger.gradle'
 
 android {
     buildTypes {
@@ -19,7 +20,7 @@ android {
 }
 
 dependencies {
-    implementation project(':core')
+    implementation project(':app-injection')
     implementation project(':shared')
     implementation project(':image-provider')
 
@@ -28,13 +29,11 @@ dependencies {
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
-    implementation librariesCore.daggerAndroid
-    kapt librariesCore.daggerAndroidProcessor
-    api librariesMusic.remoteExoPlayer
+    implementation librariesMusic.remoteExoPlayer
 
-//    api project(librariesMusic.exoPlayer)
+//    implementation project(librariesMusic.exoPlayer)
 //    implementation project(librariesMusic.exoPlayerFlac)
 //    implementation project(librariesMusic.exoPlayerOpus)
 //    implementation project(librariesMusic.exoPlayerFfmpeg)
-    api librariesUtils.lastFm
+    implementation librariesUtils.lastFm
 }

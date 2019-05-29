@@ -12,20 +12,24 @@ import dev.olog.msc.shared.utils.isNougat
 import dev.olog.msc.shared.utils.isOreo
 
 @Module
-class NotificationModule {
+abstract class NotificationModule {
 
-    @Provides
-    @PerService
-    internal fun provideNotificationImpl(
+    @Module
+    companion object {
+        @Provides
+        @PerService
+        @JvmStatic
+        internal fun provideNotificationImpl(
             notificationImpl26: Lazy<NotificationImpl26>,
             notificationImpl24: Lazy<NotificationImpl24>,
             notificationImpl: Lazy<NotificationImpl21>
 
-    ): INotification {
-        return when {
-            isOreo() -> notificationImpl26.get()
-            isNougat() -> notificationImpl24.get()
-            else -> notificationImpl.get()
+        ): INotification {
+            return when {
+                isOreo() -> notificationImpl26.get()
+                isNougat() -> notificationImpl24.get()
+                else -> notificationImpl.get()
+            }
         }
     }
 

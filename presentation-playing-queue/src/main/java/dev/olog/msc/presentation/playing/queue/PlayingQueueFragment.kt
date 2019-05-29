@@ -17,6 +17,7 @@ import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.playing.queue.adapter.PlayingQueueFragmentAdapter
+import dev.olog.msc.presentation.playing.queue.di.inject
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.ui.extensions.subscribe
@@ -54,6 +55,10 @@ class PlayingQueueFragment : BaseFragment(), OnStartDragListener {
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper?.startDrag(viewHolder)
+    }
+
+    override fun injectComponent() {
+        inject()
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {

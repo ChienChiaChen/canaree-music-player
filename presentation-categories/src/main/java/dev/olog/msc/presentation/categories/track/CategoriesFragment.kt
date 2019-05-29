@@ -13,6 +13,7 @@ import dev.olog.msc.presentation.categories.BuildConfig
 import dev.olog.msc.presentation.categories.FragmentFactory
 import dev.olog.msc.presentation.categories.R
 import dev.olog.msc.presentation.categories.Tutorial
+import dev.olog.msc.presentation.categories.di.inject
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.core.lazyFast
 import kotlinx.android.synthetic.main.fragment_library_categories.*
@@ -43,6 +44,10 @@ class CategoriesFragment : BaseFragment() {
             act.applicationContext, childFragmentManager, fragmentFactory,
             presenter.getCategories(), prefsGateway
         )
+    }
+
+    override fun injectComponent() {
+        inject()
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {

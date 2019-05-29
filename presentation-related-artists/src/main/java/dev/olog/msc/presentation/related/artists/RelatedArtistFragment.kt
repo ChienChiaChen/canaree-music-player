@@ -10,6 +10,7 @@ import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.related.artists.di.inject
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.fragment_related_artist.*
@@ -42,6 +43,10 @@ class RelatedArtistFragment : BaseFragment() {
     lateinit var navigator: Navigator
 
     private val adapter by lazy { RelatedArtistFragmentAdapter(navigator) }
+
+    override fun injectComponent() {
+        inject()
+    }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         view.list.layoutManager = GridLayoutManager(context!!, 2)

@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.scope.PerService
@@ -21,7 +20,7 @@ internal class PlayerState @Inject constructor(
         @ApplicationContext private val context: Context,
         private val mediaSession: MediaSessionCompat,
         private val musicPreferencesUseCase: MusicPreferencesGateway,
-        private val appShortcuts: AppShortcuts,
+//        private val appShortcuts: AppShortcuts, TODO
         private val widgetClasses: WidgetClasses
 
 ){
@@ -188,12 +187,12 @@ internal class PlayerState @Inject constructor(
     }
 
     private fun disablePlayShortcut(){
-        appShortcuts.disablePlay()
+//        appShortcuts.disablePlay()
     }
 
 
     private fun enablePlayShortcut(){
-        appShortcuts.enablePlay()
+//        appShortcuts.enablePlay()
     }
 
 }

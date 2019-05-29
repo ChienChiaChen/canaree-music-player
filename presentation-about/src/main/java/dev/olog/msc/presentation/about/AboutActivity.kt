@@ -10,6 +10,7 @@ import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import dev.olog.msc.presentation.about.di.inject
 import dev.olog.msc.presentation.base.activity.BaseActivity
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.navigator.NavigatorAbout
@@ -31,6 +32,10 @@ class AboutActivity : BaseActivity() {
         )
     }
     private val adapter by lazyFast { AboutActivityAdapter(lifecycle, navigator, viewModel) }
+
+    override fun injectComponents() {
+        inject()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

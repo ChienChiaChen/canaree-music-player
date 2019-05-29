@@ -28,6 +28,7 @@ import dev.olog.msc.presentation.base.ripple.RippleTarget
 import dev.olog.msc.presentation.base.utils.hideKeyboard
 import dev.olog.msc.presentation.base.utils.showKeyboard
 import dev.olog.msc.presentation.detail.adapter.*
+import dev.olog.msc.presentation.detail.di.inject
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.core.flow.debounceFirst
@@ -92,6 +93,10 @@ class DetailFragment : BaseFragment(),
 
     internal var hasLightStatusBarColor by Delegates.observable(false) { _, _, new ->
         adjustStatusBarColor(new)
+    }
+
+    override fun injectComponent() {
+        inject()
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {

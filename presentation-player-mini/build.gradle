@@ -1,12 +1,7 @@
 apply plugin: 'com.android.library'
-apply from: '../presentation_module.gradle'
+apply from: '../base_presentation.gradle'
 
-android {
-    lintOptions {
-        disable 'MissingTranslation'
-    }
-}
 
 dependencies {
-    implementation librariesCore.rxBinding
+    implementation librariesUi.slidingPanel
 }

@@ -1,4 +1,4 @@
-package dev.olog.msc.musicservice.equalizer.impl
+package dev.olog.msc.app.injection.equalizer
 
 import android.media.audiofx.Equalizer
 import dev.olog.msc.core.equalizer.IEqualizer

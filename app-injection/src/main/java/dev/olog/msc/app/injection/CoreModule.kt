@@ -43,7 +43,7 @@ internal abstract class CoreModule {
             return object : WidgetClasses {
                 override fun get(): List<Class<*>> {
                     return listOf(
-//                        WidgetColored::class.java
+//                        WidgetColored::class.java TODO
                     )
                 }
             }

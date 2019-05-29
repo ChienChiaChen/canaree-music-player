@@ -1,14 +1,11 @@
 package dev.olog.msc
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import dev.olog.msc.musicservice.MusicService
-import dev.olog.msc.shared.MusicConstants
 
-class ShortcutsActivity : AppCompatActivity(){
+class ShortcutsActivity : Activity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,19 +18,19 @@ class ShortcutsActivity : AppCompatActivity(){
     }
 
     private fun handleIntent(intent: Intent){
-        val action = intent.action
-        when (action){
-            MusicConstants.ACTION_PLAY -> {
-                val serviceIntent = Intent(this, MusicService::class.java)
-                serviceIntent.action = MusicConstants.ACTION_PLAY
-                ContextCompat.startForegroundService(this, serviceIntent)
-            }
-            MusicConstants.ACTION_SHUFFLE -> {
-                val serviceIntent = Intent(this, MusicService::class.java)
-                serviceIntent.action = MusicConstants.ACTION_SHUFFLE
-                ContextCompat.startForegroundService(this, serviceIntent)
-            }
-        }
+//        val action = intent.action TODO
+//        when (action){
+//            MusicConstants.ACTION_PLAY -> {
+//                val serviceIntent = Intent(this, MusicService::class.java)
+//                serviceIntent.action = MusicConstants.ACTION_PLAY
+//                ContextCompat.startForegroundService(this, serviceIntent)
+//            }
+//            MusicConstants.ACTION_SHUFFLE -> {
+//                val serviceIntent = Intent(this, MusicService::class.java)
+//                serviceIntent.action = MusicConstants.ACTION_SHUFFLE
+//                ContextCompat.startForegroundService(this, serviceIntent)
+//            }
+//        }
     }
 
 }

@@ -18,6 +18,7 @@ import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
+import dev.olog.msc.presentation.player.di.inject
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.core.lazyFast
@@ -63,6 +64,10 @@ class PlayerFragment : BaseFragment(),
     private var seekBarJob: Job? = null
 
     private var itemTouchHelper: ItemTouchHelper? = null
+
+    override fun injectComponent() {
+        inject()
+    }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         val adapter = PlayerFragmentAdapter(
