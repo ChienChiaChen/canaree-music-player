@@ -1,13 +1,13 @@
 package dev.olog.msc.presentation.popup.genre
 
 import android.view.MenuItem
-import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.track.Genre
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.GetPlaylistsBlockingUseCase
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
+import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
 import dev.olog.msc.presentation.popup.R
@@ -15,10 +15,10 @@ import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import javax.inject.Inject
 
 class GenrePopupListener @Inject constructor(
-        private val navigator: Navigator,
-        getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-        addToPlaylistUseCase: AddToPlaylistUseCase,
-        private val appShortcuts: AppShortcuts
+    private val navigator: Navigator,
+    getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
+    addToPlaylistUseCase: AddToPlaylistUseCase,
+    private val appShortcuts: AppShortcuts
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, false) {
 

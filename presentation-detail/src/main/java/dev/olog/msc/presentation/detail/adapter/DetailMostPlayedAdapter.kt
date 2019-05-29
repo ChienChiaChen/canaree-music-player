@@ -1,7 +1,6 @@
 package dev.olog.msc.presentation.detail.adapter
 
 import androidx.databinding.ViewDataBinding
-import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
@@ -11,6 +10,7 @@ import dev.olog.msc.presentation.base.list.extensions.setOnLongClickListener
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.detail.BR
 import dev.olog.msc.presentation.detail.R
+import dev.olog.msc.presentation.navigator.Navigator
 import kotlinx.android.synthetic.main.item_detail_song_with_track.view.*
 
 internal class DetailMostPlayedAdapter(

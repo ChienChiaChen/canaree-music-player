@@ -3,10 +3,10 @@ package dev.olog.msc.presentation.tabs.foldertree
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
+import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.foldertree.utils.safeGetCanonicalFile
 import dev.olog.msc.presentation.tabs.foldertree.widgets.BreadCrumbLayout
 import dev.olog.msc.shared.core.lazyFast

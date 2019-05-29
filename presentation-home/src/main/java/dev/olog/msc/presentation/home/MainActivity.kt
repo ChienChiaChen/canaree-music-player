@@ -9,7 +9,6 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Lifecycle
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.*
-import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.FloatingWindowHelper
@@ -26,6 +25,7 @@ import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.presentation.base.theme.player.theme.isMini
 import dev.olog.msc.presentation.home.base.MusicGlueActivity
+import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.extensions.dimen

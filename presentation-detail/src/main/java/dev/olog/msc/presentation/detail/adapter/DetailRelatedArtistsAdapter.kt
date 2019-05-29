@@ -2,7 +2,6 @@ package dev.olog.msc.presentation.detail.adapter
 
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
-import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
 import dev.olog.msc.presentation.base.list.DiffCallbackDisplayableItem
@@ -11,6 +10,7 @@ import dev.olog.msc.presentation.base.list.extensions.setOnClickListener
 import dev.olog.msc.presentation.base.list.extensions.setOnLongClickListener
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.detail.BR
+import dev.olog.msc.presentation.navigator.Navigator
 
 internal class DetailRelatedArtistsAdapter(
         private val navigator: Navigator

@@ -2,7 +2,6 @@ package dev.olog.msc.presentation.recently.added
 
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.presentation.base.BR
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
@@ -13,6 +12,7 @@ import dev.olog.msc.presentation.base.list.extensions.elevateSongOnTouch
 import dev.olog.msc.presentation.base.list.extensions.setOnClickListener
 import dev.olog.msc.presentation.base.list.extensions.setOnLongClickListener
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.navigator.Navigator
 
 class RecentlyAddedFragmentAdapter(
     private val navigator: Navigator,

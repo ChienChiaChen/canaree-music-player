@@ -9,6 +9,7 @@ import dev.olog.msc.presentation.about.AboutActivity
 import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.dialogs.playlist.NewPlaylistDialog
 import dev.olog.msc.presentation.equalizer.EqualizerFragment
+import dev.olog.msc.presentation.navigator.IPopupNavigator
 import dev.olog.msc.presentation.preferences.PreferencesActivity
 import dev.olog.msc.presentation.sleeptimer.SleepTimerPickerDialogBuilder
 import dev.olog.msc.shared.extensions.toast

@@ -1,4 +1,4 @@
-package dev.olog.msc.app.injection.navigator
+package dev.olog.msc.presentation.navigator
 
 import android.view.View
 import androidx.fragment.app.FragmentActivity

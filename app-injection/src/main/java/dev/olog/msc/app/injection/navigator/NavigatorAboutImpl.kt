@@ -9,6 +9,7 @@ import dev.olog.msc.presentation.about.thanks.SpecialThanksFragment
 import dev.olog.msc.presentation.base.extensions.fragmentTransaction
 import dev.olog.msc.presentation.base.extensions.isIntentSafe
 import dev.olog.msc.presentation.base.openPlayStore
+import dev.olog.msc.presentation.navigator.NavigatorAbout
 import dev.olog.msc.shared.extensions.toast
 import javax.inject.Inject
 

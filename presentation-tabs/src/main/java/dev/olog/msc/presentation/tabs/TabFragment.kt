@@ -5,7 +5,6 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.sort.SortType
@@ -18,6 +17,7 @@ import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.SetupNestedList
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.adapters.TabFragmentAdapter
 import dev.olog.msc.presentation.tabs.adapters.TabFragmentNestedAdapter
 import dev.olog.msc.shared.core.lazyFast

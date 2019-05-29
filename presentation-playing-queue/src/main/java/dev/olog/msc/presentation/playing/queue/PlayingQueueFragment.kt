@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.FloatingWindowHelper
@@ -16,6 +15,7 @@ import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
+import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.playing.queue.adapter.PlayingQueueFragmentAdapter
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dip

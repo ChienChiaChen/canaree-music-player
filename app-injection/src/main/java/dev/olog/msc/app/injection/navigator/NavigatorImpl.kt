@@ -32,6 +32,7 @@ import dev.olog.msc.presentation.edititem.EditItemDialogFactory
 import dev.olog.msc.presentation.edititem.album.EditAlbumFragment
 import dev.olog.msc.presentation.edititem.artist.EditArtistFragment
 import dev.olog.msc.presentation.edititem.track.EditTrackFragment
+import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.offlinelyrics.OfflineLyricsFragment
 import dev.olog.msc.presentation.playing.queue.PlayingQueueFragment
 import dev.olog.msc.presentation.popup.PopupMenuFactory

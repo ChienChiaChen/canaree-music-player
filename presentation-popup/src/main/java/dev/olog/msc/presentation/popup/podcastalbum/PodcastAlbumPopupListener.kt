@@ -1,7 +1,6 @@
 package dev.olog.msc.presentation.popup.podcastalbum
 
 import android.view.MenuItem
-import dev.olog.msc.app.injection.navigator.Navigator
 import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.podcast.Podcast
@@ -9,6 +8,7 @@ import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.toSong
 import dev.olog.msc.core.interactor.GetPlaylistsBlockingUseCase
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
+import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
 import dev.olog.msc.presentation.popup.R

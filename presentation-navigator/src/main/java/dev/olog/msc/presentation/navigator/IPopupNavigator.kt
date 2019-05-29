@@ -1,4 +1,4 @@
-package dev.olog.msc.app.injection.navigator
+package dev.olog.msc.presentation.navigator
 
 import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.core.MediaId
