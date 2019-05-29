@@ -9,15 +9,9 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
-import javax.inject.Inject
 
 abstract class BaseFragment : Fragment() {
-
-    // workaround to avoid duplicated classes
-    @Inject
-    internal lateinit var songGateway: SongGateway
 
     override fun onAttach(context: Context) {
         injectComponent()
