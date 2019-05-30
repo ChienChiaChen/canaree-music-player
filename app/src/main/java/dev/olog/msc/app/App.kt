@@ -8,6 +8,7 @@ import dev.olog.msc.app.base.ThemedApp
 import dev.olog.msc.app.injection.CoreComponent
 import dev.olog.msc.appshortcuts.AppShortcuts
 import dev.olog.msc.core.interactor.SleepTimerUseCase
+import dev.olog.msc.dagger.DaggerAppComponent
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.shared.PendingIntents

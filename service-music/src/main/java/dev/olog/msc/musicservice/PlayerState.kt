@@ -81,7 +81,8 @@ internal class PlayerState @Inject constructor(
         if (currentState == null) {
             builder.setState(PlaybackStateCompat.STATE_PAUSED, musicPreferencesUseCase.getBookmark(), 0f)
         } else {
-            val stateSpeed = if (currentState.isPlaying()) speed else 0f
+            val isPlaying = currentState.state == PlaybackStateCompat.STATE_PLAYING
+            val stateSpeed = if (isPlaying) speed else 0f
             builder.setState(currentState.state, currentState.position, stateSpeed)
         }
         mediaSession.setPlaybackState(builder.build())
