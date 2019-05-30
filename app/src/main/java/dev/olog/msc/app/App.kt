@@ -8,8 +8,9 @@ import dev.olog.msc.app.base.ThemedApp
 import dev.olog.msc.app.injection.CoreComponent
 import dev.olog.msc.appshortcuts.AppShortcuts
 import dev.olog.msc.core.interactor.SleepTimerUseCase
-import dev.olog.msc.dagger.DaggerAppComponent
+import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.presentation.base.ImageViews
+import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.TrackUtils
 import io.alterac.blurkit.BlurKit
 import kotlinx.coroutines.GlobalScope
@@ -23,14 +24,6 @@ class App : ThemedApp() {
     @Inject
     lateinit var sleepTimerUseCase: SleepTimerUseCase
 
-    override fun onCreate() {
-        TrackUtils.initialize(
-            getString(R.string.common_unknown_artist),
-            getString(R.string.common_unknown_album)
-        )
-        super.onCreate()
-    }
-
     override fun initializeApp() {
         initializeComponents()
         initializeConstants()
@@ -40,6 +33,8 @@ class App : ThemedApp() {
     }
 
     private fun initializeComponents() {
+        appShortcuts = AppShortcuts.instance(this)
+        ImageViews.initialize(this)
         GlobalScope.launch {
             BlurKit.init(this@App)
         }
@@ -53,16 +48,17 @@ class App : ThemedApp() {
     }
 
     private fun initializeConstants() {
-        // initialize app shortcuts
-        appShortcuts = AppShortcuts.instance(this)
-        ImageViews.initialize(this)
+        TrackUtils.initialize(
+            getString(R.string.common_unknown_artist),
+            getString(R.string.common_unknown_album)
+        )
 //        PreferenceManager.setDefaultValues(this, R.xml.prefs, false) TODO crashes
     }
 
     private fun resetSleepTimer() {
         sleepTimerUseCase.reset()
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        alarmManager.cancel(PendingIntents.stopMusicServiceIntent(this, MusicService::class.java)) TODO
+        alarmManager.cancel(PendingIntents.stopMusicServiceIntent(this, MusicService::class.java))
     }
 
     override fun injectComponenet() {

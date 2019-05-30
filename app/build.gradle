@@ -37,6 +37,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
             manifestPlaceholders = [enableCrashReporting:"false"]
+            multiDexEnabled false
 //            debuggable false
 
             ext.enableCrashlytics = false
@@ -80,6 +81,7 @@ dependencies {
     implementation project(':presentation-recently-added')
     implementation project(':presentation-search')
     implementation project(':presentation-playing-queue')
+    implementation project(':presentation-popup')
     // services
     implementation project(':service-music')
     implementation project(':service-floating-window')

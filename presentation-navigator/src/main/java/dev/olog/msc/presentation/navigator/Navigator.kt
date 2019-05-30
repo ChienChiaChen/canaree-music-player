@@ -8,17 +8,27 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
+import dev.olog.msc.shared.interfaces.MainPopup
 import javax.inject.Inject
 
 private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
 
 class Navigator @Inject constructor(
 //    private val popupFactory: PopupMenuFactory,
-//    private val mainPopup: MainPopupDialog,
+    private val popupNavigator: IPopupNavigator,
+    private val sortGateway: SortPreferencesGateway
 //    private val editItemDialogFactory: EditItemDialogFactory
 ) {
 
     private var lastRequest: Long = -1
+
+    private val mainPopup by lazy {
+        // TODO find a better way than reflection
+        val mainPopup = Class.forName("dev.olog.msc.presentation.popup.main.MainPopupDialog")
+        val contructor = mainPopup.getConstructor(IPopupNavigator::class.java, SortPreferencesGateway::class.java)
+        contructor.newInstance(popupNavigator, sortGateway) as MainPopup
+    }
 
     private fun allowed(): Boolean {
         val allowed = (System.currentTimeMillis() - lastRequest) > NEXT_REQUEST_THRESHOLD
@@ -166,11 +176,11 @@ class Navigator @Inject constructor(
     }
 
     fun toMainPopup(activity: FragmentActivity, anchor: View, category: MediaIdCategory?) {
-//        try {
-//            mainPopup.show(activity, anchor, category)
-//        } catch (ex: Exception){
-//            ex.printStackTrace()
-//        }
+        try {
+            mainPopup.show(activity, anchor, category?.ordinal)
+        } catch (ex: Exception){
+            ex.printStackTrace()
+        }
     }
 
     fun toSetRingtoneDialog(activity: FragmentActivity, mediaId: MediaId, title: String, artist: String) {

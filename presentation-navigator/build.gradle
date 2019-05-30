@@ -1,9 +1,10 @@
 apply plugin: 'com.android.library'
-apply from: '../base_module.gradle'
+apply from: '../base_module_2.gradle'
 
 dependencies {
     implementation project(':core')
     implementation project(':preferences-keys')
+    implementation project(':shared')
 
     implementation librariesAndroidX.appcompat
     implementation librariesAndroidX.coreKtx

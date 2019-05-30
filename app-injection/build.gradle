@@ -28,7 +28,6 @@ dependencies {
 //    implementation project(':presentation-edit-item')
 //    implementation project(':presentation-sleep-timer')
 //    implementation project(':presentation-tabs-folder-tree')
-//    implementation project(':presentation-popup')
 //    implementation project(':presentation-dialogs')
 //    implementation project(':presentation-create-playlist')
 //    debugImplementation project(':presentation-debug')
