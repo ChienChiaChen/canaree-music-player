@@ -2,7 +2,6 @@ package dev.olog.msc.app
 
 import android.app.AlarmManager
 import android.content.Context
-import android.preference.PreferenceManager
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
 import dev.olog.msc.app.base.ThemedApp
@@ -55,7 +54,7 @@ class App : ThemedApp() {
 
     private fun initializeConstants() {
         ImageViews.initialize(this)
-        PreferenceManager.setDefaultValues(this, R.xml.prefs, false)
+//        PreferenceManager.setDefaultValues(this, R.xml.prefs, false) TODO crashes
     }
 
     private fun resetSleepTimer() {

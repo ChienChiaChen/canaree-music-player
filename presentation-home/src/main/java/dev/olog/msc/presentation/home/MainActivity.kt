@@ -316,6 +316,7 @@ object BottomNavigator {
             }
             val fragment = activity.supportFragmentManager.findFragmentByTag(fragmentTag)
             if (fragment == null) {
+                // TODO always returning null
                 replace(R.id.fragmentContainer, tagToInstance(activity, fragmentTag), fragmentTag)
             } else {
                 show(fragment)
