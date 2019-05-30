@@ -34,13 +34,13 @@ class SearchFoldersDataSource @Inject constructor(
     private val filterRequest by lazy { Filter(filterBy, arrayOf(Filter.By.TITLE), Filter.BehaviorOnEmpty.NONE) }
 
 
-    override fun getMainDataSize(): Int {
+    override suspend fun getMainDataSize(): Int {
         return chunk.getCount(filterRequest)
     }
 
-    override fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun loadInternal(request: Request): List<DisplayableItem> {
         return chunk.getPage(request.with(filter = filterRequest))

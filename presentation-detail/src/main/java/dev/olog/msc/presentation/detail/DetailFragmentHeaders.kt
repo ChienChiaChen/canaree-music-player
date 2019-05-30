@@ -8,8 +8,8 @@ import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import javax.inject.Inject
 
 class DetailFragmentHeaders @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val mediaId: MediaId
+    @ApplicationContext private val context: Context,
+    private val mediaId: MediaId
 ) {
 
     companion object {
@@ -18,35 +18,58 @@ class DetailFragmentHeaders @Inject constructor(
     }
 
     val mostPlayed = listOf(
-            DisplayableItem(R.layout.item_detail_header, MediaId.headerId("most played header"), context.getString(R.string.detail_most_played)),
-            DisplayableItem(R.layout.item_detail_most_played_list, MediaId.headerId("most played horiz list"), "")
+        DisplayableItem(
+            R.layout.item_detail_header,
+            MediaId.headerId("most played header"),
+            context.getString(R.string.detail_most_played)
+        ),
+        DisplayableItem(R.layout.item_detail_most_played_list, MediaId.headerId("most played horiz list"), "")
     )
 
     fun relatedArtists(showSeeAll: Boolean) = listOf(
-            DisplayableItem(R.layout.item_detail_header, RELATED_ARTISTS_SEE_ALL, context.getString(R.string.detail_related_artists),
-                    extra = bundleOf("visible" to showSeeAll)),
-            DisplayableItem(R.layout.item_detail_related_artists_list, MediaId.headerId("related artist list"), "")
+        DisplayableItem(
+            R.layout.item_detail_header, RELATED_ARTISTS_SEE_ALL, context.getString(R.string.detail_related_artists),
+            extra = bundleOf("visible" to showSeeAll)
+        ),
+        DisplayableItem(R.layout.item_detail_related_artists_list, MediaId.headerId("related artist list"), "")
     )
 
     fun recent(listSize: Int, showSeeAll: Boolean) = listOf(
-            DisplayableItem(R.layout.item_detail_header_recently_added, RECENTLY_ADDED_SEE_ALL, context.getString(R.string.detail_recently_added), context.resources.getQuantityString(R.plurals.detail_xx_new_songs, listSize, listSize),
-                    extra = bundleOf("visible" to showSeeAll)),
-            DisplayableItem(R.layout.item_detail_recently_added_list, MediaId.headerId("recent horiz list"), "")
+        DisplayableItem(
+            R.layout.item_detail_header_recently_added,
+            RECENTLY_ADDED_SEE_ALL,
+            context.getString(R.string.detail_recently_added),
+            context.resources.getQuantityString(R.plurals.detail_xx_new_songs, listSize, listSize),
+            extra = bundleOf("visible" to showSeeAll)
+        ),
+        DisplayableItem(R.layout.item_detail_recently_added_list, MediaId.headerId("recent horiz list"), "")
     )
 
     fun siblings() = listOf(
-        DisplayableItem(R.layout.item_detail_header_albums, MediaId.headerId("detail albums"),
-            context.resources.getStringArray(R.array.detail_album_header)[mediaId.source]),
-            DisplayableItem(R.layout.item_detail_albums_list, MediaId.headerId("albums horiz list"), "")
+        DisplayableItem(
+            R.layout.item_detail_header_albums, MediaId.headerId("detail albums"),
+            context.resources.getStringArray(R.array.detail_album_header)[mediaId.source]
+        ),
+        DisplayableItem(R.layout.item_detail_albums_list, MediaId.headerId("albums horiz list"), "")
     )
 
-    val shuffle = DisplayableItem(R.layout.item_detail_shuffle, MediaId.headerId("detail shuffle"), "")
+    private val shuffle = DisplayableItem(R.layout.item_detail_shuffle, MediaId.headerId("detail shuffle"), "")
 
     val songs = listOf(
-            DisplayableItem(R.layout.item_detail_header_all_song, MediaId.headerId("detail songs header"), context.getString(R.string.detail_tracks), context.getString(R.string.sort_by).toLowerCase()),
-            shuffle
+        DisplayableItem(
+            R.layout.item_detail_header_all_song,
+            MediaId.headerId("detail songs header"),
+            context.getString(R.string.detail_tracks),
+            context.getString(R.string.sort_by).toLowerCase()
+        ),
+        shuffle
     )
 
-    val no_songs = DisplayableItem(R.layout.item_detail_empty_state, MediaId.headerId("detail empty state"), "")
+    val no_songs = listOf(
+        DisplayableItem(
+            R.layout.item_detail_empty_state, MediaId.headerId("detail empty state"),
+            ""
+        )
+    )
 
 }

@@ -38,13 +38,13 @@ internal class RecentlyAddedDataSource @Inject constructor(
     override val canLoadData: Boolean
         get() = recentlyAddedUseCase.canShow(mediaId)
 
-    override fun getMainDataSize(): Int {
+    override suspend fun getMainDataSize(): Int {
         return clamp(chunked.getCount(Filter.NO_FILTER), 0, DetailFragmentViewModel.RECENTLY_ADDED_VISIBLE_PAGES)
     }
 
-    override fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun loadInternal(request: Request): List<DisplayableItem> {
         return chunked.getPage(request)

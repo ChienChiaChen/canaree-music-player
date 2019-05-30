@@ -47,13 +47,13 @@ internal class RelatedArtistsSource @Inject constructor(
     override val canLoadData: Boolean
         get() = relatedArtistsUseCase.canShow(mediaId, filterRequest)
 
-    override fun getMainDataSize(): Int {
+    override suspend fun getMainDataSize(): Int {
         return clamp(chunked.getCount(filterRequest), 0, RELATED_ARTISTS_TO_SEE)
     }
 
-    override fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun loadInternal(request: Request): List<DisplayableItem> {
         return chunked.getPage(request.with(filter = filterRequest))

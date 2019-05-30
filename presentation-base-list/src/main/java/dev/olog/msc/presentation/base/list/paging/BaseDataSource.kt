@@ -7,8 +7,7 @@ import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.Page
 import dev.olog.msc.core.entity.data.request.Request
 import dev.olog.msc.shared.core.coroutines.DefaultScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlin.math.abs
 
 /**
@@ -33,37 +32,58 @@ abstract class BaseDataSource<PresentationModel> :
     private val headers = mutableListOf<PresentationModel>()
     private var footers = listOf<PresentationModel>()
 
-    protected abstract fun getMainDataSize(): Int
-    protected abstract fun getHeaders(mainListSize: Int): List<PresentationModel>
-    protected abstract fun getFooters(mainListSize: Int): List<PresentationModel>
+    protected abstract suspend fun getMainDataSize(): Int
+    protected abstract suspend fun getHeaders(mainListSize: Int): List<PresentationModel>
+    protected abstract suspend fun getFooters(mainListSize: Int): List<PresentationModel>
 
     @CallSuper
-    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<PresentationModel>) {
-        if (canLoadData) {
-            val mainDataSize = getMainDataSize()
+    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<PresentationModel>) = runBlocking {
+        if (!canLoadData){
+            return@runBlocking
+        }
 
-            headers.addAll(getHeaders(mainDataSize))
-            footers = getFooters(mainDataSize)
+        val start = System.currentTimeMillis()
+
+        val mainDataSize = getMainDataSize()
+
+        val safeStartPosition = MathUtils.clamp(
+            params.requestedStartPosition,
+            0,
+            mainDataSize
+        )
+        val safeLoadSize = MathUtils.clamp(
+            params.requestedLoadSize /*- headers.size*/,
+            0,
+            mainDataSize
+        )
+
+        launch {
+            // Parallel call, get headers, footer and data all in parallel.
+            val asyncData = listOf(
+                async { getHeaders(mainDataSize) },
+                async { getFooters(mainDataSize) },
+                // (*) since 'headers' are not available yet, it's mandatory to clamp the result
+                async { loadInternal(Request(Page(safeStartPosition, safeLoadSize), Filter.NO_FILTER)) }
+            ).awaitAll()
+
+            headers.addAll(asyncData[0])
+            footers = asyncData[1]
+            val headersSize = headers.size
             val footerSize = footers.size
 
-            val result = mutableListOf<PresentationModel>()
-            result.addAll(headers)
-
-            val safeStartPosition = MathUtils.clamp(
-                params.requestedStartPosition,
-                0,
-                mainDataSize
-            )
-            val safeLoadSize = MathUtils.clamp(
-                params.requestedLoadSize - headers.size,
-                0,
-                mainDataSize
-            )
-
-            result.addAll(loadInternal(Request(Page(safeStartPosition, safeLoadSize), Filter.NO_FILTER)))
+            // (*) clamping result
+            val result = headers.plus(asyncData[2])
+                .take(params.requestedLoadSize)
+                .toMutableList()
+            // adds footer is resulting list size is minor than the page request
             tryAddFooter(result, params.requestedLoadSize)
-            callback.onResult(result, 0, mainDataSize + headers.size + footerSize)
-        }
+
+            callback.onResult(result, 0, headersSize + mainDataSize + footerSize)
+
+        }.join()
+
+        val done = System.currentTimeMillis() - start
+        println("done in $done")
     }
 
     @CallSuper
@@ -93,6 +113,14 @@ abstract class BaseDataSource<PresentationModel> :
     }
 
     protected abstract fun loadInternal(request: Request): List<PresentationModel>
+
+    protected suspend fun loadParallel(vararg deferred: Deferred<List<PresentationModel>>): List<PresentationModel>{
+        val result = mutableListOf<PresentationModel>()
+        for (list in deferred.toList().awaitAll()) {
+            result.addAll(list)
+        }
+        return result
+    }
 
     protected open val canLoadData = true
 

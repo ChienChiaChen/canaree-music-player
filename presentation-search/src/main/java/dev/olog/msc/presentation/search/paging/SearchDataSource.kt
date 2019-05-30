@@ -24,6 +24,7 @@ import dev.olog.msc.presentation.base.list.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.search.R
 import dev.olog.msc.presentation.search.SearchFragmentHeaders
 import dev.olog.msc.shared.RecentSearchesTypes
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -76,14 +77,14 @@ internal class SearchDataSource @Inject constructor(
         )
     }
 
-    override fun getMainDataSize(): Int {
+    override suspend fun getMainDataSize(): Int {
         if (podcastsOnly) {
             return podcastGateway.getAll().getCount(filterRequest)
         }
         return songGateway.getAll().getCount(filterRequest)
     }
 
-    override fun getHeaders(mainListSize: Int): List<DisplayableItem> {
+    override suspend fun getHeaders(mainListSize: Int): List<DisplayableItem> {
         if (mainListSize == 0) {
             val headers = recentSearchesGateway.getAll().map { it.toSearchDisplayableItem(context) }.toMutableList()
             if (headers.isNotEmpty()) {
@@ -92,46 +93,69 @@ internal class SearchDataSource @Inject constructor(
             }
             return headers
         } else {
-            val headers = mutableListOf<DisplayableItem>()
-
-            val albumsSize = if (podcastsOnly) podcastAlbumGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ALBUM, Filter.By.ARTIST)))
-            else albumGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ALBUM, Filter.By.ARTIST)))
-
-            val artistsSize = if (podcastsOnly) podcastArtistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ARTIST)))
-            else artistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ARTIST)))
-
-            val playlistsSize = if (podcastsOnly) podcastPlaylistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
-            else playlistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
-
-            val foldersSize = folderGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
-            val genresSize = genreGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
-
-            val songsSize = if (podcastsOnly) podcastGateway.getAll().getCount(filterRequest)
-            else songGateway.getAll().getCount(filterRequest)
-
-            if (albumsSize > 0 && filters.contains(SearchFilters.ALBUM)) {
-                headers.addAll(displayableHeaders.albumsHeaders(albumsSize))
-            }
-            if (artistsSize > 0 && filters.contains(SearchFilters.ARTIST)) {
-                headers.addAll(displayableHeaders.artistsHeaders(artistsSize))
-            }
-            if (playlistsSize > 0 && filters.contains(SearchFilters.PLAYLIST)) {
-                headers.addAll(displayableHeaders.playlistsHeaders(playlistsSize))
-            }
-            if (foldersSize > 0 && filters.contains(SearchFilters.FOLDER)) {
-                headers.addAll(displayableHeaders.foldersHeaders(foldersSize))
-            }
-            if (genresSize > 0 && filters.contains(SearchFilters.GENRE)) {
-                headers.addAll(displayableHeaders.genreHeaders(genresSize))
-            }
-            if (songsSize > 0) {
-                headers.add(displayableHeaders.songsHeaders(songsSize))
-            }
-            return headers
+            return loadParallel(
+                async {
+                    if (filters.contains(SearchFilters.ALBUM)){
+                        val albumsSize = if (podcastsOnly) podcastAlbumGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ALBUM, Filter.By.ARTIST)))
+                        else albumGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ALBUM, Filter.By.ARTIST)))
+                        if (albumsSize > 0) {
+                            return@async displayableHeaders.albumsHeaders(albumsSize)
+                        }
+                    }
+                    emptyList<DisplayableItem>()
+                },
+                async {
+                    if (filters.contains(SearchFilters.ARTIST)){
+                        val artistsSize = if (podcastsOnly) podcastArtistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ARTIST)))
+                        else artistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.ARTIST)))
+                        if (artistsSize > 0) {
+                            return@async displayableHeaders.artistsHeaders(artistsSize)
+                        }
+                    }
+                    emptyList<DisplayableItem>()
+                },
+                async {
+                    if (filters.contains(SearchFilters.PLAYLIST)){
+                        val playlistsSize = if (podcastsOnly) podcastPlaylistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
+                        else playlistGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
+                        if (playlistsSize > 0) {
+                            return@async displayableHeaders.playlistsHeaders(playlistsSize)
+                        }
+                    }
+                    emptyList<DisplayableItem>()
+                },
+                async {
+                    if (filters.contains(SearchFilters.FOLDER)){
+                        val foldersSize = folderGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
+                        if (foldersSize > 0) {
+                            return@async displayableHeaders.foldersHeaders(foldersSize)
+                        }
+                    }
+                    emptyList<DisplayableItem>()
+                },
+                async {
+                    if (filters.contains(SearchFilters.GENRE)){
+                        val genresSize = genreGateway.getAll().getCount(filterRequest.with(byColumn = arrayOf(Filter.By.TITLE)))
+                        if (genresSize > 0) {
+                            return@async displayableHeaders.genreHeaders(genresSize)
+                        }
+                    }
+                    emptyList<DisplayableItem>()
+                },
+                async {
+                    val songsSize = if (podcastsOnly) podcastGateway.getAll().getCount(filterRequest)
+                    else songGateway.getAll().getCount(filterRequest)
+                    if (songsSize > 0) {
+                        displayableHeaders.songsHeaders(songsSize)
+                    } else {
+                        emptyList()
+                    }
+                }
+            )
         }
     }
 
-    override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun loadInternal(request: Request): List<DisplayableItem> {
         if (podcastsOnly) {

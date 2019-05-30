@@ -36,7 +36,7 @@ internal class PodcastArtistDataSource @Inject constructor(
         }
     }
 
-    override fun getHeaders(mainListSize: Int): List<DisplayableItem> {
+    override suspend fun getHeaders(mainListSize: Int): List<DisplayableItem> {
         val headers = mutableListOf<DisplayableItem>()
         if (gateway.canShowRecentlyAdded(Filter.NO_FILTER)) {
             headers.addAll(displayableHeaders.recentlyAddedArtistsHeaders)
@@ -50,9 +50,9 @@ internal class PodcastArtistDataSource @Inject constructor(
         return headers
     }
 
-    override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun getMainDataSize(): Int {
+    override suspend fun getMainDataSize(): Int {
         return chunked.getCount(Filter.NO_FILTER)
     }
 

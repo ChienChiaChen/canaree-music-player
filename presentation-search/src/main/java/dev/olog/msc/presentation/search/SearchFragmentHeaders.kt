@@ -3,9 +3,11 @@ package dev.olog.msc.presentation.search
 import android.content.Context
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.scope.PerFragment
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import javax.inject.Inject
 
+@PerFragment
 class SearchFragmentHeaders @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
@@ -17,14 +19,16 @@ class SearchFragmentHeaders @Inject constructor(
         )
     )
 
-    fun songsHeaders(size: Int) = DisplayableItem(
-        R.layout.item_search_header,
-        MediaId.headerId("songs header id"),
-        context.getString(R.string.search_songs),
-        context.resources.getQuantityString(R.plurals.search_xx_results, size, size)
+    fun songsHeaders(size: Int) = listOf(
+        DisplayableItem(
+            R.layout.item_search_header,
+            MediaId.headerId("songs header id"),
+            context.getString(R.string.search_songs),
+            context.resources.getQuantityString(R.plurals.search_xx_results, size, size)
+        )
     )
 
-    fun albumsHeaders(size: Int) = mutableListOf(
+    fun albumsHeaders(size: Int) = listOf(
         DisplayableItem(
             R.layout.item_search_header,
             MediaId.headerId("albums header id"),
@@ -34,7 +38,7 @@ class SearchFragmentHeaders @Inject constructor(
         DisplayableItem(R.layout.item_search_albums_horizontal_list, MediaId.headerId("albums list id"), "")
     )
 
-    fun artistsHeaders(size: Int) = mutableListOf(
+    fun artistsHeaders(size: Int) = listOf(
         DisplayableItem(
             R.layout.item_search_header,
             MediaId.headerId("artists header id"),
@@ -44,7 +48,7 @@ class SearchFragmentHeaders @Inject constructor(
         DisplayableItem(R.layout.item_search_artists_horizontal_list, MediaId.headerId("artists list id"), "")
     )
 
-    fun foldersHeaders(size: Int) = mutableListOf(
+    fun foldersHeaders(size: Int) = listOf(
         DisplayableItem(
             R.layout.item_search_header,
             MediaId.headerId("folders header id"),
@@ -54,7 +58,7 @@ class SearchFragmentHeaders @Inject constructor(
         DisplayableItem(R.layout.item_search_folder_horizontal_list, MediaId.headerId("folders list id"), "")
     )
 
-    fun playlistsHeaders(size: Int) = mutableListOf(
+    fun playlistsHeaders(size: Int) = listOf(
         DisplayableItem(
             R.layout.item_search_header,
             MediaId.headerId("playlists header id"),
@@ -64,7 +68,7 @@ class SearchFragmentHeaders @Inject constructor(
         DisplayableItem(R.layout.item_search_playlists_horizontal_list, MediaId.headerId("playlists list id"), "")
     )
 
-    fun genreHeaders(size: Int) = mutableListOf(
+    fun genreHeaders(size: Int) = listOf(
         DisplayableItem(
             R.layout.item_search_header,
             MediaId.headerId("genres header id"),

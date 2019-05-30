@@ -46,16 +46,16 @@ class SearchArtistsDataSource @Inject constructor(
     private val filterRequest by lazy { Filter(filterBy, arrayOf(Filter.By.ARTIST), Filter.BehaviorOnEmpty.NONE) }
 
 
-    override fun getMainDataSize(): Int {
+    override suspend fun getMainDataSize(): Int {
         if (podcastsOnly){
             return podcastGateway.getAll().getCount(filterRequest)
         }
         return gateway.getAll().getCount(filterRequest)
     }
 
-    override fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getHeaders(mainListSize: Int): List<DisplayableItem> = listOf()
 
-    override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun loadInternal(request: Request): List<DisplayableItem> {
         if (podcastsOnly){

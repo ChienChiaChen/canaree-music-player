@@ -34,13 +34,13 @@ internal class PlayingQueueDataSource @Inject constructor(
         }
     }
 
-    override fun getMainDataSize(): Int {
+    override suspend fun getMainDataSize(): Int {
         return playingQueueGateway.getCount()
     }
 
-    override fun getHeaders(mainListSize: Int): List<DisplayableQueueSong> = listOf()
+    override suspend fun getHeaders(mainListSize: Int): List<DisplayableQueueSong> = listOf()
 
-    override fun getFooters(mainListSize: Int): List<DisplayableQueueSong> = listOf()
+    override suspend fun getFooters(mainListSize: Int): List<DisplayableQueueSong> = listOf()
 
     override fun loadInternal(request: Request): List<DisplayableQueueSong> {
         val currentItemIndex = musicPrefs.getLastPositionInQueue()

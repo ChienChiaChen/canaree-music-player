@@ -36,6 +36,7 @@ import dev.olog.msc.presentation.detail.mapper.toHeaderItem
 import dev.olog.msc.shared.core.flow.merge
 import dev.olog.msc.shared.ui.TimeUtils
 import dev.olog.msc.shared.utils.TextUtils
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take
@@ -90,60 +91,79 @@ internal class DetailDataSource @Inject constructor(
 
     private val artistsFilterRequest by lazy { filterRequest.with(byColumn = arrayOf(Filter.By.ARTIST)) }
 
-    override fun getMainDataSize(): Int {
+    override suspend fun getMainDataSize(): Int {
         return chunked.getCount(filterRequest)
     }
 
     // hide recently added and most played when filter is ON
-    override fun getHeaders(mainListSize: Int): List<DisplayableItem> {
-        val headers = mutableListOf(generateHeader(mainListSize))
-
-        // show sibllings at the top if current item is an artists
-        if (mediaId.isArtist && siblingsUseCase.canShow(mediaId, filterRequest)) {
-            headers.addAll(displayableHeaders.siblings())
-        }
-        // most played
-        if (mostPlayedUseCase.canShow(mediaId) && filterBy.isBlank()) {
-            headers.addAll(this.displayableHeaders.mostPlayed)
-        }
-        // recently added
-        if (recentlyAddedSongUseCase.canShow(mediaId) && filterBy.isBlank()) {
-            val recentlyAddedSize = recentlyAddedSongUseCase.get(mediaId).getCount(Filter.NO_FILTER)
-            headers.addAll(
-                this.displayableHeaders.recent(
-                    recentlyAddedSize,
-                    recentlyAddedSize > RECENTLY_ADDED_VISIBLE_PAGES
-                )
-            )
-        }
-
-        if (mainListSize != 0) {
-            headers.addAll(displayableHeaders.songs)
-        } else {
-            headers.add(displayableHeaders.no_songs)
-        }
-        return headers
+    override suspend fun getHeaders(mainListSize: Int): List<DisplayableItem> {
+        return loadParallel(
+            async { listOf(generateHeader(mainListSize)) },
+            async {
+                // show sibllings at the top if current item is an artists
+                if (mediaId.isArtist && siblingsUseCase.canShow(mediaId, filterRequest)) {
+                    displayableHeaders.siblings()
+                } else {
+                    emptyList()
+                }
+            },
+            async {
+                // most played
+                if (mostPlayedUseCase.canShow(mediaId) && filterBy.isBlank()) {
+                    displayableHeaders.mostPlayed
+                } else {
+                    emptyList()
+                }
+            },
+            async {
+                // recently added
+                if (recentlyAddedSongUseCase.canShow(mediaId) && filterBy.isBlank()) {
+                    val recentlyAddedSize = recentlyAddedSongUseCase.get(mediaId).getCount(Filter.NO_FILTER)
+                        displayableHeaders.recent(
+                            recentlyAddedSize,
+                            recentlyAddedSize > RECENTLY_ADDED_VISIBLE_PAGES
+                        )
+                } else {
+                    emptyList()
+                }
+            },
+            async {
+                if (mainListSize != 0) {
+                    displayableHeaders.songs
+                } else {
+                    displayableHeaders.no_songs
+                }
+            }
+        )
     }
 
 
-    override fun getFooters(mainListSize: Int): List<DisplayableItem> {
-        val footers = mutableListOf<DisplayableItem>()
-
-        val duration = songDurationUseCase.execute(mediaId, filterRequest)
-        if (duration > 0 && mainListSize > 0) {
-            footers.add(createDurationFooter(duration))
-        }
-
-
-        if (relatedArtistsUseCase.canShow(mediaId, artistsFilterRequest)) {
-            val relatedArtistsSize = relatedArtistsUseCase.get(mediaId).getCount(artistsFilterRequest)
-            footers.addAll(displayableHeaders.relatedArtists(relatedArtistsSize > RELATED_ARTISTS_TO_SEE))
-        }
-
-        if (!mediaId.isArtist && siblingsUseCase.canShow(mediaId, filterRequest)) {
-            footers.addAll(displayableHeaders.siblings())
-        }
-        return footers
+    override suspend fun getFooters(mainListSize: Int): List<DisplayableItem> {
+        return loadParallel(
+            async {
+                val duration = songDurationUseCase.execute(mediaId, filterRequest)
+                if (duration > 0 && mainListSize > 0) {
+                    listOf(createDurationFooter(duration))
+                } else {
+                    emptyList()
+                }
+            }    ,
+            async {
+                if (relatedArtistsUseCase.canShow(mediaId, artistsFilterRequest)) {
+                    val relatedArtistsSize = relatedArtistsUseCase.get(mediaId).getCount(artistsFilterRequest)
+                    displayableHeaders.relatedArtists(relatedArtistsSize > RELATED_ARTISTS_TO_SEE)
+                } else {
+                    emptyList()
+                }
+            },
+            async {
+                if (!mediaId.isArtist && siblingsUseCase.canShow(mediaId, filterRequest)) {
+                    displayableHeaders.siblings()
+                } else {
+                    emptyList()
+                }
+            }
+        )
     }
 
     override fun loadInternal(request: Request): List<DisplayableItem> {

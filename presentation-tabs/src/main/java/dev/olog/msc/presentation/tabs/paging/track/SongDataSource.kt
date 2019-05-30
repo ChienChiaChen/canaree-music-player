@@ -36,18 +36,18 @@ internal class SongDataSource @Inject constructor(
         }
     }
 
-    override fun getMainDataSize(): Int {
+    override suspend fun getMainDataSize(): Int {
         return pageRequest.getCount(Filter.NO_FILTER)
     }
 
-    override fun getHeaders(mainListSize: Int): List<DisplayableItem> {
+    override suspend fun getHeaders(mainListSize: Int): List<DisplayableItem> {
         if (mainListSize == 0) {
             return listOf()
         }
         return listOf(displayableHeaders.shuffleHeader)
     }
 
-    override fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
+    override suspend fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()
 
     override fun loadInternal(request: Request): List<DisplayableItem> {
         return pageRequest.getPage(request)
