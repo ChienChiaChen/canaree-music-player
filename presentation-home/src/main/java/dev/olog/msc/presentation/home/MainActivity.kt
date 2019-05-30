@@ -1,31 +1,31 @@
 package dev.olog.msc.presentation.home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.*
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.FloatingWindowHelper
-import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.RateAppDialog
 import dev.olog.msc.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
-import dev.olog.msc.presentation.base.extensions.collapse
-import dev.olog.msc.presentation.base.extensions.expand
-import dev.olog.msc.presentation.base.extensions.getTopFragment
-import dev.olog.msc.presentation.base.extensions.isExpanded
+import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.presentation.home.base.MusicGlueActivity
 import dev.olog.msc.presentation.home.di.inject
+import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.navigator.Services
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.extensions.dimen
@@ -162,10 +162,10 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     private fun bottomNavigate(itemId: Int, forceRecreate: Boolean) {
         when (itemId) {
-            R.id.navigation_songs -> navigator.toLibraryCategories(this, forceRecreate)
-            R.id.navigation_search -> navigator.toSearchFragment(this)
-            R.id.navigation_podcasts -> navigator.toPodcastCategories(this, forceRecreate)
-            R.id.navigation_queue -> navigator.toPlayingQueueFragment(this)
+            R.id.navigation_songs -> BottomNavigator.navigate(this, Fragments.CATEGORIES, forceRecreate)
+            R.id.navigation_search -> BottomNavigator.navigate(this, Fragments.SEARCH, false)
+            R.id.navigation_podcasts -> BottomNavigator.navigate(this, Fragments.CATEGORIES_PODCAST, forceRecreate)
+            R.id.navigation_queue -> BottomNavigator.navigate(this, Fragments.PLAYING_QUEUE, false)
             else -> bottomNavigate(R.id.navigation_songs, forceRecreate)
         }
     }
@@ -195,15 +195,15 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     private fun handleIntent(intent: Intent) {
         when (intent.action) {
             FloatingWindowsConstants.ACTION_START_SERVICE -> {
-                FloatingWindowHelper.startServiceIfHasOverlayPermission(this, Classes.musicService)
+                FloatingWindowHelper.startServiceIfHasOverlayPermission(this, Services.floating())
             }
             ShortcutsConstants.SHORTCUT_SEARCH -> {
                 bottomNavigation.selectedItemId = R.id.navigation_search
-                navigator.toSearchFragment(this)
+                BottomNavigator.navigate(this, Fragments.SEARCH, false)
             }
             PendingIntents.ACTION_CONTENT_VIEW -> slidingPanel.expand()
             MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH -> {
-                val serviceIntent = Intent(this, Classes.musicService)
+                val serviceIntent = Intent(this, Services.music())
                 serviceIntent.action = MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH
                 ContextCompat.startForegroundService(this, serviceIntent)
             }
@@ -213,7 +213,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
                 navigator.toDetailFragment(this, mediaId)
             }
             Intent.ACTION_VIEW -> {
-                val serviceIntent = Intent(this, Classes.musicService)
+                val serviceIntent = Intent(this, Services.music())
                 serviceIntent.action = MusicConstants.ACTION_PLAY_FROM_URI
                 serviceIntent.data = intent.data
                 ContextCompat.startForegroundService(this, serviceIntent)
@@ -232,7 +232,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == FloatingWindowHelper.REQUEST_CODE_HOVER_PERMISSION) {
-            FloatingWindowHelper.startServiceIfHasOverlayPermission(this, Classes.floatingWindowService)
+            FloatingWindowHelper.startServiceIfHasOverlayPermission(this, Services.floating())
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -265,7 +265,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     private fun tryPopFolderBack(): Boolean {
-        val categoriesFragment = supportFragmentManager.findFragmentByTag(FragmentTags.CATEGORIES) ?: return false
+        val categoriesFragment = supportFragmentManager.findFragmentByTag(Fragments.CATEGORIES) ?: return false
         val fragments = categoriesFragment.childFragmentManager.fragments
         for (fragment in fragments) {
             if (fragment is CanHandleOnBackPressed &&
@@ -279,4 +279,56 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     override fun getSlidingPanel(): SlidingUpPanelLayout = slidingPanel
+}
+
+object BottomNavigator {
+
+    private val tags = listOf(
+        Fragments.CATEGORIES,
+        Fragments.CATEGORIES_PODCAST,
+        Fragments.SEARCH,
+        Fragments.PLAYING_QUEUE
+    )
+
+    private fun anyFragmentOnUpperFragmentContainer(activity: FragmentActivity): Boolean {
+        return activity.supportFragmentManager.fragments
+            .any { (it.view?.parent as View?)?.id == R.id.upperFragmentContainer }
+    }
+
+    fun navigate(activity: FragmentActivity, fragmentTag: String, forceRecreate: Boolean) {
+        if (!tags.contains(fragmentTag)){
+            throw IllegalArgumentException("invalid fragment tag $fragmentTag")
+        }
+
+        if (anyFragmentOnUpperFragmentContainer(activity)) {
+            activity.onBackPressed()
+        }
+
+        activity.fragmentTransaction {
+            setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            hideFragmentsIfExists(activity, tags.dropWhile { it == fragmentTag })
+            if (forceRecreate) {
+                return@fragmentTransaction replace(
+                    R.id.fragmentContainer,
+                    tagToInstance(activity, fragmentTag),
+                    fragmentTag
+                )
+            }
+            val fragment = activity.supportFragmentManager.findFragmentByTag(fragmentTag)
+            if (fragment == null) {
+                replace(R.id.fragmentContainer, tagToInstance(activity, fragmentTag), fragmentTag)
+            } else {
+                show(fragment)
+            }
+        }
+    }
+
+    private fun tagToInstance(context: Context, tag: String): Fragment = when (tag){
+        Fragments.CATEGORIES -> Fragments.categories(context)
+        Fragments.CATEGORIES_PODCAST -> Fragments.categoriesPodcast(context)
+        Fragments.SEARCH -> Fragments.search(context)
+        Fragments.PLAYING_QUEUE -> Fragments.playingQueue(context)
+        else -> throw IllegalArgumentException("invalid fragment tag $tag")
+    }
+
 }

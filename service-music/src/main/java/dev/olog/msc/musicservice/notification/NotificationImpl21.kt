@@ -14,10 +14,10 @@ import android.text.style.StyleSpan
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import dagger.Lazy
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.musicservice.R
+import dev.olog.msc.presentation.navigator.Activities
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.extensions.asActivityPendingIntent
@@ -138,7 +138,7 @@ internal open class NotificationImpl21 @Inject constructor(
     }
 
     private fun buildContentIntent(): PendingIntent {
-        val intent = Intent(service, Classes.mainActivity)
+        val intent = Intent(service, Activities.main())
         intent.action = PendingIntents.ACTION_CONTENT_VIEW
         return intent.asActivityPendingIntent(service)
     }

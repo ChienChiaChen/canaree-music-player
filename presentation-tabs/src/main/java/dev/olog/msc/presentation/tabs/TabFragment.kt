@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.parentViewModelProvider
@@ -16,6 +15,7 @@ import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.SetupNestedList
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
+import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.adapters.TabFragmentAdapter
 import dev.olog.msc.presentation.tabs.adapters.TabFragmentNestedAdapter
@@ -43,8 +43,8 @@ class TabFragment : BaseFragment(), SetupNestedList {
 
     private val viewModel by lazyFast { parentViewModelProvider<TabFragmentViewModel>(viewModelFactory) }
 
-    internal val category by lazyFast {
-        val ordinalCategory = arguments!!.getInt(FragmentTags.TAB_ARGUMENTS_SOURCE)
+    private val category by lazyFast {
+        val ordinalCategory = arguments!!.getInt(Fragments.ARGUMENTS_MEDIA_ID_CATEGORY)
         MediaIdCategory.values()[ordinalCategory]
     }
 

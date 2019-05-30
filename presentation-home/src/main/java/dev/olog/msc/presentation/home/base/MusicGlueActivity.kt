@@ -12,12 +12,12 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.presentation.base.activity.BaseActivity
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
+import dev.olog.msc.presentation.navigator.Services
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.MusicServiceConnectionState
 import dev.olog.msc.shared.Permissions
@@ -54,7 +54,7 @@ abstract class MusicGlueActivity : BaseActivity(), MediaProvider, CoroutineScope
 
         mediaBrowser = MediaBrowserCompat(
             this,
-            ComponentName(this, Classes.musicService),
+            ComponentName(this, Services.music()),
             MusicServiceConnection(this), null
         )
 

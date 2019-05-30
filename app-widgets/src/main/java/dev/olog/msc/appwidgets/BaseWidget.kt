@@ -8,11 +8,11 @@ import android.view.View
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import dev.olog.msc.core.Classes
-
 import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
+import dev.olog.msc.presentation.navigator.Activities
+import dev.olog.msc.presentation.navigator.Services
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.extensions.asServicePendingIntent
@@ -107,13 +107,13 @@ abstract class BaseWidget : AbsWidgetApp() {
     }
 
     private fun buildPendingIntent(context: Context, action: String): PendingIntent? {
-        val intent = Intent(context, Classes.musicService)
+        val intent = Intent(context, Services.music())
         intent.action = action
         return intent.asServicePendingIntent(context, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun buildContentIntent(context: Context): PendingIntent {
-        val intent = Intent(context, Classes.mainActivity)
+        val intent = Intent(context, Activities.main())
         intent.action = PendingIntents.ACTION_CONTENT_VIEW
         return PendingIntent.getActivity(
             context, 0,

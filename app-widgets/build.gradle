@@ -6,6 +6,7 @@ dependencies {
     implementation project(':shared-ui-components')
     implementation project(':core')
     implementation project(':image-provider')
+    implementation project(':presentation-navigator')
 
     implementation librariesAndroidX.core
     implementation librariesAndroidX.coreKtx

@@ -8,10 +8,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.entity.SearchFilters
 import dev.olog.msc.presentation.base.FloatingWindowHelper
-import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.fragmentTransaction
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
@@ -20,7 +18,9 @@ import dev.olog.msc.presentation.base.list.SetupNestedList
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.utils.hideKeyboard
 import dev.olog.msc.presentation.base.utils.showKeyboard
+import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.navigator.Services
 import dev.olog.msc.presentation.search.adapters.SearchFragmentAdapter
 import dev.olog.msc.presentation.search.adapters.SearchFragmentNestedAdapter
 import dev.olog.msc.presentation.search.di.inject
@@ -38,15 +38,6 @@ import kotlinx.coroutines.flow.filter
 import javax.inject.Inject
 
 class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainScope() {
-
-    companion object {
-        const val TAG = "SearchFragment"
-
-        @JvmStatic
-        fun newInstance(): SearchFragment {
-            return SearchFragment()
-        }
-    }
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -69,8 +60,8 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
     override fun onDetach() {
         val fragmentManager = activity?.supportFragmentManager
         act.fragmentTransaction {
-            fragmentManager?.findFragmentByTag(FragmentTags.DETAIL)?.let { show(it) }
-                    ?: fragmentManager!!.findFragmentByTag(FragmentTags.CATEGORIES)?.let { show(it) }
+            fragmentManager?.findFragmentByTag(Fragments.DETAIL)?.let { show(it) }
+                    ?: fragmentManager!!.findFragmentByTag(Fragments.CATEGORIES)?.let { show(it) }
             setReorderingAllowed(true)
         }
         super.onDetach()
@@ -243,7 +234,7 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
     }
 
     private fun startServiceOrRequestOverlayPermission() {
-        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Classes.floatingWindowService)
+        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Services.floating())
     }
 
 

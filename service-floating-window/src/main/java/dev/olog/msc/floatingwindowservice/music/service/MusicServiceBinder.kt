@@ -9,10 +9,10 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.*
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
+import dev.olog.msc.presentation.navigator.Services
 import dev.olog.msc.shared.MusicServiceConnectionState
 import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.extensions.isPaused
@@ -35,7 +35,7 @@ internal class MusicServiceBinder @Inject constructor(
 ) : DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
     private val mediaBrowser = MediaBrowserCompat(
-        context, ComponentName(context, Classes.musicService),
+        context, ComponentName(context, Services.music()),
         FloatingMusicConnection(this), null
     )
     private val publisher = BroadcastChannel<MusicServiceConnectionState>(Channel.CONFLATED)

@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
-import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.related.artists.di.inject
@@ -18,18 +16,6 @@ import kotlinx.android.synthetic.main.fragment_related_artist.view.*
 import javax.inject.Inject
 
 class RelatedArtistFragment : BaseFragment() {
-
-    companion object {
-        const val TAG = "RelatedArtistFragment"
-        const val ARGUMENTS_MEDIA_ID = "$TAG.arguments.media_id"
-
-
-        fun newInstance(mediaId: MediaId): RelatedArtistFragment {
-            return RelatedArtistFragment().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString()
-            )
-        }
-    }
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory

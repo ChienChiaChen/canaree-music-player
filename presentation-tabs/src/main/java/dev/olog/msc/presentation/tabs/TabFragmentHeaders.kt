@@ -3,11 +3,11 @@ package dev.olog.msc.presentation.tabs
 import android.content.Context
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.scope.PerFragment
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@PerFragment
 internal class TabFragmentHeaders @Inject constructor(
         @ApplicationContext context: Context
 ) {

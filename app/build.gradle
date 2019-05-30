@@ -72,6 +72,7 @@ dependencies {
     implementation project(':presentation-splash')
     implementation project(':presentation-preferences')
     implementation project(':presentation-create-playlist')
+    implementation project(':presentation-player') // without this throws ClassNotFoundException
     debugImplementation project(':presentation-debug')
 
 //    debugImplementation librariesCore.coroutinesDebug

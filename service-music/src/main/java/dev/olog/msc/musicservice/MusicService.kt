@@ -12,7 +12,6 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.RatingCompat
 import android.support.v4.media.session.MediaSessionCompat
 import dagger.Lazy
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.interactor.SleepTimerUseCase
@@ -22,6 +21,7 @@ import dev.olog.msc.musicservice.helper.MediaIdHelper
 import dev.olog.msc.musicservice.helper.MediaItemGenerator
 import dev.olog.msc.musicservice.helper.WearHelper
 import dev.olog.msc.musicservice.notification.MusicNotificationManager
+import dev.olog.msc.presentation.navigator.Activities
 import dev.olog.msc.shared.FileProvider
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
@@ -229,7 +229,7 @@ class MusicService : dev.olog.msc.musicservice.BaseMusicService(), CoroutineScop
     private fun buildSessionActivityPendingIntent(): PendingIntent {
         return PendingIntent.getActivity(
             this, 0,
-            Intent(this, Classes.mainActivity), PendingIntent.FLAG_CANCEL_CURRENT
+            Intent(this, Activities.main()), PendingIntent.FLAG_CANCEL_CURRENT
         )
     }
 }

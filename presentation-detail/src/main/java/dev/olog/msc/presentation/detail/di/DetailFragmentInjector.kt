@@ -11,6 +11,7 @@ import dev.olog.msc.app.injection.coreComponent
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel
+import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.shared.dagger.ViewModelKey
 
 fun DetailFragment.inject() {
@@ -33,7 +34,7 @@ abstract class DetailFragmentModule {
         @Provides
         @JvmStatic
         internal fun provideMediaId(fragment: DetailFragment): MediaId {
-            val mediaId = fragment.arguments!!.getString(DetailFragment.ARGUMENTS_MEDIA_ID)!!
+            val mediaId = fragment.arguments!!.getString(Fragments.ARGUMENTS_MEDIA_ID)!!
             return MediaId.fromString(mediaId)
         }
     }

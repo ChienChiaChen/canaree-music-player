@@ -2,15 +2,14 @@ package dev.olog.msc.presentation.categories.podcast
 
 import android.os.Bundle
 import android.view.View
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.fragment.BaseFragment
-import dev.olog.msc.presentation.categories.FragmentFactory
 import dev.olog.msc.presentation.categories.R
 import dev.olog.msc.presentation.categories.di.inject
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.navigator.Services
 import dev.olog.msc.shared.core.lazyFast
 import kotlinx.android.synthetic.main.fragment_library_categories.*
 import kotlinx.android.synthetic.main.fragment_library_categories.view.*
@@ -18,27 +17,13 @@ import javax.inject.Inject
 
 class CategoriesPodcastFragment : BaseFragment() {
 
-    companion object {
-        const val TAG = "CategoriesPodcastFragment"
-
-        @JvmStatic
-        fun newInstance(): CategoriesPodcastFragment {
-            return CategoriesPodcastFragment()
-        }
-    }
-
     @Inject
     lateinit var navigator: Navigator
     @Inject
     lateinit var presenter: CategoriesPodcastFragmentPresenter
 
-    private val fragmentFactory by lazyFast { FragmentFactory(childFragmentManager.fragmentFactory) }
-
     private val pagerAdapter by lazyFast {
-        CategoriesPodcastFragmentViewPager(
-            act.applicationContext, childFragmentManager,
-            fragmentFactory, presenter.getCategories()
-        )
+        CategoriesPodcastFragmentViewPager(act.applicationContext, childFragmentManager, presenter.getCategories())
     }
 
     override fun injectComponent() {
@@ -78,7 +63,7 @@ class CategoriesPodcastFragment : BaseFragment() {
     }
 
     private fun startServiceOrRequestOverlayPermission() {
-        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Classes.floatingWindowService)
+        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Services.floating())
     }
 
     private val onPageChangeListener = object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {

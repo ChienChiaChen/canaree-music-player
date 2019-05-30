@@ -9,9 +9,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import dev.olog.msc.core.AppShortcuts
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.glide.getCachedBitmap
+import dev.olog.msc.presentation.navigator.Activities
 import dev.olog.msc.shared.ShortcutsConstants
 import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.extensions.toast
@@ -33,7 +33,7 @@ internal abstract class BaseAppShortcuts(
 
             job?.cancel()
             job = launch {
-                val intent = Intent(context, Classes.mainActivity)
+                val intent = Intent(context, Activities.main())
                 intent.action = ShortcutsConstants.SHORTCUT_DETAIL
                 intent.putExtra(ShortcutsConstants.SHORTCUT_DETAIL_MEDIA_ID, mediaId.toString())
 

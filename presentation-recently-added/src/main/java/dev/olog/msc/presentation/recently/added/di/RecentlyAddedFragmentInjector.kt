@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.app.injection.coreComponent
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.presentation.recently.added.RecentlyAddedFragment
 import dev.olog.msc.presentation.recently.added.RecentlyAddedFragmentViewModel
 import dev.olog.msc.shared.dagger.ViewModelKey
@@ -31,7 +32,7 @@ abstract class RecentlyAddedFragmentModule {
         @Provides
         @JvmStatic
         internal fun provideMediaId(fragment: RecentlyAddedFragment): MediaId {
-            val mediaId = fragment.arguments!!.getString(RecentlyAddedFragment.ARGUMENTS_MEDIA_ID)!!
+            val mediaId = fragment.arguments!!.getString(Fragments.ARGUMENTS_MEDIA_ID)!!
             return MediaId.fromString(mediaId)
         }
     }

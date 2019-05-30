@@ -4,6 +4,7 @@ import dagger.BindsInstance
 import dagger.Component
 import dev.olog.msc.app.injection.CoreComponent
 import dev.olog.msc.app.injection.InjectionHelper
+import dev.olog.msc.app.injection.viewmodel.ViewModelModule
 import dev.olog.msc.core.dagger.scope.PerActivity
 import dev.olog.msc.presentation.home.MainActivity
 import dev.olog.msc.pro.ProModule
@@ -11,7 +12,8 @@ import dev.olog.msc.pro.ProModule
 @Component(
     modules = [
         ProModule::class,
-        MainActivityModule::class
+        MainActivityModule::class,
+        ViewModelModule::class
     ], dependencies = [CoreComponent::class]
 )
 @PerActivity

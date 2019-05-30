@@ -16,19 +16,14 @@
 
 package dev.olog.msc.app.injection.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
-import dagger.multibindings.Multibinds
 
 @Module
-internal abstract class ViewModelModule {
+abstract class ViewModelModule {
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: AppViewModelFactory): ViewModelProvider.Factory
-
-    @Multibinds
-    abstract fun viewModels(): Map<Class<out ViewModel>, ViewModel>
 
 }

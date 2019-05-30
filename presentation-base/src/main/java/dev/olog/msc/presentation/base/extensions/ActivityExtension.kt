@@ -13,13 +13,6 @@ inline fun FragmentActivity.fragmentTransaction(crossinline func: FragmentTransa
             .commitAllowingStateLoss()
 }
 
-fun FragmentTransaction.hideFragmentsIfExists(activity: FragmentActivity, tags: List<String>){
-    val manager = activity.supportFragmentManager
-    tags.forEach { tag ->
-        manager.findFragmentByTag(tag)?.let { hide(it) }
-    }
-}
-
 fun FragmentActivity.getTopFragment(): Fragment? {
     val topFragment = supportFragmentManager.backStackEntryCount - 1
     if (topFragment > -1){
@@ -27,4 +20,11 @@ fun FragmentActivity.getTopFragment(): Fragment? {
         return supportFragmentManager.findFragmentByTag(tag)
     }
     return null
+}
+
+fun FragmentTransaction.hideFragmentsIfExists(activity: FragmentActivity, tags: List<String>){
+    val manager = activity.supportFragmentManager
+    tags.forEach { tag ->
+        manager.findFragmentByTag(tag)?.let { hide(it) }
+    }
 }

@@ -6,12 +6,10 @@ import android.app.Service
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import dagger.BindsInstance
 import dagger.Component
 import dev.olog.msc.apilastfm.LastFmModule
 import dev.olog.msc.app.injection.equalizer.EqualizerModule
-import dev.olog.msc.app.injection.viewmodel.ViewModelModule
 import dev.olog.msc.core.IEncrypter
 import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
@@ -26,10 +24,7 @@ import dev.olog.msc.core.gateway.podcast.PodcastAlbumGateway
 import dev.olog.msc.core.gateway.podcast.PodcastArtistGateway
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
-import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
-import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
-import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
+import dev.olog.msc.core.gateway.prefs.*
 import dev.olog.msc.core.gateway.track.*
 import dev.olog.msc.data.di.PreferenceModule
 import dev.olog.msc.data.di.RepositoryHelperModule
@@ -53,10 +48,8 @@ import javax.inject.Singleton
 //        // presentation
 //        SleepTimerModule::class,
         DialogModules::class,
-//        PresentationModules::class,
         NavigatorModule::class,
 //        WidgetBindingModule::class,
-        ViewModelModule::class,
         EqualizerModule::class
 
 //        // floating info service
@@ -72,12 +65,11 @@ interface CoreComponent {
     @ProcessLifecycle
     fun lifecycle(): Lifecycle
 
-    fun viewModelFactory(): ViewModelProvider.Factory
-
     fun prefs(): AppPreferencesGateway
     fun musicPrefs(): MusicPreferencesGateway
     fun tutorialPrefs(): TutorialPreferenceGateway
     fun equalizerPrefs(): EqualizerPreferencesGateway
+    fun sortPrefs(): SortPreferencesGateway
 
     fun folderGateway(): FolderGateway
     fun playlistGateway(): PlaylistGateway
@@ -96,6 +88,7 @@ interface CoreComponent {
     fun favoriteGateway(): FavoriteGateway
     fun searchGateway(): SearchGateway
     fun widgetClasses(): WidgetClasses
+    fun recentSearches(): RecentSearchesGateway
 
     fun sharedPreferences(): SharedPreferences
 

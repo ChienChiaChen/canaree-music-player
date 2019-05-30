@@ -6,4 +6,6 @@ dependencies {
     implementation project(':preferences-keys')
 
     implementation librariesAndroidX.appcompat
+    implementation librariesAndroidX.coreKtx
+    implementation librariesUi.slidingPanel
 }

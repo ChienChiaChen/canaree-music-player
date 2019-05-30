@@ -6,12 +6,11 @@ import androidx.fragment.app.FragmentPagerAdapter
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.presentation.base.extensions.asString
-import dev.olog.msc.presentation.categories.FragmentFactory
+import dev.olog.msc.presentation.navigator.Fragments
 
 class CategoriesPodcastFragmentViewPager(
     private val context: Context,
     fragmentManager: androidx.fragment.app.FragmentManager,
-    private val factory: FragmentFactory,
     private val categories: List<LibraryCategoryBehavior>
 
 ) : FragmentPagerAdapter(fragmentManager) {
@@ -26,7 +25,7 @@ class CategoriesPodcastFragmentViewPager(
 
     override fun getItem(position: Int): Fragment {
         val category = categories[position].category
-        return factory.tabFragment(category)
+        return Fragments.tab(context, category)
     }
 
     override fun getCount(): Int = categories.size

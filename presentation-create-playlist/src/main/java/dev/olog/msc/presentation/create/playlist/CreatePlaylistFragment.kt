@@ -7,7 +7,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.core.entity.PlaylistType
-import dev.olog.msc.presentation.base.FragmentTags
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.fragmentTransaction
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
@@ -15,6 +14,7 @@ import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.base.utils.hideKeyboard
+import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
@@ -57,7 +57,7 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
     override fun onDetach() {
         val fragmentManager = activity?.supportFragmentManager
         act.fragmentTransaction {
-            fragmentManager!!.findFragmentByTag(FragmentTags.CATEGORIES)?.let { show(it) }
+            fragmentManager!!.findFragmentByTag(Fragments.CATEGORIES)?.let { show(it) }
             setReorderingAllowed(true)
         }
         super.onDetach()

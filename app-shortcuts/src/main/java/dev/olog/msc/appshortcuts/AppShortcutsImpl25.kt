@@ -8,7 +8,7 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
-import dev.olog.msc.core.Classes
+import dev.olog.msc.presentation.navigator.Activities
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.ShortcutsConstants
 import dev.olog.msc.shared.utils.isNougat_MR1
@@ -73,25 +73,25 @@ internal open class AppShortcutsImpl25(
     }
 
     private fun createSearchIntent(): Intent {
-        val intent = Intent(context, Classes.mainActivity)
+        val intent = Intent(context, Activities.main())
         intent.action = ShortcutsConstants.SHORTCUT_SEARCH
         return intent
     }
 
     private fun createPlayIntent(): Intent {
-        val intent = Intent(context, Classes.shortcutActivity)
+        val intent = Intent(context, Activities.shortcuts())
         intent.action = MusicConstants.ACTION_PLAY
         return intent
     }
 
     private fun createShuffleIntent(): Intent {
-        val intent = Intent(context, Classes.shortcutActivity)
+        val intent = Intent(context, Activities.shortcuts())
         intent.action = MusicConstants.ACTION_SHUFFLE
         return intent
     }
 
     private fun createPlaylistChooserIntent(): Intent {
-        val intent = Intent(context, Classes.playlistChooser)
+        val intent = Intent(context, Activities.newPlaylist())
         intent.action = ShortcutsConstants.SHORTCUT_PLAYLIST_CHOOSER
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         return intent

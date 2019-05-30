@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
-import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
@@ -19,18 +17,6 @@ import kotlinx.android.synthetic.main.fragment_recently_added.view.*
 import javax.inject.Inject
 
 class RecentlyAddedFragment : BaseFragment() {
-
-    companion object {
-        const val TAG = "RecentlyAddedFragment"
-        const val ARGUMENTS_MEDIA_ID = "$TAG.arguments.media_id"
-
-
-        fun newInstance(mediaId: MediaId): RecentlyAddedFragment {
-            return RecentlyAddedFragment().withArguments(
-                ARGUMENTS_MEDIA_ID to mediaId.toString()
-            )
-        }
-    }
 
     @Inject
     lateinit var navigator: Navigator

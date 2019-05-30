@@ -1,4 +1,13 @@
-include ':app', ':core', ':shared', ':tap-target-view', ':service-music', ':image-provider', ':data', ':api-lastfm', ':pro', ':service-floating-window', ':shared-ui-components', ':offline-lyrics', ':presentation-navigator', ':presentation-search', ':presentation-base', ':app-widgets', ':presentation-offline-lyrics', ':presentation-equalizer', ':presentation-edit-item', ':jaudiotagger', ':app-shortcuts', ':presentation-home', ':presentation-player', ':presentation-player-mini', ':presentation-sleep-timer', ':presentation-tabs', ':presentation-categories', ':presentation-tabs-folder-tree', ':presentation-detail', ':presentation-playing-queue', ':presentation-splash', ':presentation-preferences', ':presentation-recently-added', ':presentation-related-artists', ':presentation-popup', ':presentation-about', ':presentation-dialogs', ':presentation-debug', ':presentation-create-playlist', ':data-benchmark', ':shared-core', ':presentation-base-list', ':app-injection', ':preferences-keys', ':presentation-playlist-chooser'
+include ':app', ':core', ':shared', ':tap-target-view', ':service-music', ':image-provider', ':data', ':api-lastfm',
+        ':pro', ':service-floating-window', ':shared-ui-components', ':offline-lyrics', ':presentation-navigator',
+        ':presentation-search', ':presentation-base', ':app-widgets', ':presentation-offline-lyrics', ':presentation-equalizer',
+        ':presentation-edit-item', ':jaudiotagger', ':app-shortcuts', ':presentation-home', ':presentation-player',
+        ':presentation-player-mini', ':presentation-sleep-timer', ':presentation-tabs', ':presentation-categories',
+        ':presentation-tabs-folder-tree', ':presentation-detail', ':presentation-playing-queue', ':presentation-splash',
+        ':presentation-preferences', ':presentation-recently-added', ':presentation-related-artists',
+        ':presentation-popup', ':presentation-about', ':presentation-dialogs', ':presentation-debug',
+        ':presentation-create-playlist', ':data-benchmark', ':shared-core', ':presentation-base-list', ':app-injection',
+        ':preferences-keys', ':presentation-playlist-chooser'
 
 //gradle.ext.exoplayerRoot = '/Users/eugeniuolog/AndroidStudioProjects/ExoPlayer'
 //gradle.ext.exoplayerModulePrefix = 'exoplayer-'

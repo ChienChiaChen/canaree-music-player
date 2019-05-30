@@ -12,6 +12,7 @@ dependencies {
     implementation project(':image-provider')
     implementation project(':shared')
     implementation project(':shared-ui-components')
+    implementation project(':presentation-navigator')
 
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions

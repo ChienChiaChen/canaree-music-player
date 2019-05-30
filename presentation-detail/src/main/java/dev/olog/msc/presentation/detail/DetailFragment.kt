@@ -30,6 +30,7 @@ import dev.olog.msc.presentation.base.utils.showKeyboard
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.di.inject
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
+import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.core.flow.debounceFirst
 import dev.olog.msc.shared.core.lazyFast
@@ -54,18 +55,6 @@ class DetailFragment : BaseFragment(),
     OnStartDragListener,
     CoroutineScope by MainScope() {
 
-    companion object {
-        const val TAG = "DetailFragment"
-        const val ARGUMENTS_MEDIA_ID = "$TAG.arguments.media_id"
-
-        @JvmStatic
-        fun newInstance(mediaId: MediaId): DetailFragment {
-            return DetailFragment().withArguments(
-                ARGUMENTS_MEDIA_ID to mediaId.toString()
-            )
-        }
-    }
-
     @Inject
     lateinit var navigator: Navigator
     @Inject
@@ -74,7 +63,7 @@ class DetailFragment : BaseFragment(),
 
     private val recyclerOnScrollListener by lazyFast { HeaderVisibilityScrollListener(this) }
 
-    private val mediaId by lazyFast { MediaId.fromString(arguments!!.getString(ARGUMENTS_MEDIA_ID)!!) }
+    private val mediaId by lazyFast { MediaId.fromString(arguments!!.getString(Fragments.ARGUMENTS_MEDIA_ID)!!) }
 
     private val mostPlayedAdapter by lazyFast { DetailMostPlayedAdapter(navigator) }
     private val recentlyAddedAdapter by lazyFast { DetailRecentlyAddedAdapter(navigator) }

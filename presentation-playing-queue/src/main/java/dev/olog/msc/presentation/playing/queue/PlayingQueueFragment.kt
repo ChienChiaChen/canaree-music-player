@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.msc.core.Classes
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.extensions.act
@@ -16,6 +15,7 @@ import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.navigator.Services
 import dev.olog.msc.presentation.playing.queue.adapter.PlayingQueueFragmentAdapter
 import dev.olog.msc.presentation.playing.queue.di.inject
 import dev.olog.msc.shared.core.lazyFast
@@ -26,15 +26,6 @@ import kotlinx.android.synthetic.main.fragment_playing_queue.view.*
 import javax.inject.Inject
 
 class PlayingQueueFragment : BaseFragment(), OnStartDragListener {
-
-    companion object {
-        const val TAG = "PlayingQueueFragment"
-
-        @JvmStatic
-        fun newInstance(): PlayingQueueFragment {
-            return PlayingQueueFragment()
-        }
-    }
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -99,7 +90,7 @@ class PlayingQueueFragment : BaseFragment(), OnStartDragListener {
     }
 
     private fun startServiceOrRequestOverlayPermission() {
-        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Classes.floatingWindowService)
+        FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Services.floating())
     }
 
     override fun provideLayoutId(): Int = R.layout.fragment_playing_queue
