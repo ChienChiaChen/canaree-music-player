@@ -58,22 +58,30 @@ dependencies {
     implementation project(':shared')
     implementation project(':shared-ui-components')
 
-    // used in manifest do display services
-    implementation project(':service-music')
-    implementation project(':service-floating-window')
-
     // need to initialize at app startup
     implementation project(':app-shortcuts')
 
     implementation project(':pro')
     implementation project(':presentation-base')
-    // used in manifest do diplay activities
+    // activities
     implementation project(':presentation-home')
     implementation project(':presentation-splash')
     implementation project(':presentation-preferences')
     implementation project(':presentation-create-playlist')
-    implementation project(':presentation-player') // without this throws ClassNotFoundException
     debugImplementation project(':presentation-debug')
+    // fragments
+    implementation project(':presentation-player')
+    implementation project(':presentation-player-mini')
+    implementation project(':presentation-categories')
+    implementation project(':presentation-tabs')
+    implementation project(':presentation-detail')
+    implementation project(':presentation-related-artists')
+    implementation project(':presentation-recently-added')
+    implementation project(':presentation-search')
+    implementation project(':presentation-playing-queue')
+    // services
+    implementation project(':service-music')
+    implementation project(':service-floating-window')
 
 //    debugImplementation librariesCore.coroutinesDebug
 
