@@ -3,6 +3,7 @@ package dev.olog.msc.app.injection.navigator
 import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.navigator.IPopupNavigator
+import dev.olog.msc.presentation.navigator.Intents
 import javax.inject.Inject
 
 internal class MainPopupNavigator @Inject constructor() : IPopupNavigator {
@@ -44,10 +45,9 @@ internal class MainPopupNavigator @Inject constructor() : IPopupNavigator {
 ////        activity.startActivity(intent)
 //    }
 //
-//    override fun toSettingsActivity(activity: FragmentActivity) {
-//        val intent = Intent(activity, PreferencesActivity::class.java)
-//        activity.startActivity(intent)
-//    }
+    override fun toSettingsActivity(activity: FragmentActivity) {
+        activity.startActivity(Intents.preferenceActivity(activity))
+    }
 //
 //    override fun toSleepTimer(activity: FragmentActivity) {
 //        SleepTimerPickerDialogBuilder(activity, activity.supportFragmentManager)
@@ -73,10 +73,6 @@ internal class MainPopupNavigator @Inject constructor() : IPopupNavigator {
     }
 
     override fun toDebugConfiguration(activity: FragmentActivity) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun toSettingsActivity(activity: FragmentActivity) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
