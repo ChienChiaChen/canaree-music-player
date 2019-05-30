@@ -5,11 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import dev.olog.msc.core.WidgetClasses
+import dev.olog.msc.appshortcuts.AppShortcuts
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.musicservice.model.PositionInQueue
+import dev.olog.msc.presentation.navigator.Widgets
 import dev.olog.msc.shared.WidgetConstants
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
 import dev.olog.msc.shared.extensions.isPlaying
@@ -17,20 +18,18 @@ import javax.inject.Inject
 
 @PerService
 internal class PlayerState @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val mediaSession: MediaSessionCompat,
-        private val musicPreferencesUseCase: MusicPreferencesGateway,
-//        private val appShortcuts: AppShortcuts, TODO
-        private val widgetClasses: WidgetClasses
+    @ApplicationContext private val context: Context,
+    private val mediaSession: MediaSessionCompat,
+    private val musicPreferencesUseCase: MusicPreferencesGateway
 
-){
+) {
 
     private val builder = PlaybackStateCompat.Builder()
     private var activeQueueId = MediaSessionCompat.QueueItem.UNKNOWN_ID.toLong()
 
     init {
         builder.setState(PlaybackStateCompat.STATE_PAUSED, musicPreferencesUseCase.getBookmark(), 0f)
-                .setActions(getActions())
+            .setActions(getActions())
     }
 
     fun prepare(id: Long, bookmark: Long) {
@@ -50,7 +49,7 @@ internal class PlayerState @Inject constructor(
     fun update(state: Int, bookmark: Long, id: Long?, speed: Float): PlaybackStateCompat {
         val isPlaying = state == PlaybackStateCompat.STATE_PLAYING
 
-        if (isPlaying){
+        if (isPlaying) {
             disablePlayShortcut()
         } else {
             enablePlayShortcut()
@@ -80,7 +79,7 @@ internal class PlayerState @Inject constructor(
 
     fun updatePlaybackSpeed(speed: Float) {
         val currentState = mediaSession.controller?.playbackState
-        if (currentState == null){
+        if (currentState == null) {
             builder.setState(PlaybackStateCompat.STATE_PAUSED, musicPreferencesUseCase.getBookmark(), 0f)
         } else {
             val stateSpeed = if (currentState.isPlaying()) speed else 0f
@@ -89,7 +88,7 @@ internal class PlayerState @Inject constructor(
         mediaSession.setPlaybackState(builder.build())
     }
 
-    fun updateActiveQueueId(id: Long){
+    fun updateActiveQueueId(id: Long) {
         val state = builder.setActiveQueueItemId(id).build()
         mediaSession.setPlaybackState(state)
     }
@@ -156,8 +155,8 @@ internal class PlayerState @Inject constructor(
                 PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
     }
 
-    private fun notifyWidgetsOfStateChanged(isPlaying: Boolean, bookmark: Long){
-        for (clazz in widgetClasses.get()) {
+    private fun notifyWidgetsOfStateChanged(isPlaying: Boolean, bookmark: Long) {
+        for (clazz in Widgets.all()) {
             val ids = context.getAppWidgetsIdsFor(clazz)
 
             val intent = Intent(context, clazz).apply {
@@ -171,8 +170,8 @@ internal class PlayerState @Inject constructor(
         }
     }
 
-    private fun notifyWidgetsActionChanged(showPrevious: Boolean, showNext: Boolean){
-        for (clazz in widgetClasses.get()) {
+    private fun notifyWidgetsActionChanged(showPrevious: Boolean, showNext: Boolean) {
+        for (clazz in Widgets.all()) {
             val ids = context.getAppWidgetsIdsFor(clazz)
 
             val intent = Intent(context, clazz).apply {
@@ -186,13 +185,13 @@ internal class PlayerState @Inject constructor(
         }
     }
 
-    private fun disablePlayShortcut(){
-//        appShortcuts.disablePlay()
+    private fun disablePlayShortcut() {
+        AppShortcuts.instance(context).disablePlay()
     }
 
 
-    private fun enablePlayShortcut(){
-//        appShortcuts.enablePlay()
+    private fun enablePlayShortcut() {
+        AppShortcuts.instance(context).enablePlay()
     }
 
 }

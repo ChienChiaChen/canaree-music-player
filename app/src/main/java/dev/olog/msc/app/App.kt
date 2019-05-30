@@ -6,6 +6,7 @@ import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
 import dev.olog.msc.app.base.ThemedApp
 import dev.olog.msc.app.injection.CoreComponent
+import dev.olog.msc.appshortcuts.AppShortcuts
 import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.dagger.DaggerAppComponent
 import dev.olog.msc.presentation.base.ImageViews
@@ -17,8 +18,7 @@ import javax.inject.Inject
 
 class App : ThemedApp() {
 
-//    @Inject TODO restore
-//    lateinit var appShortcuts: AppShortcuts
+    private lateinit var appShortcuts: AppShortcuts
 
     @Inject
     lateinit var sleepTimerUseCase: SleepTimerUseCase
@@ -53,6 +53,8 @@ class App : ThemedApp() {
     }
 
     private fun initializeConstants() {
+        // initialize app shortcuts
+        appShortcuts = AppShortcuts.instance(this)
         ImageViews.initialize(this)
 //        PreferenceManager.setDefaultValues(this, R.xml.prefs, false) TODO crashes
     }

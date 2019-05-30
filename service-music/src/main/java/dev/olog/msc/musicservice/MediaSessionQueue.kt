@@ -9,10 +9,10 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
+import dev.olog.msc.presentation.navigator.Widgets
 import dev.olog.msc.shared.WidgetConstants
 import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
@@ -24,8 +24,7 @@ internal class MediaSessionQueue @Inject constructor(
     @ApplicationContext private val context: Context,
     @ServiceLifecycle lifecycle: Lifecycle,
     mediaSession: MediaSessionCompat,
-    private val playerState: PlayerState,
-    private val widgetClasses: WidgetClasses
+    private val playerState: PlayerState
 
 ) : DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
@@ -60,7 +59,7 @@ internal class MediaSessionQueue @Inject constructor(
     }
 
     private fun notifyWidgets() {
-        for (clazz in widgetClasses.get()) {
+        for (clazz in Widgets.all()) {
             val ids = context.getAppWidgetsIdsFor(clazz)
             val intent = Intent(context, clazz).apply {
                 action = WidgetConstants.QUEUE_CHANGED

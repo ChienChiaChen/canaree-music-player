@@ -5,13 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
-import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.imageprovider.glide.getBitmapAsync
 import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
+import dev.olog.msc.presentation.navigator.Widgets
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.WidgetConstants
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
@@ -22,7 +22,6 @@ internal class PlayerMetadata @Inject constructor(
     @ApplicationContext private val context: Context,
     private val mediaSession: MediaSessionCompat,
     playerLifecycle: PlayerLifecycle,
-    private val widgetClasses: WidgetClasses,
     private val prefsGateway: AppPreferencesGateway
 
 ) : PlayerLifecycle.Listener {
@@ -69,7 +68,7 @@ internal class PlayerMetadata @Inject constructor(
     }
 
     private fun notifyWidgets(entity: MediaEntity) {
-        for (clazz in widgetClasses.get()) {
+        for (clazz in Widgets.all()) {
             val ids = context.getAppWidgetsIdsFor(clazz)
 
             val intent = Intent(context, clazz).apply {

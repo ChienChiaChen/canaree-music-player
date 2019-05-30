@@ -8,7 +8,6 @@ import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
-import dev.olog.msc.core.AppShortcuts
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.presentation.navigator.Activities
@@ -20,7 +19,7 @@ import kotlinx.coroutines.*
 internal abstract class BaseAppShortcuts(
     protected val context: Context
 
-) : AppShortcuts, DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
+) : DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
 
     private var job: Job? = null
 
@@ -28,7 +27,7 @@ internal abstract class BaseAppShortcuts(
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
 
-    override fun addDetailShortcut(mediaId: MediaId, title: String) {
+    fun addDetailShortcut(mediaId: MediaId, title: String) {
         if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
 
             job?.cancel()
@@ -38,6 +37,7 @@ internal abstract class BaseAppShortcuts(
                 intent.putExtra(ShortcutsConstants.SHORTCUT_DETAIL_MEDIA_ID, mediaId.toString())
 
                 val bitmap = context.getCachedBitmap(mediaId, 128, { circleCrop() })
+                yield()
                 val shortcut = ShortcutInfoCompat.Builder(context, title)
                     .setShortLabel(title)
                     .setIcon(IconCompat.createWithBitmap(bitmap))
@@ -66,5 +66,8 @@ internal abstract class BaseAppShortcuts(
     override fun onStop(owner: LifecycleOwner) {
         job?.cancel()
     }
+
+    abstract fun disablePlay()
+    abstract fun enablePlay()
 
 }

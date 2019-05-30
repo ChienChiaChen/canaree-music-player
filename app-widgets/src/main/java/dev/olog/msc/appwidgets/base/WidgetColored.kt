@@ -4,16 +4,25 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.widget.RemoteViews
+import dev.olog.msc.app.injection.DaggerCoreComponent
+import dev.olog.msc.app.injection.coreComponent
 import dev.olog.msc.appwidgets.BaseWidget
 import dev.olog.msc.appwidgets.R
 import dev.olog.msc.appwidgets.WidgetMetadata
+import dev.olog.msc.appwidgets.di.DaggerAppWidgetComponent
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.glide.getBitmapAsync
 import dev.olog.msc.shared.ui.processor.ImageProcessor
 
 private const val IMAGE_SIZE = 300
 
-open class WidgetColored : BaseWidget() {
+class WidgetColored : BaseWidget() {
+
+    override fun injectComponent() {
+        DaggerAppWidgetComponent.factory()
+            .create(coreComponent())
+            .inject(this)
+    }
 
     override fun onMetadataChanged(
         context: Context,

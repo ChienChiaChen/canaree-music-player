@@ -1,8 +1,10 @@
 package dev.olog.msc.presentation.popup.playlist
 
+import android.content.Context
 import android.view.MenuItem
-import dev.olog.msc.core.AppShortcuts
+import dev.olog.msc.appshortcuts.AppShortcuts
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.track.Playlist
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.GetPlaylistsBlockingUseCase
@@ -16,10 +18,10 @@ import dev.olog.msc.shared.extensions.toast
 import javax.inject.Inject
 
 class PlaylistPopupListener @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val navigator: Navigator,
     getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-    addToPlaylistUseCase: AddToPlaylistUseCase,
-    private val appShortcuts: AppShortcuts
+    addToPlaylistUseCase: AddToPlaylistUseCase
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, false) {
 
@@ -60,7 +62,7 @@ class PlaylistPopupListener @Inject constructor(
             R.id.viewArtist -> viewArtist(navigator, MediaId.artistId(song!!.artistId))
             R.id.share -> share(activity, song!!)
             R.id.setRingtone -> setRingtone(navigator, getMediaId(), song!!)
-            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), playlist.title)
+            R.id.addHomeScreen -> AppShortcuts.instance(context).addDetailShortcut(getMediaId(), playlist.title)
             R.id.removeDuplicates -> removeDuplicates()
         }
 

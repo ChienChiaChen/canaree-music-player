@@ -1,8 +1,10 @@
 package dev.olog.msc.presentation.popup.podcastalbum
 
+import android.content.Context
 import android.view.MenuItem
-import dev.olog.msc.core.AppShortcuts
+import dev.olog.msc.appshortcuts.AppShortcuts
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastAlbum
 import dev.olog.msc.core.entity.podcast.toSong
@@ -16,10 +18,10 @@ import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import javax.inject.Inject
 
 class PodcastAlbumPopupListener @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val navigator: Navigator,
     getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-    addToPlaylistUseCase: AddToPlaylistUseCase,
-    private val appShortcuts: AppShortcuts
+    addToPlaylistUseCase: AddToPlaylistUseCase
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, true) {
 
@@ -57,7 +59,7 @@ class PodcastAlbumPopupListener @Inject constructor(
             R.id.viewAlbum -> viewAlbum(navigator, MediaId.podcastAlbumId(podcast!!.albumId))
             R.id.viewInfo -> viewInfo(navigator, getMediaId())
             R.id.share -> share(activity, podcast!!.toSong())
-            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), album.title)
+            R.id.addHomeScreen -> AppShortcuts.instance(context).addDetailShortcut(getMediaId(), album.title)
         }
 
         return true

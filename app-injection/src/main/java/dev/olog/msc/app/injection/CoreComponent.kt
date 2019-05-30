@@ -3,6 +3,7 @@ package dev.olog.msc.app.injection
 import android.app.Activity
 import android.app.Application
 import android.app.Service
+import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.Lifecycle
@@ -11,7 +12,6 @@ import dagger.Component
 import dev.olog.msc.apilastfm.LastFmModule
 import dev.olog.msc.app.injection.equalizer.EqualizerModule
 import dev.olog.msc.core.IEncrypter
-import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.core.equalizer.IBassBoost
@@ -37,7 +37,6 @@ import javax.inject.Singleton
     modules = arrayOf(
         CoreModule::class,
         SchedulersModule::class,
-//        AppShortcutsModule::class,
         LastFmModule::class,
 
 //        // data
@@ -87,7 +86,6 @@ interface CoreComponent {
     fun playingQueueGateway(): PlayingQueueGateway
     fun favoriteGateway(): FavoriteGateway
     fun searchGateway(): SearchGateway
-    fun widgetClasses(): WidgetClasses
     fun recentSearches(): RecentSearchesGateway
 
     fun sharedPreferences(): SharedPreferences
@@ -97,9 +95,6 @@ interface CoreComponent {
     fun bassBoost(): IBassBoost
 
     fun encrypter(): IEncrypter
-
-//    fun appShortcuts(): AppShortcuts TODO restore
-
 
     fun navigator(): Navigator
     fun navigatorAbout(): NavigatorAbout
@@ -126,7 +121,7 @@ interface CoreComponent {
             return coreComponent!!
         }
 
-        fun safeCoreComponent(): CoreComponent = coreComponent!!
+        internal fun safeCoreComponent(): CoreComponent = coreComponent!!
 
     }
 
@@ -134,3 +129,4 @@ interface CoreComponent {
 
 fun Activity.coreComponent(): CoreComponent = CoreComponent.safeCoreComponent()
 fun Service.coreComponent(): CoreComponent = CoreComponent.safeCoreComponent()
+fun AppWidgetProvider.coreComponent(): CoreComponent = CoreComponent.safeCoreComponent()

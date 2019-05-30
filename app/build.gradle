@@ -60,6 +60,7 @@ dependencies {
 
     // need to initialize at app startup
     implementation project(':app-shortcuts')
+    implementation project(':app-widgets')
 
     implementation project(':pro')
     implementation project(':presentation-base')

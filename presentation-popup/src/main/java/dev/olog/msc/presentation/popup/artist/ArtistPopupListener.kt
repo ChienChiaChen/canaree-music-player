@@ -1,8 +1,10 @@
 package dev.olog.msc.presentation.popup.artist
 
+import android.content.Context
 import android.view.MenuItem
-import dev.olog.msc.core.AppShortcuts
+import dev.olog.msc.appshortcuts.AppShortcuts
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.track.Artist
 import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.GetPlaylistsBlockingUseCase
@@ -15,10 +17,10 @@ import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import javax.inject.Inject
 
 class ArtistPopupListener @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val navigator: Navigator,
     getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-    addToPlaylistUseCase: AddToPlaylistUseCase,
-    private val appShortcuts: AppShortcuts
+    addToPlaylistUseCase: AddToPlaylistUseCase
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, false) {
 
@@ -57,7 +59,7 @@ class ArtistPopupListener @Inject constructor(
             R.id.viewArtist -> viewArtist(navigator, MediaId.artistId(song!!.artistId))
             R.id.share -> share(activity, song!!)
             R.id.setRingtone -> setRingtone(navigator, getMediaId(), song!!)
-            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), artist.name)
+            R.id.addHomeScreen -> AppShortcuts.instance(context).addDetailShortcut(getMediaId(), artist.name)
         }
 
 

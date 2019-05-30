@@ -24,6 +24,7 @@ dependencies {
     implementation project(':shared')
     implementation project(':image-provider')
     implementation project(':presentation-navigator')
+    implementation project(':app-shortcuts')
 
     // kotlin
     implementation librariesAndroidX.media

@@ -1,8 +1,10 @@
 package dev.olog.msc.presentation.popup.podcastplaylist
 
+import android.content.Context
 import android.view.MenuItem
-import dev.olog.msc.core.AppShortcuts
+import dev.olog.msc.appshortcuts.AppShortcuts
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.entity.podcast.Podcast
 import dev.olog.msc.core.entity.podcast.PodcastPlaylist
 import dev.olog.msc.core.entity.podcast.toSong
@@ -17,10 +19,10 @@ import dev.olog.msc.shared.extensions.toast
 import javax.inject.Inject
 
 class PodcastPlaylistPopupListener @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val navigator: Navigator,
     getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
-    addToPlaylistUseCase: AddToPlaylistUseCase,
-    private val appShortcuts: AppShortcuts
+    addToPlaylistUseCase: AddToPlaylistUseCase
 
 ) : AbsPopupListener(getPlaylistBlockingUseCase, addToPlaylistUseCase, true) {
 
@@ -60,7 +62,7 @@ class PodcastPlaylistPopupListener @Inject constructor(
             R.id.viewAlbum -> viewAlbum(navigator, MediaId.podcastAlbumId(podcast!!.albumId))
             R.id.viewArtist -> viewArtist(navigator, MediaId.podcastArtistId(podcast!!.artistId))
             R.id.share -> share(activity, podcast!!.toSong())
-            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), playlist.title)
+            R.id.addHomeScreen -> AppShortcuts.instance(context).addDetailShortcut(getMediaId(), playlist.title)
             R.id.removeDuplicates -> removeDuplicates()
         }
 

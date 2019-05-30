@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.RemoteViews
-import dagger.android.AndroidInjection
 import dev.olog.msc.shared.WidgetConstants
 
 abstract class AbsWidgetApp : AppWidgetProvider() {
@@ -18,8 +17,10 @@ abstract class AbsWidgetApp : AppWidgetProvider() {
         private var actions: WidgetActions? = null
     }
 
+    protected abstract fun injectComponent()
+
     override fun onReceive(context: Context, intent: Intent) {
-        AndroidInjection.inject(this, context)
+        injectComponent()
         super.onReceive(context, intent)
 
         when (intent.action) {

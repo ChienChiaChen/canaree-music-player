@@ -3,16 +3,17 @@ package dev.olog.msc.presentation.playlist.chooser
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
-import dev.olog.msc.core.AppShortcuts
+import dev.olog.msc.appshortcuts.AppShortcuts
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
 import dev.olog.msc.presentation.base.list.SimpleAdapter
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
 
 class PlaylistChooserActivityAdapter (
-    private val activity: FragmentActivity,
-    private var appShortcuts: AppShortcuts
+    private val activity: FragmentActivity
 
 ) : SimpleAdapter<DisplayableItem>() {
+
+    private val appShortcuts = AppShortcuts.instance(activity)
 
     override fun initViewHolderListeners(viewHolder: DataBoundViewHolder, viewType: Int) {
         viewHolder.itemView.setOnClickListener {

@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-apply from: '../base_module.gradle'
+apply from: '../base_module_2.gradle'
+apply from: '../dagger.gradle'
 
 android {
     lintOptions {
@@ -8,18 +9,13 @@ android {
 }
 
 dependencies {
-    implementation project(':core')
     implementation project(':image-provider')
-    implementation project(':shared')
-    implementation project(':shared-ui-components')
     implementation project(':presentation-navigator')
+    implementation project(':shared')
 
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
-
-    implementation librariesAndroidX.coreKtx
-    implementation librariesAndroidX.material
 
     implementation librariesUi.glide
 

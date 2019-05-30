@@ -8,7 +8,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dev.olog.msc.core.IEncrypter
-import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.dagger.qualifier.ProcessLifecycle
 import dev.olog.msc.offlinelyrics.domain.ILyricsFromMetadata
@@ -35,18 +34,6 @@ internal abstract class CoreModule {
         @ProcessLifecycle
         internal fun provideAppLifecycle(): Lifecycle {
             return ProcessLifecycleOwner.get().lifecycle
-        }
-
-        @Provides
-        @JvmStatic
-        internal fun provideWidgetsClasses(): WidgetClasses {
-            return object : WidgetClasses {
-                override fun get(): List<Class<*>> {
-                    return listOf(
-//                        WidgetColored::class.java TODO
-                    )
-                }
-            }
         }
     }
 

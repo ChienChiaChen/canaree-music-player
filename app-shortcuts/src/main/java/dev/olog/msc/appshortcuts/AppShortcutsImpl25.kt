@@ -7,24 +7,23 @@ import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.content.getSystemService
 import dev.olog.msc.presentation.navigator.Activities
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.ShortcutsConstants
 import dev.olog.msc.shared.utils.isNougat_MR1
 
 @RequiresApi(Build.VERSION_CODES.N_MR1)
-internal open class AppShortcutsImpl25(
+internal class AppShortcutsImpl25(
         context: Context
 
 ) : BaseAppShortcuts(context) {
 
-    protected val shortcutManager : ShortcutManager = context.getSystemService<ShortcutManager>()!!
+    private val shortcutManager : ShortcutManager = context.getSystemService(Context.SHORTCUT_SERVICE) as ShortcutManager
 
     init {
         shortcutManager.removeAllDynamicShortcuts()
         shortcutManager.addDynamicShortcuts(listOf(
-                playlistChooser(), search(), shuffle(), play()
+            playlistChooser(), search(), shuffle(), play()
         ))
     }
 

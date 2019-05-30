@@ -8,11 +8,11 @@ import android.view.View
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import dev.olog.msc.core.WidgetClasses
 import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.presentation.navigator.Activities
 import dev.olog.msc.presentation.navigator.Services
+import dev.olog.msc.presentation.navigator.Widgets
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.extensions.asServicePendingIntent
@@ -28,14 +28,13 @@ abstract class BaseWidget : AbsWidgetApp() {
 
     @Inject
     internal lateinit var musicPrefsUseCase: MusicPreferencesGateway
-    @Inject
-    internal lateinit var widgetClasses: WidgetClasses
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         if (intent.action == "mobi.intuitit.android.hpp.ACTION_READY") {
             val appWidgetManager = context.getSystemService(Context.APPWIDGET_SERVICE) as AppWidgetManager
-            for (clazz in widgetClasses.get()) {
+
+            for (clazz in Widgets.all()) {
                 val ids = context.getAppWidgetsIdsFor(clazz)
                 onUpdate(context, appWidgetManager, ids)
             }

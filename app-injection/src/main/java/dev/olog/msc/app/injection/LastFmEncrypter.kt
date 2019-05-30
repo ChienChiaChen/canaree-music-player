@@ -2,7 +2,6 @@ package dev.olog.msc.app.injection
 
 import com.tozny.crypto.android.AesCbcWithIntegrity
 import dev.olog.msc.core.IEncrypter
-import dev.olog.msc.shared.utils.assertBackgroundThread
 import javax.inject.Inject
 
 private val SALT = byteArrayOf(
@@ -18,7 +17,6 @@ internal class LastFmEncrypter @Inject constructor() : IEncrypter {
     ) }
 
     override fun encrypt(string: String): String {
-        assertBackgroundThread()
         if (string.isNotBlank()) {
             val cipher = AesCbcWithIntegrity.encrypt(string, key)
             return cipher.toString()
