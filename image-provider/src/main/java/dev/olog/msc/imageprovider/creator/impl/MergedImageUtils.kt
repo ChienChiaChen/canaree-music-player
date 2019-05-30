@@ -80,14 +80,10 @@ internal object MergedImageUtils {
         paint.color = Color.WHITE
         paint.strokeWidth = 10f
 
-        val oneThirdSize = (IMAGE_SIZE / 3).toFloat()
-        val twoThirdSize = (IMAGE_SIZE / 3 * 2).toFloat()
-        // vertical lines
-        canvas.drawLine(oneThirdSize, 0f, oneThirdSize, imageSize.toFloat(), paint)
-        canvas.drawLine(twoThirdSize,0f, twoThirdSize, imageSize.toFloat(), paint)
-        // horizontal lines
-        canvas.drawLine(0f, oneThirdSize, imageSize.toFloat(), oneThirdSize, paint)
-        canvas.drawLine(0f, twoThirdSize, imageSize.toFloat(), twoThirdSize, paint)
+        for (chunk in 0..IMAGE_SIZE step IMAGE_SIZE / PARTS){
+            canvas.drawLine(chunk.toFloat(), 0f, chunk.toFloat(), imageSize.toFloat(), paint)
+            canvas.drawLine(0f, chunk.toFloat(), imageSize.toFloat(), chunk.toFloat(), paint)
+        }
 
         return result
     }
