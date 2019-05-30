@@ -6,12 +6,12 @@ import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.extensions.act
-import dev.olog.msc.presentation.base.extensions.asHtml
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
 import dev.olog.msc.presentation.dialogs.base.BaseDialog
 import dev.olog.msc.shared.core.lazyFast
+import dev.olog.msc.shared.extensions.asHtml
 import dev.olog.msc.shared.extensions.toast
 import kotlinx.coroutines.launch
 import javax.inject.Inject

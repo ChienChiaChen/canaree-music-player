@@ -16,20 +16,17 @@ import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.presentation.base.extensions.isCollapsed
 import dev.olog.msc.presentation.base.extensions.isExpanded
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
-import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
 import dev.olog.msc.presentation.base.list.ObservableAdapter
 import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.list.drag.TouchableAdapter
 import dev.olog.msc.presentation.base.list.extensions.elevateSongOnTouch
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
-import dev.olog.msc.presentation.base.utils.*
 import dev.olog.msc.presentation.base.widgets.SwipeableView
+import dev.olog.msc.presentation.media.*
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.player.animation.rotate
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
-import dev.olog.msc.shared.extensions.isPaused
-import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.*
 import dev.olog.msc.shared.ui.theme.ImageShape
 import dev.olog.msc.shared.ui.theme.playerTheme
@@ -113,14 +110,14 @@ class PlayerFragmentAdapter(
 
     private fun bindPlayerControls(view: View, holder: DataBoundViewHolder) {
 
-        mediaProvider.onMetadataChanged()
+        mediaProvider.observeMetadata()
             .subscribe(holder) {
                 viewModel.updateCurrentTrackId(it.getId())
                 updateMetadata(view, it)
                 updateImage(view, it)
             }
 
-        mediaProvider.onStateChanged()
+        mediaProvider.observePlaybackState()
             .subscribe(holder) { onPlaybackStateChanged(view, it) }
 
         view.seekBar.setListener(
@@ -136,12 +133,12 @@ class PlayerFragmentAdapter(
             .subscribe(holder) { view.seekBar.setProgress(it) }
 
         if (view.repeat != null) {
-            mediaProvider.onRepeatModeChanged()
+            mediaProvider.observeRepeat()
                 .subscribe(holder, view.repeat::cycle)
             view.repeat.setOnClickListener { mediaProvider.toggleRepeatMode() }
         }
         if (view.shuffle != null) {
-            mediaProvider.onShuffleModeChanged()
+            mediaProvider.observeShuffle()
                 .subscribe(holder, view.shuffle::cycle)
 
             view.shuffle.setOnClickListener { mediaProvider.toggleShuffleMode() }
@@ -208,7 +205,7 @@ class PlayerFragmentAdapter(
 
         val context = view.context
 
-        mediaProvider.onStateChanged()
+        mediaProvider.observePlaybackState()
             .map { it.state }
             .filter { state ->
                 state == STATE_SKIPPING_TO_NEXT || state == STATE_SKIPPING_TO_PREVIOUS
@@ -216,7 +213,7 @@ class PlayerFragmentAdapter(
             .map { state -> state == STATE_SKIPPING_TO_NEXT }
             .subscribe(holder) { animateSkipTo(view, it) }
 
-        mediaProvider.onStateChanged()
+        mediaProvider.observePlaybackState()
             .map { it.state }
             .filter { it == STATE_PLAYING || it == STATE_PAUSED }
             .distinctUntilChanged()

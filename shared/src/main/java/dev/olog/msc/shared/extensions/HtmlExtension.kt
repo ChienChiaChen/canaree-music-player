@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package dev.olog.msc.presentation.base.extensions
+package dev.olog.msc.shared.extensions
 
 import android.os.Build
 import android.text.Html

@@ -1,4 +1,4 @@
-package dev.olog.msc.presentation.base.utils
+package dev.olog.msc.presentation.media
 
 import android.support.v4.media.MediaMetadataCompat
 import dev.olog.msc.core.MediaId

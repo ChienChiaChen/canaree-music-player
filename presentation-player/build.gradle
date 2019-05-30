@@ -8,6 +8,7 @@ dependencies {
     // used to get 'mini' style
     implementation project(':presentation-player-mini')
     implementation project(':presentation-base-list')
+    implementation project(':presentation-media')
     implementation project(':image-provider')
 
     implementation librariesAndroidX.paging

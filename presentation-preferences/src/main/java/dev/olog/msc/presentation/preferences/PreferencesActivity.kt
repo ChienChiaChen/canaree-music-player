@@ -12,8 +12,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.ColorCallback
 import dev.olog.msc.presentation.base.activity.ThemedActivity
 import dev.olog.msc.presentation.base.extensions.setLightStatusBar
-import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.preferences.di.inject
+import dev.olog.msc.pro.HasBilling
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.ui.theme.immersive
 import kotlinx.android.synthetic.main.activity_preferences.*

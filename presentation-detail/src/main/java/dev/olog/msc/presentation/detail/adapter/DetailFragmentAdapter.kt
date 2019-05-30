@@ -10,7 +10,6 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.track.PlaylistGateway
-import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
 import dev.olog.msc.presentation.base.list.NestedListSpanSizeCorrector
@@ -24,6 +23,7 @@ import dev.olog.msc.presentation.base.list.model.DisplayableItem
 import dev.olog.msc.presentation.detail.*
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel.Companion.NESTED_SPAN_COUNT
 import dev.olog.msc.presentation.detail.sort.DetailSortDialog
+import dev.olog.msc.presentation.media.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.extensions.subscribe

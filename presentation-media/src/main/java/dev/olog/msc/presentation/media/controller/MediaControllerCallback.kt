@@ -1,4 +1,4 @@
-package dev.olog.msc.presentation.home.base
+package dev.olog.msc.presentation.media.controller
 
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
@@ -6,37 +6,37 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 
-class MediaServiceCallback(
-    private val activity: MusicGlueActivity
+internal class MediaControllerCallback(
+    private val controllerCallback: IMediaControllerCallback
 
 ) : MediaControllerCompat.Callback() {
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-        activity.metadataPublisher.value = metadata
+        controllerCallback.onMetadataChanged(metadata)
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-        activity.statePublisher.postValue(state)
+        controllerCallback.onPlaybackStateChanged(state)
     }
 
     override fun onRepeatModeChanged(repeatMode: Int) {
-        activity.repeatModePublisher.value = repeatMode
+        controllerCallback.onRepeatModeChanged(repeatMode)
     }
 
     override fun onShuffleModeChanged(shuffleMode: Int) {
-        activity.shuffleModePublisher.value = shuffleMode
+        controllerCallback.onShuffleModeChanged(shuffleMode)
     }
 
     override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
-        activity.queuePublisher.value = queue
+        controllerCallback.onQueueChanged(queue)
     }
 
     override fun onQueueTitleChanged(title: CharSequence?) {
-        activity.queueTitlePublisher.value = title.toString()
+        controllerCallback.onQueueTitleChanged(title)
     }
 
     override fun onExtrasChanged(extras: Bundle?) {
-        activity.extrasPublisher.value = extras
+        controllerCallback.onExtrasChanged(extras)
     }
 
 }

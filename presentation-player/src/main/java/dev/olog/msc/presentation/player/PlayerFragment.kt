@@ -13,17 +13,17 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
-import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
+import dev.olog.msc.presentation.media.MediaProvider
+import dev.olog.msc.presentation.media.extractBookmark
+import dev.olog.msc.presentation.media.isPlaying
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.player.appearance.IPlayerAppearanceDelegate
 import dev.olog.msc.presentation.player.di.inject
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.core.lazyFast
-import dev.olog.msc.shared.extensions.extractBookmark
-import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.distinctUntilChanged
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.theme.playerTheme
@@ -97,14 +97,14 @@ class PlayerFragment : BaseFragment(),
 
         mediaProvider = (activity as MediaProvider)
 
-        mediaProvider.onQueueChanged()
+        mediaProvider.observeQueue()
             .distinctUntilChanged()
             .subscribe(viewLifecycleOwner) { viewModel.updateQueue(ctx, it) }
 
         viewModel.observeMiniQueue()
             .subscribe(viewLifecycleOwner, adapter::updateDataSet)
 
-        mediaProvider.onStateChanged()
+        mediaProvider.observePlaybackState()
             .subscribe(viewLifecycleOwner) {
                 val bookmark = it.extractBookmark()
                 viewModel.updateProgress(bookmark)

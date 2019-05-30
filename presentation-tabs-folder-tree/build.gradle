@@ -8,5 +8,6 @@ android {
 }
 
 dependencies {
+    implementation project(':presentation-media')
     implementation librariesUi.glide
 }

@@ -10,7 +10,7 @@ import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.floatingwindowservice.api.HoverMenu
 import dev.olog.msc.floatingwindowservice.api.view.TabView
-import dev.olog.msc.floatingwindowservice.music.service.MusicServiceBinder
+import dev.olog.msc.floatingwindowservice.music.service.MusicGlueService
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
@@ -21,7 +21,7 @@ import kotlin.properties.Delegates
 internal class CustomHoverMenu @Inject constructor(
     @ServiceContext private val context: Context,
     @ServiceLifecycle lifecycle: Lifecycle,
-    musicServiceBinder: MusicServiceBinder,
+    glueService: MusicGlueService,
     private val musicPreferencesUseCase: MusicPreferencesGateway,
     private val offlineLyricsContentPresenter: OfflineLyricsContentPresenter
 
@@ -31,9 +31,9 @@ internal class CustomHoverMenu @Inject constructor(
     private val lyricsColors = intArrayOf(0xFFf79f32.toInt(), 0xFFfcca1c.toInt())
     private val offlineLyricsColors = intArrayOf(0xFFa3ffaa.toInt(), 0xFF1bffbc.toInt())
 
-    private val lyricsContent = LyricsContent(context, musicServiceBinder)
+    private val lyricsContent = LyricsContent(context, glueService)
     private val videoContent = VideoContent(context)
-    private val offlineLyricsContent = OfflineLyricsContent(context, musicServiceBinder, offlineLyricsContentPresenter)
+    private val offlineLyricsContent = OfflineLyricsContent(context, glueService, offlineLyricsContentPresenter)
 
     private var item by Delegates.observable("", { _, _, new ->
         sections.forEach {

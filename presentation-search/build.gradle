@@ -4,6 +4,7 @@ apply from: '../data_binding.gradle'
 
 dependencies {
     implementation project(':presentation-base-list')
+    implementation project(':presentation-media')
 
     implementation librariesUi.lottie
     implementation librariesAndroidX.paging

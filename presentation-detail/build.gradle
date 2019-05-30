@@ -6,6 +6,7 @@ dependencies {
     implementation project(':presentation-base-list')
     implementation project(':tap-target-view')
     implementation project(':image-provider')
+    implementation project(':presentation-media')
 
     implementation librariesUi.glide
     implementation librariesAndroidX.paging

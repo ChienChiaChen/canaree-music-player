@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package dev.olog.msc.shared.extensions
+package dev.olog.msc.presentation.media
 
 import android.os.SystemClock
 import android.support.v4.media.session.PlaybackStateCompat

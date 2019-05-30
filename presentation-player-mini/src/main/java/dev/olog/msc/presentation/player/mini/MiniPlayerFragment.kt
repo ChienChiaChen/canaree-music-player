@@ -12,17 +12,11 @@ import dev.olog.msc.presentation.base.extensions.isCollapsed
 import dev.olog.msc.presentation.base.extensions.isExpanded
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
-import dev.olog.msc.presentation.base.interfaces.MediaProvider
-import dev.olog.msc.presentation.base.utils.getArtist
-import dev.olog.msc.presentation.base.utils.getDuration
-import dev.olog.msc.presentation.base.utils.getTitle
-import dev.olog.msc.presentation.base.utils.isPodcast
+import dev.olog.msc.presentation.media.*
 import dev.olog.msc.presentation.player.mini.di.inject
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.core.lazyFast
-import dev.olog.msc.shared.extensions.isPaused
-import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.*
 import dev.olog.msc.shared.ui.theme.playerTheme
 import kotlinx.android.synthetic.main.fragment_mini_player.*
@@ -66,7 +60,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
 
         view.coverWrapper.toggleVisibility(requireContext().playerTheme().isMini(), true)
 
-        mediaProvider.onMetadataChanged()
+        mediaProvider.observeMetadata()
             .subscribe(viewLifecycleOwner) {
                 title.text = it.getTitle()
                 viewModel.startShowingLeftTime(it.isPodcast(), it.getDuration())
@@ -84,7 +78,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
                 artist.text = it
             }
 
-        mediaProvider.onStateChanged()
+        mediaProvider.observePlaybackState()
             .filter { it.isPlaying() || it.isPaused() }
             .distinctUntilChanged()
             .subscribe(viewLifecycleOwner) {
@@ -92,7 +86,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
                 handleProgressBar(it.isPlaying(), it.playbackSpeed)
             }
 
-        mediaProvider.onStateChanged()
+        mediaProvider.observePlaybackState()
             .map { it.state }
             .filter { it == PlaybackStateCompat.STATE_PLAYING || it == PlaybackStateCompat.STATE_PAUSED }
             .distinctUntilChanged()
@@ -105,7 +99,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
                 }
             }
 
-        mediaProvider.onStateChanged()
+        mediaProvider.observePlaybackState()
             .map { it.state }
             .filter { state ->
                 state == PlaybackStateCompat.STATE_SKIPPING_TO_NEXT ||

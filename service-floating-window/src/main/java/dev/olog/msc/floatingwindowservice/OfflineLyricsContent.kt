@@ -1,6 +1,7 @@
 package dev.olog.msc.floatingwindowservice
 
 import android.content.Context
+import android.support.v4.media.MediaMetadataCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageButton
@@ -8,20 +9,18 @@ import android.widget.ScrollView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.floatingwindowservice.api.Content
-import dev.olog.msc.floatingwindowservice.music.service.MusicServiceBinder
-import dev.olog.msc.floatingwindowservice.music.service.MusicServiceMetadata
+import dev.olog.msc.floatingwindowservice.music.service.MusicGlueService
 import dev.olog.msc.imageprovider.CoverUtils
+import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.offlinelyrics.EditLyricsDialog
 import dev.olog.msc.offlinelyrics.NoScrollTouchListener
 import dev.olog.msc.offlinelyrics.OfflineLyricsSyncAdjustementDialog
+import dev.olog.msc.presentation.media.*
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.core.flow.flowInterval
-import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.animateBackgroundColor
 import dev.olog.msc.shared.ui.extensions.animateTextColor
 import dev.olog.msc.shared.ui.extensions.subscribe
@@ -34,7 +33,7 @@ import java.util.concurrent.TimeUnit
 
 internal class OfflineLyricsContent(
     private val context: Context,
-    private val musicServiceBinder: MusicServiceBinder,
+    private val glueService: MusicGlueService,
     private val presenter: OfflineLyricsContentPresenter
 
 ) : Content() {
@@ -56,17 +55,14 @@ internal class OfflineLyricsContent(
     private val fakePrev = content.findViewById<View>(R.id.fakePrev)
     private val scrollView = content.findViewById<ScrollView>(R.id.scrollBar)
 
-    private fun loadImage(metadata: MusicServiceMetadata) {
-        val mediaId = metadata.mediaId
-        Glide.with(context).clear(this.image)
+    private fun loadImage(metadata: MediaMetadataCompat) {
+        val mediaId = metadata.getMediaId()
+        GlideApp.with(context).clear(this.image)
 
-        val drawable = CoverUtils.getGradient(
-            context, if (metadata.isPodcast) MediaId.podcastId(metadata.id)
-            else MediaId.songId(metadata.id)
-        )
+        val drawable = CoverUtils.getGradient(context, mediaId)
 
-        Glide.with(context)
-            .load(mediaId) // TODO is loading image?
+        GlideApp.with(context)
+            .load(mediaId)
             .placeholder(drawable)
             .priority(Priority.IMMEDIATE)
             .override(500)
@@ -89,9 +85,9 @@ internal class OfflineLyricsContent(
                 presenter.updateSyncAdjustement(it)
             }
         }
-        fakeNext.setOnTouchListener(NoScrollTouchListener(context) { musicServiceBinder.skipToNext() })
-        fakePrev.setOnTouchListener(NoScrollTouchListener(context) { musicServiceBinder.skipToPrevious() })
-        scrollView.setOnTouchListener(NoScrollTouchListener(context) { musicServiceBinder.playPause() })
+        fakeNext.setOnTouchListener(NoScrollTouchListener(context) { glueService.skipToNext() })
+        fakePrev.setOnTouchListener(NoScrollTouchListener(context) { glueService.skipToPrevious() })
+        scrollView.setOnTouchListener(NoScrollTouchListener(context) { glueService.playPause() })
 
         image.observePaletteColors()
             .observe(this, Observer { palette ->
@@ -100,21 +96,21 @@ internal class OfflineLyricsContent(
                 subHeader.animateTextColor(accent)
             })
 
-        musicServiceBinder.onMetadataChanged
+        glueService.observeMetadata()
             .subscribe(this) {
-                presenter.updateCurrentTrackId(it.id)
+                presenter.updateCurrentTrackId(it.getId())
                 loadImage(it)
-                header.text = it.title
-                subHeader.text = it.artist
-                updateProgressBarMax(it.duration)
+                header.text = it.getTitle()
+                subHeader.text = it.getArtist()
+                updateProgressBarMax(it.getDuration())
             }
 
-        musicServiceBinder.onStateChanged()
+        glueService.observePlaybackState()
             .subscribe(this) {
                 handleSeekBarState(it.isPlaying(), it.playbackSpeed)
             }
 
-        musicServiceBinder.onBookmarkChangedLiveData
+        glueService.onBookmarkChangedLiveData
             .subscribe(this) { seekBar.progress = it.toInt() }
 
         lyricsJob = GlobalScope.launch {
@@ -179,7 +175,7 @@ internal class OfflineLyricsContent(
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                musicServiceBinder.seekTo(seekBar.progress.toLong())
+                glueService.seekTo(seekBar.progress.toLong())
             }
         })
     }

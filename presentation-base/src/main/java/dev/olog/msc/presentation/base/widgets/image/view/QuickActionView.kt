@@ -7,7 +7,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.presentation.base.R
-import dev.olog.msc.presentation.base.interfaces.MediaProvider
+import dev.olog.msc.presentation.media.MediaProvider
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlin.properties.Delegates
 

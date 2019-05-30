@@ -19,13 +19,13 @@ import dev.olog.msc.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
 import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
-import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.presentation.home.base.MusicGlueActivity
 import dev.olog.msc.presentation.home.di.inject
 import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.navigator.Services
+import dev.olog.msc.pro.HasBilling
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.extensions.dimen

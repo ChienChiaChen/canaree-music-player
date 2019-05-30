@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply from: '../presentation_module.gradle'
+apply from: '../base_module_2.gradle'
 
 android {
     lintOptions {
@@ -8,6 +8,12 @@ android {
 }
 
 dependencies {
+    implementation project(':core')
+    implementation project(':shared')
     implementation project(':pro')
     implementation project(':app-shortcuts')
+    implementation project(':presentation-navigator')
+    implementation project(':presentation-media')
+
+    implementation librariesAndroidX.appcompat
 }

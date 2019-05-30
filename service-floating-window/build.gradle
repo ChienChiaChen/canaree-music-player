@@ -8,6 +8,7 @@ dependencies {
     implementation project(':image-provider')
     implementation project(':offline-lyrics')
     implementation project(':presentation-navigator')
+    implementation project(':presentation-media')
 
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions

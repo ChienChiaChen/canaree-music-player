@@ -18,8 +18,8 @@ import com.bumptech.glide.request.target.Target
 import dev.olog.msc.imageprovider.CoverUtils
 import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.ripple.RippleTarget
-import dev.olog.msc.presentation.base.utils.getMediaId
 import dev.olog.msc.presentation.base.widgets.image.view.PlayerImageView
+import dev.olog.msc.presentation.media.getMediaId
 import dev.olog.msc.presentation.player.R
 import dev.olog.msc.presentation.player.widgets.shadow.PlayerShadowImageView.Companion.DOWNSCALE_FACTOR
 import dev.olog.msc.shared.extensions.dpToPx

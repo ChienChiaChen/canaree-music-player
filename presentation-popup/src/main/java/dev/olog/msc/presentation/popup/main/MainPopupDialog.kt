@@ -1,9 +1,11 @@
 package dev.olog.msc.presentation.popup.main
 
+import android.app.Activity
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.Keep
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.core.MediaId
@@ -12,10 +14,11 @@ import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
-import dev.olog.msc.presentation.base.interfaces.HasBilling
 import dev.olog.msc.presentation.navigator.IPopupNavigator
 import dev.olog.msc.presentation.popup.BuildConfig
 import dev.olog.msc.presentation.popup.R
+import dev.olog.msc.pro.HasBilling
+import dev.olog.msc.shared.interfaces.MainPopup
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,13 +26,21 @@ import javax.inject.Inject
 private const val DEBUG_ID = -123
 private const val SAVE_AS_PLAYLIST_ID = -12345
 
+@Keep
 class MainPopupDialog @Inject constructor(
     private val navigator: IPopupNavigator,
     private val gateway: SortPreferencesGateway
 
-) {
+) : MainPopup {
 
-    fun show(activity: FragmentActivity, anchor: View, category: MediaIdCategory?) {
+    override fun show(activity: Activity, anchor: View, mediaIdCategoryOrdinal: Int?) {
+        val mediaIdCategory = mediaIdCategoryOrdinal?.let {
+            MediaIdCategory.values()[mediaIdCategoryOrdinal]
+        }
+        show(activity as FragmentActivity, anchor, mediaIdCategory)
+    }
+
+    private fun show(activity: FragmentActivity, anchor: View, category: MediaIdCategory?) {
         val popup = PopupMenu(activity, anchor, Gravity.BOTTOM or Gravity.END)
         val layoutId = when (category) {
             MediaIdCategory.ALBUMS -> R.menu.main_albums

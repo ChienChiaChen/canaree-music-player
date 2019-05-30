@@ -7,11 +7,13 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import dev.olog.msc.floatingwindowservice.music.service.MusicServiceBinder
+import dev.olog.msc.floatingwindowservice.music.service.MusicGlueService
+import dev.olog.msc.presentation.media.getArtist
+import dev.olog.msc.presentation.media.getTitle
+import dev.olog.msc.presentation.media.isPlaying
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.core.flow.flowInterval
-import dev.olog.msc.shared.extensions.isPlaying
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.playpause.IPlayPauseBehavior
 import kotlinx.coroutines.*
@@ -20,7 +22,7 @@ import java.util.concurrent.TimeUnit
 
 internal class LyricsContent(
     context: Context,
-    private val musicServiceBinder: MusicServiceBinder
+    private val glueService: MusicGlueService
 
 ) : WebViewContent(context, R.layout.content_web_view_with_player), DefaultLifecycleObserver,
     CoroutineScope by DefaultScope() {
@@ -35,17 +37,17 @@ internal class LyricsContent(
 
     init {
         lifecycle.addObserver(this)
-        playPause.setOnClickListener { musicServiceBinder.playPause() }
+        playPause.setOnClickListener { glueService.playPause() }
 
         launch {
-            musicServiceBinder.onStateChanged()
+            glueService.observePlaybackState()
         }
-        musicServiceBinder.onStateChanged()
+        glueService.observePlaybackState()
             .subscribe(this) {
                 handleSeekBarState(it.isPlaying(), it.playbackSpeed)
             }
 
-        musicServiceBinder.animatePlayPauseLiveData
+        glueService.animatePlayPauseLiveData
             .subscribe(this) {
                 if (it == PlaybackStateCompat.STATE_PLAYING) {
                     playPauseBehavior.animationPlay(true)
@@ -54,16 +56,16 @@ internal class LyricsContent(
                 }
             }
 
-        musicServiceBinder.onMetadataChanged
+        glueService.observeMetadata()
             .subscribe(this) {
-                title.text = it.title
-                artist.text = it.artist
+                title.text = it.getTitle()
+                artist.text = it.getArtist()
             }
 
-        musicServiceBinder.onBookmarkChangedLiveData
+        glueService.onBookmarkChangedLiveData
             .subscribe(this, this::updateProgressBarProgress)
 
-        musicServiceBinder.onMaxChangedLiveData
+        glueService.onMaxChangedLiveData
             .subscribe(this, this::updateProgressBarMax)
 
         setupSeekBar()
@@ -111,7 +113,7 @@ internal class LyricsContent(
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                musicServiceBinder.seekTo(seekBar.progress.toLong())
+                glueService.seekTo(seekBar.progress.toLong())
             }
         })
     }

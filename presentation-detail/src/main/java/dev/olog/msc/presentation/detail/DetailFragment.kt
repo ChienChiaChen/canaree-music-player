@@ -19,7 +19,6 @@ import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.CanChangeStatusBarColor
-import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.SetupNestedList
 import dev.olog.msc.presentation.base.list.drag.OnStartDragListener
@@ -30,6 +29,7 @@ import dev.olog.msc.presentation.base.utils.showKeyboard
 import dev.olog.msc.presentation.detail.adapter.*
 import dev.olog.msc.presentation.detail.di.inject
 import dev.olog.msc.presentation.detail.listener.HeaderVisibilityScrollListener
+import dev.olog.msc.presentation.media.MediaProvider
 import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.core.flow.debounceFirst

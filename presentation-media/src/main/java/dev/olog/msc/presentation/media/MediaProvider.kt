@@ -1,4 +1,4 @@
-package dev.olog.msc.presentation.base.interfaces
+package dev.olog.msc.presentation.media
 
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
@@ -11,13 +11,13 @@ import dev.olog.msc.core.entity.sort.SortType
 
 interface MediaProvider {
 
-    fun onMetadataChanged(): LiveData<MediaMetadataCompat>
-    fun onStateChanged(): LiveData<PlaybackStateCompat>
-    fun onRepeatModeChanged(): LiveData<Int>
-    fun onShuffleModeChanged(): LiveData<Int>
-    fun onQueueChanged(): LiveData<List<MediaSessionCompat.QueueItem>>
-    fun onQueueTitleChanged(): LiveData<String>
-    fun onExtrasChanged(): LiveData<Bundle>
+    fun observeMetadata(): LiveData<MediaMetadataCompat>
+    fun observePlaybackState(): LiveData<PlaybackStateCompat>
+    fun observeRepeat(): LiveData<Int>
+    fun observeShuffle(): LiveData<Int>
+    fun observeQueue(): LiveData<List<MediaSessionCompat.QueueItem>>
+    fun observeQueueTitle(): LiveData<String>
+    fun observeExtras(): LiveData<Bundle>
 
     fun playFromMediaId(mediaId: MediaId, sortType: SortType? = null, sortArranging: SortArranging? = null)
     fun playMostPlayed(mediaId: MediaId)

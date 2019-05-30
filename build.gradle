@@ -32,10 +32,6 @@ buildscript {
         classpath "androidx.benchmark:benchmark-gradle-plugin:$benchmark"
     }
 
-    
-    
-    
-
 
 }
 
@@ -133,6 +129,7 @@ ext {
             lifecycleExtensions   : "androidx.lifecycle:lifecycle-extensions:$lifecycle",
             lifecycleJava8        : "androidx.lifecycle:lifecycle-common-java8:$lifecycle",
             lifecycleKtx          : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle",
+            lifecycleLiveData     : "androidx.lifecycle:lifecycle-livedata:$lifecycle",
             lifecycleViewModel    : "androidx.lifecycle:lifecycle-viewmodel:$lifecycle",
 
             coroutines            : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines",

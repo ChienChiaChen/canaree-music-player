@@ -21,6 +21,7 @@ dependencies {
     implementation project(':image-provider')
     implementation project(':pro')
     implementation project(':preferences-keys')
+    implementation project(':presentation-media')
 
     // data binding
 //    kapt librariesUi.dataBinding

@@ -10,7 +10,7 @@ import android.provider.Settings
 import androidx.annotation.CheckResult
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import dev.olog.msc.presentation.base.interfaces.HasBilling
+import dev.olog.msc.pro.HasBilling
 
 object FloatingWindowHelper {
 

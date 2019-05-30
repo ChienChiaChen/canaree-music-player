@@ -10,6 +10,7 @@ android {
 dependencies {
     implementation project(':offline-lyrics')
     implementation project(':tap-target-view')
+    implementation project(':presentation-media')
 
     implementation librariesUi.blurkit
     implementation librariesUtils.customTabs

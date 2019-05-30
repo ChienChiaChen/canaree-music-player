@@ -2,9 +2,9 @@ package dev.olog.msc.presentation.tabs.foldertree
 
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
-import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
 import dev.olog.msc.presentation.base.list.ObservableAdapter
+import dev.olog.msc.presentation.media.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 
 class FolderTreeFragmentAdapter(

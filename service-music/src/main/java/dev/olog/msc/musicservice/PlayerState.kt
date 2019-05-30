@@ -13,7 +13,6 @@ import dev.olog.msc.musicservice.model.PositionInQueue
 import dev.olog.msc.presentation.navigator.Widgets
 import dev.olog.msc.shared.WidgetConstants
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
-import dev.olog.msc.shared.extensions.isPlaying
 import javax.inject.Inject
 
 @PerService

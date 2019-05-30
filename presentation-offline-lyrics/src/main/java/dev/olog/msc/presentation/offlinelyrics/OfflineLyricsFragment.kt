@@ -14,11 +14,7 @@ import dev.olog.msc.offlinelyrics.OfflineLyricsSyncAdjustementDialog
 import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
-import dev.olog.msc.presentation.base.interfaces.MediaProvider
-import dev.olog.msc.presentation.base.utils.getArtist
-import dev.olog.msc.presentation.base.utils.getDuration
-import dev.olog.msc.presentation.base.utils.getId
-import dev.olog.msc.presentation.base.utils.getTitle
+import dev.olog.msc.presentation.media.*
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.extensions.*
 import kotlinx.android.synthetic.main.fragment_offline_lyrics.*
@@ -53,7 +49,7 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
             Tutorial.addLyrics(view.search, view.edit, view.sync)
         }
 
-        mediaProvider.onMetadataChanged()
+        mediaProvider.observeMetadata()
                 .subscribe(viewLifecycleOwner) {
                     presenter.updateCurrentTrackId(it.getId())
                     presenter.updateCurrentMetadata(it.getTitle().toString(), it.getArtist().toString())
@@ -73,7 +69,7 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
 //                    text.text = it
 //                }
 
-        mediaProvider.onStateChanged()
+        mediaProvider.observePlaybackState()
                 .filter { it.state == PlaybackState.STATE_PLAYING || it.state == PlaybackState.STATE_PAUSED }
                 .subscribe(viewLifecycleOwner) {
                     val isPlaying = it.state == PlaybackState.STATE_PLAYING

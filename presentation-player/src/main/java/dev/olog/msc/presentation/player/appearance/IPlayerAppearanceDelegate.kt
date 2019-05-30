@@ -2,9 +2,9 @@ package dev.olog.msc.presentation.player.appearance
 
 import android.content.Context
 import android.content.res.ColorStateList
-import dev.olog.msc.presentation.base.interfaces.MediaProvider
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
-import dev.olog.msc.presentation.base.utils.getDuration
+import dev.olog.msc.presentation.media.MediaProvider
+import dev.olog.msc.presentation.media.getDuration
 import dev.olog.msc.presentation.player.PlayerFragmentViewModel
 import dev.olog.msc.presentation.player.R
 import dev.olog.msc.presentation.player.widgets.audiowave.AudioWaveViewWrapper
@@ -122,7 +122,7 @@ class AppearanceBigImage(private val viewModel: PlayerFragmentViewModel) : IPlay
         val mediaProvider = view.context as MediaProvider
         val waveWrapper: AudioWaveViewWrapper = view.findViewById(R.id.waveWrapper)
 
-        mediaProvider.onMetadataChanged()
+        mediaProvider.observeMetadata()
             .subscribe(viewHolder) {
                 waveWrapper.onTrackChanged(it.getString(MusicConstants.PATH))
                 waveWrapper.updateMax(it.getDuration())
