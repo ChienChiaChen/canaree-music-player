@@ -12,6 +12,7 @@ import dev.olog.msc.presentation.base.list.paging.BaseDataSourceFactory
 import dev.olog.msc.presentation.tabs.TabFragmentHeaders
 import dev.olog.msc.presentation.tabs.mapper.toTabDisplayableItem
 import dev.olog.msc.shared.core.flow.merge
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take
@@ -42,17 +43,25 @@ internal class ArtistDataSource @Inject constructor(
     }
 
     override suspend fun getHeaders(mainListSize: Int): List<DisplayableItem> {
-        val headers = mutableListOf<DisplayableItem>()
-        if (gateway.canShowRecentlyAdded(Filter.NO_FILTER)) {
-            headers.addAll(displayableHeaders.recentlyAddedArtistsHeaders)
-        }
-        if (gateway.canShowLastPlayed()) {
-            headers.addAll(displayableHeaders.lastPlayedArtistHeaders)
-        }
+        val headers = loadParallel(
+            async {
+                if (gateway.canShowRecentlyAdded(Filter.NO_FILTER)) {
+                    return@async displayableHeaders.recentlyAddedArtistsHeaders
+                }
+                emptyList<DisplayableItem>()
+            },
+            async {
+                if (gateway.canShowLastPlayed()) {
+                    return@async displayableHeaders.lastPlayedArtistHeaders
+                }
+                emptyList<DisplayableItem>()
+            }
+        )
+
         if (headers.isNotEmpty()) {
-            headers.addAll(displayableHeaders.allArtistsHeader)
+            return headers.plus(displayableHeaders.allArtistsHeader)
         }
-        return headers
+        return emptyList()
     }
 
     override suspend fun getFooters(mainListSize: Int): List<DisplayableItem> = listOf()

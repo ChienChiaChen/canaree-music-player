@@ -42,7 +42,7 @@ internal class SongDataSource @Inject constructor(
 
     override suspend fun getHeaders(mainListSize: Int): List<DisplayableItem> {
         if (mainListSize == 0) {
-            return listOf()
+            return emptyList()
         }
         return listOf(displayableHeaders.shuffleHeader)
     }
