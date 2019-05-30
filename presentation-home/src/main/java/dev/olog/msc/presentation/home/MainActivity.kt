@@ -305,8 +305,21 @@ object BottomNavigator {
         }
 
         activity.fragmentTransaction {
+
+            // hide other categories fragment
+            activity.supportFragmentManager.fragments
+                .asSequence()
+                .filter { tags.contains(it.tag) }
+                .filter { it.tag != fragmentTag }
+                .forEach { hide(it) }
+
+            // remove all upper fragment
+            activity.supportFragmentManager.fragments
+                .filter { (it.view?.parent as View?)?.id == R.id.upperFragmentContainer }
+                .forEach { remove(it) }
+
             setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            hideFragmentsIfExists(activity, tags.dropWhile { it == fragmentTag })
+
             if (forceRecreate) {
                 return@fragmentTransaction replace(
                     R.id.fragmentContainer,

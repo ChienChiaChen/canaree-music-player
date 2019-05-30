@@ -21,10 +21,3 @@ fun FragmentActivity.getTopFragment(): Fragment? {
     }
     return null
 }
-
-fun FragmentTransaction.hideFragmentsIfExists(activity: FragmentActivity, tags: List<String>){
-    val manager = activity.supportFragmentManager
-    tags.forEach { tag ->
-        manager.findFragmentByTag(tag)?.let { hide(it) }
-    }
-}
