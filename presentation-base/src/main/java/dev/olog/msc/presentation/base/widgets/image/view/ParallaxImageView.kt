@@ -59,7 +59,6 @@ class ParallaxImageView(
         val clamped = clamp(totalListTranslationY, 0, max)
         val ratio = clamped.toFloat() / max.toFloat()
         val newAlpha = MathUtils.lerp(0f, maxScrimAlpha, ratio)
-        println(newAlpha)
         paint.alpha = newAlpha.toInt()
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
     }
