@@ -5,7 +5,8 @@ apply from: '../data_binding.gradle'
 dependencies {
     implementation project(':pro')
     implementation project(':tap-target-view')
-    implementation project(':presentation-player-mini') // TODO is needed?
+    // used to get 'mini' style
+    implementation project(':presentation-player-mini')
     implementation project(':presentation-base-list')
     implementation project(':image-provider')
 
