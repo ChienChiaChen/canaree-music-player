@@ -19,6 +19,8 @@ class HeaderVisibilityScrollListener(
         statusBarHeight + fragment.ctx.dimen(R.dimen.toolbar)
     }
 
+    private var textWrapper : View? = null
+
     override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
         val child = recyclerView.getChildAt(0)
         val holder = recyclerView.getChildViewHolder(child)
@@ -26,7 +28,10 @@ class HeaderVisibilityScrollListener(
         val view = fragment.view!!
 
         if (holder.itemViewType == R.layout.item_detail_item_image) {
-            val bottom = child.bottom - child.findViewById<View>(R.id.textWrapper).height
+            if (textWrapper == null){
+                textWrapper = child.findViewById(R.id.textWrapper)
+            }
+            val bottom = child.bottom - textWrapper!!.height
             val needDarkLayout = bottom - toolbarHeight < 0
 
             view.statusBar.toggleVisibility(needDarkLayout, false)
