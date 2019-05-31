@@ -60,8 +60,6 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        BottomNavigator.initialize(this)
-
         presenter.observeIsRepositoryEmpty()
             .subscribe(this, this::handleEmptyRepository)
 
@@ -69,7 +67,10 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
         when {
             isFirstAccess -> navigator.toFirstAccess(this)
-            savedInstanceState == null -> handleOnActivityCreated()
+            savedInstanceState == null -> {
+                BottomNavigator.initialize(this)
+                handleOnActivityCreated()
+            }
             else -> handleOnActivityResumed()
         }
         if (isFirstAccess) {
@@ -110,7 +111,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
             }
         }
         bottomNavigation.selectedItemId = navigateTo
-        bottomNavigate(navigateTo, false)
+        bottomNavigate(navigateTo)
     }
 
     private fun handleOnActivityResumed() {
@@ -120,7 +121,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
             if (currentId == R.id.navigation_podcasts) {
                 bottomNavigation.selectedItemId = R.id.navigation_songs
                 presenter.setLastBottomViewPage(R.id.navigation_songs)
-                bottomNavigate(bottomNavigation.selectedItemId, true)
+                bottomNavigate(bottomNavigation.selectedItemId)
             }
         }
     }
@@ -134,10 +135,10 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         super.onResume()
         bottomNavigation.setOnNavigationItemSelectedListener {
             presenter.setLastBottomViewPage(it.itemId)
-            bottomNavigate(it.itemId, false)
+            bottomNavigate(it.itemId)
             true
         }
-        bottomNavigation.setOnNavigationItemReselectedListener { bottomNavigate(it.itemId, true) }
+        bottomNavigation.setOnNavigationItemReselectedListener { /* do nothing */ }
         slidingPanel.addPanelSlideListener(onPanelSlide)
         handleFakeView(slidingPanel.panelState)
 
@@ -174,17 +175,14 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         }
     }
 
-    private fun bottomNavigate(itemId: Int, forceRecreate: Boolean) {
-        if (itemId == bottomNavigation.selectedItemId){
-            return
-        }
+    private fun bottomNavigate(itemId: Int) {
 
         when (itemId) {
             R.id.navigation_songs -> BottomNavigator.navigate(this, Fragments.CATEGORIES)
             R.id.navigation_search -> BottomNavigator.navigate(this, Fragments.SEARCH)
             R.id.navigation_podcasts -> BottomNavigator.navigate(this, Fragments.CATEGORIES_PODCAST)
             R.id.navigation_queue -> BottomNavigator.navigate(this, Fragments.PLAYING_QUEUE)
-            else -> bottomNavigate(R.id.navigation_songs, forceRecreate)
+            else -> bottomNavigate(R.id.navigation_songs)
         }
     }
 
@@ -302,6 +300,13 @@ object BottomNavigator {
     )
 
     fun initialize(activity: FragmentActivity){
+        for (fragment in activity.supportFragmentManager.fragments) {
+            if (tags.contains(fragment.tag)){
+                // fragment alreade added
+                return
+            }
+        }
+
         activity.fragmentTransaction {
             for (tag in tags) {
                 val fragment = tagToInstance(activity, tag)

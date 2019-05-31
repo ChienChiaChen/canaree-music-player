@@ -10,7 +10,6 @@ import androidx.core.content.edit
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import androidx.preference.SwitchPreference
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.ColorCallback
 import com.afollestad.materialdialogs.color.colorChooser
@@ -56,7 +55,7 @@ class SettingsFragment : PreferenceFragmentCompat(),
     private lateinit var iconShape: Preference
     private lateinit var deleteCache: Preference
     private lateinit var lastFmCredentials: Preference
-    private lateinit var autoCreateImages: SwitchPreference
+    private lateinit var autoCreateImages: Preference
     private lateinit var accentColorChooser: Preference
     private lateinit var resetTutorial: Preference
 
@@ -69,16 +68,15 @@ class SettingsFragment : PreferenceFragmentCompat(),
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.prefs, rootKey)
-        libraryCategories = preferenceScreen.findPreference(getString(R.string.prefs_library_categories_key))
-        podcastCategories = preferenceScreen.findPreference(getString(R.string.prefs_podcast_library_categories_key))
-        blacklist = preferenceScreen.findPreference(getString(R.string.prefs_blacklist_key))
-        iconShape = preferenceScreen.findPreference(getString(R.string.prefs_icon_shape_key))
-        deleteCache = preferenceScreen.findPreference(getString(R.string.prefs_delete_cached_images_key))
-        lastFmCredentials = preferenceScreen.findPreference(getString(R.string.prefs_last_fm_credentials_key))
-        autoCreateImages =
-            preferenceScreen.findPreference(getString(R.string.prefs_auto_create_images_key)) as SwitchPreference
-        accentColorChooser = preferenceScreen.findPreference(getString(R.string.prefs_color_accent_key))
-        resetTutorial = preferenceScreen.findPreference(getString(R.string.prefs_reset_tutorial_key))
+        libraryCategories = preferenceScreen.findPreference(getString(R.string.prefs_library_categories_key))!!
+        podcastCategories = preferenceScreen.findPreference(getString(R.string.prefs_podcast_library_categories_key))!!
+        blacklist = preferenceScreen.findPreference(getString(R.string.prefs_blacklist_key))!!
+        iconShape = preferenceScreen.findPreference(getString(R.string.prefs_icon_shape_key))!!
+        deleteCache = preferenceScreen.findPreference(getString(R.string.prefs_delete_cached_images_key))!!
+        lastFmCredentials = preferenceScreen.findPreference(getString(R.string.prefs_last_fm_credentials_key))!!
+        autoCreateImages = preferenceScreen.findPreference(getString(R.string.prefs_auto_create_images_key))!!
+        accentColorChooser = preferenceScreen.findPreference(getString(R.string.prefs_color_accent_key))!!
+        resetTutorial = preferenceScreen.findPreference(getString(R.string.prefs_reset_tutorial_key))!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -89,6 +89,7 @@ dependencies {
 //    debugImplementation librariesCore.coroutinesDebug
 
     implementation librariesAndroidX.appcompat
+    implementation librariesAndroidX.preference
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleJava8
     implementation librariesUi.blurkit

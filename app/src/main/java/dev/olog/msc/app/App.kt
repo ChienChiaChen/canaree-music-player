@@ -2,6 +2,7 @@ package dev.olog.msc.app
 
 import android.app.AlarmManager
 import android.content.Context
+import androidx.preference.PreferenceManager
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
 import dev.olog.msc.app.base.ThemedApp
@@ -53,7 +54,7 @@ class App : ThemedApp() {
             getString(R.string.common_unknown_artist),
             getString(R.string.common_unknown_album)
         )
-//        PreferenceManager.setDefaultValues(this, R.xml.prefs, false) TODO crashes
+        PreferenceManager.setDefaultValues(this, R.xml.prefs, false)
     }
 
     private fun resetSleepTimer() {
