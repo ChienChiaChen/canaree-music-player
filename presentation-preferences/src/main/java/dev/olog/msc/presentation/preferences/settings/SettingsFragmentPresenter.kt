@@ -1,8 +1,7 @@
-package dev.olog.msc.presentation.preferences
+package dev.olog.msc.presentation.preferences.settings
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.imageprovider.glide.GlideApp
@@ -17,10 +16,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class PreferenceFragmentPresenter @Inject constructor(
-    @ApplicationContext private val context: Context,
+class SettingsFragmentPresenter(
+    private val context: Context,
     private val billing: IBilling,
     private val tutorialPrefsUseCase: TutorialPreferenceGateway
 ) : CoroutineScope by DefaultScope() {

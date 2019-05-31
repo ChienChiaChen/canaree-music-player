@@ -1,39 +1,54 @@
-package dev.olog.msc.presentation.preferences
+package dev.olog.msc.presentation.preferences.settings
 
-import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.Keep
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.edit
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.color.ColorCallback
 import com.afollestad.materialdialogs.color.colorChooser
 import com.google.android.material.snackbar.Snackbar
-import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.fragmentTransaction
+import dev.olog.msc.presentation.preferences.R
 import dev.olog.msc.presentation.preferences.blacklist.BlacklistFragment
 import dev.olog.msc.presentation.preferences.categories.LibraryCategoriesFragment
 import dev.olog.msc.presentation.preferences.credentials.LastFmCredentialsFragment
 import dev.olog.msc.presentation.preferences.utils.ColorPalette
 import dev.olog.msc.presentation.preferences.utils.forEach
+import dev.olog.msc.pro.HasBilling
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.extensions.colorPrimary
 import dev.olog.msc.shared.ui.extensions.subscribe
 import javax.inject.Inject
 
-class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+@Keep
+class SettingsFragment : PreferenceFragmentCompat(),
+    SharedPreferences.OnSharedPreferenceChangeListener,
+    ColorCallback {
 
     @Inject
-    lateinit var presenter: PreferenceFragmentPresenter
+    lateinit var tutoriaPrefs: TutorialPreferenceGateway
+
+    private val presenter by lazy {
+        SettingsFragmentPresenter(
+            requireContext().applicationContext,
+            (requireActivity() as HasBilling).billing,
+            tutoriaPrefs
+        )
+    }
 
     private lateinit var libraryCategories: Preference
     private lateinit var podcastCategories: Preference
@@ -45,8 +60,10 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
     private lateinit var accentColorChooser: Preference
     private lateinit var resetTutorial: Preference
 
+    private var requestActivityToRecreate = false
+
     override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
+        inject()
         super.onAttach(context)
     }
 
@@ -63,8 +80,6 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
         accentColorChooser = preferenceScreen.findPreference(getString(R.string.prefs_color_accent_key))
         resetTutorial = preferenceScreen.findPreference(getString(R.string.prefs_reset_tutorial_key))
     }
-
-    private var needsToRecreate = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -121,8 +136,8 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
             true
         }
         accentColorChooser.setOnPreferenceClickListener {
+            // TODO get from app press
             val prefs = PreferenceManager.getDefaultSharedPreferences(act.applicationContext)
-
             val initialSelection = prefs.getInt(getString(R.string.prefs_color_accent_key), ctx.colorPrimary())
 
             MaterialDialog(act)
@@ -130,7 +145,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
                     colors = ColorPalette.ACCENT_COLORS,
                     subColors = ColorPalette.ACCENT_COLORS_SUB,
                     initialSelection = initialSelection,
-                    selection = act as PreferencesActivity
+                    selection = this
                 ).show()
             true
         }
@@ -156,25 +171,20 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
         when (key) {
             getString(R.string.prefs_quick_action_key) -> {
                 ImageViews.updateQuickAction(act)
-                requestMainActivityToRecreate()
+                requestActivityToRecreate()
             }
             getString(R.string.prefs_icon_shape_key) -> {
                 ImageViews.updateIconShape(act)
-                requestMainActivityToRecreate()
+                requestActivityToRecreate()
             }
             getString(R.string.prefs_appearance_key) -> {
-                requestMainActivityToRecreate()
+                requestActivityToRecreate()
             }
             getString(R.string.prefs_folder_tree_view_key),
             getString(R.string.prefs_blacklist_key),
             getString(R.string.prefs_show_podcasts_key),
-            getString(R.string.prefs_adaptive_colors_key) -> requestMainActivityToRecreate()
+            getString(R.string.prefs_adaptive_colors_key) -> requestActivityToRecreate()
         }
-    }
-
-    fun requestMainActivityToRecreate() {
-        needsToRecreate = true
-        act.setResult(Activity.RESULT_OK)
     }
 
     private fun showDeleteAllCacheDialog() {
@@ -184,7 +194,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
             .setPositiveButton(R.string.common_ok) { _, _ ->
                 GlideApp.get(ctx.applicationContext).clearMemory()
                 presenter.clearCachedImages {
-                    requestMainActivityToRecreate()
+                    requestActivityToRecreate()
                     ctx.applicationContext.toast(R.string.prefs_delete_cached_images_success)
                 }
             }
@@ -196,11 +206,22 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
         AlertDialog.Builder(ctx)
             .setTitle(R.string.prefs_reset_tutorial_title)
             .setMessage(R.string.are_you_sure)
-            .setPositiveButton(R.string.common_ok) { _, _ ->
-                presenter.resetTutorial()
-            }
+            .setPositiveButton(R.string.common_ok) { _, _ -> presenter.resetTutorial() }
             .setNegativeButton(R.string.common_no, null)
             .show()
     }
 
+    override fun invoke(dialog: MaterialDialog, color: Int) {
+        // TODO move to apprefs
+        val prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val key = getString(R.string.prefs_color_accent_key)
+        prefs.edit {
+            putInt(key, color)
+        }
+        requireActivity().recreate()
+    }
+
+    private fun requestActivityToRecreate() {
+        requestActivityToRecreate = true
+    }
 }

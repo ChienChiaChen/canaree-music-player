@@ -100,9 +100,6 @@
         <!--about activity-->
         <activity android:name=".presentation.about.AboutActivity" />
 
-        <!--settings activity-->
-        <activity android:name=".presentation.preferences.PreferencesActivity" />
-
         <!--dummy shortcuts activity-->
         <activity android:name=".ShortcutsActivity" />
 

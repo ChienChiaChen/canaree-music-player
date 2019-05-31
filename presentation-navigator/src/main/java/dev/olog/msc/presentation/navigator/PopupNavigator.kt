@@ -1,19 +1,18 @@
-package dev.olog.msc.app.injection.navigator
+package dev.olog.msc.presentation.navigator
 
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentTransaction
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.presentation.navigator.IPopupNavigator
-import dev.olog.msc.presentation.navigator.Intents
 import javax.inject.Inject
 
-internal class MainPopupNavigator @Inject constructor() : IPopupNavigator {
+class PopupNavigator @Inject constructor() {
 
-//    override fun toAboutActivity(activity: FragmentActivity) {
+    //    fun toAboutActivity(activity: FragmentActivity) {
 //        val intent = Intent(activity, AboutActivity::class.java)
 //        activity.startActivity(intent)
 //    }
 //
-//    override fun toEqualizer(activity: FragmentActivity) {
+//    fun toEqualizer(activity: FragmentActivity) {
 //        // TODO
 //        val useAppEqualizer = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
 //            .getBoolean(activity.getString(R.string.prefs_used_equalizer_key), true)
@@ -39,22 +38,27 @@ internal class MainPopupNavigator @Inject constructor() : IPopupNavigator {
 //        }
 //    }
 //
-//    override fun toDebugConfiguration(activity: FragmentActivity) {
+//    fun toDebugConfiguration(activity: FragmentActivity) {
 //        // TODO
 ////        val intent = Intent(activity, DebugConfigurationActivity::class.java)
 ////        activity.startActivity(intent)
 //    }
 //
-    override fun toSettingsActivity(activity: FragmentActivity) {
-        activity.startActivity(Intents.preferenceActivity(activity))
+    fun toSettings(activity: FragmentActivity) {
+        activity.fragmentTransaction {
+            setReorderingAllowed(true)
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            replace(R.id.upperFragmentContainer, Fragments.settings(activity), Fragments.SETTINGS)
+            addToBackStack(Fragments.SETTINGS)
+        }
     }
 //
-//    override fun toSleepTimer(activity: FragmentActivity) {
+//    fun toSleepTimer(activity: FragmentActivity) {
 //        SleepTimerPickerDialogBuilder(activity, activity.supportFragmentManager)
 //            .show()
 //    }
 //
-//    override fun toCreatePlaylistDialog(
+//    fun toCreatePlaylistDialog(
 //        activity: FragmentActivity,
 //        mediaId: MediaId,
 //        listSize: Int,
@@ -64,23 +68,23 @@ internal class MainPopupNavigator @Inject constructor() : IPopupNavigator {
 //        fragment.show(activity.supportFragmentManager, NewPlaylistDialog.TAG)
 //    }
 
-    override fun toAboutActivity(activity: FragmentActivity) {
+    fun toAboutActivity(activity: FragmentActivity) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun toEqualizer(activity: FragmentActivity) {
+    fun toEqualizer(activity: FragmentActivity) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun toDebugConfiguration(activity: FragmentActivity) {
+    fun toDebugConfiguration(activity: FragmentActivity) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun toSleepTimer(activity: FragmentActivity) {
+    fun toSleepTimer(activity: FragmentActivity) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun toCreatePlaylistDialog(
+    fun toCreatePlaylistDialog(
         activity: FragmentActivity,
         mediaId: MediaId,
         listSize: Int,
@@ -88,4 +92,5 @@ internal class MainPopupNavigator @Inject constructor() : IPopupNavigator {
     ) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 }

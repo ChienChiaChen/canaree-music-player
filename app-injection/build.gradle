@@ -21,8 +21,6 @@ dependencies {
     implementation project(':offline-lyrics')
     implementation project(':api-lastfm')
     implementation project(':data')
-    implementation project(':pro')
-    implementation project(':presentation-navigator')//TODO remove
 //    implementation project(':presentation-offline-lyrics')
 //    implementation project(':presentation-equalizer')
 //    implementation project(':presentation-edit-item')
@@ -35,14 +33,10 @@ dependencies {
     implementation librariesPersistency.room
     implementation librariesPersistency.rxPrefs //TODO remove
 
-    // paging
-    implementation librariesAndroidX.paging
-
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
     implementation librariesCore.lifecycleKtx
     implementation librariesUtils.aesCrypto
-    implementation librariesUtils.billing
 
 }

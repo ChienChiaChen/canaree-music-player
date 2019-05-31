@@ -6,6 +6,7 @@ import android.app.Service
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import dagger.BindsInstance
 import dagger.Component
@@ -29,8 +30,7 @@ import dev.olog.msc.core.gateway.track.*
 import dev.olog.msc.data.di.PreferenceModule
 import dev.olog.msc.data.di.RepositoryHelperModule
 import dev.olog.msc.data.di.RepositoryModule
-import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.navigator.NavigatorAbout
+import dev.olog.msc.offlinelyrics.domain.ILyricsFromMetadata
 import javax.inject.Singleton
 
 @Component(
@@ -46,8 +46,7 @@ import javax.inject.Singleton
 //
 //        // presentation
 //        SleepTimerModule::class,
-        DialogModules::class,
-        NavigatorModule::class,
+//        DialogModules::class,
 //        WidgetBindingModule::class,
         EqualizerModule::class
 
@@ -95,9 +94,7 @@ interface CoreComponent {
     fun bassBoost(): IBassBoost
 
     fun encrypter(): IEncrypter
-
-    fun navigator(): Navigator
-    fun navigatorAbout(): NavigatorAbout
+    fun lyricsFromMetadata(): ILyricsFromMetadata
 
     fun cpuDispatcher(): ComputationDispatcher
     fun ioDispatcher(): IoDispatcher
@@ -113,7 +110,7 @@ interface CoreComponent {
 
         private var coreComponent: CoreComponent? = null
 
-        fun appComponent(app: Application): CoreComponent {
+        fun coreComponent(app: Application): CoreComponent {
             if (coreComponent == null) {
                 // not double checking because it will be created in App.kt on main thread at app startup
                 coreComponent = DaggerCoreComponent.factory().create(app)
@@ -129,4 +126,5 @@ interface CoreComponent {
 
 fun Activity.coreComponent(): CoreComponent = CoreComponent.safeCoreComponent()
 fun Service.coreComponent(): CoreComponent = CoreComponent.safeCoreComponent()
+fun Fragment.coreComponent(): CoreComponent = CoreComponent.safeCoreComponent()
 fun AppWidgetProvider.coreComponent(): CoreComponent = CoreComponent.safeCoreComponent()

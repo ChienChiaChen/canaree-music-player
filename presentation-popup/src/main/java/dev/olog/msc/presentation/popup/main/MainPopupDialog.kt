@@ -14,7 +14,7 @@ import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.entity.sort.SortArranging
 import dev.olog.msc.core.entity.sort.SortType
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
-import dev.olog.msc.presentation.navigator.IPopupNavigator
+import dev.olog.msc.presentation.navigator.PopupNavigator
 import dev.olog.msc.presentation.popup.BuildConfig
 import dev.olog.msc.presentation.popup.R
 import dev.olog.msc.pro.HasBilling
@@ -28,7 +28,7 @@ private const val SAVE_AS_PLAYLIST_ID = -12345
 
 @Keep
 class MainPopupDialog @Inject constructor(
-    private val navigator: IPopupNavigator,
+    private val navigator: PopupNavigator,
     private val gateway: SortPreferencesGateway
 
 ) : MainPopup {
@@ -78,7 +78,7 @@ class MainPopupDialog @Inject constructor(
                 }
                 R.id.about -> navigator.toAboutActivity(activity)
                 R.id.equalizer -> navigator.toEqualizer(activity)
-                R.id.settings -> navigator.toSettingsActivity(activity)
+                R.id.settings -> navigator.toSettings(activity)
                 R.id.sleepTimer -> navigator.toSleepTimer(activity)
                 DEBUG_ID -> navigator.toDebugConfiguration(activity)
                 SAVE_AS_PLAYLIST_ID -> navigator.toCreatePlaylistDialog(

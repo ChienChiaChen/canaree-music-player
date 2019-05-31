@@ -7,6 +7,6 @@ import dev.olog.msc.imageprovider.glide.GlideModule
 
 fun GlideModule.inject(context: Context){
     DaggerImageProviderComponent.factory()
-        .create(CoreComponent.appComponent(context.applicationContext as Application))
+        .create(CoreComponent.coreComponent(context.applicationContext as Application))
         .inject(this)
 }

@@ -31,15 +31,16 @@
         <TextView
             android:id="@+id/header"
             android:text="@string/settings"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="56dp"
             android:textAppearance="@style/Headline6.Alt"/>
 
     </FrameLayout>
 
     <fragment
-        android:name="dev.olog.msc.presentation.preferences.PreferencesFragment"
+        android:name="dev.olog.msc.presentation.preferences.settings.SettingsFragment"
         android:tag="prefs"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

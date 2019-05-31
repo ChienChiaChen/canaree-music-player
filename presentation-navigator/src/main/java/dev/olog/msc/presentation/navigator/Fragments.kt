@@ -18,6 +18,8 @@ object Fragments {
     const val RELATED_ARTISTS = "dev.olog.msc.presentation.related.artists.RelatedArtistFragment"
     const val RECENTLY_ADDED = "dev.olog.msc.presentation.recently.added.RecentlyAddedFragment"
 
+    const val SETTINGS = "dev.olog.msc.presentation.preferences.settings.SettingsFragmentWrapper"
+
     const val ARGUMENTS_MEDIA_ID = "argument.media_id"
     const val ARGUMENTS_MEDIA_ID_CATEGORY = "argument.media_id_category"
 
@@ -63,6 +65,10 @@ object Fragments {
 
     fun folderTree(context: Context): Fragment {
         return Fragment.instantiate(context, TAB_FOLDER_TREE)
+    }
+
+    fun settings(context: Context): Fragment {
+        return Fragment.instantiate(context, SETTINGS)
     }
 
 }

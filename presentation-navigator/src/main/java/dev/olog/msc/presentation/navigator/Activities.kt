@@ -28,10 +28,4 @@ object Activities {
         }
     }
 
-    fun settings(): Class<*> {
-        return classMap.getOrPut("settings") {
-            Class.forName("dev.olog.msc.presentation.preferences.PreferencesActivity")
-        }
-    }
-
 }

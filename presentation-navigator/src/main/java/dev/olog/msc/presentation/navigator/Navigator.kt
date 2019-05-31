@@ -16,7 +16,7 @@ private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
 
 class Navigator @Inject constructor(
 //    private val popupFactory: PopupMenuFactory,
-    private val popupNavigator: IPopupNavigator,
+    private val popupNavigator: PopupNavigator,
     private val sortGateway: SortPreferencesGateway
 //    private val editItemDialogFactory: EditItemDialogFactory
 ) {
@@ -26,7 +26,7 @@ class Navigator @Inject constructor(
     private val mainPopup by lazy {
         // TODO find a better way than reflection
         val mainPopup = Class.forName("dev.olog.msc.presentation.popup.main.MainPopupDialog")
-        val contructor = mainPopup.getConstructor(IPopupNavigator::class.java, SortPreferencesGateway::class.java)
+        val contructor = mainPopup.getConstructor(PopupNavigator::class.java, SortPreferencesGateway::class.java)
         contructor.newInstance(popupNavigator, sortGateway) as MainPopup
     }
 
