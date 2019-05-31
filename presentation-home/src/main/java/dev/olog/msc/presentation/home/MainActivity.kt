@@ -29,6 +29,7 @@ import dev.olog.msc.pro.HasBilling
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.ui.extensions.setPaddingBottom
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.theme.playerTheme
 import dev.olog.msc.shared.utils.clamp
@@ -232,11 +233,14 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     private fun handleEmptyRepository(isEmpty: Boolean) {
-        if (isEmpty) {
-            slidingPanel.panelHeight = dimen(R.dimen.bottom_navigation_height)
+        val height = if (isEmpty) {
+            dimen(R.dimen.bottom_navigation_height)
         } else {
-            slidingPanel.panelHeight = dimen(R.dimen.sliding_panel_peek) + dimen(R.dimen.bottom_navigation_height)
+            dimen(R.dimen.sliding_panel_peek) + dimen(R.dimen.bottom_navigation_height)
         }
+
+        slidingPanel.panelHeight = height
+        fragmentContainer.setPaddingBottom(height)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

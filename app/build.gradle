@@ -70,6 +70,7 @@ dependencies {
     implementation project(':presentation-splash')
     implementation project(':presentation-preferences')
     implementation project(':presentation-create-playlist')
+    implementation project(':presentation-playlist-chooser')
     debugImplementation project(':presentation-debug')
     // fragments
     implementation project(':presentation-player')

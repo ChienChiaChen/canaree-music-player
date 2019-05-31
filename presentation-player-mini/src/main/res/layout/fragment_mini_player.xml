@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/sliding_panel_peek"
     android:id="@+id/root"
-    android:background="?colorSurface">
+    android:background="?colorSurface"
+    android:alpha=".4">
 
     <dev.olog.msc.shared.ui.imageview.AnimatedImageView
         android:id="@+id/next"
