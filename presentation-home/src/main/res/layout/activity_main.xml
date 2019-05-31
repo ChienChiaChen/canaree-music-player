@@ -4,6 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/slidingPanel"
         android:layout_width="match_parent"
@@ -15,15 +20,9 @@
         app:umanoShadowHeight="@dimen/sliding_panel_shadow">
 
         <FrameLayout
-            android:id="@+id/fragmentContainer"
+            android:id="@+id/fakeFragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/upperFragmentContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:elevation="1dp" />
 
             <View
                 android:id="@+id/fakeView"

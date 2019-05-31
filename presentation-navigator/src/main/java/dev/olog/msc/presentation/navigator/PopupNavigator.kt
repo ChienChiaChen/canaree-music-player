@@ -48,7 +48,7 @@ class PopupNavigator @Inject constructor() {
         activity.fragmentTransaction {
             setReorderingAllowed(true)
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            replace(R.id.upperFragmentContainer, Fragments.settings(activity), Fragments.SETTINGS)
+            replace(R.id.fragmentContainer, Fragments.settings(activity), Fragments.SETTINGS)
             addToBackStack(Fragments.SETTINGS)
         }
     }

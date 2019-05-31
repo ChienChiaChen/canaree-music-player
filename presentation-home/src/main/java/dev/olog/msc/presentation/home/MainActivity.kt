@@ -138,6 +138,18 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         bottomNavigation.setOnNavigationItemReselectedListener { bottomNavigate(it.itemId, true) }
         slidingPanel.addPanelSlideListener(onPanelSlide)
         handleFakeView(slidingPanel.panelState)
+
+        fakeFragmentContainer.setOnTouchListener { v, event ->
+            fragmentContainer.dispatchTouchEvent(event)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        bottomNavigation.setOnNavigationItemSelectedListener(null)
+        bottomNavigation.setOnNavigationItemReselectedListener(null)
+        slidingPanel.removePanelSlideListener(onPanelSlide)
+        fakeFragmentContainer.setOnTouchListener(null)
     }
 
     /**
@@ -161,20 +173,17 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     private fun bottomNavigate(itemId: Int, forceRecreate: Boolean) {
+        if (itemId == bottomNavigation.selectedItemId){
+            return
+        }
+
         when (itemId) {
-            R.id.navigation_songs -> BottomNavigator.navigate(this, Fragments.CATEGORIES, forceRecreate)
-            R.id.navigation_search -> BottomNavigator.navigate(this, Fragments.SEARCH, false)
-            R.id.navigation_podcasts -> BottomNavigator.navigate(this, Fragments.CATEGORIES_PODCAST, forceRecreate)
-            R.id.navigation_queue -> BottomNavigator.navigate(this, Fragments.PLAYING_QUEUE, false)
+            R.id.navigation_songs -> BottomNavigator.navigate(this, Fragments.CATEGORIES)
+            R.id.navigation_search -> BottomNavigator.navigate(this, Fragments.SEARCH)
+            R.id.navigation_podcasts -> BottomNavigator.navigate(this, Fragments.CATEGORIES_PODCAST)
+            R.id.navigation_queue -> BottomNavigator.navigate(this, Fragments.PLAYING_QUEUE)
             else -> bottomNavigate(R.id.navigation_songs, forceRecreate)
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        bottomNavigation.setOnNavigationItemSelectedListener(null)
-        bottomNavigation.setOnNavigationItemReselectedListener(null)
-        slidingPanel.removePanelSlideListener(onPanelSlide)
     }
 
     private val onPanelSlide = object : PanelSlideListener {
@@ -199,7 +208,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
             }
             ShortcutsConstants.SHORTCUT_SEARCH -> {
                 bottomNavigation.selectedItemId = R.id.navigation_search
-                BottomNavigator.navigate(this, Fragments.SEARCH, false)
+                BottomNavigator.navigate(this, Fragments.SEARCH)
             }
             PendingIntents.ACTION_CONTENT_VIEW -> slidingPanel.expand()
             MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH -> {
@@ -290,22 +299,18 @@ object BottomNavigator {
         Fragments.PLAYING_QUEUE
     )
 
-    private fun anyFragmentOnUpperFragmentContainer(activity: FragmentActivity): Boolean {
-        return activity.supportFragmentManager.fragments
-            .any { (it.view?.parent as View?)?.id == R.id.upperFragmentContainer }
-    }
-
-    fun navigate(activity: FragmentActivity, fragmentTag: String, forceRecreate: Boolean) {
+    fun navigate(activity: FragmentActivity, fragmentTag: String) {
         if (!tags.contains(fragmentTag)){
             throw IllegalArgumentException("invalid fragment tag $fragmentTag")
         }
 
-        if (anyFragmentOnUpperFragmentContainer(activity)) {
-            activity.onBackPressed()
+        for (index in 0..activity.supportFragmentManager.backStackEntryCount){
+            // clear the backstack
+            activity.supportFragmentManager.popBackStack()
         }
 
         activity.fragmentTransaction {
-
+            setReorderingAllowed(true)
             // hide other categories fragment
             activity.supportFragmentManager.fragments
                 .asSequence()
@@ -313,24 +318,12 @@ object BottomNavigator {
                 .filter { it.tag != fragmentTag }
                 .forEach { hide(it) }
 
-            // remove all upper fragment
-            activity.supportFragmentManager.fragments
-                .filter { (it.view?.parent as View?)?.id == R.id.upperFragmentContainer }
-                .forEach { remove(it) }
-
             setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 
-            if (forceRecreate) {
-                return@fragmentTransaction replace(
-                    R.id.fragmentContainer,
-                    tagToInstance(activity, fragmentTag),
-                    fragmentTag
-                )
-            }
             val fragment = activity.supportFragmentManager.findFragmentByTag(fragmentTag)
             if (fragment == null) {
                 // TODO always returning null
-                replace(R.id.fragmentContainer, tagToInstance(activity, fragmentTag), fragmentTag)
+                add(R.id.fragmentContainer, tagToInstance(activity, fragmentTag), fragmentTag)
             } else {
                 show(fragment)
             }

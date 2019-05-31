@@ -1,7 +1,10 @@
 package dev.olog.msc.presentation.navigator
 
+import android.util.Log
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
@@ -14,12 +17,31 @@ import javax.inject.Inject
 
 private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
 
+// fragment tag, last added
+private var backStackCount = mutableMapOf<String, Int>()
+
+private fun createBackStackTag(fragmentTag: String): String {
+    // get last + 1
+    val counter = backStackCount.getOrPut(fragmentTag) { 0 } + 1
+    // update
+    backStackCount[fragmentTag] = counter
+    // creates new
+    return "$fragmentTag$counter"
+}
+
 class Navigator @Inject constructor(
 //    private val popupFactory: PopupMenuFactory,
-    private val popupNavigator: PopupNavigator,
-    private val sortGateway: SortPreferencesGateway
+        private val popupNavigator: PopupNavigator,
+        private val sortGateway: SortPreferencesGateway
 //    private val editItemDialogFactory: EditItemDialogFactory
 ) {
+
+    private val basicFragments = listOf(
+            Fragments.CATEGORIES,
+            Fragments.CATEGORIES_PODCAST,
+            Fragments.SEARCH,
+            Fragments.PLAYING_QUEUE
+    )
 
     private var lastRequest: Long = -1
 
@@ -36,40 +58,35 @@ class Navigator @Inject constructor(
         return allowed
     }
 
-    // fragment tag, last added
-    private var backStackCount = mutableMapOf<String, Int>()
-
     fun toFirstAccess(activity: FragmentActivity) {
         activity.startActivity(Intents.splashActivity(activity))
     }
 
-    private fun createBackstackTag(fragmentTag: String): String {
-        // get last
-        val counter = backStackCount.getOrPut(fragmentTag) { 0 } + 1
-        // update
-        backStackCount[fragmentTag] = counter
-        // creates new
-        return "$fragmentTag$counter"
-    }
-
-    private fun getFragmentOnFragmentContainer(activity: FragmentActivity): androidx.fragment.app.Fragment? {
-        return activity.supportFragmentManager.fragments
-            .firstOrNull { (it.view?.parent as View?)?.id == R.id.fragmentContainer }
+    private fun findFirstVisibleFragment(fragmentManager: FragmentManager): Fragment? {
+        var topFragment = fragmentManager.getTopFragment()
+        if (topFragment == null) {
+            topFragment = fragmentManager.fragments
+                    .filter { it.isVisible }
+                    .firstOrNull { basicFragments.contains(it.tag) }
+        }
+        if (topFragment == null) {
+            Log.e("Navigator", "Something went wrong, for some reason no fragment were found")
+        }
+        return topFragment
     }
 
     fun toDetailFragment(activity: FragmentActivity, mediaId: MediaId) {
-
         if (allowed()) {
-            // TODO useful only when navigating from player fragment expanded
             activity.findViewById<SlidingUpPanelLayout>(R.id.slidingPanel).panelState = COLLAPSED
 
-            val newTag = createBackstackTag(Fragments.DETAIL)
+            val newTag = createBackStackTag(Fragments.DETAIL)
+            val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)
 
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                getFragmentOnFragmentContainer(activity)?.let { hide(it) }
-                replace(R.id.upperFragmentContainer, Fragments.detail(activity, mediaId), newTag)
+                topFragment?.let { hide(it) }
+                add(R.id.fragmentContainer, Fragments.detail(activity, mediaId), newTag)
                 addToBackStack(newTag)
             }
         }
@@ -78,16 +95,17 @@ class Navigator @Inject constructor(
     fun toRelatedArtists(activity: FragmentActivity, mediaId: MediaId) {
         if (allowed()) {
 
-            val newTag = createBackstackTag(Fragments.RELATED_ARTISTS)
+            val newTag = createBackStackTag(Fragments.RELATED_ARTISTS)
+            val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)
 
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                getFragmentOnFragmentContainer(activity)?.let { hide(it) }
-                replace(
-                    R.id.upperFragmentContainer,
-                    Fragments.relatedArtists(activity, mediaId),
-                    newTag
+                topFragment?.let { hide(it) }
+                add(
+                        R.id.fragmentContainer,
+                        Fragments.relatedArtists(activity, mediaId),
+                        newTag
                 )
                 addToBackStack(newTag)
             }
@@ -97,16 +115,17 @@ class Navigator @Inject constructor(
     fun toRecentlyAdded(activity: FragmentActivity, mediaId: MediaId) {
         if (allowed()) {
 
-            val newTag = createBackstackTag(Fragments.RECENTLY_ADDED)
+            val newTag = createBackStackTag(Fragments.RECENTLY_ADDED)
+            val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)
 
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                getFragmentOnFragmentContainer(activity)?.let { hide(it) }
+                topFragment?.let { hide(it) }
                 replace(
-                    R.id.upperFragmentContainer,
-                    Fragments.recentlyAdded(activity, mediaId),
-                    newTag
+                        R.id.fragmentContainer,
+                        Fragments.recentlyAdded(activity, mediaId),
+                        newTag
                 )
                 addToBackStack(newTag)
             }
@@ -178,7 +197,7 @@ class Navigator @Inject constructor(
     fun toMainPopup(activity: FragmentActivity, anchor: View, category: MediaIdCategory?) {
         try {
             mainPopup.show(activity, anchor, category?.ordinal)
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
@@ -214,10 +233,10 @@ class Navigator @Inject constructor(
     }
 
     fun toCreatePlaylistDialog(
-        activity: FragmentActivity,
-        mediaId: MediaId,
-        listSize: Int,
-        itemTitle: String
+            activity: FragmentActivity,
+            mediaId: MediaId,
+            listSize: Int,
+            itemTitle: String
     ) {
 //        val fragment = NewPlaylistDialog.newInstance(mediaId, listSize, itemTitle)
 //        fragment.show(activity.supportFragmentManager, NewPlaylistDialog.TAG)
