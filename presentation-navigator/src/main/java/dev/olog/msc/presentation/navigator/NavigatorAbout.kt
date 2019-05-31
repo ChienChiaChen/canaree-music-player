@@ -3,12 +3,7 @@ package dev.olog.msc.presentation.navigator
 import androidx.fragment.app.FragmentActivity
 import javax.inject.Inject
 
-private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
-
 class NavigatorAbout @Inject constructor(){
-
-
-//    private var lastRequest: Long = -1
 //
 //    fun toLicensesFragment(activity: FragmentActivity) {
 //        if (allowed()) {
@@ -74,11 +69,6 @@ class NavigatorAbout @Inject constructor(){
 //        }
 //    }
 //
-//    private fun allowed(): Boolean {
-//        val allowed = (System.currentTimeMillis() - lastRequest) > NEXT_REQUEST_THRESHOLD
-//        lastRequest = System.currentTimeMillis()
-//        return allowed
-//    }
 
     fun toLicensesFragment(activity: FragmentActivity) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

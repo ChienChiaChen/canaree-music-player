@@ -18,7 +18,7 @@ object Activities {
 
     fun shortcuts(): Class<*> {
         return classMap.getOrPut("shortcuts") {
-            Class.forName("dev.olog.msc.presentation.shortcuts.ShortcutsActivity")
+            Class.forName("dev.olog.msc.appshortcuts.ShortcutsActivity")
         }
     }
 

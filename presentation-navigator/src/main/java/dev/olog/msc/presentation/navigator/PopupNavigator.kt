@@ -45,10 +45,13 @@ class PopupNavigator @Inject constructor() {
 //    }
 //
     fun toSettings(activity: FragmentActivity) {
+        val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)
+
         activity.fragmentTransaction {
             setReorderingAllowed(true)
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            replace(R.id.fragmentContainer, Fragments.settings(activity), Fragments.SETTINGS)
+            topFragment?.let { hide(it) }
+            add(R.id.fragmentContainer, Fragments.settings(activity), Fragments.SETTINGS)
             addToBackStack(Fragments.SETTINGS)
         }
     }

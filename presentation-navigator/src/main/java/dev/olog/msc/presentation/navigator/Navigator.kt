@@ -1,10 +1,7 @@
 package dev.olog.msc.presentation.navigator
 
-import android.util.Log
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
@@ -15,20 +12,6 @@ import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.shared.interfaces.MainPopup
 import javax.inject.Inject
 
-private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
-
-// fragment tag, last added
-private var backStackCount = mutableMapOf<String, Int>()
-
-private fun createBackStackTag(fragmentTag: String): String {
-    // get last + 1
-    val counter = backStackCount.getOrPut(fragmentTag) { 0 } + 1
-    // update
-    backStackCount[fragmentTag] = counter
-    // creates new
-    return "$fragmentTag$counter"
-}
-
 class Navigator @Inject constructor(
 //    private val popupFactory: PopupMenuFactory,
         private val popupNavigator: PopupNavigator,
@@ -36,14 +19,6 @@ class Navigator @Inject constructor(
 //    private val editItemDialogFactory: EditItemDialogFactory
 ) {
 
-    private val basicFragments = listOf(
-            Fragments.CATEGORIES,
-            Fragments.CATEGORIES_PODCAST,
-            Fragments.SEARCH,
-            Fragments.PLAYING_QUEUE
-    )
-
-    private var lastRequest: Long = -1
 
     private val mainPopup by lazy {
         // TODO find a better way than reflection
@@ -52,27 +27,8 @@ class Navigator @Inject constructor(
         contructor.newInstance(popupNavigator, sortGateway) as MainPopup
     }
 
-    private fun allowed(): Boolean {
-        val allowed = (System.currentTimeMillis() - lastRequest) > NEXT_REQUEST_THRESHOLD
-        lastRequest = System.currentTimeMillis()
-        return allowed
-    }
-
     fun toFirstAccess(activity: FragmentActivity) {
         activity.startActivity(Intents.splashActivity(activity))
-    }
-
-    private fun findFirstVisibleFragment(fragmentManager: FragmentManager): Fragment? {
-        var topFragment = fragmentManager.getTopFragment()
-        if (topFragment == null) {
-            topFragment = fragmentManager.fragments
-                    .filter { it.isVisible }
-                    .firstOrNull { basicFragments.contains(it.tag) }
-        }
-        if (topFragment == null) {
-            Log.e("Navigator", "Something went wrong, for some reason no fragment were found")
-        }
-        return topFragment
     }
 
     fun toDetailFragment(activity: FragmentActivity, mediaId: MediaId) {
