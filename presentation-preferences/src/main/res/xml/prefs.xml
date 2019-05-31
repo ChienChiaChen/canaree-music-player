@@ -57,7 +57,8 @@
             app:summary="@string/prefs_cross_fade_summary"
             app:title="@string/prefs_cross_fade_title"
             app:min="0"
-            android:max="12"/>
+            android:max="12"
+            app:showSeekBarValue="true"/>
 
         <SwitchPreferenceCompat
             app:defaultValue="false"
