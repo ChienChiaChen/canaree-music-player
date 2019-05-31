@@ -60,6 +60,8 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        BottomNavigator.initialize(this)
+
         presenter.observeIsRepositoryEmpty()
             .subscribe(this, this::handleEmptyRepository)
 
@@ -299,6 +301,17 @@ object BottomNavigator {
         Fragments.PLAYING_QUEUE
     )
 
+    fun initialize(activity: FragmentActivity){
+        activity.fragmentTransaction {
+            for (tag in tags) {
+                val fragment = tagToInstance(activity, tag)
+                add(R.id.fragmentContainer, fragment, tag)
+                hide(fragment)
+            }
+            setReorderingAllowed(true)
+        }
+    }
+
     fun navigate(activity: FragmentActivity, fragmentTag: String) {
         if (!tags.contains(fragmentTag)){
             throw IllegalArgumentException("invalid fragment tag $fragmentTag")
@@ -310,12 +323,12 @@ object BottomNavigator {
         }
 
         activity.fragmentTransaction {
+            disallowAddToBackStack()
             setReorderingAllowed(true)
             // hide other categories fragment
             activity.supportFragmentManager.fragments
                 .asSequence()
                 .filter { tags.contains(it.tag) }
-                .filter { it.tag != fragmentTag }
                 .forEach { hide(it) }
 
             setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)

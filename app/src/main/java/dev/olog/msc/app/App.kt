@@ -63,7 +63,7 @@ class App : ThemedApp() {
     }
 
     override fun injectComponenet() {
-        val coreComponent = CoreComponent.appComponent(this)
+        val coreComponent = CoreComponent.coreComponent(this)
         DaggerAppComponent.factory().create(coreComponent).inject(this)
     }
 

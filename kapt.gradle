@@ -9,7 +9,7 @@ kapt {
         // dagger compiler options
         option("-Adagger.gradle.incremental")
         option("-Adagger.fastInit=enabled")
-//        option("-Adagger.moduleBindingValidation=ERROR")
-        option("-Adagger.formatGeneratedSource=disabled")
+//        option("-Adagger.fullBindingGraphValidation=ERROR")
+//        option("-Adagger.formatGeneratedSource=enabled")
     }
 }

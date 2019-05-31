@@ -71,7 +71,7 @@ ext {
     buildToolsVersion = '28.0.3'
 
 //    libs
-    dagger = '2.22.1'
+    dagger = '2.23.1'
     rx_java = '2.2.8'
     rx_binding = '2.2.0'
     rx_preferences = '2.0.0'
