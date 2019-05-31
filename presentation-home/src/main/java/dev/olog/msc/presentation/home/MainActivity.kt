@@ -19,6 +19,7 @@ import dev.olog.msc.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
 import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
+import dev.olog.msc.presentation.base.interfaces.HasBottomNavigation
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.presentation.home.base.MusicGlueActivity
 import dev.olog.msc.presentation.home.di.inject
@@ -36,7 +37,10 @@ import dev.olog.msc.shared.utils.clamp
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
+class MainActivity : MusicGlueActivity(),
+    HasSlidingPanel,
+    HasBottomNavigation,
+    HasBilling {
 
     @Inject
     lateinit var presenter: MainActivityViewModel
@@ -72,7 +76,6 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
                 BottomNavigator.initialize(this)
                 handleOnActivityCreated()
             }
-            else -> handleOnActivityResumed()
         }
         if (isFirstAccess) {
             return
@@ -115,18 +118,6 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         bottomNavigate(navigateTo)
     }
 
-    private fun handleOnActivityResumed() {
-        if (!presenter.canShowPodcastCategory()) {
-            val currentId = presenter.getLastBottomViewPage(R.id.navigation_songs)
-            bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
-            if (currentId == R.id.navigation_podcasts) {
-                bottomNavigation.selectedItemId = R.id.navigation_songs
-                presenter.setLastBottomViewPage(R.id.navigation_songs)
-                bottomNavigate(bottomNavigation.selectedItemId)
-            }
-        }
-    }
-
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.let { handleIntent(it) }
@@ -143,7 +134,9 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         slidingPanel.addPanelSlideListener(onPanelSlide)
         handleFakeView(slidingPanel.panelState)
 
-        fakeFragmentContainer.setOnTouchListener { v, event ->
+        fakeFragmentContainer.setOnTouchListener { _, event ->
+            // since the read fragment container is behind the sliding panel, pass every touch
+            // from first child of sliding panel to fragment container
             fragmentContainer.dispatchTouchEvent(event)
         }
     }
@@ -193,11 +186,7 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
             bottomWrapper.translationY = bottomWrapper.height * clamp(slideOffset, 0f, 1f)
         }
 
-        override fun onPanelStateChanged(
-            panel: View,
-            previousState: PanelState,
-            newState: PanelState
-        ) {
+        override fun onPanelStateChanged(panel: View, previousState: PanelState, newState: PanelState) {
             handleFakeView(newState)
         }
     }
@@ -292,6 +281,21 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
     }
 
     override fun getSlidingPanel(): SlidingUpPanelLayout = slidingPanel
+
+    override fun togglePodcast(show: Boolean) {
+        if (show) {
+            bottomNavigation.menu.removeItem(R.id.navigation_songs)
+            bottomNavigation.menu.removeItem(R.id.navigation_queue)
+            bottomNavigation.menu.removeItem(R.id.navigation_search)
+            bottomNavigation.inflateMenu(R.menu.drawer)
+        } else {
+            if (bottomNavigation.selectedItemId == R.id.navigation_podcasts) {
+                bottomNavigation.selectedItemId = R.id.navigation_songs
+                bottomNavigate(R.id.navigation_songs)
+            }
+            bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
+        }
+    }
 }
 
 object BottomNavigator {
@@ -303,9 +307,9 @@ object BottomNavigator {
         Fragments.PLAYING_QUEUE
     )
 
-    fun initialize(activity: FragmentActivity){
+    fun initialize(activity: FragmentActivity) {
         for (fragment in activity.supportFragmentManager.fragments) {
-            if (tags.contains(fragment.tag)){
+            if (tags.contains(fragment.tag)) {
                 // fragment alreade added
                 return
             }
@@ -322,11 +326,11 @@ object BottomNavigator {
     }
 
     fun navigate(activity: FragmentActivity, fragmentTag: String) {
-        if (!tags.contains(fragmentTag)){
+        if (!tags.contains(fragmentTag)) {
             throw IllegalArgumentException("invalid fragment tag $fragmentTag")
         }
 
-        for (index in 0..activity.supportFragmentManager.backStackEntryCount){
+        for (index in 0..activity.supportFragmentManager.backStackEntryCount) {
             // clear the backstack
             activity.supportFragmentManager.popBackStack()
         }
@@ -352,7 +356,7 @@ object BottomNavigator {
         }
     }
 
-    private fun tagToInstance(context: Context, tag: String): Fragment = when (tag){
+    private fun tagToInstance(context: Context, tag: String): Fragment = when (tag) {
         Fragments.CATEGORIES -> Fragments.categories(context)
         Fragments.CATEGORIES_PODCAST -> Fragments.categoriesPodcast(context)
         Fragments.SEARCH -> Fragments.search(context)

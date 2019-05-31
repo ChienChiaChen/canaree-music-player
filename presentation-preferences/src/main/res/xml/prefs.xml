@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/prefs_category_library">
 
@@ -52,13 +52,13 @@
 
         <!--suppress AndroidElementNotAllowed -->
         <androidx.preference.SeekBarPreference
+            android:max="12"
             app:defaultValue="0"
             app:key="@string/prefs_cross_fade_key"
-            app:summary="@string/prefs_cross_fade_summary"
-            app:title="@string/prefs_cross_fade_title"
             app:min="0"
-            android:max="12"
-            app:showSeekBarValue="true"/>
+            app:showSeekBarValue="true"
+            app:summary="@string/prefs_cross_fade_summary"
+            app:title="@string/prefs_cross_fade_title" />
 
         <SwitchPreferenceCompat
             app:defaultValue="false"
@@ -71,17 +71,17 @@
     <PreferenceCategory app:title="@string/prefs_category_ui">
 
         <ListPreference
+            app:defaultValue="@string/prefs_dark_mode_2_value_follow_system"
             app:entries="@array/prefs_dark_mode_entries"
             app:entryValues="@array/prefs_dark_mode_entry_values"
-            app:defaultValue="@string/prefs_dark_mode_2_value_follow_system"
             app:key="@string/prefs_dark_mode_2_key"
             app:summary="%s"
             app:title="@string/prefs_dark_mode_title" />
 
         <ListPreference
+            app:defaultValue="@string/prefs_appearance_entry_value_default"
             app:entries="@array/prefs_appearance_entries"
             app:entryValues="@array/prefs_appearance_entry_values"
-            app:defaultValue="@string/prefs_appearance_entry_value_default"
             app:key="@string/prefs_appearance_key"
             app:summary="%s"
             app:title="@string/prefs_appearance_title" />
@@ -125,32 +125,35 @@
             app:title="@string/prefs_player_controls_visibility_title" />
 
         <MultiSelectListPreference
+            app:defaultValue="@array/prefs_detail_sections_entry_values_default"
             app:entries="@array/prefs_detail_sections_entries"
             app:entryValues="@array/prefs_detail_sections_entry_values"
-            app:defaultValue="@array/prefs_detail_sections_entry_values_default"
             app:key="@string/prefs_detail_sections_key"
             app:summary="@string/prefs_detail_sections_summary"
             app:title="@string/prefs_detail_sections_title" />
 
         <ListPreference
+            app:defaultValue="@string/prefs_quick_action_entry_value_hide"
             app:entries="@array/prefs_quick_action_entries"
             app:entryValues="@array/prefs_quick_action_entry_values"
-            app:defaultValue="@string/prefs_quick_action_entry_value_hide"
             app:key="@string/prefs_quick_action_key"
             app:summary="@string/prefs_quick_action_summary"
             app:title="@string/prefs_quick_action_title" />
 
         <ListPreference
+            app:defaultValue="@string/prefs_icon_shape_rounded"
             app:entries="@array/prefs_icon_shape_entries"
             app:entryValues="@array/prefs_icon_shape_entry_values"
-            app:defaultValue="@string/prefs_icon_shape_rounded"
             app:key="@string/prefs_icon_shape_key"
             app:summary="%s"
             app:title="@string/prefs_icon_shape_title" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/prefs_category_other">
+    <PreferenceCategory
+        app:initialExpandedChildrenCount="0"
+        app:title="@string/prefs_category_other"
+        app:key="other_group">
 
         <SwitchPreferenceCompat
             app:defaultValue="false"
@@ -166,9 +169,9 @@
             app:title="@string/prefs_last_fm_credentials_title" />
 
         <ListPreference
+            app:defaultValue="@string/prefs_auto_download_images_entry_value_wifi"
             app:entries="@array/prefs_auto_download_images_entries"
             app:entryValues="@array/prefs_auto_download_images_entry_values"
-            app:defaultValue="@string/prefs_auto_download_images_entry_value_wifi"
             app:key="@string/prefs_auto_download_images_key"
             app:summary="%s"
             app:title="@string/prefs_auto_download_images_title" />

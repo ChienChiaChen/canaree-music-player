@@ -15,12 +15,14 @@ import com.afollestad.materialdialogs.color.ColorCallback
 import com.afollestad.materialdialogs.color.colorChooser
 import com.google.android.material.snackbar.Snackbar
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.TutorialPreferenceGateway
 import dev.olog.msc.imageprovider.glide.GlideApp
 import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.childFragmentTransaction
 import dev.olog.msc.presentation.base.extensions.ctx
-import dev.olog.msc.presentation.base.extensions.fragmentTransaction
+import dev.olog.msc.presentation.base.interfaces.HasBottomNavigation
 import dev.olog.msc.presentation.preferences.R
 import dev.olog.msc.presentation.preferences.blacklist.BlacklistFragment
 import dev.olog.msc.presentation.preferences.categories.LibraryCategoriesFragment
@@ -40,6 +42,8 @@ class SettingsFragment : PreferenceFragmentCompat(),
 
     @Inject
     lateinit var tutoriaPrefs: TutorialPreferenceGateway
+    @Inject
+    lateinit var appPrefs: AppPreferencesGateway
 
     private val presenter by lazy {
         SettingsFragmentPresenter(
@@ -58,8 +62,6 @@ class SettingsFragment : PreferenceFragmentCompat(),
     private lateinit var autoCreateImages: Preference
     private lateinit var accentColorChooser: Preference
     private lateinit var resetTutorial: Preference
-
-    private var requestActivityToRecreate = false
 
     override fun onAttach(context: Context) {
         inject()
@@ -106,16 +108,16 @@ class SettingsFragment : PreferenceFragmentCompat(),
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         libraryCategories.setOnPreferenceClickListener {
             LibraryCategoriesFragment.newInstance(MediaIdCategory.SONGS)
-                .show(activity!!.supportFragmentManager, LibraryCategoriesFragment.TAG)
+                .show(childFragmentManager, LibraryCategoriesFragment.TAG)
             true
         }
         podcastCategories.setOnPreferenceClickListener {
             LibraryCategoriesFragment.newInstance(MediaIdCategory.PODCASTS)
-                .show(activity!!.supportFragmentManager, LibraryCategoriesFragment.TAG)
+                .show(childFragmentManager, LibraryCategoriesFragment.TAG)
             true
         }
         blacklist.setOnPreferenceClickListener {
-            act.fragmentTransaction {
+            childFragmentTransaction {
                 setReorderingAllowed(true)
                 add(BlacklistFragment.newInstance(), BlacklistFragment.TAG)
             }
@@ -127,7 +129,7 @@ class SettingsFragment : PreferenceFragmentCompat(),
             true
         }
         lastFmCredentials.setOnPreferenceClickListener {
-            act.fragmentTransaction {
+            childFragmentTransaction {
                 setReorderingAllowed(true)
                 add(LastFmCredentialsFragment.newInstance(), LastFmCredentialsFragment.TAG)
             }
@@ -169,19 +171,23 @@ class SettingsFragment : PreferenceFragmentCompat(),
         when (key) {
             getString(R.string.prefs_quick_action_key) -> {
                 ImageViews.updateQuickAction(act)
-                requestActivityToRecreate()
+//                requestActivityToRecreate()
             }
             getString(R.string.prefs_icon_shape_key) -> {
                 ImageViews.updateIconShape(act)
-                requestActivityToRecreate()
+//                requestActivityToRecreate()
             }
             getString(R.string.prefs_appearance_key) -> {
-                requestActivityToRecreate()
+                // TODO find a way without recrating whole activity
+                recreateActivity()
             }
             getString(R.string.prefs_folder_tree_view_key),
             getString(R.string.prefs_blacklist_key),
-            getString(R.string.prefs_show_podcasts_key),
-            getString(R.string.prefs_adaptive_colors_key) -> requestActivityToRecreate()
+            getString(R.string.prefs_adaptive_colors_key) -> {
+            }//requestActivityToRecreate()
+            getString(R.string.prefs_show_podcasts_key) -> {
+                toggleShowPodcast(sharedPreferences.getBoolean(key, true))
+            }
         }
     }
 
@@ -192,7 +198,7 @@ class SettingsFragment : PreferenceFragmentCompat(),
             .setPositiveButton(R.string.common_ok) { _, _ ->
                 GlideApp.get(ctx.applicationContext).clearMemory()
                 presenter.clearCachedImages {
-                    requestActivityToRecreate()
+                    //                    requestActivityToRecreate()
                     ctx.applicationContext.toast(R.string.prefs_delete_cached_images_success)
                 }
             }
@@ -219,7 +225,13 @@ class SettingsFragment : PreferenceFragmentCompat(),
         requireActivity().recreate()
     }
 
-    private fun requestActivityToRecreate() {
-        requestActivityToRecreate = true
+    private fun recreateActivity() {
+        act.recreate()
     }
+
+    private fun toggleShowPodcast(show: Boolean) {
+        (activity as HasBottomNavigation).togglePodcast(show)
+    }
+
+
 }

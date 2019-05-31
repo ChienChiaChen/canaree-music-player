@@ -13,6 +13,13 @@ inline fun FragmentActivity.fragmentTransaction(crossinline func: FragmentTransa
             .commitAllowingStateLoss()
 }
 
+inline fun Fragment.childFragmentTransaction(crossinline func: FragmentTransaction.() -> FragmentTransaction) {
+    childFragmentManager
+        .beginTransaction()
+        .func()
+        .commitAllowingStateLoss()
+}
+
 fun FragmentActivity.getTopFragment(): Fragment? {
     val topFragment = supportFragmentManager.backStackEntryCount - 1
     if (topFragment > -1){

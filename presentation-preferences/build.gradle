@@ -15,9 +15,4 @@ dependencies {
     implementation librariesUi.glide
     implementation librariesAndroidX.paging
 
-    implementation librariesCore.daggerAndroid
-    implementation librariesCore.daggerAndroidSupport
-    kapt librariesCore.daggerAndroidProcessor
-
-    implementation librariesUtils.billing
 }

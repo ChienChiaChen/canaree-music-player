@@ -3,11 +3,8 @@ package dev.olog.msc.presentation.preferences.categories
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
-import javax.inject.Inject
 
-class LibraryCategoriesFragmentPresenter @Inject constructor(
-        private val appPreferencesUseCase: AppPreferencesGateway
-){
+class LibraryCategoriesFragmentPresenter (private val appPreferencesUseCase: AppPreferencesGateway){
 
     fun getDefaultDataSet(category: MediaIdCategory): List<LibraryCategoryBehavior>{
         if (category == MediaIdCategory.PODCASTS){

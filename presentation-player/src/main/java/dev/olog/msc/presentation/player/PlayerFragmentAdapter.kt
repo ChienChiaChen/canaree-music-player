@@ -146,7 +146,7 @@ class PlayerFragmentAdapter(
 
         view.favorite.setOnClickListener { mediaProvider.togglePlayerFavorite() }
 
-        view.swipeableView.setOnSwipeListener(object : SwipeableView.SwipeListener {
+        view.swipeableView?.setOnSwipeListener(object : SwipeableView.SwipeListener {
             override fun onSwipedLeft() {
                 mediaProvider.skipToNext()
             }

@@ -2,7 +2,6 @@ package dev.olog.msc.presentation.preferences.categories
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,14 +9,13 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
-import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.preferences.R
+import dev.olog.msc.presentation.preferences.settings.SettingsFragment
 import dev.olog.msc.shared.core.lazyFast
-import javax.inject.Inject
 
 class LibraryCategoriesFragment : DialogFragment() {
 
@@ -33,17 +31,14 @@ class LibraryCategoriesFragment : DialogFragment() {
         }
     }
 
-    @Inject lateinit var presenter: LibraryCategoriesFragmentPresenter
+    private val presenter by lazyFast { LibraryCategoriesFragmentPresenter(
+        (parentFragment as SettingsFragment).appPrefs
+    ) }
     private val adapter by lazyFast {
         LibraryCategoriesFragmentAdapter(presenter.getDataSet(category).toMutableList())
     }
 
     private val category by lazyFast { MediaIdCategory.values()[arguments!!.getInt(TYPE)] }
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = LayoutInflater.from(activity!!)

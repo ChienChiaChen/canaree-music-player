@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.interactor.scrobble.GetLastFmUserCredentials
 import dev.olog.msc.core.interactor.scrobble.UpdateLastFmUserCredentials
@@ -21,6 +20,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+// TODO improve
+// TODO 1) check if credentials are correft
 class LastFmCredentialsFragment : DialogFragment() {
 
     companion object {
@@ -36,7 +37,7 @@ class LastFmCredentialsFragment : DialogFragment() {
     @Inject lateinit var updateLastFmUserCredentials: UpdateLastFmUserCredentials
 
     override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
+        inject()
         super.onAttach(context)
     }
 
