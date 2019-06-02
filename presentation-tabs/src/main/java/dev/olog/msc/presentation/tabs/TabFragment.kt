@@ -78,7 +78,7 @@ class TabFragment : BaseFragment(), SetupNestedList {
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
 
-        applyMarginToList(view)
+        applyInsetsToList(view)
 
         val scrollableLayoutId = when (category) {
             MediaIdCategory.SONGS -> R.layout.item_tab_song
@@ -89,41 +89,41 @@ class TabFragment : BaseFragment(), SetupNestedList {
         view.sidebar.scrollableLayoutId = scrollableLayoutId
 
         view.fab.toggleVisibility(
-            category == MediaIdCategory.PLAYLISTS ||
-                    category == MediaIdCategory.PODCASTS_PLAYLIST, true
+                category == MediaIdCategory.PLAYLISTS ||
+                        category == MediaIdCategory.PODCASTS_PLAYLIST, true
         )
 
         viewModel.observeData(category)
-            .subscribe(viewLifecycleOwner) { list ->
-                handleEmptyStateVisibility(list.isEmpty())
-                adapter.submitList(list)
+                .subscribe(viewLifecycleOwner) { list ->
+                    handleEmptyStateVisibility(list.isEmpty())
+                    adapter.submitList(list)
 //                sidebar.onDataChanged(list) TODO
-            }
+                }
 
         when (category) {
             MediaIdCategory.ALBUMS -> {
                 viewModel.observeData(MediaIdCategory.LAST_PLAYED_ALBUMS)
-                    .subscribe(viewLifecycleOwner) { lastAlbumsAdapter.submitList(it) }
+                        .subscribe(viewLifecycleOwner) { lastAlbumsAdapter.submitList(it) }
                 viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_ALBUMS)
-                    .subscribe(viewLifecycleOwner) { newAlbumsAdapter.submitList(it) }
+                        .subscribe(viewLifecycleOwner) { newAlbumsAdapter.submitList(it) }
             }
             MediaIdCategory.ARTISTS -> {
                 viewModel.observeData(MediaIdCategory.LAST_PLAYED_ARTISTS)
-                    .subscribe(viewLifecycleOwner) { lastArtistsAdapter.submitList(it) }
+                        .subscribe(viewLifecycleOwner) { lastArtistsAdapter.submitList(it) }
                 viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_ARTISTS)
-                    .subscribe(viewLifecycleOwner) { newArtistsAdapter.submitList(it) }
+                        .subscribe(viewLifecycleOwner) { newArtistsAdapter.submitList(it) }
             }
             MediaIdCategory.PODCASTS_ALBUMS -> {
                 viewModel.observeData(MediaIdCategory.LAST_PLAYED_PODCAST_ALBUMS)
-                    .subscribe(viewLifecycleOwner) { lastAlbumsAdapter.submitList(it) }
+                        .subscribe(viewLifecycleOwner) { lastAlbumsAdapter.submitList(it) }
                 viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_PODCAST_ALBUMS)
-                    .subscribe(viewLifecycleOwner) { newAlbumsAdapter.submitList(it) }
+                        .subscribe(viewLifecycleOwner) { newAlbumsAdapter.submitList(it) }
             }
             MediaIdCategory.PODCASTS_ARTISTS -> {
                 viewModel.observeData(MediaIdCategory.LAST_PLAYED_PODCAST_ARTISTS)
-                    .subscribe(viewLifecycleOwner) { lastArtistsAdapter.submitList(it) }
+                        .subscribe(viewLifecycleOwner) { lastArtistsAdapter.submitList(it) }
                 viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_PODCAST_ARTISTS)
-                    .subscribe(viewLifecycleOwner) { newArtistsAdapter.submitList(it) }
+                        .subscribe(viewLifecycleOwner) { newArtistsAdapter.submitList(it) }
             }
             else -> {/*making lint happy*/
             }
@@ -131,7 +131,7 @@ class TabFragment : BaseFragment(), SetupNestedList {
     }
 
     override fun setupNestedList(layoutId: Int, recyclerView: RecyclerView) {
-        when (layoutId){
+        when (layoutId) {
             R.layout.item_tab_last_played_album_horizontal_list -> setupHorizontalList(recyclerView, lastAlbumsAdapter)
             R.layout.item_tab_last_played_artist_horizontal_list -> setupHorizontalList(recyclerView, lastArtistsAdapter)
             R.layout.item_tab_new_album_horizontal_list -> setupHorizontalList(recyclerView, newAlbumsAdapter)
@@ -141,9 +141,9 @@ class TabFragment : BaseFragment(), SetupNestedList {
 
     private fun setupHorizontalList(list: RecyclerView, adapter: BasePagedAdapter<*>) {
         val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-            list.context,
-            androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
-            false
+                list.context,
+                androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
+                false
         )
         list.layoutManager = layoutManager
         list.adapter = adapter
@@ -158,7 +158,6 @@ class TabFragment : BaseFragment(), SetupNestedList {
             } else {
                 navigator.toChooseTracksForPlaylistFragment(requireActivity(), PlaylistType.PODCAST)
             }
-
         }
     }
 
@@ -168,17 +167,23 @@ class TabFragment : BaseFragment(), SetupNestedList {
         fab?.setOnClickListener(null)
     }
 
-    private fun applyMarginToList(view: View) {
+    private fun applyInsetsToList(view: View) {
+        val topInset = ctx.dimen(R.dimen.tab) + ctx.dimen(R.dimen.tab_margin_vertical)
+        val bottomInset =  ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dimen(R.dimen.tab_margin_vertical)
         if (category == MediaIdCategory.SONGS || category == MediaIdCategory.PODCASTS) {
             // start/end margin is set in item
             view.list.setPadding(
-                view.list.paddingLeft, view.list.paddingTop,
-                view.list.paddingRight, ctx.dimen(R.dimen.tab_margin_bottom)
+                    view.list.paddingStart,
+                    topInset,
+                    view.list.paddingEnd,
+                    bottomInset
             )
         } else {
             view.list.setPadding(
-                ctx.dimen(R.dimen.tab_margin_start), ctx.dimen(R.dimen.tab_margin_top),
-                ctx.dimen(R.dimen.tab_margin_end), ctx.dimen(R.dimen.tab_margin_bottom)
+                    ctx.dimen(R.dimen.tab_margin_start),
+                    topInset,
+                    ctx.dimen(R.dimen.tab_margin_end),
+                    bottomInset
             )
         }
     }

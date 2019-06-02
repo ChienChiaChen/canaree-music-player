@@ -1,11 +1,12 @@
 package dev.olog.msc.presentation.home
 
+import android.annotation.SuppressLint
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dev.olog.msc.presentation.base.extensions.isExpanded
 import dev.olog.msc.presentation.base.extensions.removeLightStatusBar
 import dev.olog.msc.presentation.base.extensions.setLightStatusBar
@@ -13,7 +14,6 @@ import dev.olog.msc.presentation.base.interfaces.CanChangeStatusBarColor
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.shared.ui.theme.playerTheme
 import dev.olog.msc.shared.utils.isMarshmallow
-import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 /**
@@ -22,11 +22,11 @@ import javax.inject.Inject
  * 2) Entering a CanChangeStatusBarColor fragment (probably only DetailFragment)
  */
 class StatusBarColorBehavior @Inject constructor(
-        private val activity: AppCompatActivity
+    private val activity: AppCompatActivity
 
-) : DefaultLifecycleObserver,
-        SlidingUpPanelLayout.PanelSlideListener,
-        FragmentManager.OnBackStackChangedListener {
+) : DefaultLifecycleObserver, FragmentManager.OnBackStackChangedListener {
+
+    private val slidingPanel by lazy { (activity as HasSlidingPanel?)?.getSlidingPanel() }
 
     init {
         activity.lifecycle.addObserver(this)
@@ -37,9 +37,7 @@ class StatusBarColorBehavior @Inject constructor(
             return
         }
 
-        if (activity is HasSlidingPanel){
-            activity.addPanelSlideListener(this)
-        }
+        slidingPanel?.addPanelSlideListener(slidingPanelListener)
         activity.supportFragmentManager.addOnBackStackChangedListener(this)
     }
 
@@ -48,9 +46,7 @@ class StatusBarColorBehavior @Inject constructor(
             return
         }
 
-        if (activity is HasSlidingPanel){
-            activity.removePanelSlideListener(this)
-        }
+        slidingPanel?.removePanelSlideListener(slidingPanelListener)
         activity.supportFragmentManager.removeOnBackStackChangedListener(this)
     }
 
@@ -63,7 +59,7 @@ class StatusBarColorBehavior @Inject constructor(
         if (fragment == null) {
             activity.window.setLightStatusBar()
         } else {
-            if (activity.slidingPanel.isExpanded()) {
+            if (slidingPanel?.isExpanded() == true) {
                 activity.window.setLightStatusBar()
             } else {
                 fragment.adjustStatusBarColor()
@@ -84,28 +80,29 @@ class StatusBarColorBehavior @Inject constructor(
         return null
     }
 
-    @Suppress("NON_EXHAUSTIVE_WHEN")
-    override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState, newState: SlidingUpPanelLayout.PanelState) {
-        val context = panel.context
+    private val slidingPanelListener = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+        }
 
-        when (newState) {
-            SlidingUpPanelLayout.PanelState.EXPANDED -> {
-                // TODO check if it needed
-                val playerTheme = context.playerTheme()
-                if (playerTheme.isFullscreen() || playerTheme.isBigImage()) {
-                    activity.window.removeLightStatusBar()
-                } else {
-                    activity.window.setLightStatusBar()
+        @SuppressLint("SwitchIntDef")
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            val context = bottomSheet.context
+
+            when (newState) {
+                BottomSheetBehavior.STATE_EXPANDED -> {
+                    // TODO check if it needed
+                    val playerTheme = context.playerTheme()
+                    if (playerTheme.isFullscreen() || playerTheme.isBigImage()) {
+                        activity.window.removeLightStatusBar()
+                    } else {
+                        activity.window.setLightStatusBar()
+                    }
+                }
+                BottomSheetBehavior.STATE_COLLAPSED -> {
+                    searchForDetailFragment()?.adjustStatusBarColor() ?: activity.window.setLightStatusBar()
                 }
             }
-            SlidingUpPanelLayout.PanelState.COLLAPSED -> {
-                searchForDetailFragment()?.adjustStatusBarColor()
-                    ?: activity.window.setLightStatusBar()
-            }
         }
-    }
-
-    override fun onPanelSlide(panel: View?, slideOffset: Float) {
     }
 
 }

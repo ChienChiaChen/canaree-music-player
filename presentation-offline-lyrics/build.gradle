@@ -11,8 +11,9 @@ dependencies {
     implementation project(':offline-lyrics')
     implementation project(':tap-target-view')
     implementation project(':presentation-media')
+    implementation project(':blurkit')
 
-    implementation librariesUi.blurkit
     implementation librariesUtils.customTabs
     implementation librariesAndroidX.browser
+    implementation librariesAndroidX.media
 }

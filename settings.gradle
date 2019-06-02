@@ -1,4 +1,4 @@
-include ':app', ':core', ':shared', ':tap-target-view', ':service-music', ':image-provider', ':data', ':api-lastfm', ':presentation-media',
+include ':app', ':core', ':shared', ':tap-target-view', ':service-music', ':image-provider', ':data', ':api-lastfm', ':presentation-media', ':blurkit',
         ':pro', ':service-floating-window', ':shared-ui-components', ':offline-lyrics', ':presentation-navigator',
         ':presentation-search', ':presentation-base', ':app-widgets', ':presentation-offline-lyrics', ':presentation-equalizer',
         ':presentation-edit-item', ':jaudiotagger', ':app-shortcuts', ':presentation-home', ':presentation-player',

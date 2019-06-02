@@ -2,22 +2,26 @@
 
 package dev.olog.msc.presentation.base.extensions
 
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
-inline fun SlidingUpPanelLayout?.isCollapsed() = this != null &&
-        panelState == SlidingUpPanelLayout.PanelState.COLLAPSED
-inline fun SlidingUpPanelLayout?.isExpanded() = this != null &&
-        panelState != SlidingUpPanelLayout.PanelState.COLLAPSED
+inline fun BottomSheetBehavior<*>?.isCollapsed() = this != null && state == BottomSheetBehavior.STATE_COLLAPSED
+inline fun BottomSheetBehavior<*>?.isExpanded() = this != null && state != BottomSheetBehavior.STATE_COLLAPSED
 
-inline fun SlidingUpPanelLayout?.collapse() {
+inline fun BottomSheetBehavior<*>?.collapse() {
     if (this != null){
-        panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+        state = BottomSheetBehavior.STATE_COLLAPSED
     }
 }
 
-inline fun SlidingUpPanelLayout?.expand() {
+inline fun BottomSheetBehavior<*>?.expand() {
     if (this != null){
-        panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        state = BottomSheetBehavior.STATE_EXPANDED
     }
 }
+
+var BottomSheetBehavior<*>.panelHeight
+    get() = peekHeight
+    set(value) {
+        peekHeight = value
+    }

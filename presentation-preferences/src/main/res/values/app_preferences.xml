@@ -162,7 +162,7 @@
     <string name="prefs_auto_create_images_summary_on">@string/common_enabled</string>
     <string name="prefs_auto_create_images_summary_off">@string/common_disabled</string>
 
-    <!--appearance-->
+    <!--player appearance-->
 
     <string name="prefs_appearance_title">Now playing screen appearance</string>
     <string name="prefs_appearance_default">Default</string>
@@ -191,6 +191,21 @@
         <item>@string/prefs_appearance_big_image</item>
         <item>@string/prefs_appearance_clean</item>
         <item>@string/prefs_appearance_mini</item>
+    </string-array>
+
+<!--    mini player appearance-->
+    <string name="prefs_mini_player_appearance_title">Mini player appearance</string>
+    <string name="prefs_mini_player_appearance_opaque">Opaque</string>
+    <string name="prefs_mini_player_appearance_blurry">Blurry</string>
+
+    <string-array name="prefs_mini_player_appearance_entries">
+        <item>@string/prefs_mini_player_appearance_opaque</item>
+        <item>@string/prefs_mini_player_appearance_blurry</item>
+    </string-array>
+
+    <string-array name="prefs_mini_player_appearance_entry_values">
+        <item>@string/prefs_mini_player_appearance_entry_value_opaque</item>
+        <item>@string/prefs_mini_player_appearance_entry_value_blurry</item>
     </string-array>
 
     <!--dark mode-->

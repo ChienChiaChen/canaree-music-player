@@ -6,8 +6,8 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable
+import dev.olog.msc.blurkit.BlurKit
 import dev.olog.msc.shared.ui.imageview.adaptive.AdaptiveColorImageView
-import io.alterac.blurkit.BlurKit
 
 class BlurImageView(context: Context, attrs: AttributeSet?) : AdaptiveColorImageView(context, attrs) {
 

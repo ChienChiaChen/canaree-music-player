@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
+import dev.olog.msc.presentation.base.interfaces.SuperCerealBottomSheetBehavior
 
 abstract class BaseFragment : Fragment() {
 
@@ -30,7 +30,7 @@ abstract class BaseFragment : Fragment() {
     @LayoutRes
     protected abstract fun provideLayoutId(): Int
 
-    fun getSlidingPanel(): SlidingUpPanelLayout? {
+    fun getSlidingPanel(): SuperCerealBottomSheetBehavior<*>? {
         return (activity as HasSlidingPanel).getSlidingPanel()
     }
 

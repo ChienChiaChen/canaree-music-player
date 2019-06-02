@@ -18,14 +18,23 @@ class DarkMode @Inject constructor(
     private val prefs: SharedPreferences
 ) : DefaultLifecycleObserver, SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private var hasInit: Boolean = false
+
     init {
         lifecycle.addObserver(this)
+        tryInitialize()
     }
 
     override fun onStart(owner: LifecycleOwner) {
-        prefs.registerOnSharedPreferenceChangeListener(this)
+        tryInitialize()
+    }
 
-        setInitialValue()
+    private fun tryInitialize(){
+        if (!hasInit){
+            prefs.registerOnSharedPreferenceChangeListener(this)
+            setInitialValue()
+            hasInit = true
+        }
     }
 
     override fun onStop(owner: LifecycleOwner) {

@@ -3,8 +3,6 @@ package dev.olog.msc.presentation.navigator
 import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
@@ -33,7 +31,7 @@ class Navigator @Inject constructor(
 
     fun toDetailFragment(activity: FragmentActivity, mediaId: MediaId) {
         if (allowed()) {
-            activity.findViewById<SlidingUpPanelLayout>(R.id.slidingPanel).panelState = COLLAPSED
+//            activity.findViewById<SlidingUpPanelLayout>(R.id.slidingPanel).panelState = COLLAPSED TODO
 
             val newTag = createBackStackTag(Fragments.DETAIL)
             val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)

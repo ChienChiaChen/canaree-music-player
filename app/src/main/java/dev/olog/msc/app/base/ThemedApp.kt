@@ -4,15 +4,18 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import dev.olog.msc.shared.ui.theme.HasImmersive
+import dev.olog.msc.shared.ui.theme.HasMiniPlayerTheme
 import dev.olog.msc.shared.ui.theme.HasPlayerTheme
 import dev.olog.msc.theme.DarkMode
 import dev.olog.msc.theme.Immersive
+import dev.olog.msc.theme.MiniPlayerTheme
 import dev.olog.msc.theme.PlayerTheme
 import javax.inject.Inject
 
 abstract class ThemedApp : BaseApp(),
         HasPlayerTheme,
         HasImmersive,
+        HasMiniPlayerTheme,
         Application.ActivityLifecycleCallbacks {
 
     @Suppress("unused")
@@ -20,6 +23,10 @@ abstract class ThemedApp : BaseApp(),
     lateinit var darkMode: DarkMode
     @Inject
     lateinit var playerTheme: PlayerTheme
+
+    @Inject
+    lateinit var miniPlayerTheme: MiniPlayerTheme
+
     @Inject
     lateinit var immersive: Immersive
 
@@ -61,6 +68,13 @@ abstract class ThemedApp : BaseApp(),
         return immersive.isEnabled()
     }
 
+    override fun isOpaque(): Boolean {
+        return miniPlayerTheme.isOpaque()
+    }
+
+    override fun isBlurry(): Boolean {
+        return miniPlayerTheme.isBlurry()
+    }
 
     override fun onActivityPaused(activity: Activity?) {
 

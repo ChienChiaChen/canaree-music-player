@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
@@ -27,6 +27,7 @@ import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.distinctUntilChanged
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.theme.playerTheme
+import dev.olog.msc.shared.utils.clamp
 import dev.olog.msc.shared.utils.isMarshmallow
 import kotlinx.android.synthetic.main.fragment_player.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
@@ -42,7 +43,6 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class PlayerFragment : BaseFragment(),
-    SlidingUpPanelLayout.PanelSlideListener,
     OnStartDragListener,
     CoroutineScope by MainScope() {
 
@@ -132,13 +132,12 @@ class PlayerFragment : BaseFragment(),
 
     override fun onResume() {
         super.onResume()
-        getSlidingPanel()?.setScrollableView(list)
-        getSlidingPanel()!!.addPanelSlideListener(this)
+        getSlidingPanel()!!.addPanelSlideListener(slidingPanelListener)
     }
 
     override fun onPause() {
         super.onPause()
-        getSlidingPanel()?.removePanelSlideListener(this)
+        getSlidingPanel()?.removePanelSlideListener(slidingPanelListener)
     }
 
     override fun onStop() {
@@ -146,21 +145,21 @@ class PlayerFragment : BaseFragment(),
         seekBarJob?.cancel()
     }
 
-    override fun onPanelSlide(panel: View?, slideOffset: Float) {
-        if (!isMarshmallow() && slideOffset in .9f..1f) {
-            val alpha = (1 - slideOffset) * 10
-            statusBar?.alpha = MathUtils.clamp(abs(1 - alpha), 0f, 1f)
+    private val slidingPanelListener = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            if (!isMarshmallow() && slideOffset in .9f..1f) {
+                val alpha = (1 - slideOffset) * 10
+                statusBar?.alpha = MathUtils.clamp(abs(1 - alpha), 0f, 1f)
+            }
+            val alpha = clamp(slideOffset * 5f, 0f, 1f)
+            view?.alpha = alpha
         }
-    }
 
-    override fun onPanelStateChanged(
-        panel: View,
-        previousState: SlidingUpPanelLayout.PanelState,
-        newState: SlidingUpPanelLayout.PanelState
-    ) {
-        if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
-            if (viewModel.showLyricsTutorialIfNeverShown()) {
-                lyrics?.let { Tutorial.lyrics(it) }
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                if (viewModel.showLyricsTutorialIfNeverShown()) {
+                    lyrics?.let { Tutorial.lyrics(it) }
+                }
             }
         }
     }

@@ -37,8 +37,6 @@ dependencies {
     implementation librariesCore.daggerAndroidSupport
     kapt librariesCore.daggerAndroidProcessor
 
-    implementation librariesUi.slidingPanel
-
     implementation librariesAndroidX.paging
 
 }

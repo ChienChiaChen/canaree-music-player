@@ -8,13 +8,13 @@ import dev.olog.msc.R
 import dev.olog.msc.app.base.ThemedApp
 import dev.olog.msc.app.injection.CoreComponent
 import dev.olog.msc.appshortcuts.AppShortcuts
+import dev.olog.msc.blurkit.BlurKit
 import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.dagger.DaggerAppComponent
 import dev.olog.msc.musicservice.MusicService
 import dev.olog.msc.presentation.base.ImageViews
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.TrackUtils
-import io.alterac.blurkit.BlurKit
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject

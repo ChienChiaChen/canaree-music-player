@@ -5,5 +5,4 @@ dependencies {
     implementation project(':image-provider')
 
     implementation librariesUi.glide
-    implementation librariesUi.slidingPanel
 }

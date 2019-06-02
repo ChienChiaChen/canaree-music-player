@@ -6,11 +6,8 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import androidx.core.math.MathUtils
 import androidx.lifecycle.ViewModelProvider
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import dev.olog.msc.presentation.base.extensions.expand
-import dev.olog.msc.presentation.base.extensions.isCollapsed
-import dev.olog.msc.presentation.base.extensions.isExpanded
-import dev.olog.msc.presentation.base.extensions.viewModelProvider
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.media.*
 import dev.olog.msc.presentation.player.mini.di.inject
@@ -18,6 +15,7 @@ import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
 import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.*
+import dev.olog.msc.shared.ui.theme.miniPlayerTheme
 import dev.olog.msc.shared.ui.theme.playerTheme
 import kotlinx.android.synthetic.main.fragment_mini_player.*
 import kotlinx.android.synthetic.main.fragment_mini_player.view.*
@@ -29,7 +27,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener, CoroutineScope by MainScope() {
+class MiniPlayerFragment : BaseFragment(), CoroutineScope by MainScope() {
 
     companion object {
         private const val TAG = "MiniPlayerFragment"
@@ -53,10 +51,13 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
         savedInstanceState?.let {
             view.toggleVisibility(it.getBoolean(BUNDLE_IS_VISIBLE), true)
         }
+
+
         val (modelTitle, modelSubtitle) = viewModel.getMetadata()
         view.title.text = modelTitle
         view.artist.text = modelSubtitle
 
+        setupMiniPlayerTheme(view)
 
         view.coverWrapper.toggleVisibility(requireContext().playerTheme().isMini(), true)
 
@@ -119,9 +120,15 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
             }
     }
 
+    private fun setupMiniPlayerTheme(view: View){
+        if (ctx.miniPlayerTheme().isBlurry()){
+            view.root.background = null
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        getSlidingPanel()!!.addPanelSlideListener(this)
+        getSlidingPanel()!!.addPanelSlideListener(slidingPanelListener)
         view?.setOnClickListener { getSlidingPanel()?.expand() }
         view?.toggleVisibility(!getSlidingPanel().isExpanded(), true)
         next.setOnClickListener { mediaProvider.skipToNext() }
@@ -131,7 +138,7 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
 
     override fun onPause() {
         super.onPause()
-        getSlidingPanel()!!.removePanelSlideListener(this)
+        getSlidingPanel()!!.removePanelSlideListener(slidingPanelListener)
         view?.setOnClickListener(null)
         next.setOnClickListener(null)
         previous.setOnClickListener(null)
@@ -198,17 +205,15 @@ class MiniPlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListen
         }
     }
 
+    private val slidingPanelListener = object : BottomSheetBehavior.BottomSheetCallback(){
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            view?.alpha = MathUtils.clamp(1 - slideOffset * 3f, 0f, 1f)
+            view?.toggleVisibility(slideOffset <= .8f, true)
+        }
 
-    override fun onPanelSlide(panel: View?, slideOffset: Float) {
-        view?.alpha = MathUtils.clamp(1 - slideOffset * 3f, 0f, 1f)
-        view?.toggleVisibility(slideOffset <= .8f, true)
-    }
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
 
-    override fun onPanelStateChanged(
-        panel: View?,
-        previousState: SlidingUpPanelLayout.PanelState?,
-        newState: SlidingUpPanelLayout.PanelState?
-    ) {
+        }
     }
 
     override fun provideLayoutId(): Int = R.layout.fragment_mini_player

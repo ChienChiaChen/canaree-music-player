@@ -4,7 +4,8 @@ apply from: '../base_presentation.gradle'
 dependencies {
     implementation project(':pro')
     implementation project(':presentation-media')
+    implementation project(':blurkit')
 
-    implementation librariesUi.slidingPanel
     implementation librariesUtils.billing
+    implementation librariesAndroidX.media
 }

@@ -8,6 +8,8 @@ android {
     defaultConfig {
         applicationId "dev.olog.msc"
 
+        renderscriptTargetApi 21
+        renderscriptSupportModeEnabled true
     }
 
     bundle {
@@ -65,14 +67,15 @@ dependencies {
 
     implementation project(':pro')
     implementation project(':presentation-base')
+    implementation project(':blurkit')
+
     // activities
     implementation project(':presentation-home')
     implementation project(':presentation-splash')
     implementation project(':presentation-preferences')
     implementation project(':presentation-create-playlist')
     implementation project(':presentation-playlist-chooser')
-    debugImplementation project(':presentation-debug')
-    // fragments
+    debugImplementation project(':presentation-debug')// fragments
     implementation project(':presentation-player')
     implementation project(':presentation-player-mini')
     implementation project(':presentation-categories')
@@ -93,7 +96,6 @@ dependencies {
     implementation librariesAndroidX.preference
     implementation librariesCore.lifecycleRuntime
     implementation librariesCore.lifecycleJava8
-    implementation librariesUi.blurkit
     implementation librariesUtils.customTabs
 
     debugImplementation librariesDebug.leakCanary

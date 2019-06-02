@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.olog.msc.core.entity.BottomNavigationPage
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.presentation.home.domain.IsPlayingQueueEmptyUseCase
 import kotlinx.coroutines.Dispatchers
@@ -36,9 +37,9 @@ class MainActivityViewModel @Inject constructor(
         return appPreferencesUseCase.isFirstAccess()
     }
 
-    fun getLastBottomViewPage(defaultId: Int): Int = appPreferencesUseCase.getLastBottomViewPage(defaultId)
+    fun getLastBottomViewPage(): BottomNavigationPage = appPreferencesUseCase.getLastBottomViewPage()
 
-    fun setLastBottomViewPage(page: Int) {
+    fun setLastBottomViewPage(page: BottomNavigationPage) {
         appPreferencesUseCase.setLastBottomViewPage(page)
     }
 

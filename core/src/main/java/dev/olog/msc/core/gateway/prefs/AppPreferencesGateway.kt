@@ -1,5 +1,6 @@
 package dev.olog.msc.core.gateway.prefs
 
+import dev.olog.msc.core.entity.BottomNavigationPage
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.SearchFilters
 import dev.olog.msc.core.entity.UserCredentials
@@ -11,8 +12,8 @@ import java.io.File
 
 interface AppPreferencesGateway {
 
-    fun getLastBottomViewPage(defaultId: Int): Int
-    fun setLastBottomViewPage(page: Int)
+    fun getLastBottomViewPage(): BottomNavigationPage
+    fun setLastBottomViewPage(page: BottomNavigationPage)
 
     fun isFirstAccess(): Boolean
 

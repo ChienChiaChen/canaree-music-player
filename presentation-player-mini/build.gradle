@@ -3,6 +3,9 @@ apply from: '../base_presentation.gradle'
 
 
 dependencies {
-    implementation librariesUi.slidingPanel
     implementation project(':presentation-media')
+    implementation project(':blurkit')
+
+    implementation librariesAndroidX.media
+
 }

@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dev.olog.msc.presentation.base.interfaces.HasSlidingPanel
 import dev.olog.msc.shared.core.channel.asFlow
 import dev.olog.msc.shared.core.lazyFast
@@ -26,7 +26,7 @@ class SwipeableView(
     context: Context,
     attrs: AttributeSet?
 
-) : View(context, attrs), SlidingUpPanelLayout.PanelSlideListener, CoroutineScope by MainScope() {
+) : View(context, attrs), CoroutineScope by MainScope() {
 
     private val swipedThreshold = DEFAULT_SWIPED_THRESHOLD
     private var xDown = 0f
@@ -56,7 +56,7 @@ class SwipeableView(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (!isInEditMode && context is HasSlidingPanel){
-            ((context as Activity) as HasSlidingPanel).addPanelSlideListener(this)
+            ((context as Activity) as HasSlidingPanel).getSlidingPanel().addPanelSlideListener(slidingPanelListener)
         }
     }
 
@@ -64,8 +64,7 @@ class SwipeableView(
         super.onDetachedFromWindow()
         this.swipeListener = null
         if (context is HasSlidingPanel){
-            ((context as Activity) as HasSlidingPanel).removePanelSlideListener(this)
-
+            ((context as Activity) as HasSlidingPanel).getSlidingPanel().removePanelSlideListener(slidingPanelListener)
         }
     }
 
@@ -149,12 +148,14 @@ class SwipeableView(
         cover?.dispatchTouchEvent(event)
     }
 
-    override fun onPanelSlide(panel: View?, slideOffset: Float) {
+    private val slidingPanelListener = object : BottomSheetBehavior.BottomSheetCallback(){
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
 
-    }
+        }
 
-    override fun onPanelStateChanged(panel: View?, previousState: SlidingUpPanelLayout.PanelState?, newState: SlidingUpPanelLayout.PanelState) {
-        isTouchEnabled = newState == SlidingUpPanelLayout.PanelState.EXPANDED
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            isTouchEnabled = newState == BottomSheetBehavior.STATE_EXPANDED
+        }
     }
 
     interface SwipeListener {

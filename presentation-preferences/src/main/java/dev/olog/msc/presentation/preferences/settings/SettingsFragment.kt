@@ -177,7 +177,8 @@ class SettingsFragment : PreferenceFragmentCompat(),
                 ImageViews.updateIconShape(act)
 //                requestActivityToRecreate()
             }
-            getString(R.string.prefs_appearance_key) -> {
+            getString(R.string.prefs_appearance_key),
+            getString(R.string.prefs_mini_player_appearance_key)-> {
                 // TODO find a way without recrating whole activity
                 recreateActivity()
             }

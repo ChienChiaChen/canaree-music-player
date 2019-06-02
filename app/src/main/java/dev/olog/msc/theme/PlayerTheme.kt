@@ -18,13 +18,23 @@ class PlayerTheme @Inject constructor(
 
     private var THEME = PlayerThemeEnum.DEFAULT
 
+    private var hasInit: Boolean = false
+
     init {
         lifecycle.addObserver(this)
+        tryInitialize()
     }
 
     override fun onStart(owner: LifecycleOwner) {
-        prefs.registerOnSharedPreferenceChangeListener(this)
-        setInitialValue()
+        tryInitialize()
+    }
+
+    private fun tryInitialize(){
+        if (!hasInit){
+            prefs.registerOnSharedPreferenceChangeListener(this)
+            setInitialValue()
+            hasInit = true
+        }
     }
 
     override fun onStop(owner: LifecycleOwner) {

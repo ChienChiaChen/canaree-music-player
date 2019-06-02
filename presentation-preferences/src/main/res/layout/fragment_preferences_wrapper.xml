@@ -3,7 +3,9 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/sliding_panel_peek">
 
     <dev.olog.msc.presentation.base.widgets.StatusBarView
         android:layout_width="match_parent"
