@@ -8,6 +8,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.BottomNavigationPage
@@ -26,6 +27,7 @@ import dev.olog.msc.presentation.navigator.Services
 import dev.olog.msc.pro.HasBilling
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.ui.extensions.setGone
 import dev.olog.msc.shared.ui.theme.miniPlayerTheme
@@ -38,10 +40,13 @@ class MainActivity : MusicGlueActivity(),
     HasBilling {
 
     @Inject
-    lateinit var presenter: MainActivityViewModel
+    lateinit var factory: ViewModelProvider.Factory
+
+    private val presenter by lazyFast { viewModelProvider<MainActivityViewModel>(factory) }
+
     @Inject
     lateinit var navigator: Navigator
-    // handles lifecycle itself
+
     @Inject
     override lateinit var billing: IBilling
 
@@ -49,6 +54,7 @@ class MainActivity : MusicGlueActivity(),
     @Inject
     lateinit var statusBarColorBehavior: StatusBarColorBehavior
 
+    @Suppress("unused")
     @Inject
     lateinit var onScrollBehavior: OnScrollBehavior
 
@@ -65,6 +71,7 @@ class MainActivity : MusicGlueActivity(),
         setContentView(R.layout.activity_main)
 
         statusBar.doOnPreDraw {
+            // workaround for blurLayout that has problems blurring views when navigation bar is hidden
             blurView.setStatusBarHeight(statusBar.height)
             root.removeView(it)
         }
@@ -94,8 +101,8 @@ class MainActivity : MusicGlueActivity(),
         intent?.let { handleIntent(it) }
     }
 
-    private fun setupMiniPlayerTheme(){
-        if (miniPlayerTheme().isOpaque()){
+    private fun setupMiniPlayerTheme() {
+        if (miniPlayerTheme().isOpaque()) {
             blurView.setGone()
             blurView.fps = 0
         } else {
@@ -110,7 +117,7 @@ class MainActivity : MusicGlueActivity(),
         return !canReadStorage || isFirstAccess
     }
 
-    private fun setupSlidingPanel(){
+    private fun setupSlidingPanel() {
         val params = slidingPanel.layoutParams as CoordinatorLayout.LayoutParams
         params.behavior = SuperCerealBottomSheetBehavior<View>()
     }
