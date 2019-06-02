@@ -42,8 +42,6 @@ abstract class BaseDataSource<PresentationModel> :
             return@runBlocking
         }
 
-        val start = System.currentTimeMillis()
-
         val mainDataSize = getMainDataSize()
 
         val safeStartPosition = MathUtils.clamp(
@@ -81,9 +79,6 @@ abstract class BaseDataSource<PresentationModel> :
             callback.onResult(result, 0, headersSize + mainDataSize + footerSize)
 
         }.join()
-
-        val done = System.currentTimeMillis() - start
-        println("done in $done")
     }
 
     @CallSuper
