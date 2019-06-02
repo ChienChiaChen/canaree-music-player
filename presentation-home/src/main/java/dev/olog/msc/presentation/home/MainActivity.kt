@@ -56,7 +56,7 @@ class MainActivity : MusicGlueActivity(),
 
     @Suppress("unused")
     @Inject
-    lateinit var onScrollBehavior: OnScrollCerealBehavior
+    lateinit var onScrollBehavior: OnScrollSlidingCerealBehavior
 
     @Suppress("unused")
     @Inject
