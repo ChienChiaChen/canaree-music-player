@@ -6,6 +6,7 @@ import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.detail.R
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.ui.extensions.colorSurface
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 
@@ -35,17 +36,25 @@ class HeaderVisibilityScrollListener(
             val needDarkLayout = bottom - toolbarHeight < 0
 
             view.statusBar.toggleVisibility(needDarkLayout, false)
-            view.toolbar.toggleVisibility(needDarkLayout, false)
+            toggleToolbarBackground(view.toolbar, needDarkLayout)
             view.headerText.toggleVisibility(needDarkLayout, false)
 
             fragment.hasLightStatusBarColor = needDarkLayout
 
         } else {
             view.statusBar.toggleVisibility(true, false)
-            view.toolbar.toggleVisibility(true, false)
+            toggleToolbarBackground(view.toolbar, true)
             view.headerText.toggleVisibility(true, false)
 
             fragment.hasLightStatusBarColor = true
+        }
+    }
+
+    private fun toggleToolbarBackground(toolbar: View, show: Boolean){
+        if (show && toolbar.background == null){
+            toolbar.setBackgroundColor(toolbar.context.colorSurface())
+        } else if (!show && toolbar.background != null){
+            toolbar.background = null
         }
     }
 

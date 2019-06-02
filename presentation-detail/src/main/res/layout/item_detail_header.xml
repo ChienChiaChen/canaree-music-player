@@ -16,7 +16,7 @@
         android:paddingEnd="@dimen/detail_header_margin_end"
         android:paddingTop="@dimen/item_detail_header_padding_top"
         android:paddingBottom="12dp"
-        android:background="?android:colorBackground">
+        android:background="?colorSurface">
 
         <TextView
             android:id="@+id/title"

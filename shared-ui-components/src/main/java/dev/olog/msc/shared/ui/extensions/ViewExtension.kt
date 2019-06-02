@@ -19,15 +19,21 @@ fun View.toggleVisibility(visible: Boolean, gone: Boolean){
 }
 
 inline fun View.setGone(){
-    this.visibility = View.GONE
+    if (this.visibility != View.GONE){
+        this.visibility = View.GONE
+    }
 }
 
 inline fun View.setVisible(){
-    this.visibility = View.VISIBLE
+    if (this.visibility != View.VISIBLE){
+        this.visibility = View.VISIBLE
+    }
 }
 
 inline fun View.setInvisible(){
-    this.visibility = View.INVISIBLE
+    if (this.visibility != View.INVISIBLE){
+        this.visibility = View.INVISIBLE
+    }
 }
 
 fun View.setPaddingTop(padding: Int) {
