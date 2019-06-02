@@ -9,7 +9,7 @@
         android:id="@+id/statusBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <FrameLayout
         android:id="@+id/fragmentContainer"
@@ -25,17 +25,17 @@
         android:layout_gravity="bottom"
         android:clickable="false"
         android:focusable="false"
-        app:blk_blurRadius="20"
-        app:blk_downscaleFactor=".15"
+        android:scaleX="1.1"
         android:scaleY="1.1"
-        android:scaleX="1.1">
+        app:blk_blurRadius="20"
+        app:blk_downscaleFactor=".15">
 
         <View
             android:id="@+id/blurScrim"
-            android:background="?colorSurface"
-            android:alpha=".6"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:alpha=".6"
+            android:background="?colorSurface" />
 
     </dev.olog.msc.blurkit.BlurLayout>
 
@@ -44,9 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?colorSurface"
-        android:clipChildren="true"
         android:elevation="8dp"
-        android:focusable="true"
         app:behavior_hideable="false"
         app:behavior_peekHeight="@dimen/sliding_panel_peek">
 

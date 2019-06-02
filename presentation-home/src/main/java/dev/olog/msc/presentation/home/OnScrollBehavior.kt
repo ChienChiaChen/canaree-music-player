@@ -20,6 +20,10 @@ import dev.olog.msc.shared.utils.clamp
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
+/**
+ * Adjust toolbar, tab layout(if present), bottom navigation and sliding panel sliding when a list
+ * is scrollied
+ */
 class OnScrollBehavior @Inject constructor(private val activity: AppCompatActivity) : DefaultLifecycleObserver {
 
     init {
