@@ -63,7 +63,7 @@ class App : ThemedApp() {
         alarmManager.cancel(PendingIntents.stopMusicServiceIntent(this, MusicService::class.java))
     }
 
-    override fun injectComponenet() {
+    override fun injectComponent() {
         val coreComponent = CoreComponent.coreComponent(this)
         DaggerAppComponent.factory().create(coreComponent).inject(this)
     }

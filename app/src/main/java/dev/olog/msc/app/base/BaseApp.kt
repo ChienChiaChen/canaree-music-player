@@ -10,11 +10,11 @@ abstract class BaseApp : Application(){
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return
         }
-        injectComponenet()
+        injectComponent()
         initializeApp()
     }
 
-    protected abstract fun injectComponenet()
+    protected abstract fun injectComponent()
 
     protected abstract fun initializeApp()
 
