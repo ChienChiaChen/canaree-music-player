@@ -24,7 +24,7 @@ import javax.inject.Inject
  * Adjust toolbar, tab layout(if present), bottom navigation and sliding panel sliding when a list
  * is scrollied
  */
-class OnScrollBehavior @Inject constructor(private val activity: AppCompatActivity) : DefaultLifecycleObserver {
+class OnScrollCerealBehavior @Inject constructor(private val activity: AppCompatActivity) : DefaultLifecycleObserver {
 
     init {
         activity.lifecycle.addObserver(this)

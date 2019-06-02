@@ -56,7 +56,7 @@ class MainActivity : MusicGlueActivity(),
 
     @Suppress("unused")
     @Inject
-    lateinit var onScrollBehavior: OnScrollBehavior
+    lateinit var onScrollBehavior: OnScrollCerealBehavior
 
     @Suppress("unused")
     @Inject
@@ -106,7 +106,6 @@ class MainActivity : MusicGlueActivity(),
             blurView.setGone()
             blurView.fps = 0
         } else {
-            slidingPanel.background = null
             bottomWrapper.background = null
         }
     }
