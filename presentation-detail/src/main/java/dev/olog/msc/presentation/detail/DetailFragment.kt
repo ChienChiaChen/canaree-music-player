@@ -108,9 +108,6 @@ class DetailFragment : BaseFragment(),
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper!!.attachToRecyclerView(view.list)
 
-        view.fastScroller.attachRecyclerView(view.list)
-        view.fastScroller.showBubble(false)
-
         viewModel.data.subscribe(viewLifecycleOwner, adapter::submitList)
         viewModel.mostPlayed.subscribe(viewLifecycleOwner, mostPlayedAdapter::submitList)
         viewModel.recentlyAdded.subscribe(viewLifecycleOwner, recentlyAddedAdapter::submitList)

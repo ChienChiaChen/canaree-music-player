@@ -29,7 +29,6 @@ import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
-import dev.olog.msc.shared.ui.extensions.setGone
 import dev.olog.msc.shared.ui.theme.miniPlayerTheme
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -103,8 +102,7 @@ class MainActivity : MusicGlueActivity(),
 
     private fun setupMiniPlayerTheme() {
         if (miniPlayerTheme().isOpaque()) {
-            blurView.setGone()
-            blurView.fps = 0
+            root.removeView(blurView) // TODO blur view not removing
         } else {
             bottomWrapper.background = null
         }
