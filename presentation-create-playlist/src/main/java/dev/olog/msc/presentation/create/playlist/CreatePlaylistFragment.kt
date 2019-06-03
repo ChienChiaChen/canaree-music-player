@@ -162,8 +162,6 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop, CoroutineScope by Mai
 
         val editText = dialog.findViewById<TextInputEditText>(R.id.editText)!!
         val editTextLayout = dialog.findViewById<TextInputLayout>(R.id.editTextLayout)!!
-        val clearButton = dialog.findViewById<View>(R.id.clear)!!
-        clearButton.setOnClickListener { editText.setText("") }
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
             val editTextString = editText.text.toString()
