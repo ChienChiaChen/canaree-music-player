@@ -2,7 +2,7 @@ package dev.olog.msc.presentation.tabs
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.marginBottom
+import androidx.core.view.updatePadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.MediaIdCategory
@@ -23,7 +23,6 @@ import dev.olog.msc.presentation.tabs.adapters.TabFragmentNestedAdapter
 import dev.olog.msc.presentation.tabs.di.inject
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
-import dev.olog.msc.shared.ui.extensions.setMargin
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.utils.TextUtils
@@ -80,9 +79,8 @@ class TabFragment : BaseFragment(), SetupNestedList {
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
 
-        view.fab.setMargin(bottomPx = view.fab.marginBottom + ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dimen(R.dimen.bottom_navigation_height))
-
-        applyInsetsToList(view)
+        setupFabInset(view.fab)
+        applyInsetsToList(view.list)
 
         val scrollableLayoutId = when (category) {
             MediaIdCategory.SONGS -> R.layout.item_tab_song
@@ -171,25 +169,11 @@ class TabFragment : BaseFragment(), SetupNestedList {
         fab?.setOnClickListener(null)
     }
 
-    private fun applyInsetsToList(view: View) {
-        // TODO adjust inset when list is too short
-        val topInset = ctx.dimen(R.dimen.tab) + ctx.dimen(R.dimen.tab_margin_vertical)
-        val bottomInset =  ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dimen(R.dimen.tab_margin_vertical)
-        if (category == MediaIdCategory.SONGS || category == MediaIdCategory.PODCASTS) {
-            // start/end margin is set in item
-            view.list.setPadding(
-                    view.list.paddingStart,
-                    topInset,
-                    view.list.paddingEnd,
-                    bottomInset
-            )
-        } else {
-            view.list.setPadding(
-                    ctx.dimen(R.dimen.tab_margin_start),
-                    topInset,
-                    ctx.dimen(R.dimen.tab_margin_end),
-                    bottomInset
-            )
+    private fun applyInsetsToList(view: RecyclerView) {
+        setupListInset(view)
+
+        if (category != MediaIdCategory.SONGS && category != MediaIdCategory.PODCASTS) {
+            view.list.updatePadding(right = ctx.dimen(R.dimen.tab_margin_end))
         }
     }
 

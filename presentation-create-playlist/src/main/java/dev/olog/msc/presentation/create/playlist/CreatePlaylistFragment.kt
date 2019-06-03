@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.marginBottom
+import androidx.core.view.updatePadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputEditText
@@ -28,7 +29,10 @@ import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.bindinds.afterTextChange
-import dev.olog.msc.shared.ui.extensions.*
+import dev.olog.msc.shared.ui.extensions.setMargin
+import dev.olog.msc.shared.ui.extensions.subscribe
+import dev.olog.msc.shared.ui.extensions.toggleSelected
+import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_create_playlist.*
 import kotlinx.android.synthetic.main.fragment_create_playlist.view.*
 import kotlinx.coroutines.*
@@ -71,10 +75,10 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop, CoroutineScope by Mai
         view.list.setHasFixedSize(true)
 
         view.fab.setMargin(bottomPx = view.fab.marginBottom + ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dimen(R.dimen.bottom_navigation_height))
-        view.list.setPaddingBottom(ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dip(8))
+        view.list.updatePadding(bottom = ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dip(8))
 
         view.toolbar.doOnPreDraw {
-            view.list.setPaddingTop(it.height + ctx.dip(8))
+            view.list.updatePadding(top = it.height + ctx.dip(8))
         }
 
         viewModel.observeData(playlistType)

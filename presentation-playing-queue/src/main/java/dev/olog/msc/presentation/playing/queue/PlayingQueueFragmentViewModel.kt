@@ -20,10 +20,9 @@ internal class PlayingQueueFragmentViewModel @Inject constructor(
     val data: LiveData<PagedList<DisplayableQueueSong>>
 
     init {
-        val pageSize = 30
+        val pageSize = 100
         val config = PagedList.Config.Builder()
             .setPageSize(pageSize)
-            .setInitialLoadSizeHint(pageSize * 2)
             .setEnablePlaceholders(true)
             .build()
         data = LivePagedListBuilder(dataSourceFactory, config).build()

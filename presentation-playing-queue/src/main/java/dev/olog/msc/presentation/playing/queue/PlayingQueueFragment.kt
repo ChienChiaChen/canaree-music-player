@@ -59,6 +59,7 @@ class PlayingQueueFragment : BaseFragment(), OnStartDragListener {
         view.list.setHasFixedSize(true)
         view.fastScroller.attachRecyclerView(view.list)
         view.fastScroller.showBubble(false)
+        setupListInset(view.list)
 
         val callback = TouchHelperAdapterCallback(adapter, ItemTouchHelper.RIGHT)
         itemTouchHelper = ItemTouchHelper(callback)

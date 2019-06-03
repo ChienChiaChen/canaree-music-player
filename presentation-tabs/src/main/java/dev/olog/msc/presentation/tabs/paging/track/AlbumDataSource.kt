@@ -35,6 +35,7 @@ internal class AlbumDataSource @Inject constructor(
                     invalidate()
                 }
         }
+        // TODO observe recently played changes from none to someyhing, same in artistdatasource and podcasts
     }
 
     override suspend fun getMainDataSize(): Int {

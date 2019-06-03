@@ -4,16 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <dev.olog.msc.presentation.base.widgets.StatusBarView
-        android:id="@+id/statusBar"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/status_bar"
-        android:elevation="@dimen/toolbar_elevation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
@@ -62,6 +55,15 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <dev.olog.msc.presentation.base.widgets.StatusBarView
+        android:id="@+id/statusBar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/status_bar"
+        android:elevation="@dimen/toolbar_elevation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="0dp"
@@ -73,7 +75,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/statusBar"
         tools:listitem="@layout/item_playing_queue" />
 
     <dev.olog.msc.presentation.base.widgets.RxFastScroller

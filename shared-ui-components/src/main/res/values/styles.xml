@@ -101,11 +101,15 @@
     <style name="FilterChip" parent="Widget.MaterialComponents.Chip.Filter">
         <item name="iconStartPadding">8dp</item>
         <item name="android:textAppearance">@style/FilterChipTextAppearance</item>
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">?colorPrimary</item>
+        <item name="chipBackgroundColor">@android:color/transparent</item>
     </style>
 
 
     <style name="FilterChipTextAppearance" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="fontFamily">sans-serif-black</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
 <!--    tab layout-->
