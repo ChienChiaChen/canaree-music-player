@@ -37,13 +37,13 @@
 
             <TextView
                 android:id="@+id/text"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                app:fontFamily="sans-serif"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="@string/common_shuffle"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textStyle="bold"
                 android:layout_marginStart="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/img"
                 app:layout_constraintStart_toEndOf="@+id/img"
