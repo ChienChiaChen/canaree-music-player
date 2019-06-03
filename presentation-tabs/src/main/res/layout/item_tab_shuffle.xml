@@ -12,17 +12,14 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:paddingStart="@dimen/tab_margin_start"
-            android:paddingTop="6dp"
-            android:paddingEnd="@dimen/tab_margin_end"
             android:paddingBottom="6dp">
 
             <ImageButton
                 android:id="@+id/img"
                 android:layout_width="@dimen/common_icon_size"
                 android:layout_height="@dimen/common_icon_size"
-                android:background="@null"
+                android:layout_marginStart="16dp"
                 android:src="@drawable/vd_shuffle"
-                app:layout_constraintEnd_toStartOf="@+id/text"
                 app:layout_constraintHorizontal_bias=".45"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
@@ -30,17 +27,15 @@
 
             <TextView
                 android:id="@+id/text"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:gravity="center_vertical"
-                android:scaleX=".95"
-                android:scaleY=".95"
                 android:text="@string/common_shuffle"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textStyle="bold"
+                app:fontFamily="sans-serif"
                 app:layout_constraintBottom_toBottomOf="@+id/img"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/img"
                 app:layout_constraintTop_toTopOf="@+id/img" />
 

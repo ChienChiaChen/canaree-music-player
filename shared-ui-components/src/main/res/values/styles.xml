@@ -111,7 +111,7 @@
 
 
     <style name="FilterChipTextAppearance" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="fontFamily">@font/roboto_black</item>
+        <item name="fontFamily">sans-serif-black</item>
     </style>
 
 <!--    tab layout-->

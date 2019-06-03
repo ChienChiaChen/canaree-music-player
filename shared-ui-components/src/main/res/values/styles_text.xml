@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Headline4" parent="TextAppearance.MaterialComponents.Headline4">
-        <item name="fontFamily">@font/roboto_black</item>
+        <item name="fontFamily">sans-serif-black</item>
 
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:maxLines">3</item>
@@ -10,7 +10,7 @@
     </style>
 
     <style name="HeaderHeadline" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="fontFamily">@font/roboto_black</item>
+        <item name="fontFamily">sans-serif-black</item>
         <item name="android:textColor">?android:textColorPrimary</item>
 
     </style>
@@ -25,7 +25,7 @@
     </style>
 
     <style name="Headline6.Alt" parent="Headline6">
-        <item name="fontFamily">@font/roboto_black</item>
+        <item name="fontFamily">sans-serif-black</item>
         <item name="android:maxLines">2</item>
     </style>
 

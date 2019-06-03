@@ -2,7 +2,7 @@
 <resources>
 
     <style name="NowPlaying" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="fontFamily">@font/roboto_black</item>
+        <item name="fontFamily">sans-serif-black</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:alpha">.4</item>
     </style>
