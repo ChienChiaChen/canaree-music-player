@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
     <FrameLayout
         android:id="@+id/toolbar"
@@ -50,8 +52,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         tools:listitem="@layout/item_related_artist"
         android:paddingTop="@dimen/item_margin"
         android:paddingBottom="@dimen/item_margin"

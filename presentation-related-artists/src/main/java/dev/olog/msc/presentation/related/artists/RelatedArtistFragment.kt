@@ -39,6 +39,7 @@ class RelatedArtistFragment : BaseFragment() {
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
 
+        setupListInset(view.list)
         viewModel.data.subscribe(viewLifecycleOwner, adapter::submitList)
 
         viewModel.observeTitle().subscribe(viewLifecycleOwner) { itemTitle ->
