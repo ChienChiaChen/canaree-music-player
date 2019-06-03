@@ -130,6 +130,9 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
             toolbarMap.get(recyclerView.hashCode())?.animate()?.translationY(0f)
             bottomNavigation.animate().translationY(0f)
             slidingPanel.panelHeight = slidingPanelPlusNavigationHeight
+            fabMap.forEach { key, value ->
+                value.animate().translationY(0f)
+            }
         }
 
     }
