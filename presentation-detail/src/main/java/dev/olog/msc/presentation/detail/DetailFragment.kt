@@ -35,6 +35,7 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.shared.core.flow.debounceFirst
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.bindinds.afterTextChange
+import dev.olog.msc.shared.ui.extensions.colorControlNormal
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.*
@@ -238,10 +239,10 @@ class DetailFragment : BaseFragment(),
 
     private fun removeLightStatusBar() {
         act.window.removeLightStatusBar()
-        val color = ContextCompat.getColor(ctx, R.color.detail_button_color_light)
-        view?.back?.setColorFilter(color)
-        more?.setColorFilter(color)
-        filter?.setColorFilter(color)
+        val color = ContextCompat.getColor(ctx, android.R.color.white)
+        back.setColorFilter(color)
+        more.setColorFilter(color)
+        filter.setColorFilter(color)
     }
 
     private fun setLightStatusBar() {
@@ -251,7 +252,7 @@ class DetailFragment : BaseFragment(),
         }
 
         act.window.setLightStatusBar()
-        val color = ContextCompat.getColor(ctx, R.color.detail_button_color_dark)
+        val color = ctx.colorControlNormal()
         view?.back?.setColorFilter(color)
         more?.setColorFilter(color)
         filter?.setColorFilter(color)

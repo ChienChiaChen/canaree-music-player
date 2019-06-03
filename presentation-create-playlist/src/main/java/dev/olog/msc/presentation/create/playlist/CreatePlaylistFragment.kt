@@ -1,13 +1,17 @@
 package dev.olog.msc.presentation.create.playlist
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.marginBottom
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.ctx
@@ -27,13 +31,10 @@ import dev.olog.msc.shared.ui.bindinds.afterTextChange
 import dev.olog.msc.shared.ui.extensions.*
 import kotlinx.android.synthetic.main.fragment_create_playlist.*
 import kotlinx.android.synthetic.main.fragment_create_playlist.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CreatePlaylistFragment : BaseFragment(), DrawsOnTop, CoroutineScope by MainScope() {
@@ -45,6 +46,7 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop, CoroutineScope by Mai
     private val adapter by lazyFast { CreatePlaylistAdapter(viewModel) }
 
     private var toast: Toast? = null
+    private var errorJob: Job? = null
 
     private val playlistType by lazyFast {
         PlaylistType.values()[arguments!!.getInt(Fragments.ARGUMENTS_PLAYLIST_TYPE)]
@@ -108,6 +110,7 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop, CoroutineScope by Mai
 
     override fun onDestroyView() {
         super.onDestroyView()
+        errorJob?.cancel()
         cancel()
     }
 
@@ -151,52 +154,48 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop, CoroutineScope by Mai
             .setPositiveButton(R.string.common_ok, null)
             .setNegativeButton(R.string.common_cancel, null)
 
-//        val dialog = builder.show() TODO
-//
-//        val editText = dialog.findViewById<TextInputEditText>(R.id.editText)!!
-//        val editTextLayout = dialog.findViewById<TextInputLayout>(R.id.editTextLayout)!!
-//        val clearButton = dialog.findViewById<View>(R.id.clear)!!
-//        clearButton.setOnClickListener { editText.setText("") }
-//
-//        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-//            val editTextString = editText.text.toString()
-//            when {
-//                editTextString.isBlank() -> showError(editTextLayout, "Playlist name not valid")
-//                else -> {
-//                    viewModel.savePlaylist(playlistType, editTextString,
-//                        onSuccess = {
-//                            dialog.dismiss()
-//                            act.onBackPressed()
-//                        },
-//                        onFail = {
-//                            ctx.toast("Something wen wrong")
-//                        })
-//
-//                }
-//            }
-//        }
-//
-//        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener { dialog.dismiss() }
-//
-//        dialog.show()
+        val dialog = builder.show()
+
+        val editText = dialog.findViewById<TextInputEditText>(R.id.editText)!!
+        val editTextLayout = dialog.findViewById<TextInputLayout>(R.id.editTextLayout)!!
+        val clearButton = dialog.findViewById<View>(R.id.clear)!!
+        clearButton.setOnClickListener { editText.setText("") }
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+            val editTextString = editText.text.toString()
+            when {
+                editTextString.isBlank() -> showError(editTextLayout, "Playlist name not valid")
+                else -> {
+                    viewModel.savePlaylist(playlistType, editTextString,
+                        onSuccess = {
+                            dialog.dismiss()
+                            act.onBackPressed()
+                        },
+                        onFail = {
+                            ctx.toast("Something wen wrong")
+                        })
+
+                }
+            }
+        }
+
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
     }
 
-    override fun onStop() {
-        super.onStop()
-//        errorDisposable.unsubscribe()
-    }
+    private fun showError(editTextLayout: TextInputLayout, error: String) {
+        val shake = AnimationUtils.loadAnimation(context, R.anim.shake)
+        editTextLayout.startAnimation(shake)
+        editTextLayout.error = error
+        editTextLayout.isErrorEnabled = true
 
-//    private fun showError(editTextLayout: TextInputLayout, error: String) { TODO
-//        val shake = AnimationUtils.loadAnimation(context, R.anim.shake)
-//        editTextLayout.startAnimation(shake)
-//        editTextLayout.error = error
-//        editTextLayout.isErrorEnabled = true
-//
-//        errorDisposable.unsubscribe()
-//        errorDisposable = Single.timer(2, TimeUnit.SECONDS)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({ editTextLayout.isErrorEnabled = false }, Throwable::printStackTrace)
-//    }
+        errorJob?.cancel()
+        errorJob = launch {
+            delay(2000)
+            editTextLayout.isErrorEnabled = false
+        }
+    }
 
 
     override fun provideLayoutId(): Int = R.layout.fragment_create_playlist

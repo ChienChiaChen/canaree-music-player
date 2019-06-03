@@ -31,7 +31,6 @@
 
         <ImageButton
             android:id="@+id/more"
-            style="@style/MainButton"
             android:layout_width="@dimen/common_icon_size"
             android:layout_height="@dimen/common_icon_size"
             android:clickable="true"
@@ -44,7 +43,6 @@
 
         <ImageButton
             android:id="@+id/floatingWindow"
-            style="@style/MainButton"
             android:layout_width="@dimen/common_icon_size"
             android:layout_height="@dimen/common_icon_size"
             android:clickable="true"
