@@ -172,6 +172,7 @@ class TabFragment : BaseFragment(), SetupNestedList {
     }
 
     private fun applyInsetsToList(view: View) {
+        // TODO adjust inset when list is too short
         val topInset = ctx.dimen(R.dimen.tab) + ctx.dimen(R.dimen.tab_margin_vertical)
         val bottomInset =  ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dimen(R.dimen.tab_margin_vertical)
         if (category == MediaIdCategory.SONGS || category == MediaIdCategory.PODCASTS) {

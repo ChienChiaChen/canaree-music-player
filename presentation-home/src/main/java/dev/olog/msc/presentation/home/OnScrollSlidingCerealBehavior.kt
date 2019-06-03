@@ -3,10 +3,8 @@ package dev.olog.msc.presentation.home
 import android.annotation.SuppressLint
 import android.util.SparseArray
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.forEach
-import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -19,16 +17,22 @@ import dev.olog.msc.presentation.base.interfaces.SuperCerealBottomSheetBehavior
 import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.ui.extensions.findViewByIdNotRecursive
 import dev.olog.msc.shared.utils.clamp
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 import javax.inject.Inject
 
 /**
  * Adjust toolbar, tab layout(if present), bottom navigation and sliding panel sliding when a list
  * is scrollied
+ *
+ * This class assumes each fragment has a unique tag
  */
 class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: AppCompatActivity) : DefaultLifecycleObserver {
+
+    companion object {
+        private val DEBUG = BuildConfig.DEBUG
+    }
 
     init {
         activity.lifecycle.addObserver(this)
@@ -37,8 +41,8 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
     private val slidingPanel by lazyFast { BottomSheetBehavior.from(activity.slidingPanel) as SuperCerealBottomSheetBehavior }
     private val bottomNavigation by lazyFast { activity.bottomWrapper }
     private val blurView: View? by lazyFast { activity.blurView }
-    private var toolbarStack = Stack<View>()
-    private var tabBarStack = Stack<View>()
+    private var toolbarMap = SparseArray<View>()
+    private var tabLayoutMap = SparseArray<View>()
     private var fabMap = SparseArray<View>()
 
     private val superCerialSlidingPanelListener by lazyFast { SuperCerealBottomSheetCallback() }
@@ -64,16 +68,12 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             var clampedToolbarTranslation = 0f
-            if (toolbarStack.isNotEmpty()){
-                val toolbar = toolbarStack.peek()
-                if (toolbar != null) {
-                    clampedToolbarTranslation = clamp(toolbar.translationY - dy, -toolbar.height.toFloat(), 0f)
-                    toolbar.translationY = clampedToolbarTranslation
-
-                }
+            toolbarMap.get(recyclerView.hashCode())?.let { toolbar ->
+                clampedToolbarTranslation = clamp(toolbar.translationY - dy, -toolbar.height.toFloat(), 0f)
+                toolbar.translationY = clampedToolbarTranslation
             }
-            if (tabBarStack.isNotEmpty()){
-                tabBarStack.peek().translationY = clampedToolbarTranslation
+            tabLayoutMap.get(recyclerView.hashCode())?.let { tabLayout ->
+                tabLayout.translationY = clampedToolbarTranslation
             }
 
             val clampedNavigationTranslation =
@@ -120,74 +120,102 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
 
     private val callbacks = object : FragmentManager.FragmentLifecycleCallbacks() {
 
-        private fun <T : View> View.findViewByIdNotRecursive(id: Int): T? {
-            if (this is ViewGroup) {
-                forEach { child ->
-                    if (child.id == id) {
-                        return child as T
-                    }
-                }
+        // TODO check after migratin to viewpager 2
+        private fun isViewPagerChildTag(tag: String?) = tag?.startsWith("android:switcher:") == true
+
+        private fun hasFragmentOwnership(tag: String?) = tag?.startsWith("dev.olog.msc") == true
+        private fun isPlayerTag(tag: String?) = tag?.contains("Player") == true
+
+        private fun couldHaveToolbar(f: Fragment): Boolean {
+            return hasFragmentOwnership(f.tag) && !isPlayerTag(f.tag)
+        }
+
+        override fun onFragmentResumed(fm: FragmentManager, fragment: Fragment) {
+            println("on fragment resumed ${fragment.tag}")
+            if (isPlayerTag(fragment.tag)) {
+                return
             }
-            return null
-        }
 
-        private fun hasFragmentOwnership(tag: String?): Boolean {
-            return tag?.startsWith("dev.olog.msc") == true
-        }
-
-        private fun isPlayerTag(tag: String?): Boolean {
-            return tag?.contains("Player") == true
-        }
-
-        private fun isViewPagerChildTag(tag: String?): Boolean {
-            // TODO check after migratin to viewpager 2
-            return tag?.startsWith("android:switcher:") == true
-        }
-
-        override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
-            if (hasFragmentOwnership(f.tag) && !isPlayerTag(f.tag) && !isViewPagerChildTag(f.tag)) {
-                println("search tab and toolbar of ${f.tag}")
-
-                // since it can be only 1 tab layout and toolbar per visible screen,
-                // just override the last value when find a new one tab layout or toolbar
-                f.view?.findViewByIdNotRecursive<View>(R.id.tabLayout)?.apply {
-                    tabBarStack.push(this)
-                }
-                f.view?.findViewByIdNotRecursive<View>(R.id.toolbar)?.apply {
-                    toolbarStack.push(this)
-                }
-
-
-            }
-            if (!isPlayerTag(f.tag)) {
-                var recyclerView = f.view?.findViewByIdNotRecursive<RecyclerView>(R.id.list)
-                if (recyclerView == null && f.tag == Fragments.SETTINGS) {
-                    // search for settings list
-                    recyclerView = f.view?.findViewById(R.id.recycler_view)
-                }
-                recyclerView?.addOnScrollListener(onScrollListener)?.also {
-                    val fab = f.view?.findViewById<View>(R.id.fab)
-                    if (fab != null && fab.isVisible) {
-                        // add only visible fabs
-                        fabMap.append(f.tag!!.hashCode(), fab)
-                    }
-                    println("adding scroll listener to ${f.tag}")
-                }
+            val recyclerView = searchForRecyclerView(fragment)
+            if (recyclerView != null) {
+                addOnScrollListener(fragment, recyclerView)
+                searchForToolbarDefault(fragment,
+                        onToolbarFound = {
+                            toolbarMap.append(recyclerView.hashCode(), it)
+                        },
+                        onTabLayoutFound = {
+                            tabLayoutMap.append(recyclerView.hashCode(), it)
+                        }
+                )
             }
         }
 
-        override fun onFragmentPaused(fm: FragmentManager, f: Fragment) {
-            if (hasFragmentOwnership(f.tag) && !isPlayerTag(f.tag) && !isViewPagerChildTag(f.tag)){
-                f.view?.findViewByIdNotRecursive<View>(R.id.tabLayout)?.apply {
-                    tabBarStack.pop()
-                }
-                f.view?.findViewByIdNotRecursive<View>(R.id.toolbar)?.apply {
-                    toolbarStack.pop()
-                }
+        override fun onFragmentPaused(fm: FragmentManager, fragment: Fragment) {
+            println("on fragment paused ${fragment.tag}")
+            if (isPlayerTag(fragment.tag)) {
+                return
             }
-            println("on fragment paused ${f.tag}")
-            f.view?.findViewByIdNotRecursive<RecyclerView>(R.id.list)?.removeOnScrollListener(onScrollListener)?.also {
-                fabMap.remove(f.tag!!.hashCode())
+            val recyclerView = searchForRecyclerView(fragment)
+            if (recyclerView != null) {
+                recyclerView.removeOnScrollListener(onScrollListener)
+                fabMap.remove(recyclerView.hashCode().hashCode())
+
+                searchForToolbarDefault(
+                        fragment,
+                        onToolbarFound = {
+                            toolbarMap.remove(recyclerView.hashCode())
+                        },
+                        onTabLayoutFound = {
+                            tabLayoutMap.remove(recyclerView.hashCode())
+                        }
+                )
+            }
+        }
+
+        /**
+         * All main recycler view in the app have [android:id] = [R.id.list] and are
+         *  placed as direct child of root.
+         * If fails to find R.id.list, try recursiveley to find [R.id.recycler_view]
+         *  in the hierarchy (settings fragment)
+         */
+        private fun searchForRecyclerView(f: Fragment): RecyclerView? {
+            var recyclerView = f.view?.findViewByIdNotRecursive<RecyclerView>(R.id.list)
+            if (recyclerView == null && f.tag == Fragments.SETTINGS) {
+                recyclerView = f.view?.findViewById(R.id.recycler_view)
+            }
+            return recyclerView
+        }
+
+        private fun addOnScrollListener(f: Fragment, recyclerView: RecyclerView) {
+            recyclerView.addOnScrollListener(onScrollListener)
+
+            val fab = f.view?.findViewById<View>(R.id.fab)
+            if (fab != null && fab.isVisible) {
+                // add only visible fabs
+                fabMap.append(recyclerView.hashCode(), fab)
+            }
+            println("adding scroll listener to ${f.tag}")
+        }
+
+        private fun searchForToolbarDefault(f: Fragment,
+                                            onToolbarFound: (View) -> Unit,
+                                            onTabLayoutFound: (View) -> Unit) {
+            val view : View? = when {
+                isViewPagerChildTag(f.tag) -> {
+                    // search toolbar and tab layout in parent fragment
+                    f.parentFragment?.view
+                }
+                couldHaveToolbar(f) -> f.view
+                else -> null
+            }
+            // since it can be only 1 tab layout and toolbar per visible screen,
+            // just override the last value when find a new one tab layout or toolbar
+            view?.findViewByIdNotRecursive<View>(R.id.tabLayout)?.apply {
+                onTabLayoutFound(this)
+
+            }
+            view?.findViewByIdNotRecursive<View>(R.id.toolbar)?.apply {
+                onToolbarFound(this)
             }
         }
     }

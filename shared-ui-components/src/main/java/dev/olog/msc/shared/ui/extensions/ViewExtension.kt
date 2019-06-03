@@ -141,3 +141,14 @@ fun ViewGroup.forEachRecursively(action: (view: View) -> Unit){
         }
     }
 }
+
+fun <T : View> View.findViewByIdNotRecursive(id: Int): T? {
+    if (this is ViewGroup) {
+        forEach { child ->
+            if (child.id == id) {
+                return child as T
+            }
+        }
+    }
+    return null
+}
