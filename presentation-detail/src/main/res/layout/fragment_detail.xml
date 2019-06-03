@@ -101,7 +101,6 @@
             android:id="@+id/headerText"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="12dp"
             android:ellipsize="marquee"
             android:gravity="center_vertical"
             android:marqueeRepeatLimit="marquee_forever"
