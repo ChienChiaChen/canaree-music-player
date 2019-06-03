@@ -1,6 +1,5 @@
 package dev.olog.msc.presentation.home
 
-import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import dev.olog.msc.core.entity.BottomNavigationPage
@@ -28,7 +27,7 @@ internal object BottomNavigator {
 
         activity.fragmentTransaction {
             for (tag in tags) {
-                if (tag != newFragmentTag){
+                if (tag != newFragmentTag) {
                     val fragment = tagToInstance(activity, tag)
                     add(R.id.fragmentContainer, fragment, tag)
                     hide(fragment)
@@ -70,19 +69,11 @@ internal object BottomNavigator {
         }
     }
 
-    private fun tagToInstance(context: Context, tag: String): Fragment = when (tag) {
-        Fragments.CATEGORIES -> Fragments.categories(
-            context
-        )
-        Fragments.CATEGORIES_PODCAST -> Fragments.categoriesPodcast(
-            context
-        )
-        Fragments.SEARCH -> Fragments.search(
-            context
-        )
-        Fragments.PLAYING_QUEUE -> Fragments.playingQueue(
-            context
-        )
+    private fun tagToInstance(activity: FragmentActivity, tag: String): Fragment = when (tag) {
+        Fragments.CATEGORIES -> Fragments.categories(activity)
+        Fragments.CATEGORIES_PODCAST -> Fragments.categoriesPodcast(activity)
+        Fragments.SEARCH -> Fragments.search(activity)
+        Fragments.PLAYING_QUEUE -> Fragments.playingQueue(activity)
         else -> throw IllegalArgumentException("invalid fragment tag $tag")
     }
 

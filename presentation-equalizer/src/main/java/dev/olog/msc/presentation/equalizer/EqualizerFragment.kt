@@ -2,9 +2,11 @@ package dev.olog.msc.presentation.equalizer
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import dev.olog.msc.core.equalizer.IEqualizer
 import dev.olog.msc.presentation.base.bottom.sheet.BaseBottomSheetFragment
+import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.equalizer.widget.RadialKnob
 import dev.olog.msc.shared.ui.extensions.subscribe
 import kotlinx.android.synthetic.main.fragment_equalizer.*
@@ -13,53 +15,39 @@ import javax.inject.Inject
 
 class EqualizerFragment : BaseBottomSheetFragment(), IEqualizer.Listener {
 
-    companion object {
-        const val TAG = "EqualizerFragment"
-
-        @JvmStatic
-        fun newInstance(): EqualizerFragment {
-            return EqualizerFragment()
-        }
-    }
-
     @Inject
-    lateinit var presenter: EqualizerFragmentPresenter
+    lateinit var factory: ViewModelProvider.Factory
+
+    private val viewModel by lazy { viewModelProvider<EqualizerFragmentViewModel>(factory) }
     private lateinit var adapter: PresetPagerAdapter
     private var snackBar: Snackbar? = null
 
+
+
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
-        val presets = presenter.getPresets()
+        val presets = viewModel.getPresets()
         adapter = PresetPagerAdapter(childFragmentManager, presets.toMutableList())
 
         if (presets.isNotEmpty()) {
             view.pager.adapter = adapter
-            view.pager.currentItem = presenter.getCurrentPreset()
+            view.pager.currentItem = viewModel.getCurrentPreset()
             view.pageIndicator.setViewPager(view.pager)
         }
 
-        view.powerSwitch.isChecked = presenter.isEqualizerEnabled()
+        view.powerSwitch.isChecked = viewModel.isEqualizerEnabled()
 
         view.bassKnob.setMax(100)
         view.virtualizerKnob.setMax(100)
-        view.bassKnob.setValue(presenter.getBassStrength())
-        view.virtualizerKnob.setValue(presenter.getVirtualizerStrength())
+        view.bassKnob.setValue(viewModel.getBassStrength())
+        view.virtualizerKnob.setValue(viewModel.getVirtualizerStrength())
 
-        view.band1.initializeBandHeight(presenter.getBandLevel(0))
-        view.band2.initializeBandHeight(presenter.getBandLevel(1))
-        view.band3.initializeBandHeight(presenter.getBandLevel(2))
-        view.band4.initializeBandHeight(presenter.getBandLevel(3))
-        view.band5.initializeBandHeight(presenter.getBandLevel(4))
+        view.band1.initializeBandHeight(viewModel.getBandLevel(0))
+        view.band2.initializeBandHeight(viewModel.getBandLevel(1))
+        view.band3.initializeBandHeight(viewModel.getBandLevel(2))
+        view.band4.initializeBandHeight(viewModel.getBandLevel(3))
+        view.band5.initializeBandHeight(viewModel.getBandLevel(4))
 
-//        RxCompoundButton.checkedChanges(view.powerSwitch)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .asLiveData()
-//                .subscribe(viewLifecycleOwner) { isChecked ->
-//                    val text = if(isChecked) R.string.common_switch_on else R.string.common_switch_off
-//                    view.powerSwitch.text = getString(text)
-//                    presenter.setEqualizerEnabled(isChecked)
-//                }
-
-        presenter.isEqualizerAvailable()
+        viewModel.isEqualizerAvailable()
             .subscribe(viewLifecycleOwner) { isEqAvailable ->
                 if (snackBar != null) {
                     if (isEqAvailable) {
@@ -80,13 +68,18 @@ class EqualizerFragment : BaseBottomSheetFragment(), IEqualizer.Listener {
         bassKnob.setOnKnobChangeListener(onBassKnobChangeListener)
         virtualizerKnob.setOnKnobChangeListener(onVirtualizerKnobChangeListener)
         pager.addOnPageChangeListener(onPageChangeListener)
-        presenter.addEqualizerListener(this)
+        viewModel.addEqualizerListener(this)
 
         band1.setLevel = onBandLevelChange
         band2.setLevel = onBandLevelChange
         band3.setLevel = onBandLevelChange
         band4.setLevel = onBandLevelChange
         band5.setLevel = onBandLevelChange
+        powerSwitch.setOnCheckedChangeListener { _, isChecked ->
+            val text = if (isChecked) R.string.common_switch_on else R.string.common_switch_off
+            powerSwitch.text = getString(text)
+            viewModel.setEqualizerEnabled(isChecked)
+        }
     }
 
     override fun onPause() {
@@ -94,7 +87,8 @@ class EqualizerFragment : BaseBottomSheetFragment(), IEqualizer.Listener {
         bassKnob.setOnKnobChangeListener(null)
         virtualizerKnob.setOnKnobChangeListener(null)
         pager.removeOnPageChangeListener(onPageChangeListener)
-        presenter.removeEqualizerListener(this)
+        viewModel.removeEqualizerListener(this)
+        powerSwitch.setOnCheckedChangeListener(null)
 
         band1.setLevel = null
         band2.setLevel = null
@@ -105,7 +99,7 @@ class EqualizerFragment : BaseBottomSheetFragment(), IEqualizer.Listener {
 
     private val onBassKnobChangeListener = object : RadialKnob.OnKnobChangeListener {
         override fun onValueChanged(knob: RadialKnob?, value: Int, fromUser: Boolean) {
-            presenter.setBassStrength(value)
+            viewModel.setBassStrength(value)
         }
 
         override fun onSwitchChanged(knob: RadialKnob?, on: Boolean): Boolean = false
@@ -113,7 +107,7 @@ class EqualizerFragment : BaseBottomSheetFragment(), IEqualizer.Listener {
 
     private val onVirtualizerKnobChangeListener = object : RadialKnob.OnKnobChangeListener {
         override fun onValueChanged(knob: RadialKnob?, value: Int, fromUser: Boolean) {
-            presenter.setVirtualizerStrength(value)
+            viewModel.setVirtualizerStrength(value)
         }
 
         override fun onSwitchChanged(knob: RadialKnob?, on: Boolean): Boolean = false
@@ -121,12 +115,12 @@ class EqualizerFragment : BaseBottomSheetFragment(), IEqualizer.Listener {
 
     private val onPageChangeListener = object : androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener() {
         override fun onPageSelected(position: Int) {
-            presenter.setPreset(position % adapter.count)
+            viewModel.setPreset(position % adapter.count)
         }
     }
 
     private val onBandLevelChange = { band: Int, level: Float ->
-        presenter.setBandLevel(band, level)
+        viewModel.setBandLevel(band, level)
     }
 
     override fun onPresetChange(band: Int, level: Float) {

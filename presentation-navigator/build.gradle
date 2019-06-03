@@ -6,6 +6,7 @@ dependencies {
     implementation project(':core')
     implementation project(':preferences-keys')
     implementation project(':shared')
+    implementation project(':pro')
 
     implementation librariesAndroidX.appcompat
     implementation librariesAndroidX.coreKtx

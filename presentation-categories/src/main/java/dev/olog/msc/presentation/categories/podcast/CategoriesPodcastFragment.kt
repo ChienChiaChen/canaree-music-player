@@ -24,7 +24,7 @@ class CategoriesPodcastFragment : BaseFragment() {
     lateinit var presenter: CategoriesPodcastFragmentPresenter
 
     private val pagerAdapter by lazyFast {
-        CategoriesPodcastFragmentViewPager(act.applicationContext, childFragmentManager, presenter.getCategories())
+        CategoriesPodcastFragmentViewPager(act, childFragmentManager, presenter.getCategories())
     }
 
     override fun injectComponent() {

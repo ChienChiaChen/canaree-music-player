@@ -1,7 +1,8 @@
 package dev.olog.msc.presentation.navigator
 
-import android.content.Context
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
@@ -19,6 +20,7 @@ object Fragments {
     const val RELATED_ARTISTS = "dev.olog.msc.presentation.related.artists.RelatedArtistFragment"
     const val RECENTLY_ADDED = "dev.olog.msc.presentation.recently.added.RecentlyAddedFragment"
     const val CREATE_PLAYLIST = "dev.olog.msc.presentation.create.playlist.CreatePlaylistFragment"
+    const val EQUALIZER = "dev.olog.msc.presentation.equalizer.EqualizerFragment"
 
     const val SETTINGS = "dev.olog.msc.presentation.preferences.settings.SettingsFragmentWrapper"
 
@@ -26,58 +28,67 @@ object Fragments {
     const val ARGUMENTS_MEDIA_ID_CATEGORY = "argument.media_id_category"
     const val ARGUMENTS_PLAYLIST_TYPE = "argument.playlist_type"
 
-    fun categories(context: Context): Fragment {
-        return Fragment.instantiate(context, CATEGORIES)
+    private fun instantiate(fragmentManager: FragmentManager, className: String): Fragment {
+        val factory = fragmentManager.fragmentFactory
+        return factory.instantiate(ClassLoader.getSystemClassLoader(), className)
     }
 
-    fun categoriesPodcast(context: Context): Fragment {
-        return Fragment.instantiate(context, CATEGORIES_PODCAST)
+    fun categories(activity: FragmentActivity): Fragment {
+        return instantiate(activity.supportFragmentManager, CATEGORIES)
     }
 
-    fun search(context: Context): Fragment {
-        return Fragment.instantiate(context, SEARCH)
+    fun categoriesPodcast(activity: FragmentActivity): Fragment {
+        return instantiate(activity.supportFragmentManager, CATEGORIES_PODCAST)
     }
 
-    fun playingQueue(context: Context): Fragment {
-        return Fragment.instantiate(context, PLAYING_QUEUE)
+    fun search(activity: FragmentActivity): Fragment {
+        return instantiate(activity.supportFragmentManager, SEARCH)
     }
 
-    fun detail(context: Context, mediaId: MediaId): Fragment {
-        return Fragment.instantiate(context, DETAIL).withArguments(
+    fun playingQueue(activity: FragmentActivity): Fragment {
+        return instantiate(activity.supportFragmentManager, PLAYING_QUEUE)
+    }
+
+    fun detail(activity: FragmentActivity, mediaId: MediaId): Fragment {
+        return instantiate(activity.supportFragmentManager, DETAIL).withArguments(
             ARGUMENTS_MEDIA_ID to mediaId.toString()
         )
     }
 
-    fun relatedArtists(context: Context, mediaId: MediaId): Fragment {
-        return Fragment.instantiate(context, RELATED_ARTISTS).withArguments(
+    fun relatedArtists(activity: FragmentActivity, mediaId: MediaId): Fragment {
+        return instantiate(activity.supportFragmentManager, RELATED_ARTISTS).withArguments(
             ARGUMENTS_MEDIA_ID to mediaId.toString()
         )
     }
 
-    fun recentlyAdded(context: Context, mediaId: MediaId): Fragment {
-        return Fragment.instantiate(context, RECENTLY_ADDED).withArguments(
+    fun recentlyAdded(activity: FragmentActivity, mediaId: MediaId): Fragment {
+        return instantiate(activity.supportFragmentManager, RECENTLY_ADDED).withArguments(
             ARGUMENTS_MEDIA_ID to mediaId.toString()
         )
     }
 
-    fun tab(context: Context, mediaIdCategory: MediaIdCategory): Fragment {
-        return Fragment.instantiate(context, TAB).withArguments(
+    fun tab(fragmentManager: FragmentManager, mediaIdCategory: MediaIdCategory): Fragment {
+        return instantiate(fragmentManager, TAB).withArguments(
             ARGUMENTS_MEDIA_ID_CATEGORY to mediaIdCategory.ordinal
         )
     }
 
-    fun folderTree(context: Context): Fragment {
-        return Fragment.instantiate(context, TAB_FOLDER_TREE)
+    fun folderTree(fragmentManager: FragmentManager): Fragment {
+        return instantiate(fragmentManager, TAB_FOLDER_TREE)
     }
 
-    fun settings(context: Context): Fragment {
-        return Fragment.instantiate(context, SETTINGS)
+    fun settings(activity: FragmentActivity): Fragment {
+        return instantiate(activity.supportFragmentManager, SETTINGS)
     }
 
-    fun createPlaylist(context: Context, type: PlaylistType): Fragment {
-        return Fragment.instantiate(context, CREATE_PLAYLIST).withArguments(
+    fun createPlaylist(activity: FragmentActivity, type: PlaylistType): Fragment {
+        return instantiate(activity.supportFragmentManager, CREATE_PLAYLIST).withArguments(
             ARGUMENTS_PLAYLIST_TYPE to type.ordinal
         )
+    }
+
+    fun equalizer(activity: FragmentActivity): Fragment {
+        return instantiate(activity.supportFragmentManager, EQUALIZER)
     }
 
 }

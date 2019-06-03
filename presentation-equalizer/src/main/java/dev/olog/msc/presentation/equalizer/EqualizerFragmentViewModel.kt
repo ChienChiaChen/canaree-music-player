@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class EqualizerFragmentPresenter @Inject constructor(
+class EqualizerFragmentViewModel @Inject constructor(
     private val equalizer: IEqualizer,
     private val bassBoost: IBassBoost,
     private val virtualizer: IVirtualizer,
