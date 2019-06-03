@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.entity.PlaylistType
 
 object Fragments {
 
@@ -17,11 +18,13 @@ object Fragments {
     const val DETAIL = "dev.olog.msc.presentation.detail.DetailFragment"
     const val RELATED_ARTISTS = "dev.olog.msc.presentation.related.artists.RelatedArtistFragment"
     const val RECENTLY_ADDED = "dev.olog.msc.presentation.recently.added.RecentlyAddedFragment"
+    const val CREATE_PLAYLIST = "dev.olog.msc.presentation.create.playlist.CreatePlaylistFragment"
 
     const val SETTINGS = "dev.olog.msc.presentation.preferences.settings.SettingsFragmentWrapper"
 
     const val ARGUMENTS_MEDIA_ID = "argument.media_id"
     const val ARGUMENTS_MEDIA_ID_CATEGORY = "argument.media_id_category"
+    const val ARGUMENTS_PLAYLIST_TYPE = "argument.playlist_type"
 
     fun categories(context: Context): Fragment {
         return Fragment.instantiate(context, CATEGORIES)
@@ -69,6 +72,12 @@ object Fragments {
 
     fun settings(context: Context): Fragment {
         return Fragment.instantiate(context, SETTINGS)
+    }
+
+    fun createPlaylist(context: Context, type: PlaylistType): Fragment {
+        return Fragment.instantiate(context, CREATE_PLAYLIST).withArguments(
+            ARGUMENTS_PLAYLIST_TYPE to type.ordinal
+        )
     }
 
 }

@@ -2,6 +2,7 @@ package dev.olog.msc.presentation.categories.podcast
 
 import android.os.Bundle
 import android.view.View
+import androidx.viewpager.widget.ViewPager
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.extensions.act
@@ -66,9 +67,7 @@ class CategoriesPodcastFragment : BaseFragment() {
         FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Services.floating())
     }
 
-    private val onPageChangeListener = object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
-        override fun onPageScrollStateChanged(state: Int) {}
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+    private val onPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
 
         override fun onPageSelected(position: Int) {
             presenter.setViewPagerLastPage(position)

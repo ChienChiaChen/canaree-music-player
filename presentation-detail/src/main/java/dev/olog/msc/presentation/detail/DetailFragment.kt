@@ -112,7 +112,7 @@ class DetailFragment : BaseFragment(),
         viewModel.siblings.subscribe(viewLifecycleOwner, albumsAdapter::submitList)
 
         launch {
-            delay(200)
+            delay(1000)
             view.root.removeView(textWrapper)
         }
 

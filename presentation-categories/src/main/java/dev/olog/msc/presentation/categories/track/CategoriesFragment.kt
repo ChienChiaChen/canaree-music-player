@@ -2,6 +2,7 @@ package dev.olog.msc.presentation.categories.track
 
 import android.os.Bundle
 import android.view.View
+import androidx.viewpager.widget.ViewPager
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.presentation.base.FloatingWindowHelper
@@ -73,9 +74,7 @@ class CategoriesFragment : BaseFragment() {
         FloatingWindowHelper.startServiceOrRequestOverlayPermission(activity!!, Services.floating())
     }
 
-    private val onPageChangeListener = object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
-        override fun onPageScrollStateChanged(state: Int) {}
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+    private val onPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
 
         override fun onPageSelected(position: Int) {
             presenter.setViewPagerLastPage(position)

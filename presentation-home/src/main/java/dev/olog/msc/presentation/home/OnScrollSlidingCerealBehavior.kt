@@ -5,7 +5,6 @@ import android.util.SparseArray
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.forEach
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -23,6 +22,10 @@ import dev.olog.msc.shared.extensions.dimen
 import dev.olog.msc.shared.ui.extensions.findViewByIdNotRecursive
 import dev.olog.msc.shared.utils.clamp
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -89,17 +92,37 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
             blurView?.translationY = clampedNavigationTranslation
             bottomNavigation.translationY = clampedNavigationTranslation
 
-            fabMap.forEach { key, value ->
-                // not very taxing because this collection will have few elements inside
-                value.translationY = clampedNavigationTranslation
-            }
+            fabMap.forEach { _, value -> value.translationY = clampedNavigationTranslation }
         }
     }
 
     // used to restore scrolling when the list contains too few items
-    private inner class ViewPagerListener(private val fm: FragmentManager) : ViewPager.SimpleOnPageChangeListener(){
+    private inner class ViewPagerListener(private val fm: FragmentManager) :
+            ViewPager.SimpleOnPageChangeListener(), CoroutineScope by MainScope(){
+
+        private val channel = Channel<Int>(Channel.CONFLATED)
+
+        init {
+            launch {
+                var last = -1
+                for (pos in channel) {
+                    if (last != pos){
+                        onPageChanged(pos)
+                        last = pos
+                    }
+                }
+            }
+        }
+
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            launch { channel.send(position) }
+        }
 
         override fun onPageSelected(position: Int) {
+            launch { channel.send(position) }
+        }
+
+        private fun onPageChanged(position: Int){
             val fragment = fm.fragments.find { it.tag?.last().toString() == position.toString() }
             val recyclerView = fragment?.view?.findViewByIdNotRecursive<RecyclerView>(R.id.list)
                     ?: throw IllegalStateException("view pager child has not a list")
@@ -113,14 +136,14 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
 
         // song and podcast case
         private fun handleLinearLayoutManager(recyclerView: RecyclerView, layoutManager: LinearLayoutManager){
-            if (recyclerView.adapter?.itemCount ?: 0 == layoutManager.findLastVisibleItemPosition() + 1){
+            if (!recyclerView.canScrollVertically(-1)){
                 // there are no items offscreen
                 restore(recyclerView)
             }
         }
 
         private fun handleGridLayoutManager(recyclerView: RecyclerView, layoutManager: GridLayoutManager){
-            if (recyclerView.adapter?.itemCount ?: 0 == layoutManager.findLastVisibleItemPosition() + 1){
+            if (!recyclerView.canScrollVertically(-1)){
                 // there are no items offscreen
                 restore(recyclerView)
             }
@@ -128,8 +151,8 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
 
         private fun restore(recyclerView: RecyclerView){
             blurView?.animate()?.translationY(0f)
-            tabLayoutMap.get(recyclerView.hashCode())?.animate()?.translationY(0f)
-            toolbarMap.get(recyclerView.hashCode())?.animate()?.translationY(0f)
+            tabLayoutMap.get(recyclerView.hashCode())?.animate()?.translationY(0f) // TODO not restoring
+            toolbarMap.get(recyclerView.hashCode())?.animate()?.translationY(0f) // TODO not restoring
             bottomNavigation.animate().translationY(0f)
             slidingPanel.panelHeight = slidingPanelPlusNavigationHeight
             fabMap.forEach { key, value ->
@@ -255,8 +278,7 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
             recyclerView.addOnScrollListener(onScrollListener)
 
             val fab = f.view?.findViewById<View>(R.id.fab)
-            if (fab != null && fab.isVisible) {
-                // add only visible fabs
+            if (fab != null) {
                 fabMap.append(recyclerView.hashCode(), fab)
             }
             println("adding scroll listener to ${f.tag}")

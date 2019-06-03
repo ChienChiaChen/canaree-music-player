@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.navigator
 
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import dev.olog.msc.core.MediaId
@@ -29,27 +30,9 @@ class Navigator @Inject constructor(
         activity.startActivity(Intents.splashActivity(activity))
     }
 
-    fun toDetailFragment(activity: FragmentActivity, mediaId: MediaId) {
-        if (allowed()) {
-//            activity.findViewById<SlidingUpPanelLayout>(R.id.slidingPanel).panelState = COLLAPSED TODO
-
-            val newTag = createBackStackTag(Fragments.DETAIL)
-            val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)
-
-            activity.fragmentTransaction {
-                setReorderingAllowed(true)
-                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                topFragment?.let { hide(it) }
-                add(R.id.fragmentContainer, Fragments.detail(activity, mediaId), newTag)
-                addToBackStack(newTag)
-            }
-        }
-    }
-
-    fun toRelatedArtists(activity: FragmentActivity, mediaId: MediaId) {
+    private fun superCerealTransition(activity: FragmentActivity, fragment: Fragment, tag: String){
         if (allowed()) {
 
-            val newTag = createBackStackTag(Fragments.RELATED_ARTISTS)
             val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)
 
             activity.fragmentTransaction {
@@ -57,33 +40,29 @@ class Navigator @Inject constructor(
                 setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 topFragment?.let { hide(it) }
                 add(
-                        R.id.fragmentContainer,
-                        Fragments.relatedArtists(activity, mediaId),
-                        newTag
+                    R.id.fragmentContainer,
+                    fragment,
+                    tag
                 )
-                addToBackStack(newTag)
+                addToBackStack(tag)
             }
         }
     }
 
+    fun toDetailFragment(activity: FragmentActivity, mediaId: MediaId) {
+//        activity.findViewById<SlidingUpPanelLayout>(R.id.slidingPanel).panelState = COLLAPSED TODO
+        val newTag = createBackStackTag(Fragments.DETAIL)
+        superCerealTransition(activity, Fragments.detail(activity, mediaId), newTag)
+    }
+
+    fun toRelatedArtists(activity: FragmentActivity, mediaId: MediaId) {
+        val newTag = createBackStackTag(Fragments.RELATED_ARTISTS)
+        superCerealTransition(activity, Fragments.relatedArtists(activity, mediaId), newTag)
+    }
+
     fun toRecentlyAdded(activity: FragmentActivity, mediaId: MediaId) {
-        if (allowed()) {
-
-            val newTag = createBackStackTag(Fragments.RECENTLY_ADDED)
-            val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)
-
-            activity.fragmentTransaction {
-                setReorderingAllowed(true)
-                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                topFragment?.let { hide(it) }
-                replace(
-                        R.id.fragmentContainer,
-                        Fragments.recentlyAdded(activity, mediaId),
-                        newTag
-                )
-                addToBackStack(newTag)
-            }
-        }
+        val newTag = createBackStackTag(Fragments.RECENTLY_ADDED)
+        superCerealTransition(activity, Fragments.recentlyAdded(activity, mediaId), newTag)
     }
 
     fun toOfflineLyrics(activity: FragmentActivity) {
@@ -127,19 +106,8 @@ class Navigator @Inject constructor(
     }
 
     fun toChooseTracksForPlaylistFragment(activity: FragmentActivity, type: PlaylistType) {
-//        if (allowed()) {
-//            activity.fragmentTransaction {
-//                setReorderingAllowed(true)
-//                setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-//                getFragmentOnFragmentContainer(activity)?.let { hide(it) }
-//                replace(
-//                    R.id.upperFragmentContainer,
-//                    dev.olog.msc.presentation.create.playlist.CreatePlaylistFragment.newInstance(type),
-//                    dev.olog.msc.presentation.create.playlist.CreatePlaylistFragment.TAG
-//                )
-//                addToBackStack(dev.olog.msc.presentation.create.playlist.CreatePlaylistFragment.TAG)
-//            }
-//        }
+        val newTag = createBackStackTag(Fragments.CREATE_PLAYLIST)
+        superCerealTransition(activity, Fragments.createPlaylist(activity, type), newTag)
     }
 
     fun toDialog(mediaId: MediaId, anchor: View) {

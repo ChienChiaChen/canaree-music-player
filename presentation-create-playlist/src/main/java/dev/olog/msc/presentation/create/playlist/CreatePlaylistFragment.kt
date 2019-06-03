@@ -4,54 +4,54 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.doOnPreDraw
+import androidx.core.view.marginBottom
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.fragmentTransaction
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
-import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.base.utils.hideKeyboard
+import dev.olog.msc.presentation.create.playlist.di.inject
 import dev.olog.msc.presentation.navigator.Fragments
+import dev.olog.msc.shared.core.flow.debounceFirst
 import dev.olog.msc.shared.core.lazyFast
-import dev.olog.msc.shared.ui.extensions.subscribe
-import dev.olog.msc.shared.ui.extensions.toggleVisibility
-import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_playlist_track_chooser.*
-import kotlinx.android.synthetic.main.fragment_playlist_track_chooser.view.*
+import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.extensions.dip
+import dev.olog.msc.shared.extensions.toast
+import dev.olog.msc.shared.ui.bindinds.afterTextChange
+import dev.olog.msc.shared.ui.extensions.*
+import kotlinx.android.synthetic.main.fragment_create_playlist.*
+import kotlinx.android.synthetic.main.fragment_create_playlist.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
-
-    companion object {
-        const val TAG = "PlaylistTracksChooserFragment"
-        const val ARGUMENT_PLAYLIST_TYPE = "$TAG.argument.playlist_type"
-
-        @JvmStatic
-        fun newInstance(type: PlaylistType): CreatePlaylistFragment {
-            return CreatePlaylistFragment().withArguments(
-                ARGUMENT_PLAYLIST_TYPE to type.ordinal
-            )
-        }
-    }
+class CreatePlaylistFragment : BaseFragment(), DrawsOnTop, CoroutineScope by MainScope() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazyFast {
-        viewModelProvider<CreatePlaylistViewModel>(
-            viewModelFactory
-        )
-    }
+
+    private val viewModel by lazyFast { viewModelProvider<CreatePlaylistViewModel>(viewModelFactory) }
     private val adapter by lazyFast { CreatePlaylistAdapter(viewModel) }
 
     private var toast: Toast? = null
 
-    private var errorDisposable: Disposable? = null
-
     private val playlistType by lazyFast {
-        PlaylistType.values()[arguments!!.getInt(ARGUMENT_PLAYLIST_TYPE)]
+        PlaylistType.values()[arguments!!.getInt(Fragments.ARGUMENTS_PLAYLIST_TYPE)]
+    }
+
+    override fun injectComponent() {
+        inject()
     }
 
     override fun onDetach() {
@@ -68,6 +68,13 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
 
+        view.fab.setMargin(bottomPx = view.fab.marginBottom + ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dimen(R.dimen.bottom_navigation_height))
+        view.list.setPaddingBottom(ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dip(8))
+
+        view.toolbar.doOnPreDraw {
+            view.list.setPaddingTop(it.height + ctx.dip(8))
+        }
+
         viewModel.observeData(playlistType)
             .subscribe(this, adapter::submitList)
 
@@ -78,7 +85,7 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
                     else -> resources.getQuantityString(R.plurals.playlist_tracks_chooser_count, size, size)
                 }
                 header.text = text
-                save.toggleVisibility(size > 0, true)
+                fab.toggleVisibility(size > 0, false)
             }
 
 //        viewModel.getAllSongs(playlistType, filter(view))
@@ -90,52 +97,51 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
 //            view.emptyStateText.toggleVisibility(it.isEmpty(), true)
 //        }) TODO
 
-//        RxView.clicks(view.filterList) TODo
-//            .asLiveData()
-//            .subscribe(viewLifecycleOwner) {
-//                if (viewModel.toggleShowOnlyFiltered()) {
-//                    view.filterList.toggleSelected()
-//
-//                    toast?.cancel()
-//
-//                    if (view.filterList.isSelected) {
-//                        toast = act.toast(R.string.playlist_tracks_chooser_show_only_selected)
-//                    } else {
-//                        toast = act.toast(R.string.playlist_tracks_chooser_show_all)
-//                    }
-//                } else {
-//                    act.toast("No song selected")
-//                }
-//            }
-//
-//        RxTextView.afterTextChangeEvents(view.filter)
-//            .map { it.editable().toString() }
-//            .filter { it.isBlank() || it.trim().length >= 2 }
-//            .debounceFirst(250, TimeUnit.MILLISECONDS)
-//            .distinctUntilChanged()
-//            .asLiveData()
-//            .subscribe(this, viewModel::updateFilter)
+        launch {
+            view.editText.afterTextChange()
+                .debounceFirst(200)
+                .filter { it.isBlank() || it.trim().length >= 2 }
+                .distinctUntilChanged()
+                .collect { viewModel.updateFilter(it) }
+        }
+    }
 
-        view.sidebar.scrollableLayoutId = R.layout.item_choose_track
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cancel()
     }
 
     override fun onResume() {
         super.onResume()
-//        sidebar.setListener(letterTouchListener) TODO
         back.setOnClickListener {
-            filter.hideKeyboard()
+            editText.hideKeyboard()
             act.onBackPressed()
         }
-        save.setOnClickListener {
+        fab.setOnClickListener {
             showCreateDialog()
+        }
+        filterList.setOnClickListener {
+            if (viewModel.toggleShowOnlyFiltered()) {
+                filterList.toggleSelected()
+
+                toast?.cancel()
+
+                if (filterList.isSelected) {
+                    toast = act.toast(R.string.playlist_tracks_chooser_show_only_selected)
+                } else {
+                    toast = act.toast(R.string.playlist_tracks_chooser_show_all)
+                }
+            } else {
+                act.toast("No song selected")
+            }
         }
     }
 
     override fun onPause() {
         super.onPause()
-        sidebar.setListener(null)
         back.setOnClickListener(null)
-        save.setOnClickListener(null)
+        fab.setOnClickListener(null)
+        editText.setOnClickListener(null)
     }
 
     private fun showCreateDialog() {
@@ -192,23 +198,6 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop {
 //            .subscribe({ editTextLayout.isErrorEnabled = false }, Throwable::printStackTrace)
 //    }
 
-//    private val letterTouchListener = WaveSideBarView.OnTouchLetterChangeListener { letter -> TODO
-//        list.stopScroll()
-//
-//        val position = when (letter){
-//            TextUtils.MIDDLE_DOT -> -1
-//            "#" -> 0
-//            "?" -> adapter.itemCount - 1
-//            else -> adapter.indexOf {
-//                if (it.title.isBlank()) false
-//                else it.title[0].toUpperCase().toString() == letter
-//            }
-//        }
-//        if (position != -1){
-//            val layoutManager = list.layoutManager as LinearLayoutManager
-//            layoutManager.scrollToPositionWithOffset(position, 0)
-//        }
-//    }
 
-    override fun provideLayoutId(): Int = R.layout.fragment_playlist_track_chooser
+    override fun provideLayoutId(): Int = R.layout.fragment_create_playlist
 }

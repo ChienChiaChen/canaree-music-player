@@ -3,6 +3,7 @@ package dev.olog.msc.presentation.search
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.core.view.marginBottom
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.entity.SearchFilters
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.extensions.act
+import dev.olog.msc.presentation.base.extensions.ctx
 import dev.olog.msc.presentation.base.extensions.fragmentTransaction
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
@@ -26,7 +28,11 @@ import dev.olog.msc.presentation.search.adapters.SearchFragmentNestedAdapter
 import dev.olog.msc.presentation.search.di.inject
 import dev.olog.msc.shared.core.flow.debounceFirst
 import dev.olog.msc.shared.core.lazyFast
+import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.extensions.dip
 import dev.olog.msc.shared.ui.bindinds.afterTextChange
+import dev.olog.msc.shared.ui.extensions.setMargin
+import dev.olog.msc.shared.ui.extensions.setPaddingBottom
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -77,6 +83,9 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
         view.list.layoutManager = layoutManager
         view.list.setHasFixedSize(true)
 
+        view.fab.setMargin(bottomPx = view.fab.marginBottom + ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dimen(R.dimen.bottom_navigation_height))
+        view.list.setPaddingBottom(ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dip(8))
+
         updateFilters(view)
 
         val callback = TouchHelperAdapterCallback(adapter, ItemTouchHelper.LEFT)
@@ -106,7 +115,7 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
 
     override fun onResume() {
         super.onResume()
-        keyboard.setOnClickListener { editText.showKeyboard() }
+        fab.setOnClickListener { editText.showKeyboard() }
 
         floatingWindow.setOnClickListener { startServiceOrRequestOverlayPermission() }
         more.setOnClickListener { navigator.toMainPopup(requireActivity(), it, null) }
@@ -123,7 +132,7 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
     override fun onPause() {
         super.onPause()
         act.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
-        keyboard.setOnClickListener(null)
+        fab.setOnClickListener(null)
         floatingWindow.setOnClickListener(null)
         more.setOnClickListener(null)
         podcastFilter.setOnCheckedChangeListener(null)
