@@ -21,6 +21,7 @@ dependencies {
     implementation librariesAndroidX.coreKtx
     implementation librariesAndroidX.palette
     implementation librariesUi.glide
+    implementation librariesUi.constraintLayout
     implementation librariesAndroidX.palette
 
     implementation librariesAndroidX.preference

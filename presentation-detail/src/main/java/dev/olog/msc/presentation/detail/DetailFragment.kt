@@ -39,13 +39,10 @@ import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -115,6 +112,12 @@ class DetailFragment : BaseFragment(),
         viewModel.siblings.subscribe(viewLifecycleOwner, albumsAdapter::submitList)
 
         launch {
+            delay(200)
+            view.root.removeView(textWrapper)
+        }
+
+        launch {
+
             view.editText.afterTextChange()
                 .filter { it.isBlank() || it.trim().length >= 2 }
                 .debounceFirst(200)
