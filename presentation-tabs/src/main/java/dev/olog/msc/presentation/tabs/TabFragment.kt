@@ -2,6 +2,7 @@ package dev.olog.msc.presentation.tabs
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.marginBottom
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.MediaIdCategory
@@ -22,6 +23,7 @@ import dev.olog.msc.presentation.tabs.adapters.TabFragmentNestedAdapter
 import dev.olog.msc.presentation.tabs.di.inject
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.ui.extensions.setMargin
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.extensions.toggleVisibility
 import dev.olog.msc.shared.utils.TextUtils
@@ -77,6 +79,8 @@ class TabFragment : BaseFragment(), SetupNestedList {
         view.list.layoutManager = gridLayoutManager
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
+
+        view.fab.setMargin(bottomPx = view.fab.marginBottom + ctx.dimen(R.dimen.sliding_panel_peek) + ctx.dimen(R.dimen.bottom_navigation_height))
 
         applyInsetsToList(view)
 

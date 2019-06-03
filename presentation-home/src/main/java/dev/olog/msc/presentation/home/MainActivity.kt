@@ -29,6 +29,7 @@ import dev.olog.msc.pro.IBilling
 import dev.olog.msc.shared.*
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.dimen
+import dev.olog.msc.shared.ui.extensions.setHeight
 import dev.olog.msc.shared.ui.theme.miniPlayerTheme
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -209,9 +210,7 @@ class MainActivity : MusicGlueActivity(),
         }
 
         getSlidingPanel().panelHeight = height
-        val params = blurView.layoutParams as CoordinatorLayout.LayoutParams
-        params.height = height
-        blurView.layoutParams = params
+        blurView.setHeight(height)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

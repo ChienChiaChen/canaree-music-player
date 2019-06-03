@@ -8,4 +8,5 @@ dependencies {
 
     implementation librariesUtils.billing
     implementation librariesAndroidX.media
+    implementation librariesAndroidX.coreKtx
 }
