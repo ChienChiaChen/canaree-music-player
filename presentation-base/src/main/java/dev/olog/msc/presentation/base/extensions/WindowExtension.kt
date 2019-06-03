@@ -27,7 +27,6 @@ fun Window.setLightStatusBar(){
 
         if (isOreo()){
             flags = flags or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-            navigationBarColor = Color.WHITE
         }
     }
     decorView.systemUiVisibility = flags
@@ -49,7 +48,6 @@ fun Window.removeLightStatusBar(){
 
     if (isOreo() && !isDarkMode(context)){
         flags = flags or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-        navigationBarColor = Color.WHITE
     }
     decorView.systemUiVisibility = flags
 }
