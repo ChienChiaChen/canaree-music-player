@@ -67,13 +67,15 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
     private val onScrollListener = object : RecyclerView.OnScrollListener() {
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            var clampedToolbarTranslation = 0f
+            var clampedTabLayoutTranslation = 0f
             toolbarMap.get(recyclerView.hashCode())?.let { toolbar ->
-                clampedToolbarTranslation = clamp(toolbar.translationY - dy, -toolbar.height.toFloat(), 0f)
-                toolbar.translationY = clampedToolbarTranslation
+                clampedTabLayoutTranslation = clamp(toolbar.translationY - dy, -toolbar.height.toFloat(), 0f)
+                // moves the toolbar just a little more than its height
+                val clampedToolbartTranslation = clamp(toolbar.translationY - dy, -toolbar.height.toFloat() * 1.2f, 0f)
+                toolbar.translationY = clampedToolbartTranslation
             }
             tabLayoutMap.get(recyclerView.hashCode())?.let { tabLayout ->
-                tabLayout.translationY = clampedToolbarTranslation
+                tabLayout.translationY = clampedTabLayoutTranslation
             }
 
             val clampedNavigationTranslation =
