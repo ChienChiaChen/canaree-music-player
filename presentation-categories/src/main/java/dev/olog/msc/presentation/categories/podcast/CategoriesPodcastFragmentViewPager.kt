@@ -13,7 +13,7 @@ class CategoriesPodcastFragmentViewPager(
     fragmentManager: androidx.fragment.app.FragmentManager,
     private val categories: List<LibraryCategoryBehavior>
 
-) : FragmentPagerAdapter(fragmentManager) {
+) : FragmentPagerAdapter(fragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     fun getCategoryAtPosition(position: Int): MediaIdCategory? {
         try {

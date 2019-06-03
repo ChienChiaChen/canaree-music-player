@@ -17,7 +17,7 @@ class CategoriesViewPager(
     private val categories: List<LibraryCategoryBehavior>,
     private val gateway: AppPreferencesGateway
 
-) : FragmentPagerAdapter(fragmentManager) {
+) : FragmentPagerAdapter(fragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private val showFolderAsHierarchy by lazyFast { gateway.getShowFolderAsTreeView() }
 

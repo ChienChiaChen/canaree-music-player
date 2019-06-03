@@ -10,7 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dev.olog.msc.presentation.base.extensions.panelHeight
 import dev.olog.msc.presentation.base.interfaces.SuperCerealBottomSheetBehavior
@@ -30,10 +33,6 @@ import javax.inject.Inject
  */
 class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: AppCompatActivity) : DefaultLifecycleObserver {
 
-    companion object {
-        private val DEBUG = BuildConfig.DEBUG
-    }
-
     init {
         activity.lifecycle.addObserver(this)
     }
@@ -44,6 +43,7 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
     private var toolbarMap = SparseArray<View>()
     private var tabLayoutMap = SparseArray<View>()
     private var fabMap = SparseArray<View>()
+    private var viewPagerListenerMap = SparseArray<ViewPagerListener>()
 
     private val superCerialSlidingPanelListener by lazyFast { SuperCerealBottomSheetCallback() }
 
@@ -94,6 +94,46 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
         }
     }
 
+    // used to restore scrolling when the list contains too few items
+    private inner class ViewPagerListener(private val fm: FragmentManager) : ViewPager.SimpleOnPageChangeListener(){
+
+        override fun onPageSelected(position: Int) {
+            val fragment = fm.fragments.find { it.tag?.last().toString() == position.toString() }
+            val recyclerView = fragment?.view?.findViewByIdNotRecursive<RecyclerView>(R.id.list)
+                    ?: throw IllegalStateException("view pager child has not a list")
+
+            when (val layoutManager = recyclerView.layoutManager){
+                // check first if is a 'GridLayoutManager' because it extends 'LinearLayoutManager'
+                is GridLayoutManager -> handleGridLayoutManager(recyclerView, layoutManager)
+                is LinearLayoutManager -> handleLinearLayoutManager(recyclerView, layoutManager)
+            }
+        }
+
+        // song and podcast case
+        private fun handleLinearLayoutManager(recyclerView: RecyclerView, layoutManager: LinearLayoutManager){
+            if (recyclerView.adapter?.itemCount ?: 0 == layoutManager.findLastVisibleItemPosition() + 1){
+                // there are no items offscreen
+                restore(recyclerView)
+            }
+        }
+
+        private fun handleGridLayoutManager(recyclerView: RecyclerView, layoutManager: GridLayoutManager){
+            if (recyclerView.adapter?.itemCount ?: 0 == layoutManager.findLastVisibleItemPosition() + 1){
+                // there are no items offscreen
+                restore(recyclerView)
+            }
+        }
+
+        private fun restore(recyclerView: RecyclerView){
+            blurView?.animate()?.translationY(0f)
+            tabLayoutMap.get(recyclerView.hashCode())?.animate()?.translationY(0f)
+            toolbarMap.get(recyclerView.hashCode())?.animate()?.translationY(0f)
+            bottomNavigation.animate().translationY(0f)
+            slidingPanel.panelHeight = slidingPanelPlusNavigationHeight
+        }
+
+    }
+
     private inner class SuperCerealBottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
 
         private var lastState = BottomSheetBehavior.STATE_COLLAPSED
@@ -136,6 +176,12 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
                 return
             }
 
+            searchForViewPager(fragment)?.let { viewPager ->
+                val listener = ViewPagerListener(fragment.childFragmentManager)
+                viewPagerListenerMap.append(viewPager.hashCode(), listener)
+                viewPager.addOnPageChangeListener(listener)
+            }
+
             val recyclerView = searchForRecyclerView(fragment)
             if (recyclerView != null) {
                 addOnScrollListener(fragment, recyclerView)
@@ -155,6 +201,13 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
             if (isPlayerTag(fragment.tag)) {
                 return
             }
+
+            searchForViewPager(fragment)?.let { viewPager ->
+                val listener = viewPagerListenerMap.get(viewPager.hashCode())
+                viewPager.removeOnPageChangeListener(listener)
+                viewPagerListenerMap.remove(viewPager.hashCode())
+            }
+
             val recyclerView = searchForRecyclerView(fragment)
             if (recyclerView != null) {
                 recyclerView.removeOnScrollListener(onScrollListener)
@@ -184,6 +237,13 @@ class OnScrollSlidingCerealBehavior @Inject constructor(private val activity: Ap
                 recyclerView = f.view?.findViewById(R.id.recycler_view)
             }
             return recyclerView
+        }
+
+        private fun searchForViewPager(f: Fragment): ViewPager? {
+            if (f.tag == Fragments.CATEGORIES || f.tag == Fragments.CATEGORIES_PODCAST){
+                return f.view?.findViewByIdNotRecursive(R.id.viewPager)
+            }
+            return null
         }
 
         private fun addOnScrollListener(f: Fragment, recyclerView: RecyclerView) {
