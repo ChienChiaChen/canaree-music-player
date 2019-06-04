@@ -15,6 +15,7 @@ import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
+import dev.olog.msc.data.R
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.PodcastPlaylistEntity
 import dev.olog.msc.data.entity.PodcastPlaylistTrackEntity
@@ -57,8 +58,7 @@ internal class PodcastPlaylistRepository @Inject constructor(
         )
     }
 
-    // TODO map names in presentation
-    private val autoPlaylistTitles = (0..3).map { "TODO map names in presentation" }
+    private val autoPlaylistTitles = context.resources.getStringArray(R.array.common_auto_playlists)
 
     private fun createAutoPlaylist(id: Long, title: String): PodcastPlaylist {
         return PodcastPlaylist(id, title, 0)

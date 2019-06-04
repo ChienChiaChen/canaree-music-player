@@ -17,6 +17,7 @@ import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGatewayHelper
 import dev.olog.msc.core.gateway.track.SongGateway
+import dev.olog.msc.data.R
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.PlaylistMostPlayedEntity
 import dev.olog.msc.data.entity.custom.*
@@ -53,8 +54,7 @@ internal class PlaylistRepository @Inject constructor(
     private val mostPlayedDao = appDatabase.playlistMostPlayedDao()
     private val historyDao = appDatabase.historyDao()
 
-    // TODO map names in presentation
-    private val autoPlaylistTitles = (0..3).map { "TODO map names in presentation" }
+    private val autoPlaylistTitles = resources.getStringArray(R.array.common_auto_playlists)
 
     private fun createAutoPlaylist(id: Long, title: String): Playlist {
         return Playlist(id, title, 0)
