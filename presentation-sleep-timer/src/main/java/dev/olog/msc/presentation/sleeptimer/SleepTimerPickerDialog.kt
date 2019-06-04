@@ -8,9 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.annotation.Keep
 import dev.olog.msc.core.interactor.SleepTimerUseCase
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.navigator.Services
+import dev.olog.msc.presentation.sleeptimer.di.inject
 import dev.olog.msc.shared.PendingIntents
 import dev.olog.msc.shared.core.coroutines.DefaultScope
 import dev.olog.msc.shared.core.flow.flowInterval
@@ -25,8 +27,10 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+@Keep
 class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
-    ScrollHmsPickerDialog.HmsPickHandler, CoroutineScope by DefaultScope() {
+    ScrollHmsPickerDialog.HmsPickHandler,
+    CoroutineScope by DefaultScope() {
 
     private var countDownJob: Job? = null
 
@@ -35,6 +39,11 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
 
     @Inject
     lateinit var sleepTimerUseCase: SleepTimerUseCase
+
+    override fun onAttach(context: Context) {
+        inject()
+        super.onAttach(context)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = super.onCreateView(inflater, container, savedInstanceState)!!
@@ -86,7 +95,7 @@ class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
             } else {
                 // as ok button
                 if (TimeUtils.timeAsMillis(hmsPicker.hours, hmsPicker.minutes, hmsPicker.seconds) > 0) {
-                    pickListener?.onHmsPick(reference, hmsPicker.hours, hmsPicker.minutes, hmsPicker.seconds)
+                    pickListener?.onHmsPick(-1, hmsPicker.hours, hmsPicker.minutes, hmsPicker.seconds)
                     act.toast(R.string.sleep_timer_set)
                     dismiss()
                 } else {

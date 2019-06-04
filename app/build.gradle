@@ -87,6 +87,7 @@ dependencies {
     implementation project(':presentation-playing-queue')
     implementation project(':presentation-popup')
     implementation project(':presentation-equalizer')
+    implementation project(':presentation-sleep-timer')
 
     // services
     implementation project(':service-music')

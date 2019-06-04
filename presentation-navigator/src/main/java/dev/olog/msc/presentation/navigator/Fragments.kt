@@ -21,6 +21,7 @@ object Fragments {
     const val RECENTLY_ADDED = "dev.olog.msc.presentation.recently.added.RecentlyAddedFragment"
     const val CREATE_PLAYLIST = "dev.olog.msc.presentation.create.playlist.CreatePlaylistFragment"
     const val EQUALIZER = "dev.olog.msc.presentation.equalizer.EqualizerFragment"
+    const val SLEEP_TIMER = "dev.olog.msc.presentation.sleeptimer.ScrollHmsPickerDialog"
 
     const val SETTINGS = "dev.olog.msc.presentation.preferences.settings.SettingsFragmentWrapper"
 
@@ -89,6 +90,10 @@ object Fragments {
 
     fun equalizer(activity: FragmentActivity): Fragment {
         return instantiate(activity.supportFragmentManager, EQUALIZER)
+    }
+
+    fun sleepTimer(activity: FragmentActivity): Fragment {
+        return instantiate(activity.supportFragmentManager, SLEEP_TIMER)
     }
 
 }

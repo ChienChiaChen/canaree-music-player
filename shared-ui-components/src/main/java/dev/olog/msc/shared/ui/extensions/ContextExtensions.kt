@@ -15,10 +15,6 @@ inline fun Context.getAnimatedVectorDrawable(@DrawableRes id: Int): AnimatedVect
     return AnimatedVectorDrawableCompat.create(this, id)!!
 }
 
-inline fun Context.colorAccentId(): Int {
-    return themeAttributeToResId(android.R.attr.colorAccent)
-}
-
 inline fun Context.textColorPrimary(): Int {
     return themeAttributeToColor(android.R.attr.textColorPrimary)
 }
@@ -51,14 +47,4 @@ fun Context.themeAttributeToColor(themeAttributeId: Int, fallbackColor: Int = Co
         return ContextCompat.getColor(this, outValue.resourceId)
     }
     return fallbackColor
-}
-
-fun Context.themeAttributeToResId(themeAttributeId: Int): Int {
-    val outValue = TypedValue()
-    val theme = this.theme
-    val resolved = theme.resolveAttribute(themeAttributeId, outValue, true)
-    if (resolved) {
-        return outValue.resourceId
-    }
-    return -1
 }

@@ -63,11 +63,13 @@ class PopupNavigator @Inject constructor() {
             addToBackStack(Fragments.SETTINGS)
         }
     }
-//
-//    fun toSleepTimer(activity: FragmentActivity) {
-//        SleepTimerPickerDialogBuilder(activity, activity.supportFragmentManager)
-//            .show()
-//    }
+
+    fun toSleepTimer(activity: FragmentActivity) {
+        activity.fragmentTransaction {
+            add(Fragments.sleepTimer(activity), Fragments.SLEEP_TIMER)
+            addToBackStack(Fragments.SLEEP_TIMER)
+        }
+    }
 //
 //    fun toCreatePlaylistDialog(
 //        activity: FragmentActivity,
@@ -87,9 +89,6 @@ class PopupNavigator @Inject constructor() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun toSleepTimer(activity: FragmentActivity) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     fun toCreatePlaylistDialog(
         activity: FragmentActivity,

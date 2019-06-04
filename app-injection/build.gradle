@@ -23,7 +23,6 @@ dependencies {
     implementation project(':data')
 //    implementation project(':presentation-offline-lyrics')
 //    implementation project(':presentation-edit-item')
-//    implementation project(':presentation-sleep-timer')
 //    implementation project(':presentation-tabs-folder-tree')
 //    implementation project(':presentation-dialogs')
 //    implementation project(':presentation-create-playlist')

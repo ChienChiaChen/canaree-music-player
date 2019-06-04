@@ -10,15 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 
 
 class ScrollHmsPicker @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private val pickerHours: NumberPickerView
     private val textHours: TextView
@@ -49,10 +47,14 @@ class ScrollHmsPicker @JvmOverloads constructor(
 
         val ta = context.obtainStyledAttributes(attrs, R.styleable.ScrollHmsPicker)
 
-        val colorNormal = ta.getColor(R.styleable.ScrollHmsPicker_shp_normal_color,
-                color(android.R.color.darker_gray))
-        @ColorInt val colorSelected = ta.getColor(R.styleable.ScrollHmsPicker_shp_selected_color,
-                color(android.R.color.holo_red_light))
+        val colorNormal = ta.getColor(
+            R.styleable.ScrollHmsPicker_shp_normal_color,
+            ContextCompat.getColor(context, android.R.color.darker_gray)
+        )
+        val colorSelected = ta.getColor(
+            R.styleable.ScrollHmsPicker_shp_selected_color,
+            ContextCompat.getColor(context, android.R.color.holo_red_light)
+        )
         val hours = ta.getInteger(R.styleable.ScrollHmsPicker_shp_hours, 0)
         val minutes = ta.getInteger(R.styleable.ScrollHmsPicker_shp_minutes, 0)
         val seconds = ta.getInteger(R.styleable.ScrollHmsPicker_shp_seconds, 0)
@@ -102,14 +104,13 @@ class ScrollHmsPicker @JvmOverloads constructor(
         }
     }
 
-    fun setColorNormal(@ColorRes res: Int) {
+    fun setColorNormal(colorInt: Int) {
         arrayOf(pickerHours, pickerMinutes, pickerSeconds).forEach {
-            it.setNormalTextColor(color(res))
+            it.setNormalTextColor(colorInt)
         }
     }
 
-    fun setColorSelected(@ColorRes res: Int) {
-        val colorInt = color(res)
+    fun setColorSelected(colorInt: Int) {
         arrayOf(pickerHours, pickerMinutes, pickerSeconds).forEach {
             it.setSelectedTextColor(colorInt)
         }
@@ -141,8 +142,8 @@ class ScrollHmsPicker @JvmOverloads constructor(
         }
     }
 
-    fun setTime(hours: Int, minutes: Int, seconds: Int, smooth: Boolean){
-        if (smooth){
+    fun setTime(hours: Int, minutes: Int, seconds: Int, smooth: Boolean) {
+        if (smooth) {
             pickerHours.smoothScrollToValue(hours, false)
             pickerMinutes.smoothScrollToValue(minutes, false)
             pickerSeconds.smoothScrollToValue(seconds, false)
@@ -174,11 +175,11 @@ class ScrollHmsPicker @JvmOverloads constructor(
     }
 
     override fun onSaveInstanceState(): Parcelable = SavedState(super.onSaveInstanceState()!!)
-            .also { state ->
-                state.hours = hours
-                state.minutes = minutes
-                state.seconds = seconds
-            }
+        .also { state ->
+            state.hours = hours
+            state.minutes = minutes
+            state.seconds = seconds
+        }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state is SavedState) {
@@ -225,6 +226,4 @@ class ScrollHmsPicker @JvmOverloads constructor(
             }
         }
     }
-
-    fun View.color(@ColorRes id: Int) = ContextCompat.getColor(this.context, id)
 }

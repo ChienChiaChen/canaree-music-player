@@ -1,8 +1,2 @@
 apply plugin: 'com.android.library'
-apply from: '../presentation_module.gradle'
-
-android {
-    lintOptions {
-        disable 'MissingTranslation'
-    }
-}
+apply from: '../base_presentation.gradle'
