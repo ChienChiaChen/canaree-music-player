@@ -42,7 +42,7 @@ internal class SearchFragmentViewModel @Inject constructor(
 
     init {
         val config = PagedList.Config.Builder()
-                .setPageSize(30)
+                .setPageSize(50)
                 .setEnablePlaceholders(true)
                 .build()
         val miniConfig = PagedList.Config.Builder()

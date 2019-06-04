@@ -49,7 +49,7 @@ abstract class BaseEditTextDialog : BaseDialog() {
             showError(provideMessageForInvalid())
         } else {
             launch(Dispatchers.Main) {
-                onStringValid(string)
+                onItemValid(string)
                 dismiss()
             }
         }
@@ -62,7 +62,7 @@ abstract class BaseEditTextDialog : BaseDialog() {
         return "Stub messsage"
     }
 
-    protected abstract suspend fun onStringValid(string: String)
+    protected abstract suspend fun onItemValid(string: String)
 
 
     private fun showError(errorString: String) {

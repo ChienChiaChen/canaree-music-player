@@ -16,7 +16,6 @@ import com.google.android.material.textfield.TextInputLayout
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.ctx
-import dev.olog.msc.presentation.base.extensions.fragmentTransaction
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
@@ -58,15 +57,6 @@ class CreatePlaylistFragment : BaseFragment(), DrawsOnTop, CoroutineScope by Mai
 
     override fun injectComponent() {
         inject()
-    }
-
-    override fun onDetach() {
-        val fragmentManager = activity?.supportFragmentManager
-        act.fragmentTransaction {
-            fragmentManager!!.findFragmentByTag(Fragments.CATEGORIES)?.let { show(it) }
-            setReorderingAllowed(true)
-        }
-        super.onDetach()
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {

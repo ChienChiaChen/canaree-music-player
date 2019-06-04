@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.LibrarySortType
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.presentation.base.list.model.DisplayableItem
@@ -51,41 +50,41 @@ internal class TabFragmentViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val liveDataList: MutableMap<MediaIdCategory, LiveData<PagedList<DisplayableItem>>> = mutableMapOf()
+    private val liveDataList: MutableMap<TabCategory, LiveData<PagedList<DisplayableItem>>> = mutableMapOf()
 
-    fun observeData(category: MediaIdCategory): LiveData<PagedList<DisplayableItem>> {
+    fun observeData(category: TabCategory): LiveData<PagedList<DisplayableItem>> {
         return liveDataList.getOrPut(category) {
-            val isLongList = category == MediaIdCategory.SONGS || category == MediaIdCategory.PODCASTS
+            val isLongList = category == TabCategory.SONGS || category == TabCategory.PODCASTS
             val config = PagedList.Config.Builder()
-                .setPageSize(if (isLongList) 30 else 15)
+                .setPageSize(if (isLongList) 100 else 25)
                 .setEnablePlaceholders(true)
                 .build()
             LivePagedListBuilder(getFactory(category), config).build()
         }
     }
 
-    private fun getFactory(category: MediaIdCategory): DataSource.Factory<Int, DisplayableItem> {
+    private fun getFactory(category: TabCategory): DataSource.Factory<Int, DisplayableItem> {
         return when (category) {
             // tracks
-            MediaIdCategory.FOLDERS -> folderDataSource
-            MediaIdCategory.PLAYLISTS -> playlistDataSource
-            MediaIdCategory.SONGS -> songDataSource
-            MediaIdCategory.ALBUMS -> albumDataSource
-            MediaIdCategory.ARTISTS -> artistDataSource
-            MediaIdCategory.GENRES -> genreDataSource
-            MediaIdCategory.LAST_PLAYED_ARTISTS -> lastPlayedArtistDataSource
-            MediaIdCategory.LAST_PLAYED_ALBUMS -> lastPlayedAlbumDataSource
-            MediaIdCategory.RECENTLY_ADDED_ARTISTS -> recentlyAddedArtistDataSource
-            MediaIdCategory.RECENTLY_ADDED_ALBUMS -> recentlyAddedAlbumDataSource
+            TabCategory.FOLDERS -> folderDataSource
+            TabCategory.PLAYLISTS -> playlistDataSource
+            TabCategory.SONGS -> songDataSource
+            TabCategory.ALBUMS -> albumDataSource
+            TabCategory.ARTISTS -> artistDataSource
+            TabCategory.GENRES -> genreDataSource
+            TabCategory.LAST_PLAYED_ARTISTS -> lastPlayedArtistDataSource
+            TabCategory.LAST_PLAYED_ALBUMS -> lastPlayedAlbumDataSource
+            TabCategory.RECENTLY_ADDED_ARTISTS -> recentlyAddedArtistDataSource
+            TabCategory.RECENTLY_ADDED_ALBUMS -> recentlyAddedAlbumDataSource
             // podcasts
-            MediaIdCategory.PODCASTS_PLAYLIST -> podcastPlaylistDataSource
-            MediaIdCategory.PODCASTS -> podcastDataSource
-            MediaIdCategory.PODCASTS_ALBUMS -> podcastAlbumDataSource
-            MediaIdCategory.PODCASTS_ARTISTS -> podcastArtistDataSource
-            MediaIdCategory.LAST_PLAYED_PODCAST_ALBUMS -> lastPlayedPodcastAlbumDataSource
-            MediaIdCategory.LAST_PLAYED_PODCAST_ARTISTS -> lastPlayedPodcastArtistDataSource
-            MediaIdCategory.RECENTLY_ADDED_PODCAST_ALBUMS -> recentlyAddedPodcastAlbumDataSource
-            MediaIdCategory.RECENTLY_ADDED_PODCAST_ARTISTS -> recentlyAddedPodcastArtistDataSource
+            TabCategory.PODCASTS_PLAYLIST -> podcastPlaylistDataSource
+            TabCategory.PODCASTS -> podcastDataSource
+            TabCategory.PODCASTS_ALBUMS -> podcastAlbumDataSource
+            TabCategory.PODCASTS_ARTISTS -> podcastArtistDataSource
+            TabCategory.LAST_PLAYED_PODCAST_ALBUMS -> lastPlayedPodcastAlbumDataSource
+            TabCategory.LAST_PLAYED_PODCAST_ARTISTS -> lastPlayedPodcastArtistDataSource
+            TabCategory.RECENTLY_ADDED_PODCAST_ALBUMS -> recentlyAddedPodcastAlbumDataSource
+            TabCategory.RECENTLY_ADDED_PODCAST_ARTISTS -> recentlyAddedPodcastArtistDataSource
             else -> throw IllegalArgumentException("invalid media category $category")
         }
     }

@@ -1,14 +1,14 @@
 package dev.olog.msc.core.interactor
 
 import dev.olog.msc.core.entity.PlaylistType
-import dev.olog.msc.core.executors.IoDispatcher
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class InsertCustomTrackListToPlaylist @Inject constructor(
-    scheduler: IoDispatcher,
+    scheduler: ComputationDispatcher,
     private val playlistGateway: PlaylistGateway,
     private val podcastPlaylistGateway: PodcastPlaylistGateway
 

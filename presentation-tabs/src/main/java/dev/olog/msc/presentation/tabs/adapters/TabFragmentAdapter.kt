@@ -4,7 +4,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.presentation.base.list.BasePagedAdapter
 import dev.olog.msc.presentation.base.list.DataBoundViewHolder
 import dev.olog.msc.presentation.base.list.DiffCallbackDisplayableItem
@@ -18,10 +17,11 @@ import dev.olog.msc.presentation.media.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tabs.BR
 import dev.olog.msc.presentation.tabs.R
+import dev.olog.msc.presentation.tabs.TabCategory
 import dev.olog.msc.presentation.tabs.TabFragmentViewModel
 
 internal class TabFragmentAdapter(
-    private val mediaIdCategory: MediaIdCategory,
+    private val mediaIdCategory: TabCategory,
     private val navigator: Navigator,
     private val viewModel: TabFragmentViewModel,
     private val mediaProvider: MediaProvider,
@@ -31,7 +31,7 @@ internal class TabFragmentAdapter(
 
     override val placeholder: Int
         get() {
-            if (mediaIdCategory == MediaIdCategory.SONGS || mediaIdCategory == MediaIdCategory.PODCASTS) {
+            if (mediaIdCategory == TabCategory.SONGS || mediaIdCategory == TabCategory.PODCASTS) {
                 return super.placeholder
             }
             return R.layout.item_placeholder_album

@@ -88,6 +88,12 @@ dependencies {
     implementation project(':presentation-popup')
     implementation project(':presentation-equalizer')
     implementation project(':presentation-sleep-timer')
+    implementation project(':presentation-tabs-folder-tree')
+    implementation project(':presentation-offline-lyrics')
+    implementation project(':presentation-navigator')
+    implementation project(':presentation-dialogs')
+
+
 
     // services
     implementation project(':service-music')

@@ -14,7 +14,7 @@ import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
 import dev.olog.msc.presentation.navigator.Widgets
 import dev.olog.msc.shared.WidgetConstants
-import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.extensions.getAppWidgetsIdsFor
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -26,7 +26,7 @@ internal class MediaSessionQueue @Inject constructor(
     mediaSession: MediaSessionCompat,
     private val playerState: PlayerState
 
-) : DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
+) : DefaultLifecycleObserver, CoroutineScope by CustomScope() {
 
     private val channel = Channel<MediaSessionQueueModel<MediaEntity>>(Channel.CONFLATED)
 

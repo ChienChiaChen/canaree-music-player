@@ -12,7 +12,7 @@ import dev.olog.msc.presentation.popup.R
 import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import javax.inject.Inject
 
-class PodcastPopupListener @Inject constructor(
+internal class PodcastPopupListener @Inject constructor(
     private val navigator: Navigator,
     getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
     addToPlaylistUseCase: AddToPlaylistUseCase

@@ -6,7 +6,6 @@ import dev.olog.msc.core.interactor.last.fm.DeleteLastFmArtistUseCase
 import dev.olog.msc.core.interactor.last.fm.DeleteLastFmTrackUseCase
 import dev.olog.msc.presentation.edititem.domain.UpdateMultipleTracksUseCase
 import dev.olog.msc.presentation.edititem.domain.UpdateTrackUseCase
-import io.reactivex.Completable
 import javax.inject.Inject
 
 class EditItemPresenter @Inject constructor(
@@ -30,9 +29,9 @@ class EditItemPresenter @Inject constructor(
         deleteArtistUseCase.execute(mediaId)
     }
 
-    fun updateSingle(info: UpdateSongInfo): Completable {
-        val albumArtist = if (info.albumArtist.isBlank()) info.artist else info.albumArtist
-TODO()
+    fun updateSingle(info: UpdateSongInfo) {
+        TODO()
+//        val albumArtist = if (info.albumArtist.isBlank()) info.artist else info.albumArtist
 //        return updateTrackUseCase.execute(
 //            UpdateTrackUseCase.Data(
 //                info.originalSong.id,
@@ -52,7 +51,7 @@ TODO()
 //        )
     }
 
-    fun updateAlbum(info: UpdateAlbumInfo): Completable {
+    fun updateAlbum(info: UpdateAlbumInfo) {
         val albumArtist = if (info.albumArtist.isBlank()) info.artist else info.albumArtist
         TODO()
 //        return updateMultipleTracksUseCase.execute(
@@ -71,7 +70,7 @@ TODO()
     }
 
 
-    fun updateArtist(info: UpdateArtistInfo): Completable {
+    fun updateArtist(info: UpdateArtistInfo) {
         val albumArtist = if (info.albumArtist.isBlank()) info.name else info.albumArtist
         TODO()
 //        return updateMultipleTracksUseCase.execute(

@@ -25,13 +25,13 @@ import dev.olog.msc.presentation.navigator.Activities
 import dev.olog.msc.shared.FileProvider
 import dev.olog.msc.shared.MusicConstants
 import dev.olog.msc.shared.PendingIntents
-import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.extensions.asServicePendingIntent
 import dev.olog.msc.shared.extensions.toast
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class MusicService : dev.olog.msc.musicservice.BaseMusicService(), CoroutineScope by DefaultScope() {
+class MusicService : dev.olog.msc.musicservice.BaseMusicService(), CoroutineScope by CustomScope() {
 
     companion object {
         const val TAG = "MusicService"

@@ -13,14 +13,12 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.olog.msc.core.entity.SearchFilters
 import dev.olog.msc.presentation.base.FloatingWindowHelper
 import dev.olog.msc.presentation.base.extensions.act
-import dev.olog.msc.presentation.base.extensions.fragmentTransaction
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.list.SetupNestedList
 import dev.olog.msc.presentation.base.list.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.utils.hideKeyboard
 import dev.olog.msc.presentation.base.utils.showKeyboard
-import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.navigator.Services
 import dev.olog.msc.presentation.search.adapters.SearchFragmentAdapter
@@ -58,16 +56,6 @@ class SearchFragment : BaseFragment(), SetupNestedList, CoroutineScope by MainSc
     private val folderAdapter by lazyFast { SearchFragmentNestedAdapter(navigator, viewModel) }
 
     private val mainDataObserver by lazyFast { MainDataObserver() }
-
-    override fun onDetach() {
-        val fragmentManager = activity?.supportFragmentManager
-        act.fragmentTransaction {
-            fragmentManager?.findFragmentByTag(Fragments.DETAIL)?.let { show(it) }
-                    ?: fragmentManager!!.findFragmentByTag(Fragments.CATEGORIES)?.let { show(it) }
-            setReorderingAllowed(true)
-        }
-        super.onDetach()
-    }
 
     override fun injectComponent() {
         inject()

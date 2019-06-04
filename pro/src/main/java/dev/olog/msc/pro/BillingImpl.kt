@@ -13,7 +13,7 @@ import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.EqualizerPreferencesGateway
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.shared.core.channel.combineLatest
-import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
@@ -29,7 +29,7 @@ internal class BillingImpl @Inject constructor(
     private val musicPreferencesUseCase: MusicPreferencesGateway,
     private val equalizerPrefsUseCase: EqualizerPreferencesGateway
 
-) : IBilling, PurchasesUpdatedListener, DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
+) : IBilling, PurchasesUpdatedListener, DefaultLifecycleObserver, CoroutineScope by CustomScope() {
 
     companion object {
         private const val PRO_VERSION_ID = "pro_version"

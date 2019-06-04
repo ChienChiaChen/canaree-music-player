@@ -12,10 +12,6 @@ import dev.olog.msc.core.gateway.track.ArtistGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmArtistEntity
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class LastFmRepoArtist @Inject constructor(
@@ -51,28 +47,28 @@ internal class LastFmRepoArtist @Inject constructor(
 
         try {
             val artistInfo = lastFmService.getArtistInfoAsync(artist.name).await()
-            return cacheAsync(artistId, artistInfo).await().toDomain()
+            return cache(artistId, artistInfo).toDomain()
         } catch (ex: Exception) {
+            cacheEmpty(artistId)
             return null
         }
     }
 
-    private suspend fun cacheAsync(artistId: Long, model: ArtistInfo): Deferred<LastFmArtistEntity> =
-        GlobalScope.async {
-            assertBackgroundThread()
-            val entity = model.toModel(artistId)
-            dao.insertArtist(entity)
-            entity
-        }
+    private suspend fun cache(artistId: Long, model: ArtistInfo): LastFmArtistEntity {
+        assertBackgroundThread()
+        val entity = model.toModel(artistId)
+        dao.insertArtist(entity)
+        return entity
+    }
 
-    private suspend fun cacheEmptyAsync(artistId: Long): Deferred<LastFmArtistEntity> = GlobalScope.async {
+    private suspend fun cacheEmpty(artistId: Long): LastFmArtistEntity {
         assertBackgroundThread()
         val entity = LastFmNulls.createNullArtist(artistId)
         dao.insertArtist(entity)
-        entity
+        return entity
     }
 
-    suspend fun delete(artistId: Long) = GlobalScope.launch {
+    suspend fun delete(artistId: Long) {
         assertBackgroundThread()
         dao.deleteArtist(artistId)
     }

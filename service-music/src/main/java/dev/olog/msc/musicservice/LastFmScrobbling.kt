@@ -13,7 +13,7 @@ import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.interactor.scrobble.ObserveLastFmUserCredentials
 import dev.olog.msc.musicservice.interfaces.PlayerLifecycle
 import dev.olog.msc.musicservice.model.MediaEntity
-import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
@@ -25,7 +25,7 @@ internal class LastFmScrobbling @Inject constructor(
     observeLastFmUserCredentials: ObserveLastFmUserCredentials,
     playerLifecycle: PlayerLifecycle
 
-) : DefaultLifecycleObserver, PlayerLifecycle.Listener, CoroutineScope by DefaultScope() {
+) : DefaultLifecycleObserver, PlayerLifecycle.Listener, CoroutineScope by CustomScope() {
 
     private var session: Session? = null
     private var userCredentials: UserCredentials? = null

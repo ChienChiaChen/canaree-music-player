@@ -15,79 +15,86 @@ import dev.olog.msc.presentation.base.extensions.*
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.DrawsOnTop
 import dev.olog.msc.presentation.media.*
+import dev.olog.msc.presentation.offlinelyrics.di.inject
+import dev.olog.msc.shared.MusicConstants
+import dev.olog.msc.shared.core.flow.flowInterval
+import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.extensions.*
 import kotlinx.android.synthetic.main.fragment_offline_lyrics.*
 import kotlinx.android.synthetic.main.fragment_offline_lyrics.view.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import saschpe.android.customtabs.CustomTabsHelper
 import java.net.URLEncoder
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
+class OfflineLyricsFragment : BaseFragment(), DrawsOnTop, CoroutineScope by MainScope() {
 
-    companion object {
-        const val TAG = "OfflineLyricsFragment"
+    @Inject
+    lateinit var presenter: OfflineLyricsFragmentPresenter
 
-        @JvmStatic
-        fun newInstance(): OfflineLyricsFragment {
-            return OfflineLyricsFragment()
-        }
+    private val mediaProvider by lazyFast { act as MediaProvider }
+
+    private var seekbarUpdateJob: Job? = null
+
+    override fun injectComponent() {
+        inject()
     }
-
-    @Inject lateinit var presenter: OfflineLyricsFragmentPresenter
-//    private var tutorialDisposable: Disposable? = null TODO
-//    private var updateDisposable : Disposable? = null
-
-    private val mediaProvider by lazy { activity as MediaProvider }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
         super.onViewBound(view, savedInstanceState)
         postponeEnterTransition()
         view.image.post { startPostponedEnterTransition() }
 
-        if (presenter.canShowLyricsTutorial()){
+        if (presenter.canShowLyricsTutorial()) {
             Tutorial.addLyrics(view.search, view.edit, view.sync)
         }
 
         mediaProvider.observeMetadata()
-                .subscribe(viewLifecycleOwner) {
-                    presenter.updateCurrentTrackId(it.getId())
-                    presenter.updateCurrentMetadata(it.getTitle().toString(), it.getArtist().toString())
-                    image.loadImage(it)
-                    header.text = it.getTitle()
-                    subHeader.text = it.getArtist()
-                    seekBar.max = it.getDuration().toInt()
-                }
+            .subscribe(viewLifecycleOwner) {
+                presenter.updateCurrentTrackId(it.getId())
+                presenter.updateCurrentMetadata(it.getTitle().toString(), it.getArtist().toString())
+                image.loadImage(it)
+                header.text = it.getTitle()
+                subHeader.text = it.getArtist()
+                seekBar.max = it.getDuration().toInt()
+            }
 
-//        presenter.observeLyrics() TODO
-//                .map { presenter.transformLyrics(ctx, seekBar.progress, it) }
-//                .map { text.precomputeText(it) }
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .asLiveData()
-//                .subscribe(viewLifecycleOwner) {
-//                    emptyState.toggleVisibility(it.isEmpty(), true)
-//                    text.text = it
-//                }
+        launch(Dispatchers.Default) {
+            presenter.observeLyrics()
+                .map { presenter.transformLyrics(ctx, seekBar.progress, it) }
+                .map { text.precomputeText(it) }
+                .collect {
+                    withContext(Dispatchers.Main) {
+                        emptyState.toggleVisibility(it.isEmpty(), true)
+                        text.text = it
+                    }
+                }
+        }
 
         mediaProvider.observePlaybackState()
-                .filter { it.state == PlaybackState.STATE_PLAYING || it.state == PlaybackState.STATE_PAUSED }
-                .subscribe(viewLifecycleOwner) {
-                    val isPlaying = it.state == PlaybackState.STATE_PLAYING
-                    seekBar.progress = it.position.toInt()
-                    handleSeekBarState(isPlaying, it.playbackSpeed)
-                }
+            .filter { it.state == PlaybackState.STATE_PLAYING || it.state == PlaybackState.STATE_PAUSED }
+            .subscribe(viewLifecycleOwner) {
+                val isPlaying = it.state == PlaybackState.STATE_PLAYING
+                seekBar.progress = it.position.toInt()
+                handleSeekBarState(isPlaying, it.playbackSpeed)
+            }
 
         view.image.observePaletteColors()
-                .map { it.accent }
-                .subscribe(viewLifecycleOwner) { accent ->
-                    subHeader.animateTextColor(accent)
-                    edit.animateBackgroundColor(accent)
-                }
+            .map { it.accent }
+            .subscribe(viewLifecycleOwner) { accent ->
+                subHeader.animateTextColor(accent)
+                edit.animateBackgroundColor(accent)
+            }
     }
 
-    override fun onStart() {
-        super.onStart()
-        blurLayout.startBlur()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        seekbarUpdateJob?.cancel()
+        cancel()
     }
 
     override fun onResume() {
@@ -127,25 +134,18 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
         sync.setOnClickListener(null)
     }
 
-    override fun onStop() {
-        super.onStop()
-//        tutorialDisposable.unsubscribe()
-//        updateDisposable.unsubscribe()
-        blurLayout.pauseBlur()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
     }
 
-    private fun searchLyrics(){
+    private fun searchLyrics() {
 //        val toolbarColor = if (context.isWhite()) R.color.toolbar else R.color.theme_dark_toolbar TODO set color in res
         val toolbarColor = R.color.toolbar
         val customTabIntent = CustomTabsIntent.Builder()
-                .enableUrlBarHiding()
-                .setToolbarColor(ContextCompat.getColor(ctx, toolbarColor))
-                .build()
+            .enableUrlBarHiding()
+            .setToolbarColor(ContextCompat.getColor(ctx, toolbarColor))
+            .build()
         CustomTabsHelper.addKeepAliveExtra(ctx, customTabIntent.intent)
 
         val escapedQuery = URLEncoder.encode(presenter.getInfoMetadata(), "UTF-8")
@@ -161,16 +161,20 @@ class OfflineLyricsFragment : BaseFragment(), DrawsOnTop {
     }
 
 
-    private fun handleSeekBarState(isPlaying: Boolean, speed: Float){
-//        updateDisposable.unsubscribe()
+    private fun handleSeekBarState(isPlaying: Boolean, speed: Float) {
+        seekbarUpdateJob?.cancel()
         if (isPlaying) {
             resumeSeekBar(speed)
         }
     }
 
-    private fun resumeSeekBar(speed: Float){
-//        updateDisposable = Observable.interval(PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS)
-//                .subscribe({ seekBar.incrementProgressBy((PROGRESS_BAR_INTERVAL * speed).toInt()) }, Throwable::printStackTrace)
+    private fun resumeSeekBar(speed: Float) {
+        seekbarUpdateJob = launch {
+            flowInterval(MusicConstants.PROGRESS_BAR_INTERVAL, TimeUnit.MILLISECONDS)
+                .collect {
+                    seekBar.incrementProgressBy((MusicConstants.PROGRESS_BAR_INTERVAL * speed).toInt())
+                }
+        }
     }
 
     private val seekBarListener = object : SeekBar.OnSeekBarChangeListener {

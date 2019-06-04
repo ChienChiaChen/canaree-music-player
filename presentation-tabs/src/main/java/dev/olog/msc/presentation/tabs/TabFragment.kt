@@ -44,9 +44,9 @@ class TabFragment : BaseFragment(), SetupNestedList {
 
     private val viewModel by lazyFast { parentViewModelProvider<TabFragmentViewModel>(viewModelFactory) }
 
-    private val category by lazyFast {
-        val ordinalCategory = arguments!!.getInt(Fragments.ARGUMENTS_MEDIA_ID_CATEGORY)
-        MediaIdCategory.values()[ordinalCategory]
+    private val category : TabCategory by lazyFast {
+        val categoryString = getArgument<String>(Fragments.ARGUMENTS_MEDIA_ID_CATEGORY)
+        MediaIdCategory.valueOf(categoryString).toTabCategory()
     }
 
     private val adapter by lazyFast { TabFragmentAdapter(category, navigator, viewModel, act as MediaProvider, this) }
@@ -65,8 +65,8 @@ class TabFragment : BaseFragment(), SetupNestedList {
     }
 
     private fun isPodcastFragment(): Boolean {
-        return category == MediaIdCategory.PODCASTS || category == MediaIdCategory.PODCASTS_PLAYLIST ||
-                category == MediaIdCategory.PODCASTS_ALBUMS || category == MediaIdCategory.PODCASTS_ARTISTS
+        return category == TabCategory.PODCASTS || category == TabCategory.PODCASTS_PLAYLIST ||
+                category == TabCategory.PODCASTS_ALBUMS || category == TabCategory.PODCASTS_ARTISTS
     }
 
     override fun injectComponent() {
@@ -83,16 +83,16 @@ class TabFragment : BaseFragment(), SetupNestedList {
         applyInsetsToList(view.list)
 
         val scrollableLayoutId = when (category) {
-            MediaIdCategory.SONGS -> R.layout.item_tab_song
-            MediaIdCategory.PODCASTS -> R.layout.item_tab_podcast
-            MediaIdCategory.ARTISTS -> R.layout.item_tab_artist
+            TabCategory.SONGS -> R.layout.item_tab_song
+            TabCategory.PODCASTS -> R.layout.item_tab_podcast
+            TabCategory.ARTISTS -> R.layout.item_tab_artist
             else -> R.layout.item_tab_album
         }
         view.sidebar.scrollableLayoutId = scrollableLayoutId
 
         view.fab.toggleVisibility(
-                category == MediaIdCategory.PLAYLISTS ||
-                        category == MediaIdCategory.PODCASTS_PLAYLIST, true
+                category == TabCategory.PLAYLISTS ||
+                        category == TabCategory.PODCASTS_PLAYLIST, true
         )
 
         viewModel.observeData(category)
@@ -103,28 +103,28 @@ class TabFragment : BaseFragment(), SetupNestedList {
                 }
 
         when (category) {
-            MediaIdCategory.ALBUMS -> {
-                viewModel.observeData(MediaIdCategory.LAST_PLAYED_ALBUMS)
+            TabCategory.ALBUMS -> {
+                viewModel.observeData(TabCategory.LAST_PLAYED_ALBUMS)
                         .subscribe(viewLifecycleOwner) { lastAlbumsAdapter.submitList(it) }
-                viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_ALBUMS)
+                viewModel.observeData(TabCategory.RECENTLY_ADDED_ALBUMS)
                         .subscribe(viewLifecycleOwner) { newAlbumsAdapter.submitList(it) }
             }
-            MediaIdCategory.ARTISTS -> {
-                viewModel.observeData(MediaIdCategory.LAST_PLAYED_ARTISTS)
+            TabCategory.ARTISTS -> {
+                viewModel.observeData(TabCategory.LAST_PLAYED_ARTISTS)
                         .subscribe(viewLifecycleOwner) { lastArtistsAdapter.submitList(it) }
-                viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_ARTISTS)
+                viewModel.observeData(TabCategory.RECENTLY_ADDED_ARTISTS)
                         .subscribe(viewLifecycleOwner) { newArtistsAdapter.submitList(it) }
             }
-            MediaIdCategory.PODCASTS_ALBUMS -> {
-                viewModel.observeData(MediaIdCategory.LAST_PLAYED_PODCAST_ALBUMS)
+            TabCategory.PODCASTS_ALBUMS -> {
+                viewModel.observeData(TabCategory.LAST_PLAYED_PODCAST_ALBUMS)
                         .subscribe(viewLifecycleOwner) { lastAlbumsAdapter.submitList(it) }
-                viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_PODCAST_ALBUMS)
+                viewModel.observeData(TabCategory.RECENTLY_ADDED_PODCAST_ALBUMS)
                         .subscribe(viewLifecycleOwner) { newAlbumsAdapter.submitList(it) }
             }
-            MediaIdCategory.PODCASTS_ARTISTS -> {
-                viewModel.observeData(MediaIdCategory.LAST_PLAYED_PODCAST_ARTISTS)
+            TabCategory.PODCASTS_ARTISTS -> {
+                viewModel.observeData(TabCategory.LAST_PLAYED_PODCAST_ARTISTS)
                         .subscribe(viewLifecycleOwner) { lastArtistsAdapter.submitList(it) }
-                viewModel.observeData(MediaIdCategory.RECENTLY_ADDED_PODCAST_ARTISTS)
+                viewModel.observeData(TabCategory.RECENTLY_ADDED_PODCAST_ARTISTS)
                         .subscribe(viewLifecycleOwner) { newArtistsAdapter.submitList(it) }
             }
             else -> {/*making lint happy*/
@@ -155,7 +155,7 @@ class TabFragment : BaseFragment(), SetupNestedList {
         super.onResume()
 //        sidebar.setListener(letterTouchListener)
         fab?.setOnClickListener {
-            if (category == MediaIdCategory.PLAYLISTS) {
+            if (category == TabCategory.PLAYLISTS) {
                 navigator.toChooseTracksForPlaylistFragment(requireActivity(), PlaylistType.TRACK)
             } else {
                 navigator.toChooseTracksForPlaylistFragment(requireActivity(), PlaylistType.PODCAST)
@@ -172,7 +172,7 @@ class TabFragment : BaseFragment(), SetupNestedList {
     private fun applyInsetsToList(view: RecyclerView) {
         setupListInset(view)
 
-        if (category != MediaIdCategory.SONGS && category != MediaIdCategory.PODCASTS) {
+        if (category != TabCategory.SONGS && category != TabCategory.PODCASTS) {
             view.list.updatePadding(right = ctx.dimen(R.dimen.tab_margin_end))
         }
     }
@@ -220,7 +220,7 @@ class TabFragment : BaseFragment(), SetupNestedList {
 
     private fun getCurrentSorting(item: DisplayableItem): String {
         return when (category) {
-            MediaIdCategory.SONGS -> {
+            TabCategory.SONGS -> {
                 val sortOrder = viewModel.getAllTracksSortOrder()
                 when (sortOrder.type) {
                     SortType.ARTIST -> item.subtitle!!
@@ -228,7 +228,7 @@ class TabFragment : BaseFragment(), SetupNestedList {
                     else -> item.title
                 }
             }
-            MediaIdCategory.ALBUMS -> {
+            TabCategory.ALBUMS -> {
                 val sortOrder = viewModel.getAllAlbumsSortOrder()
                 when (sortOrder.type) {
                     SortType.TITLE -> item.title

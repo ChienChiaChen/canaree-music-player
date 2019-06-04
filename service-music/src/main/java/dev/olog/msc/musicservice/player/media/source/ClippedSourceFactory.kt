@@ -8,7 +8,7 @@ import com.google.android.exoplayer2.source.MediaSource
 import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.musicservice.player.crossfade.CrossFadePlayerImpl
-import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import java.util.concurrent.TimeUnit
@@ -19,7 +19,7 @@ internal class ClippedSourceFactory @Inject constructor (
         private val sourceFactory: DefaultSourceFactory,
         musicPrefsUseCase: MusicPreferencesGateway
 
-) : DefaultLifecycleObserver, SourceFactory<CrossFadePlayerImpl.Model>, CoroutineScope by DefaultScope() {
+) : DefaultLifecycleObserver, SourceFactory<CrossFadePlayerImpl.Model>, CoroutineScope by CustomScope() {
 
     companion object {
         private val clipStart = TimeUnit.SECONDS.toMicros(2)

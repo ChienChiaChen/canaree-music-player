@@ -42,7 +42,7 @@ class CreatePlaylistViewModel @Inject constructor(
 
         if (data == null){
             val config = PagedList.Config.Builder()
-                .setPageSize(30)
+                .setPageSize(100)
                 .setEnablePlaceholders(true)
                 .build()
 

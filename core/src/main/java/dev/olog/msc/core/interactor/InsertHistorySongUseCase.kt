@@ -1,13 +1,13 @@
 package dev.olog.msc.core.interactor
 
-import dev.olog.msc.core.executors.IoDispatcher
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class InsertHistorySongUseCase @Inject constructor(
-    schedulers: IoDispatcher,
+    schedulers: ComputationDispatcher,
     private val playlistGateway: PlaylistGateway,
     private val podcastGateway: PodcastPlaylistGateway
 

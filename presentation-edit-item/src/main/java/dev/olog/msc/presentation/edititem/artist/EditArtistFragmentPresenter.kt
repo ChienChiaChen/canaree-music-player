@@ -6,7 +6,6 @@ import dev.olog.msc.core.entity.track.Song
 import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.core.interactor.item.GetArtistUseCase
 import dev.olog.msc.core.interactor.item.GetPodcastArtistUseCase
-import io.reactivex.Single
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -20,14 +19,14 @@ class EditArtistFragmentPresenter @Inject constructor(
     private lateinit var originalArtist: DisplayableArtist
     lateinit var songList: List<Song>
 
-    fun observeArtist(): Single<DisplayableArtist> {
+    fun observeArtist(): DisplayableArtist {
 //        if (mediaId.isPodcastArtist) {
 //            return getPodcastArtistInternal()
 //        }
         return getArtistInternal()
     }
 
-    private fun getArtistInternal(): Single<DisplayableArtist> = runBlocking {
+    private fun getArtistInternal(): DisplayableArtist = runBlocking {
         TODO()
 //        getArtistUseCase.execute(mediaId).asObservable()
 //                .firstOrError()
@@ -35,7 +34,7 @@ class EditArtistFragmentPresenter @Inject constructor(
 //                .doOnSuccess { originalArtist = it }
     }
 
-    private fun getPodcastArtistInternal(): Single<DisplayableArtist> = runBlocking {
+    private fun getPodcastArtistInternal(): DisplayableArtist = runBlocking {
         TODO()
 //        getPodcastArtistUseCase.execute(mediaId).asObservable()
 //                .firstOrError()
@@ -43,7 +42,7 @@ class EditArtistFragmentPresenter @Inject constructor(
 //                .doOnSuccess { originalArtist = it }
     }
 
-    fun getSongList(): Single<List<Song>> {
+    fun getSongListSingle(): List<Song> {
         TODO()
 //        return getSongListByParamUseCase.execute(mediaId)
 //                .firstOrError()

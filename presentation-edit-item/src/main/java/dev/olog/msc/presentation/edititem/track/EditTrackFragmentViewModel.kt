@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.presentation.edititem.DisplayableSong
 import dev.olog.msc.shared.utils.NetworkUtils
-import io.reactivex.disposables.Disposable
 import org.jaudiotagger.tag.TagOptionSingleton
 import javax.inject.Inject
 
@@ -19,18 +18,18 @@ class EditTrackFragmentViewModel @Inject constructor(
 
     private val displayedSong = MutableLiveData<DisplayableSong>()
 
-    private var getSongDisposable : Disposable? = null
-    private var fetchSongInfoDisposable: Disposable? = null
+//    private var getSongDisposable : Disposable? = null
+//    private var fetchSongInfoDisposable: Disposable? = null
 
     init {
         TagOptionSingleton.getInstance().isAndroid = true
 
-        getSongDisposable = presenter.observeSong()
-                .subscribe({ song ->
-                    displayedSong.postValue(song)
-                }, {
-                    it.printStackTrace()
-                })
+//        getSongDisposable = presenter.observeSong()
+//                .subscribe({ song ->
+//                    displayedSong.postValue(song)
+//                }, {
+//                    it.printStackTrace()
+//                })
     }
 
     fun updateImage(image: String){

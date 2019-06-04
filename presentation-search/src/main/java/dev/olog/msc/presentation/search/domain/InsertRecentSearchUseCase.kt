@@ -1,14 +1,14 @@
 package dev.olog.msc.presentation.search.domain
 
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.executors.IoDispatcher
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.RecentSearchesGateway
 import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 
 class InsertRecentSearchUseCase @Inject constructor(
-    scheduler: IoDispatcher,
+    scheduler: ComputationDispatcher,
     private val recentSearchesGateway: RecentSearchesGateway
 
 ) : CompletableFlowWithParam<MediaId>(scheduler) {

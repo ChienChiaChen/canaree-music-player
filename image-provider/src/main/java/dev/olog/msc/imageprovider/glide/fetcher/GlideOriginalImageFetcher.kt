@@ -7,12 +7,14 @@ import com.bumptech.glide.load.data.DataFetcher
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.podcast.PodcastGateway
 import dev.olog.msc.core.gateway.track.SongGateway
+import dev.olog.msc.imageprovider.executors.GlideScope
 import kotlinx.coroutines.*
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 import org.jaudiotagger.audio.mp3.MP3File
 import org.jaudiotagger.tag.TagException
 import java.io.*
+import java.util.concurrent.Executors
 
 private val FALLBACKS = arrayOf("cover.jpg", "album.jpg", "folder.jpg", "cover.png", "album.png", "folder.png")
 
@@ -22,15 +24,14 @@ class GlideOriginalImageFetcher(
     private val songGateway: SongGateway,
     private val podcastGateway: PodcastGateway
 
-) : DataFetcher<InputStream> {
-
-    private var job : Job? = null
+) : DataFetcher<InputStream>, CoroutineScope by GlideScope() {
 
     override fun getDataClass(): Class<InputStream> = InputStream::class.java
     override fun getDataSource(): DataSource = DataSource.LOCAL
 
     override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) {
-        job = GlobalScope.launch(Dispatchers.IO) { // TODO is needed to launch a coroutine?
+        Executors.newFixedThreadPool(4).asCoroutineDispatcher()
+        launch {
             val id = getId()
             if (id == -1L) {
                 callback.onLoadFailed(Exception("item not found for id$id"))
@@ -119,11 +120,11 @@ class GlideOriginalImageFetcher(
     }
 
     override fun cleanup() {
-        job?.cancel()
+        cancel(null)
     }
 
     override fun cancel() {
-        job?.cancel()
+        cancel(null)
     }
 
 }

@@ -248,6 +248,7 @@ class MainActivity : MusicGlueActivity(),
     }
 
     private fun tryPopFolderBack(): Boolean {
+        // TODO wrong implementation, i think it pop folder back even if not seeing the fragment
         val categoriesFragment = supportFragmentManager.findFragmentByTag(Fragments.CATEGORIES) ?: return false
         val fragments = categoriesFragment.childFragmentManager.fragments
         for (fragment in fragments) {

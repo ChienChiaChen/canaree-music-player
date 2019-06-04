@@ -5,11 +5,19 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import dev.olog.msc.presentation.base.extensions.act
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 
-abstract class BaseDialog : DaggerDialogFragment(), CoroutineScope by MainScope() {
+abstract class BaseDialog : DialogFragment(), CoroutineScope by MainScope() {
+
+    override fun onAttach(context: Context) {
+        injectComponent()
+        super.onAttach(context)
+    }
+
+    protected abstract fun injectComponent()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 

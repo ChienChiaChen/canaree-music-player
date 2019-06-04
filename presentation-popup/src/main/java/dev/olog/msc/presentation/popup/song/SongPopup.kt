@@ -8,7 +8,7 @@ import dev.olog.msc.presentation.popup.AbsPopupListener
 import dev.olog.msc.presentation.popup.R
 import dev.olog.msc.shared.TrackUtils
 
-class SongPopup(
+internal class SongPopup(
         view: View,
         song: Song,
         listener: AbsPopupListener

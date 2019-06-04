@@ -17,7 +17,7 @@ import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import dev.olog.msc.shared.extensions.toast
 import javax.inject.Inject
 
-class PlaylistPopupListener @Inject constructor(
+internal class PlaylistPopupListener @Inject constructor(
     @ApplicationContext private val context: Context,
     private val navigator: Navigator,
     getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,

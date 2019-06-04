@@ -10,7 +10,7 @@ import dev.olog.msc.presentation.popup.R
 import dev.olog.msc.shared.TrackUtils
 
 @Suppress("UNUSED_PARAMETER")
-class GenrePopup(
+internal class GenrePopup(
         view: View,
         genre: Genre,
         song: Song?,

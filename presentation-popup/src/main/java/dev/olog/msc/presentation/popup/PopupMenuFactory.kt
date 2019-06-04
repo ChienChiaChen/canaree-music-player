@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class PopupMenuFactory @Inject constructor(
+internal class PopupMenuFactory @Inject constructor(
     private val getFolderUseCase: GetFolderUseCase,
     private val getPlaylistUseCase: GetPlaylistUseCase,
     private val getSongUseCase: GetSongUseCase,
@@ -39,23 +39,26 @@ class PopupMenuFactory @Inject constructor(
 
 ) {
 
-    fun show(view: View, mediaId: MediaId) = GlobalScope.launch {
-        val category = mediaId.category
-        val popup: PopupMenu? = when (category) {
-            MediaIdCategory.FOLDERS -> getFolderPopup(view, mediaId)
-            MediaIdCategory.PLAYLISTS -> getPlaylistPopup(view, mediaId)
-            MediaIdCategory.SONGS -> getSongPopup(view, mediaId)
-            MediaIdCategory.ALBUMS -> getAlbumPopup(view, mediaId)
-            MediaIdCategory.ARTISTS -> getArtistPopup(view, mediaId)
-            MediaIdCategory.GENRES -> getGenrePopup(view, mediaId)
-            MediaIdCategory.PODCASTS -> getPodcastPopup(view, mediaId)
-            MediaIdCategory.PODCASTS_PLAYLIST -> getPodcastPlaylistPopup(view, mediaId)
-            MediaIdCategory.PODCASTS_ALBUMS -> getPodcastAlbumPopup(view, mediaId)
-            MediaIdCategory.PODCASTS_ARTISTS -> getPodcastArtistPopup(view, mediaId)
-            else -> throw IllegalArgumentException("invalid category $category")
-        }
-        withContext(Dispatchers.Main) {
-            popup?.show()
+    fun show(anchor: View, mediaId: MediaId) {
+        GlobalScope.launch {
+
+            val category = mediaId.category
+            val popup: PopupMenu? = when (category) {
+                MediaIdCategory.FOLDERS -> getFolderPopup(anchor, mediaId)
+                MediaIdCategory.PLAYLISTS -> getPlaylistPopup(anchor, mediaId)
+                MediaIdCategory.SONGS -> getSongPopup(anchor, mediaId)
+                MediaIdCategory.ALBUMS -> getAlbumPopup(anchor, mediaId)
+                MediaIdCategory.ARTISTS -> getArtistPopup(anchor, mediaId)
+                MediaIdCategory.GENRES -> getGenrePopup(anchor, mediaId)
+                MediaIdCategory.PODCASTS -> getPodcastPopup(anchor, mediaId)
+                MediaIdCategory.PODCASTS_PLAYLIST -> getPodcastPlaylistPopup(anchor, mediaId)
+                MediaIdCategory.PODCASTS_ALBUMS -> getPodcastAlbumPopup(anchor, mediaId)
+                MediaIdCategory.PODCASTS_ARTISTS -> getPodcastArtistPopup(anchor, mediaId)
+                else -> throw IllegalArgumentException("invalid category $category")
+            }
+            withContext(Dispatchers.Main) {
+                popup?.show()
+            }
         }
     }
 

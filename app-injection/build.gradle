@@ -21,10 +21,7 @@ dependencies {
     implementation project(':offline-lyrics')
     implementation project(':api-lastfm')
     implementation project(':data')
-//    implementation project(':presentation-offline-lyrics')
 //    implementation project(':presentation-edit-item')
-//    implementation project(':presentation-tabs-folder-tree')
-//    implementation project(':presentation-dialogs')
 //    implementation project(':presentation-create-playlist')
 //    debugImplementation project(':presentation-debug')
 

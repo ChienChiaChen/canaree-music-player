@@ -20,7 +20,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-abstract class AbsPopupListener(
+internal abstract class AbsPopupListener(
     getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
     private val addToPlaylistUseCase: AddToPlaylistUseCase,
     private val podcastPlaylist: Boolean

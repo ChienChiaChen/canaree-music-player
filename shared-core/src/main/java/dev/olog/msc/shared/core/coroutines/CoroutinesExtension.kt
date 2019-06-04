@@ -8,5 +8,5 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
 @Suppress("FunctionName")
-fun DefaultScope(dispatcher: CoroutineDispatcher = Dispatchers.Default): CoroutineScope =
+fun CustomScope(dispatcher: CoroutineDispatcher = Dispatchers.Default): CoroutineScope =
     CoroutineScope(SupervisorJob() + dispatcher)

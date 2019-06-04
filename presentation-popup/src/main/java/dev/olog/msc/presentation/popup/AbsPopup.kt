@@ -11,10 +11,10 @@ import androidx.appcompat.widget.PopupMenu
 
 import dev.olog.msc.core.entity.track.Playlist
 
-abstract class AbsPopup(
+internal abstract class AbsPopup(
     view: View
 
-) : PopupMenu(view.context, view, Gravity.END or Gravity.BOTTOM) {
+) : PopupMenu(view.context, view, Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM) {
 
     companion object {
         const val NEW_PLAYLIST_ID = Int.MIN_VALUE

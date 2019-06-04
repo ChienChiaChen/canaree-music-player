@@ -14,7 +14,7 @@ import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.navigator.Services
 import dev.olog.msc.presentation.sleeptimer.di.inject
 import dev.olog.msc.shared.PendingIntents
-import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.extensions.toast
 import dev.olog.msc.shared.ui.TimeUtils
@@ -30,7 +30,7 @@ import javax.inject.Inject
 @Keep
 class SleepTimerPickerDialog : ScrollHmsPickerDialog(),
     ScrollHmsPickerDialog.HmsPickHandler,
-    CoroutineScope by DefaultScope() {
+    CoroutineScope by CustomScope() {
 
     private var countDownJob: Job? = null
 

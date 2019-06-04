@@ -100,7 +100,6 @@ interface CoreComponent {
     fun cpuDispatcher(): ComputationDispatcher
     fun ioDispatcher(): IoDispatcher
 
-
     @Component.Factory
     interface Factory {
 
@@ -119,7 +118,7 @@ interface CoreComponent {
             return coreComponent!!
         }
 
-        internal fun safeCoreComponent(): CoreComponent = coreComponent!!
+        fun safeCoreComponent(): CoreComponent = coreComponent!!
 
     }
 

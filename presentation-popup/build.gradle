@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply from: '../base_module_2.gradle'
+apply from: '../dagger.gradle'
 
 android {
     lintOptions {
@@ -9,6 +10,7 @@ android {
 
 dependencies {
     implementation project(':core')
+    implementation project(':app-injection')
     implementation project(':shared')
     implementation project(':pro')
     implementation project(':app-shortcuts')

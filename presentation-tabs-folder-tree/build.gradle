@@ -1,13 +1,12 @@
 apply plugin: 'com.android.library'
-apply from: '../presentation_module.gradle'
-
-android {
-    lintOptions {
-        disable 'MissingTranslation'
-    }
-}
+apply from: '../base_presentation.gradle'
+apply from: '../data_binding.gradle'
 
 dependencies {
+    implementation project(':presentation-base-list')
     implementation project(':presentation-media')
+    implementation project(':image-provider')
+
     implementation librariesUi.glide
+    implementation librariesAndroidX.paging
 }

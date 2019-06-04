@@ -1,52 +1,27 @@
 package dev.olog.msc.presentation.navigator
 
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
-import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
-import dev.olog.msc.shared.interfaces.MainPopup
+import dev.olog.msc.shared.interfaces.IPopupFacade
 import javax.inject.Inject
 
 class Navigator @Inject constructor(
-//    private val popupFactory: PopupMenuFactory,
-        private val popupNavigator: PopupNavigator,
-        private val sortGateway: SortPreferencesGateway
 //    private val editItemDialogFactory: EditItemDialogFactory
 ) {
 
 
-    private val mainPopup by lazy {
+    private val popupFacade by lazy {
         // TODO find a better way than reflection
-        val mainPopup = Class.forName("dev.olog.msc.presentation.popup.main.MainPopupDialog")
-        val contructor = mainPopup.getConstructor(PopupNavigator::class.java, SortPreferencesGateway::class.java)
-        contructor.newInstance(popupNavigator, sortGateway) as MainPopup
+        val mainPopup = Class.forName("dev.olog.msc.presentation.popup.PopupFacade")
+        mainPopup.newInstance() as IPopupFacade
     }
 
     fun toFirstAccess(activity: FragmentActivity) {
         activity.startActivity(Intents.splashActivity(activity))
-    }
-
-    private fun superCerealTransition(activity: FragmentActivity, fragment: Fragment, tag: String){
-        if (allowed()) {
-
-            val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)
-
-            activity.fragmentTransaction {
-                setReorderingAllowed(true)
-                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                topFragment?.let { hide(it) }
-                add(
-                    R.id.fragmentContainer,
-                    fragment,
-                    tag
-                )
-                addToBackStack(tag)
-            }
-        }
     }
 
     fun toDetailFragment(activity: FragmentActivity, mediaId: MediaId) {
@@ -66,17 +41,15 @@ class Navigator @Inject constructor(
     }
 
     fun toOfflineLyrics(activity: FragmentActivity) {
-//        if (allowed()) {
-//            activity.fragmentTransaction {
-//                setReorderingAllowed(true)
-//                setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-//                add(
-//                    android.R.id.content, OfflineLyricsFragment.newInstance(),
-//                    OfflineLyricsFragment.TAG
-//                )
-//                addToBackStack(OfflineLyricsFragment.TAG)
-//            }
-//        }
+        if (!allowed()) {
+            return
+        }
+        activity.fragmentTransaction {
+            setReorderingAllowed(true)
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            add(android.R.id.content, Fragments.offlineLyrics(activity), Fragments.OFFLINE_LYRICS)
+            addToBackStack(Fragments.OFFLINE_LYRICS)
+        }
     }
 
     fun toEditInfoFragment(activity: FragmentActivity, mediaId: MediaId) {
@@ -111,67 +84,97 @@ class Navigator @Inject constructor(
     }
 
     fun toDialog(mediaId: MediaId, anchor: View) {
-//        if (allowed()) {
-//            popupFactory.show(anchor, mediaId)
-//        }
+        if (!allowed()) {
+            return
+        }
+        try {
+            popupFacade.item(anchor, mediaId.toString())
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
     }
 
     fun toMainPopup(activity: FragmentActivity, anchor: View, category: MediaIdCategory?) {
+        if (!allowed()) {
+            return
+        }
         try {
-            mainPopup.show(activity, anchor, category?.ordinal)
+            popupFacade.main(activity, anchor, category?.toString())
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
     fun toSetRingtoneDialog(activity: FragmentActivity, mediaId: MediaId, title: String, artist: String) {
-//        val fragment = SetRingtoneDialog.newInstance(mediaId, title, artist)
-//        fragment.show(activity.supportFragmentManager, SetRingtoneDialog.TAG)
+        val tag = Fragments.SET_RINGTONE
+        activity.fragmentTransaction {
+            add(Fragments.setRingtone(activity, mediaId, title, artist), tag)
+            addToBackStack(tag)
+        }
     }
 
     fun toAddToFavoriteDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String) {
-//        val fragment = AddFavoriteDialog.newInstance(mediaId, itemTitle)
-//        fragment.show(activity.supportFragmentManager, AddFavoriteDialog.TAG)
+        val tag = Fragments.ADD_FAVORITE
+        activity.fragmentTransaction {
+            add(Fragments.addFavorite(activity, mediaId, itemTitle), tag)
+            addToBackStack(tag)
+        }
     }
 
     fun toPlayLater(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String) {
-//        val fragment = PlayLaterDialog.newInstance(mediaId, listSize, itemTitle)
-//        fragment.show(activity.supportFragmentManager, PlayLaterDialog.TAG)
+        val tag = Fragments.PLAY_LATER
+        activity.fragmentTransaction {
+            add(Fragments.playLater(activity, mediaId, itemTitle, listSize), tag)
+            addToBackStack(tag)
+        }
     }
 
     fun toPlayNext(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String) {
-//        val fragment = PlayNextDialog.newInstance(mediaId, listSize, itemTitle)
-//        fragment.show(activity.supportFragmentManager, PlayNextDialog.TAG)
+        val tag = Fragments.PLAY_NEXT
+        activity.fragmentTransaction {
+            add(Fragments.playNext(activity, mediaId, itemTitle, listSize), tag)
+            addToBackStack(tag)
+        }
     }
 
     fun toRenameDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String) {
-//        val fragment = RenameDialog.newInstance(mediaId, itemTitle)
-//        fragment.show(activity.supportFragmentManager, RenameDialog.TAG)
+        val tag = Fragments.RENAME
+        activity.fragmentTransaction {
+            add(Fragments.rename(activity, mediaId, itemTitle), tag)
+            addToBackStack(tag)
+        }
     }
 
     fun toDeleteDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String) {
-//        val fragment = DeleteDialog.newInstance(mediaId, listSize, itemTitle)
-//        fragment.show(activity.supportFragmentManager, DeleteDialog.TAG)
+        val tag = Fragments.DELETE
+        activity.fragmentTransaction {
+            add(Fragments.delete(activity, mediaId, itemTitle, listSize), tag)
+            addToBackStack(tag)
+        }
     }
 
-    fun toCreatePlaylistDialog(
-            activity: FragmentActivity,
-            mediaId: MediaId,
-            listSize: Int,
-            itemTitle: String
-    ) {
-//        val fragment = NewPlaylistDialog.newInstance(mediaId, listSize, itemTitle)
-//        fragment.show(activity.supportFragmentManager, NewPlaylistDialog.TAG)
+    fun toCreatePlaylistDialog(activity: FragmentActivity, mediaId: MediaId, listSize: Int, itemTitle: String) {
+        val tag = Fragments.CREATE_PLAYLIST
+        activity.fragmentTransaction {
+            add(Fragments.newPlaylist(activity, mediaId, itemTitle, listSize), tag)
+            addToBackStack(tag)
+        }
     }
 
     fun toClearPlaylistDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String) {
-//        val fragment = ClearPlaylistDialog.newInstance(mediaId, itemTitle)
-//        fragment.show(activity.supportFragmentManager, ClearPlaylistDialog.TAG)
+        val tag = Fragments.CLEAR_PLAYLIST
+        activity.fragmentTransaction {
+            add(Fragments.clearPlaylist(activity, mediaId, itemTitle), tag)
+            addToBackStack(tag)
+        }
     }
 
     fun toRemoveDuplicatesDialog(activity: FragmentActivity, mediaId: MediaId, itemTitle: String) {
-//        val fragment = RemoveDuplicatesDialog.newInstance(mediaId, itemTitle)
-//        fragment.show(activity.supportFragmentManager, RemoveDuplicatesDialog.TAG)
+        val tag = Fragments.REMOVE_DUPLICATES
+        activity.fragmentTransaction {
+            add(Fragments.removeDuplicates(activity, mediaId, itemTitle), tag)
+            addToBackStack(tag)
+        }
     }
 
 }

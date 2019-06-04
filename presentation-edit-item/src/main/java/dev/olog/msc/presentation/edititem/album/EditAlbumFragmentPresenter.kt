@@ -7,7 +7,6 @@ import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.core.interactor.item.GetAlbumUseCase
 import dev.olog.msc.core.interactor.item.GetPodcastAlbumUseCase
 import dev.olog.msc.presentation.edititem.utils.get
-import io.reactivex.Single
 import kotlinx.coroutines.runBlocking
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.FieldKey
@@ -24,14 +23,14 @@ class EditAlbumFragmentPresenter @Inject constructor(
     lateinit var songList: List<Song>
     private lateinit var originalAlbum: DisplayableAlbum
 
-    fun observeAlbum(): Single<DisplayableAlbum> {
+    fun observeAlbum(): DisplayableAlbum {
 //        if (mediaId.isPodcastAlbum){
 //            return observePodcastAlbumInternal()
 //        }
         return observeAlbumInternal()
     }
 
-    private fun observeAlbumInternal(): Single<DisplayableAlbum> = runBlocking {
+    private fun observeAlbumInternal(): DisplayableAlbum = runBlocking {
         TODO()
 //        getAlbumUseCase.execute(mediaId).asObservable()
 //                .flatMap { original ->
@@ -42,7 +41,7 @@ class EditAlbumFragmentPresenter @Inject constructor(
 //                .doOnSuccess { originalAlbum = it }
     }
 
-    private fun observePodcastAlbumInternal(): Single<DisplayableAlbum> = runBlocking {
+    private fun observePodcastAlbumInternal(): DisplayableAlbum {
         TODO()
 //        getPodcastAlbumUseCase.execute(mediaId).asObservable()
 //                .flatMap { original ->
@@ -53,7 +52,7 @@ class EditAlbumFragmentPresenter @Inject constructor(
 //                .doOnSuccess { originalAlbum = it }
     }
 
-    fun getSongList(): Single<List<Song>> {
+    fun getSingleSongList(): List<Song> {
         TODO()
 //        return getSongListByParamUseCase.execute(mediaId)
 //                .firstOrError()

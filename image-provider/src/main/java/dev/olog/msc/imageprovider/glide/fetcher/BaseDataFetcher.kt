@@ -8,6 +8,7 @@ import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.data.HttpUrlFetcher
 import com.bumptech.glide.load.model.GlideUrl
 import dev.olog.msc.imageprovider.R
+import dev.olog.msc.imageprovider.executors.GlideScope
 import dev.olog.msc.shared.utils.NetworkUtils
 import kotlinx.coroutines.*
 import java.io.InputStream
@@ -20,7 +21,7 @@ import java.util.concurrent.atomic.AtomicLong
 abstract class BaseDataFetcher(
     private val context: Context
 
-) : DataFetcher<InputStream> {
+) : DataFetcher<InputStream>, CoroutineScope by GlideScope() {
 
     companion object {
         private const val TIMEOUT = 2500
@@ -29,8 +30,6 @@ abstract class BaseDataFetcher(
     }
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
-
-    private var job: Job? = null
 
     private var hasIncremented = false
     private var hasAlreadyDecremented = false
@@ -48,14 +47,14 @@ abstract class BaseDataFetcher(
     }
 
     private fun unsubscribe() {
-        job?.cancel()
+        cancel(null)
         if (hasIncremented && !hasAlreadyDecremented) {
             counter.decrementAndGet()
         }
     }
 
     override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) {
-        job = GlobalScope.launch {
+        launch {
             try {
                 if (shouldFetch()) {
                     delayRequest()

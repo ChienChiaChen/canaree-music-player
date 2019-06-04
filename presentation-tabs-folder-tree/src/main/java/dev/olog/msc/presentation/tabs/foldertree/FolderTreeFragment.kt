@@ -7,6 +7,7 @@ import dev.olog.msc.presentation.base.extensions.viewModelProvider
 import dev.olog.msc.presentation.base.fragment.BaseFragment
 import dev.olog.msc.presentation.base.interfaces.CanHandleOnBackPressed
 import dev.olog.msc.presentation.navigator.Navigator
+import dev.olog.msc.presentation.tabs.foldertree.di.inject
 import dev.olog.msc.presentation.tabs.foldertree.utils.safeGetCanonicalFile
 import dev.olog.msc.presentation.tabs.foldertree.widgets.BreadCrumbLayout
 import dev.olog.msc.shared.core.lazyFast
@@ -25,6 +26,10 @@ class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback,
         viewModelProvider<FolderTreeFragmentViewModel>(
             viewModelFactory
         )
+    }
+
+    override fun injectComponent() {
+        inject()
     }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {

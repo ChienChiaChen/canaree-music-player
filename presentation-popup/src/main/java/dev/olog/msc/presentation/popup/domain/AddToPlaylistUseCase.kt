@@ -13,7 +13,7 @@ import dev.olog.msc.core.interactor.GetSongListChunkByParamUseCase
 import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
-class AddToPlaylistUseCase @Inject constructor(
+internal class AddToPlaylistUseCase @Inject constructor(
     scheduler: ComputationDispatcher,
     private val playlistGateway: PlaylistGateway,
     private val podcastPlaylistGateway: PodcastPlaylistGateway,

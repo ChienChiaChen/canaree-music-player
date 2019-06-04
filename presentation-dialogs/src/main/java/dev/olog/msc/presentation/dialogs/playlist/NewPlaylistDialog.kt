@@ -8,40 +8,29 @@ import com.google.android.material.textfield.TextInputLayout
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.extensions.act
 import dev.olog.msc.presentation.base.extensions.viewModelProvider
-import dev.olog.msc.presentation.base.extensions.withArguments
 import dev.olog.msc.presentation.dialogs.R
 import dev.olog.msc.presentation.dialogs.base.BaseEditTextDialog
+import dev.olog.msc.presentation.dialogs.playlist.di.inject
+import dev.olog.msc.presentation.navigator.Fragments
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.extensions.toast
 import javax.inject.Inject
 
 class NewPlaylistDialog : BaseEditTextDialog() {
 
-    companion object {
-        const val TAG = "NewPlaylistDialog"
-        const val ARGUMENTS_MEDIA_ID = "$TAG.arguments.media_id"
-        const val ARGUMENTS_LIST_SIZE = "$TAG.arguments.list_size"
-        const val ARGUMENTS_ITEM_TITLE = "$TAG.arguments.item_title"
-
-        @JvmStatic
-        fun newInstance(mediaId: MediaId, listSize: Int, itemTitle: String): NewPlaylistDialog {
-            return NewPlaylistDialog().withArguments(
-                    ARGUMENTS_MEDIA_ID to mediaId.toString(),
-                    ARGUMENTS_LIST_SIZE to listSize,
-                    ARGUMENTS_ITEM_TITLE to itemTitle
-            )
-        }
-    }
-
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     private val viewModel by lazyFast { viewModelProvider<NewPlaylistDialogViewModel>(factory) }
-    private val listSize: Int by lazyFast { arguments!!.getInt(ARGUMENTS_LIST_SIZE) }
+    private val listSize: Int by lazyFast { arguments!!.getInt(Fragments.ARGUMENTS_ITEM_COUNT) }
     private val mediaId: MediaId by lazyFast {
-        val mediaId = arguments!!.getString(ARGUMENTS_MEDIA_ID)!!
+        val mediaId = arguments!!.getString(Fragments.ARGUMENTS_MEDIA_ID)!!
         MediaId.fromString(mediaId)
     }
-    private val title: String by lazyFast { arguments!!.getString(ARGUMENTS_ITEM_TITLE)!! }
+    private val title: String by lazyFast { arguments!!.getString(Fragments.ARGUMENTS_TITLE)!! }
+
+    override fun injectComponent() {
+        inject()
+    }
 
     override fun extendBuilder(builder: AlertDialog.Builder): AlertDialog.Builder {
         return super.extendBuilder(builder)
@@ -58,7 +47,7 @@ class NewPlaylistDialog : BaseEditTextDialog() {
         return getString(R.string.popup_playlist_name_not_valid)
     }
 
-    override suspend fun onStringValid(string: String) {
+    override suspend fun onItemValid(string: String) {
         var message: String
         try {
             viewModel.executeAsync(mediaId, string).await()

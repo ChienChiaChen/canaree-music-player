@@ -4,7 +4,6 @@ import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.preference.PreferenceManager
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentTransaction
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.pro.HasBilling
 import dev.olog.msc.shared.extensions.toast
@@ -45,7 +44,8 @@ class PopupNavigator @Inject constructor() {
             activity.toast("Equalizer not found")
         }
     }
-//
+
+    //
 //    fun toDebugConfiguration(activity: FragmentActivity) {
 //        // TODO
 ////        val intent = Intent(activity, DebugConfigurationActivity::class.java)
@@ -53,18 +53,13 @@ class PopupNavigator @Inject constructor() {
 //    }
 //
     fun toSettings(activity: FragmentActivity) {
-        val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)
-
-        activity.fragmentTransaction {
-            setReorderingAllowed(true)
-            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            topFragment?.let { hide(it) }
-            add(R.id.fragmentContainer, Fragments.settings(activity), Fragments.SETTINGS)
-            addToBackStack(Fragments.SETTINGS)
-        }
+        superCerealTransition(activity, Fragments.settings(activity), Fragments.SETTINGS)
     }
 
     fun toSleepTimer(activity: FragmentActivity) {
+        if (!allowed()) {
+            return
+        }
         activity.fragmentTransaction {
             add(Fragments.sleepTimer(activity), Fragments.SLEEP_TIMER)
             addToBackStack(Fragments.SLEEP_TIMER)

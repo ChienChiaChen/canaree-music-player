@@ -2,14 +2,14 @@ package dev.olog.msc.core.interactor.base
 
 import dev.olog.msc.core.entity.data.request.Filter
 import dev.olog.msc.core.entity.data.request.getAll
-import dev.olog.msc.core.executors.IoDispatcher
+import dev.olog.msc.core.executors.Dispatcher
 import dev.olog.msc.core.gateway.base.BaseGateway
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 abstract class GetGroupUseCase<T>(
     private val gateway: BaseGateway<T, *>,
-    schedulers: IoDispatcher
+    schedulers: Dispatcher
 ) : ObservableFlow<List<T>>(schedulers) {
 
 

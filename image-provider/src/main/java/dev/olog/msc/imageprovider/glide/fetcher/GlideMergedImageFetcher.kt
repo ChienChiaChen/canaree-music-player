@@ -13,8 +13,9 @@ import dev.olog.msc.core.gateway.track.GenreGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.imageprovider.ImagesFolderUtils
 import dev.olog.msc.imageprovider.creator.impl.MergedImagesCreator
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import dev.olog.msc.imageprovider.executors.GlideScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import java.io.File
@@ -26,10 +27,10 @@ class GlideMergedImageFetcher(
     private val folderGateway: FolderGateway,
     private val playlistGateway: PlaylistGateway,
     private val genreGateway: GenreGateway
-) : DataFetcher<InputStream> {
+) : DataFetcher<InputStream>, CoroutineScope by GlideScope() {
 
     override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) {
-        GlobalScope.launch(Dispatchers.IO) {
+        launch {
             withTimeout(2000) {
                 val inputStream = when {
                     mediaId.isFolder -> makeFolderImage(mediaId.categoryValue)
@@ -40,6 +41,7 @@ class GlideMergedImageFetcher(
             }
         }
     }
+
 
     private suspend fun makeFolderImage(folder: String): InputStream? {
 //        val folderImage = ImagesFolderUtils.forFolder(context, dirPath) --contains current image
@@ -97,11 +99,11 @@ class GlideMergedImageFetcher(
     override fun getDataSource(): DataSource = DataSource.LOCAL
 
     override fun cleanup() {
-
+        cancel(null)
     }
 
     override fun cancel() {
-
+        cancel(null)
     }
 
 }

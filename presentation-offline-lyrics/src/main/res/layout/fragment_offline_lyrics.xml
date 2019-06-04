@@ -6,9 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    android:clipToPadding="false"
-    android:elevation="20dp"
-    android:background="?android:windowBackground">
+    android:clipToPadding="false">
 
     <dev.olog.msc.presentation.base.widgets.StatusBarView
         android:id="@+id/statusBar"
@@ -26,40 +24,37 @@
         android:clickable="false"
         android:focusable="false"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/wrapper"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/placeholder_album"
-        android:layout_marginBottom="90dp"/>
+        tools:src="@drawable/placeholder_album" />
 
     <dev.olog.msc.blurkit.BlurLayout
         android:id="@+id/blurLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="90dp"
-        app:blk_fps="24"/>
+        app:blk_fps="0"/>
 
     <View
+        android:id="@+id/scrim"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#9000"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/toolbar"
+        android:layout_width="@dimen/common_icon_size"
+        android:layout_height="@dimen/common_icon_size"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:paddingEnd="12dp"
-        android:paddingStart="12dp"
         android:src="@drawable/vd_back_arrow"
         android:tint="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,11 +62,9 @@
 
     <ImageButton
         android:id="@+id/search"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/toolbar"
+        android:layout_width="@dimen/common_icon_size"
+        android:layout_height="@dimen/common_icon_size"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:paddingEnd="12dp"
-        android:paddingStart="12dp"
         android:src="@drawable/vd_search"
         android:tint="@android:color/white"
         app:layout_constraintTop_toTopOf="@+id/back"
@@ -79,11 +72,9 @@
 
     <ImageButton
         android:id="@+id/sync"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/toolbar"
+        android:layout_width="@dimen/common_icon_size"
+        android:layout_height="@dimen/common_icon_size"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:paddingEnd="12dp"
-        android:paddingStart="12dp"
         android:src="@drawable/vd_sync"
         android:tint="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -154,7 +145,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.bottomappbar.BottomAppBar
+        <FrameLayout
             android:id="@+id/bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -218,15 +209,14 @@
 
             </LinearLayout>
 
-        </com.google.android.material.bottomappbar.BottomAppBar>
+        </FrameLayout>
 
-        <dev.olog.msc.shared.ui.widgets.BottomAppBarFab
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_anchor="@id/bar"
             android:clickable="false"
             android:focusable="false"
-            app:backgroundTint="@android:color/transparent"
             app:elevation="0dp" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

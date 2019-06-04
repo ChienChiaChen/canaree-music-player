@@ -1,13 +1,13 @@
 package dev.olog.msc.presentation.detail.domain
 
 import dev.olog.msc.core.entity.PlaylistType
-import dev.olog.msc.core.executors.IoDispatcher
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.interactor.base.SingleFlowWithParam
 import javax.inject.Inject
 
 class MoveItemInPlaylistUseCase @Inject constructor(
-    dispatcher: IoDispatcher,
+    dispatcher: ComputationDispatcher,
     private val playlistGateway: PlaylistGateway
 ) : SingleFlowWithParam<Boolean, MoveItemInPlaylistUseCase.Input>(dispatcher) {
 

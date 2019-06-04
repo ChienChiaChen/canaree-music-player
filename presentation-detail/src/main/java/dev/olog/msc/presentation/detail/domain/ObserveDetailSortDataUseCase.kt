@@ -3,7 +3,7 @@ package dev.olog.msc.presentation.detail.domain
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.core.executors.IoDispatcher
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.interactor.base.ObservableFlowWithParam
 import dev.olog.msc.presentation.detail.sort.DetailSort
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 class ObserveDetailSortDataUseCase @Inject constructor(
-    scheduler: IoDispatcher,
+    scheduler: ComputationDispatcher,
     private val prefsGateway: SortPreferencesGateway
 
 ) : ObservableFlowWithParam<DetailSort, MediaId>(scheduler) {

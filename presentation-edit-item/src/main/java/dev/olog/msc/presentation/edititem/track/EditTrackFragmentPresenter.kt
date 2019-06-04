@@ -9,7 +9,6 @@ import dev.olog.msc.core.interactor.item.GetUneditedSongUseCase
 import dev.olog.msc.core.interactor.last.fm.GetLastFmTrackUseCase
 import dev.olog.msc.presentation.edititem.DisplayableSong
 import dev.olog.msc.presentation.edititem.utils.get
-import io.reactivex.Single
 import kotlinx.coroutines.runBlocking
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.FieldKey
@@ -26,14 +25,14 @@ class EditTrackFragmentPresenter @Inject constructor(
 
     private lateinit var originalSong: DisplayableSong
 
-    fun observeSong(): Single<DisplayableSong> {
+    fun observeSong(): DisplayableSong {
 //        if (mediaId.isPodcast) {
 //            return observePodcastInternal()
 //        }
         return observeSongInternal()
     }
 
-    private fun observeSongInternal(): Single<DisplayableSong> {
+    private fun observeSongInternal(): DisplayableSong {
         TODO()
 //        return getSongUseCase.execute(mediaId)
 //                .firstOrError()
@@ -50,7 +49,7 @@ class EditTrackFragmentPresenter @Inject constructor(
 //                }
     }
 
-    private fun observePodcastInternal(): Single<DisplayableSong> = runBlocking {
+    private fun observePodcastInternal(): DisplayableSong = runBlocking {
         TODO()
 //        getPodcastUseCase.execute(mediaId).asObservable()
 //                .firstOrError()

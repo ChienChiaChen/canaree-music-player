@@ -12,7 +12,7 @@ import dev.olog.msc.presentation.media.getArtist
 import dev.olog.msc.presentation.media.getTitle
 import dev.olog.msc.presentation.media.isPlaying
 import dev.olog.msc.shared.MusicConstants.PROGRESS_BAR_INTERVAL
-import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.ui.extensions.subscribe
 import dev.olog.msc.shared.ui.playpause.IPlayPauseBehavior
@@ -25,7 +25,7 @@ internal class LyricsContent(
     private val glueService: MusicGlueService
 
 ) : WebViewContent(context, R.layout.content_web_view_with_player), DefaultLifecycleObserver,
-    CoroutineScope by DefaultScope() {
+    CoroutineScope by CustomScope() {
 
     private val playPauseBehavior = content.findViewById<ImageButton>(R.id.playPause) as IPlayPauseBehavior
     private val playPause = content.findViewById<ImageButton>(R.id.playPause)

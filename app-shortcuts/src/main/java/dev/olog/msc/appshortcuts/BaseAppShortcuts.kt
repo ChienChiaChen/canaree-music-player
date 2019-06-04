@@ -12,14 +12,14 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.imageprovider.glide.getCachedBitmap
 import dev.olog.msc.presentation.navigator.Activities
 import dev.olog.msc.shared.ShortcutsConstants
-import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.extensions.toast
 import kotlinx.coroutines.*
 
 internal abstract class BaseAppShortcuts(
     protected val context: Context
 
-) : DefaultLifecycleObserver, CoroutineScope by DefaultScope() {
+) : DefaultLifecycleObserver, CoroutineScope by CustomScope() {
 
     private var job: Job? = null
 

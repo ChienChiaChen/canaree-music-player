@@ -15,7 +15,7 @@ import dev.olog.msc.core.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.core.dagger.scope.PerService
 import dev.olog.msc.presentation.media.*
 import dev.olog.msc.presentation.media.connection.OnConnectionChanged
-import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.core.lazyFast
 import dev.olog.msc.shared.ui.extensions.distinctUntilChanged
 import dev.olog.msc.shared.ui.extensions.filter
@@ -31,7 +31,7 @@ internal class MusicGlueService @Inject constructor(
 
 ) : DefaultLifecycleObserver,
     OnConnectionChanged,
-    CoroutineScope by DefaultScope() {
+    CoroutineScope by CustomScope() {
 
     private val mediaExposer by lazyFast { MediaExposer(context, this) }
 

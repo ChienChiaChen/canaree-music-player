@@ -25,7 +25,7 @@ internal class RecentlyAddedFragmentViewModel @Inject constructor(
 
     init {
         val config = PagedList.Config.Builder()
-            .setPageSize(20)
+            .setPageSize(50)
             .setEnablePlaceholders(true)
             .build()
         data = LivePagedListBuilder(recentlyAddedDataSource, config).build()

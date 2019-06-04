@@ -1,14 +1,14 @@
 package dev.olog.msc.presentation.detail.domain
 
 import dev.olog.msc.core.entity.PlaylistType
-import dev.olog.msc.core.executors.IoDispatcher
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.podcast.PodcastPlaylistGateway
 import dev.olog.msc.core.gateway.track.PlaylistGateway
 import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class RemoveFromPlaylistUseCase @Inject constructor(
-    scheduler: IoDispatcher,
+    scheduler: ComputationDispatcher,
     private val playlistGateway: PlaylistGateway,
     private val podcastGateway: PodcastPlaylistGateway
 

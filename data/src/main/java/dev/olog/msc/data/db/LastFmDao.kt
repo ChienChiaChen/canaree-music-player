@@ -8,8 +8,8 @@ import dev.olog.msc.data.entity.LastFmAlbumEntity
 import dev.olog.msc.data.entity.LastFmArtistEntity
 import dev.olog.msc.data.entity.LastFmTrackEntity
 
-private const val ARTIST_CACHE_TIME = "1 months"
-private const val ALBUM_CACHE_TIME = "2 months"
+private const val ARTIST_CACHE_TIME = "-7 day"
+private const val ALBUM_CACHE_TIME = "-2 week"
 
 @Dao
 abstract class LastFmDao {
@@ -19,7 +19,7 @@ abstract class LastFmDao {
     @Query("""
         SELECT * FROM last_fm_track
         WHERE id = :id
-        AND added BETWEEN date('now', '-$ALBUM_CACHE_TIME') AND date('now')
+        AND added BETWEEN date('now', '$ALBUM_CACHE_TIME') AND date('now')
     """)
     abstract suspend fun getTrack(id: Long): LastFmTrackEntity?
 
@@ -34,7 +34,7 @@ abstract class LastFmDao {
     @Query("""
         SELECT * FROM last_fm_album
         WHERE id = :id
-        AND added BETWEEN date('now', '-$ALBUM_CACHE_TIME') AND date('now')
+        AND added BETWEEN date('now', '$ALBUM_CACHE_TIME') AND date('now')
     """)
     abstract suspend fun getAlbum(id: Long): LastFmAlbumEntity?
 
@@ -49,7 +49,7 @@ abstract class LastFmDao {
     @Query("""
         SELECT * FROM last_fm_artist
         WHERE id = :id
-        AND added BETWEEN date('now', '-$ARTIST_CACHE_TIME') AND date('now')
+        AND added BETWEEN date('now', '$ARTIST_CACHE_TIME') AND date('now')
     """)
     abstract suspend fun getArtist(id: Long): LastFmArtistEntity?
 

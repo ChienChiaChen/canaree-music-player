@@ -11,7 +11,7 @@ import dev.olog.msc.presentation.popup.R
 import dev.olog.msc.presentation.popup.domain.AddToPlaylistUseCase
 import javax.inject.Inject
 
-class SongPopupListener @Inject constructor(
+internal class SongPopupListener @Inject constructor(
     private val navigator: Navigator,
     getPlaylistBlockingUseCase: GetPlaylistsBlockingUseCase,
     addToPlaylistUseCase: AddToPlaylistUseCase

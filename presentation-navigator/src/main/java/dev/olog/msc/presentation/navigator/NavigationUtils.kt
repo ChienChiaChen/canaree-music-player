@@ -2,7 +2,9 @@ package dev.olog.msc.presentation.navigator
 
 import android.util.Log
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 
 internal const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
 
@@ -44,7 +46,27 @@ internal fun findFirstVisibleFragment(fragmentManager: FragmentManager): Fragmen
             .firstOrNull { basicFragments.contains(it.tag) }
     }
     if (topFragment == null) {
-        Log.e("Navigator", "Something went wrong, for some reason no fragment were found")
+        Log.e("Navigator", "Something went wrong, for some reason no fragment was found")
     }
     return topFragment
+}
+
+internal fun superCerealTransition(activity: FragmentActivity, fragment: Fragment, tag: String) {
+    if (!allowed()) {
+        return
+    }
+
+    val topFragment = findFirstVisibleFragment(activity.supportFragmentManager)
+
+    activity.fragmentTransaction {
+        setReorderingAllowed(true)
+        setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        topFragment?.let { hide(it) }
+        add(
+            R.id.fragmentContainer,
+            fragment,
+            tag
+        )
+        addToBackStack(tag)
+    }
 }

@@ -11,10 +11,7 @@ import dev.olog.msc.core.gateway.track.AlbumGateway
 import dev.olog.msc.data.db.AppDatabase
 import dev.olog.msc.data.entity.LastFmAlbumEntity
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import javax.inject.Inject
 
 internal class LastFmRepoAlbum @Inject constructor(
@@ -58,36 +55,37 @@ internal class LastFmRepoAlbum @Inject constructor(
 
         try {
             val albumInfo = lastFmService.getAlbumInfoAsync(album.title, album.artist).await().toDomain(albumId)
-            return cacheAsync(albumInfo).await().toDomain()
+            return cache(albumInfo).toDomain()
         } catch (ex: Exception){
             try {
                 var searchedAlbum = lastFmService.searchAlbumAsync(album.title).await().toDomain(albumId, album.artist)
+                yield()
                 try {
                     searchedAlbum = lastFmService.getAlbumInfoAsync(searchedAlbum.title, searchedAlbum.artist).await().toDomain(albumId)
                 } catch (ignored: Exception){}
-                return cacheAsync(searchedAlbum).await().toDomain()
+                return cache(searchedAlbum).toDomain()
             } catch (ex: Exception){
-                return cacheEmptyAsync(albumId).await().toDomain()
+                return cacheEmpty(albumId).toDomain()
             }
 
         }
     }
 
-    private suspend fun cacheAsync(model: LastFmAlbum): Deferred<LastFmAlbumEntity> = GlobalScope.async {
+    private suspend fun cache(model: LastFmAlbum): LastFmAlbumEntity {
         assertBackgroundThread()
         val entity = model.toModel()
         dao.insertAlbum(entity)
-        entity
+        return entity
     }
 
-    private suspend fun cacheEmptyAsync(albumId: Long): Deferred<LastFmAlbumEntity> = GlobalScope.async {
+    private suspend fun cacheEmpty(albumId: Long): LastFmAlbumEntity {
         assertBackgroundThread()
         val entity = LastFmNulls.createNullAlbum(albumId)
         dao.insertAlbum(entity)
-        entity
+        return entity
     }
 
-    suspend fun delete(albumId: Long) = GlobalScope.launch {
+    suspend fun delete(albumId: Long) {
         assertBackgroundThread()
         dao.deleteAlbum(albumId)
     }

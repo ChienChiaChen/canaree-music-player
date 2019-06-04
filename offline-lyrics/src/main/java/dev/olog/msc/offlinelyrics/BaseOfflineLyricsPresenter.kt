@@ -12,7 +12,7 @@ import dev.olog.msc.core.entity.OfflineLyrics
 import dev.olog.msc.core.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.offlinelyrics.domain.InsertOfflineLyricsUseCase
 import dev.olog.msc.offlinelyrics.domain.ObserveOfflineLyricsUseCase
-import dev.olog.msc.shared.core.coroutines.DefaultScope
+import dev.olog.msc.shared.core.coroutines.CustomScope
 import dev.olog.msc.shared.core.flow.flowInterval
 import dev.olog.msc.shared.extensions.dpToPx
 import dev.olog.msc.shared.utils.clamp
@@ -33,9 +33,9 @@ abstract class BaseOfflineLyricsPresenter constructor(
     private val observeUseCase: ObserveOfflineLyricsUseCase,
     private val insertUseCase: InsertOfflineLyricsUseCase
 
-) : CoroutineScope by DefaultScope() {
+) : CoroutineScope by CustomScope() {
 
-    protected val currentTrackIdPublisher = BroadcastChannel<Long>(Channel.CONFLATED)
+    private val currentTrackIdPublisher = BroadcastChannel<Long>(Channel.CONFLATED)
 
     private var originalLyrics: String = ""
 

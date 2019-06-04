@@ -3,7 +3,7 @@ package dev.olog.msc.offlinelyrics.domain
 import android.util.Log
 import dev.olog.msc.core.entity.OfflineLyrics
 import dev.olog.msc.core.entity.track.Song
-import dev.olog.msc.core.executors.IoDispatcher
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.OfflineLyricsGateway
 import dev.olog.msc.core.gateway.track.SongGateway
 import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
@@ -11,7 +11,7 @@ import java.io.File
 import javax.inject.Inject
 
 class InsertOfflineLyricsUseCase @Inject constructor(
-    executors: IoDispatcher,
+    executors: ComputationDispatcher,
     private val gateway: OfflineLyricsGateway,
     private val songGateway: SongGateway,
     private val lyricsFromMetadata: ILyricsFromMetadata

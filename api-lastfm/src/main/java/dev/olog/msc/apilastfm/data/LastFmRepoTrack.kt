@@ -13,10 +13,6 @@ import dev.olog.msc.data.entity.LastFmTrackEntity
 import dev.olog.msc.shared.TrackUtils
 import dev.olog.msc.shared.utils.TextUtils
 import dev.olog.msc.shared.utils.assertBackgroundThread
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class LastFmRepoTrack @Inject constructor(
@@ -67,36 +63,37 @@ internal class LastFmRepoTrack @Inject constructor(
 
         try {
             val trackInfo = lastFmService.getTrackInfoAsync(trackTitle, trackArtist).await().toDomain(trackId)
-            return cacheAsync(trackInfo).await().toDomain()
+            return cache(trackInfo).toDomain()
         } catch (ex: Exception) {
             try {
                 var trackInfo = lastFmService.searchTrackAsync(trackTitle, trackArtist).await().toDomain(trackId)
                 try {
-                    trackInfo = lastFmService.getTrackInfoAsync(trackInfo.title, trackInfo.artist).await().toDomain(trackId)
+                    trackInfo =
+                        lastFmService.getTrackInfoAsync(trackInfo.title, trackInfo.artist).await().toDomain(trackId)
                 } catch (ignored: Exception) {
                 }
-                return cacheAsync(trackInfo).await().toDomain()
+                return cache(trackInfo).toDomain()
             } catch (ex: Exception) {
-                return cacheEmptyAsync(trackId).await().toDomain()
+                return cacheEmpty(trackId).toDomain()
             }
         }
     }
 
-    private suspend fun cacheAsync(model: LastFmTrack): Deferred<LastFmTrackEntity> = GlobalScope.async {
+    private suspend fun cache(model: LastFmTrack): LastFmTrackEntity {
         assertBackgroundThread()
         val entity = model.toModel()
         dao.insertTrack(entity)
-        entity
+        return entity
     }
 
-    private suspend fun cacheEmptyAsync(trackId: Long): Deferred<LastFmTrackEntity> = GlobalScope.async {
+    private suspend fun cacheEmpty(trackId: Long): LastFmTrackEntity {
         assertBackgroundThread()
         val entity = LastFmNulls.createNullTrack(trackId)
         dao.insertTrack(entity)
-        entity
+        return entity
     }
 
-    suspend fun delete(trackId: Long) = GlobalScope.launch {
+    suspend fun delete(trackId: Long) {
         assertBackgroundThread()
         dao.deleteTrack(trackId)
     }

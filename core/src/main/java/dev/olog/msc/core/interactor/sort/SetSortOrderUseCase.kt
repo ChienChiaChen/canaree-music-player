@@ -3,13 +3,13 @@ package dev.olog.msc.core.interactor.sort
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.sort.SortType
-import dev.olog.msc.core.executors.IoDispatcher
+import dev.olog.msc.core.executors.ComputationDispatcher
 import dev.olog.msc.core.gateway.prefs.SortPreferencesGateway
 import dev.olog.msc.core.interactor.base.CompletableFlowWithParam
 import javax.inject.Inject
 
 class SetSortOrderUseCase @Inject constructor(
-    schedulers: IoDispatcher,
+    schedulers: ComputationDispatcher,
     private val gateway: SortPreferencesGateway
 
 ) : CompletableFlowWithParam<SetSortOrderRequestModel>(schedulers) {

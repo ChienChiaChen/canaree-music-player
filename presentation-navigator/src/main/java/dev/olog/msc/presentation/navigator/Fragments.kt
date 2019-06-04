@@ -22,12 +22,27 @@ object Fragments {
     const val CREATE_PLAYLIST = "dev.olog.msc.presentation.create.playlist.CreatePlaylistFragment"
     const val EQUALIZER = "dev.olog.msc.presentation.equalizer.EqualizerFragment"
     const val SLEEP_TIMER = "dev.olog.msc.presentation.sleeptimer.ScrollHmsPickerDialog"
-
+    const val OFFLINE_LYRICS = "dev.olog.msc.presentation.offlinelyrics.OfflineLyricsFragment"
     const val SETTINGS = "dev.olog.msc.presentation.preferences.settings.SettingsFragmentWrapper"
 
+    // arguments
     const val ARGUMENTS_MEDIA_ID = "argument.media_id"
-    const val ARGUMENTS_MEDIA_ID_CATEGORY = "argument.media_id_category"
+    const val ARGUMENTS_MEDIA_ID_CATEGORY = "argument.media_id.category"
+    const val ARGUMENTS_TITLE = "argument.title"
+    const val ARGUMENTS_ARTIST = "argument.artist"
+    const val ARGUMENTS_ITEM_COUNT = "argument.item_count"
     const val ARGUMENTS_PLAYLIST_TYPE = "argument.playlist_type"
+
+    // dialogs
+    const val SET_RINGTONE = "dev.olog.msc.presentation.dialogs.ringtone.SetRingtoneDialog"
+    const val RENAME = "dev.olog.msc.presentation.dialogs.rename.RenameDialog"
+    const val CLEAR_PLAYLIST = "dev.olog.msc.presentation.dialogs.playlist.ClearPlaylistDialog"
+    const val NEW_PLAYLIST = "dev.olog.msc.presentation.dialogs.playlist.NewPlaylistDialog"
+    const val PLAY_LATER = "dev.olog.msc.presentation.dialogs.play.later.PlayLaterDialog"
+    const val PLAY_NEXT = "dev.olog.msc.presentation.dialogs.play.next.PlayNextDialog"
+    const val ADD_FAVORITE = "dev.olog.msc.presentation.dialogs.favorite.AddFavoriteDialog"
+    const val REMOVE_DUPLICATES = "dev.olog.msc.presentation.dialogs.duplicates.RemoveDuplicatesDialog"
+    const val DELETE = "dev.olog.msc.presentation.dialogs.delete.DeleteDialog"
 
     private fun instantiate(fragmentManager: FragmentManager, className: String): Fragment {
         val factory = fragmentManager.fragmentFactory
@@ -70,7 +85,7 @@ object Fragments {
 
     fun tab(fragmentManager: FragmentManager, mediaIdCategory: MediaIdCategory): Fragment {
         return instantiate(fragmentManager, TAB).withArguments(
-            ARGUMENTS_MEDIA_ID_CATEGORY to mediaIdCategory.ordinal
+            ARGUMENTS_MEDIA_ID_CATEGORY to mediaIdCategory.toString()
         )
     }
 
@@ -94,6 +109,78 @@ object Fragments {
 
     fun sleepTimer(activity: FragmentActivity): Fragment {
         return instantiate(activity.supportFragmentManager, SLEEP_TIMER)
+    }
+
+    fun offlineLyrics(activity: FragmentActivity): Fragment {
+        return instantiate(activity.supportFragmentManager, OFFLINE_LYRICS)
+    }
+
+    fun setRingtone(activity: FragmentActivity, mediaId: MediaId, title: String, artist: String): Fragment {
+        return instantiate(activity.supportFragmentManager, SET_RINGTONE).withArguments(
+            ARGUMENTS_MEDIA_ID to mediaId.toString(),
+            ARGUMENTS_TITLE to title,
+            ARGUMENTS_ARTIST to artist
+        )
+    }
+
+    fun rename(activity: FragmentActivity, mediaId: MediaId, title: String): Fragment {
+        return instantiate(activity.supportFragmentManager, RENAME).withArguments(
+            ARGUMENTS_MEDIA_ID to mediaId.toString(),
+            ARGUMENTS_TITLE to title
+        )
+    }
+
+    fun clearPlaylist(activity: FragmentActivity, mediaId: MediaId, title: String): Fragment {
+        return instantiate(activity.supportFragmentManager, CLEAR_PLAYLIST).withArguments(
+            ARGUMENTS_MEDIA_ID to mediaId.toString(),
+            ARGUMENTS_TITLE to title
+        )
+    }
+
+    fun newPlaylist(activity: FragmentActivity, mediaId: MediaId, title: String, itemCount: Int): Fragment {
+        return instantiate(activity.supportFragmentManager, NEW_PLAYLIST).withArguments(
+            ARGUMENTS_MEDIA_ID to mediaId.toString(),
+            ARGUMENTS_TITLE to title,
+            ARGUMENTS_ITEM_COUNT to itemCount
+        )
+    }
+
+    fun playLater(activity: FragmentActivity, mediaId: MediaId, title: String, itemCount: Int): Fragment {
+        return instantiate(activity.supportFragmentManager, PLAY_LATER).withArguments(
+            ARGUMENTS_MEDIA_ID to mediaId.toString(),
+            ARGUMENTS_TITLE to title,
+            ARGUMENTS_ITEM_COUNT to itemCount
+        )
+    }
+
+    fun playNext(activity: FragmentActivity, mediaId: MediaId, title: String, itemCount: Int): Fragment {
+        return instantiate(activity.supportFragmentManager, PLAY_NEXT).withArguments(
+            ARGUMENTS_MEDIA_ID to mediaId.toString(),
+            ARGUMENTS_TITLE to title,
+            ARGUMENTS_ITEM_COUNT to itemCount
+        )
+    }
+
+    fun addFavorite(activity: FragmentActivity, mediaId: MediaId, title: String): Fragment {
+        return instantiate(activity.supportFragmentManager, ADD_FAVORITE).withArguments(
+            ARGUMENTS_MEDIA_ID to mediaId.toString(),
+            ARGUMENTS_TITLE to title
+        )
+    }
+
+    fun removeDuplicates(activity: FragmentActivity, mediaId: MediaId, title: String): Fragment {
+        return instantiate(activity.supportFragmentManager, REMOVE_DUPLICATES).withArguments(
+            ARGUMENTS_MEDIA_ID to mediaId.toString(),
+            ARGUMENTS_TITLE to title
+        )
+    }
+
+    fun delete(activity: FragmentActivity, mediaId: MediaId, title: String, itemCount: Int): Fragment {
+        return instantiate(activity.supportFragmentManager, DELETE).withArguments(
+            ARGUMENTS_MEDIA_ID to mediaId.toString(),
+            ARGUMENTS_TITLE to title,
+            ARGUMENTS_ITEM_COUNT to itemCount
+        )
     }
 
 }

@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.qualifier.ApplicationContext
 import dev.olog.msc.shared.extensions.toast
-import io.reactivex.disposables.CompositeDisposable
 import org.jaudiotagger.audio.exceptions.CannotReadException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 import java.io.FileNotFoundException
@@ -18,7 +17,7 @@ class EditItemViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val subscriptions = CompositeDisposable()
+//    private val subscriptions = CompositeDisposable()
 
     fun updateSong(data: UpdateSongInfo): UpdateResult {
         when {
@@ -78,7 +77,7 @@ class EditItemViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        subscriptions.clear()
+//        subscriptions.clear()
     }
 
 }

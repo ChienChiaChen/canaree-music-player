@@ -9,7 +9,7 @@ import dev.olog.msc.presentation.popup.AbsPopupListener
 import dev.olog.msc.presentation.popup.R
 import dev.olog.msc.shared.TrackUtils
 
-class PodcastArtistPopup (
+internal class PodcastArtistPopup (
         view: View,
         artist: PodcastArtist,
         song: Podcast?,
