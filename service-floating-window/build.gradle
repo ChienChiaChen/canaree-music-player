@@ -1,7 +1,9 @@
 apply plugin: 'com.android.library'
-apply from: '../base_module.gradle'
+apply from: '../base_module_2.gradle'
+apply from: '../dagger.gradle'
 
 dependencies {
+    implementation project(':app-injection')
     implementation project(':core')
     implementation project(':shared')
     implementation project(':shared-ui-components')
@@ -20,9 +22,6 @@ dependencies {
     implementation librariesAndroidX.cardview
     implementation librariesAndroidX.material
     implementation librariesUi.constraintLayout
-
-    implementation librariesCore.daggerAndroid
-    kapt librariesCore.daggerAndroidProcessor
 
     implementation librariesUi.glide
     kapt librariesUi.glideProcessor

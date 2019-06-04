@@ -8,14 +8,15 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.appcompat.view.ContextThemeWrapper
-import dagger.android.support.AndroidSupportInjection
 
 abstract class BaseBottomSheetFragment : DimBottomSheetDialogFragment() {
 
     override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
+        injectComponents()
         super.onAttach(context)
     }
+
+    protected open fun injectComponents() {}
 
     @CallSuper
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

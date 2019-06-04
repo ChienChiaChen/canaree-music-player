@@ -86,6 +86,7 @@ interface CoreComponent {
     fun favoriteGateway(): FavoriteGateway
     fun searchGateway(): SearchGateway
     fun recentSearches(): RecentSearchesGateway
+    fun offlineLyrics(): OfflineLyricsGateway
 
     fun sharedPreferences(): SharedPreferences
 

@@ -57,4 +57,9 @@ abstract class BaseFragment : Fragment() {
         list.updatePadding(top = topInset, bottom = bottomInset)
     }
 
+    @Suppress("UNCHECKED_CAST")
+    protected fun <T> getArgument(key: String): T {
+        return arguments!!.get(key) as T
+    }
+
 }

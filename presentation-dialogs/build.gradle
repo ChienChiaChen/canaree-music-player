@@ -15,10 +15,6 @@ dependencies {
     implementation project(':shared-ui-components')
     implementation project(':presentation-base')
 
-    implementation librariesCore.daggerAndroid
-    implementation librariesCore.daggerAndroidSupport
-    kapt librariesCore.daggerAndroidProcessor
-
     implementation librariesAndroidX.coreKtx
     implementation librariesAndroidX.material
     implementation librariesAndroidX.media

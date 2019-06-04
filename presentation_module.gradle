@@ -33,10 +33,6 @@ dependencies {
     implementation librariesCore.lifecycleJava8
     implementation librariesCore.lifecycleKtx
 
-    implementation librariesCore.daggerAndroid
-    implementation librariesCore.daggerAndroidSupport
-    kapt librariesCore.daggerAndroidProcessor
-
     implementation librariesAndroidX.paging
 
 }

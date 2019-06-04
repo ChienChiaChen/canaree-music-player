@@ -86,6 +86,8 @@ dependencies {
     implementation project(':presentation-search')
     implementation project(':presentation-playing-queue')
     implementation project(':presentation-popup')
+    implementation project(':presentation-equalizer')
+
     // services
     implementation project(':service-music')
     implementation project(':service-floating-window')
@@ -110,8 +112,8 @@ dependencies {
 
     testImplementation "junit:junit:$rootProject.junit"
     testImplementation "org.mockito:mockito-core:$rootProject.mockito"
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
 // leave at bottom

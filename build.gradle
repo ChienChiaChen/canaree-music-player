@@ -114,27 +114,22 @@ ext {
     coroutines = '1.2.1'
 
     librariesCore = [
-            kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
+            kotlin             : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
 //            dagger
-            dagger                : "com.google.dagger:dagger:$dagger",
-            daggerProcessor       : "com.google.dagger:dagger-compiler:$dagger",
-            daggerAndroid         : "com.google.dagger:dagger-android:$dagger",
-            daggerAndroidProcessor: "com.google.dagger:dagger-android-processor:$dagger",
-            daggerAndroidSupport  : "com.google.dagger:dagger-android-support:$dagger",
-//            rx
-            rxBinding             : "com.jakewharton.rxbinding2:rxbinding:$rx_binding",
+            dagger             : "com.google.dagger:dagger:$dagger",
+            daggerProcessor    : "com.google.dagger:dagger-compiler:$dagger",
 //            lifecycle
-            lifecycleRuntime      : "androidx.lifecycle:lifecycle-runtime:$lifecycle",
-            lifecycleExtensions   : "androidx.lifecycle:lifecycle-extensions:$lifecycle",
-            lifecycleJava8        : "androidx.lifecycle:lifecycle-common-java8:$lifecycle",
-            lifecycleKtx          : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle",
-            lifecycleLiveData     : "androidx.lifecycle:lifecycle-livedata:$lifecycle",
-            lifecycleViewModel    : "androidx.lifecycle:lifecycle-viewmodel:$lifecycle",
+            lifecycleRuntime   : "androidx.lifecycle:lifecycle-runtime:$lifecycle",
+            lifecycleExtensions: "androidx.lifecycle:lifecycle-extensions:$lifecycle",
+            lifecycleJava8     : "androidx.lifecycle:lifecycle-common-java8:$lifecycle",
+            lifecycleKtx       : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle",
+            lifecycleLiveData  : "androidx.lifecycle:lifecycle-livedata:$lifecycle",
+            lifecycleViewModel : "androidx.lifecycle:lifecycle-viewmodel:$lifecycle",
 
-            coroutines            : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines",
-            coroutinesRx          : "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutines",
-            coroutinesDebug       : "org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutines",
-            coroutinesTest        : "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines",
+            coroutines         : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines",
+            coroutinesRx       : "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutines",
+            coroutinesDebug    : "org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutines",
+            coroutinesTest     : "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines",
     ]
 
     librariesMusic = [

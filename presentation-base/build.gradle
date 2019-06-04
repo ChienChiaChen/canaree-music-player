@@ -39,10 +39,6 @@ dependencies {
     implementation librariesCore.lifecycleExtensions
     implementation librariesCore.lifecycleJava8
 
-    implementation librariesCore.daggerAndroid
-    implementation librariesCore.daggerAndroidSupport
-    kapt librariesCore.daggerAndroidProcessor
-
     implementation librariesPersistency.rxPrefs
 
     implementation librariesAndroidX.paging
