@@ -5,15 +5,15 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PodcastAlbum
 import dev.olog.msc.core.entity.PodcastPlaylist
+import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
 import dev.olog.msc.domain.interactor.all.sibling.GetPodcastAlbumSiblingsByAlbumUseCase
 import dev.olog.msc.domain.interactor.all.sibling.GetPodcastAlbumSiblingsByArtistUseCase
 import dev.olog.msc.domain.interactor.all.sibling.GetPodcastPlaylistsSiblingsUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.mapToList
 import io.reactivex.Observable
 
@@ -63,8 +63,7 @@ private fun PodcastPlaylist.toDetailDisplayableItem(resources: Resources): Displ
             R.layout.item_detail_album,
             MediaId.podcastPlaylistId(id),
             title,
-            resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase(),
-            this.image
+            resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase()
     )
 }
 
@@ -73,7 +72,6 @@ private fun PodcastAlbum.toDetailDisplayableItem(resources: Resources): Displaya
             R.layout.item_detail_album,
             MediaId.podcastAlbumId(id),
             title,
-            resources.getQuantityString(R.plurals.common_plurals_song, this.songs, this.songs).toLowerCase(),
-            image
+            resources.getQuantityString(R.plurals.common_plurals_song, this.songs, this.songs).toLowerCase()
     )
 }

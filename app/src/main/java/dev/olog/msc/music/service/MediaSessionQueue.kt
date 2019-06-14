@@ -3,20 +3,19 @@ package dev.olog.msc.music.service
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.constants.WidgetConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.domain.interactor.playing.queue.UpdateMiniQueueUseCase
 import dev.olog.msc.music.service.model.MediaEntity
 import dev.olog.msc.presentation.app.widget.WidgetClasses
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.getAppWidgetsIdsFor
 import dev.olog.msc.utils.k.extension.unsubscribe
 import io.reactivex.disposables.Disposable
@@ -104,7 +103,7 @@ class MediaSessionQueue @Inject constructor(
                 .setMediaId(MediaId.songId(this.id).toString())
                 .setTitle(this.title)
                 .setSubtitle(DisplayableItem.adjustArtist(this.artist))
-                .setMediaUri(Uri.parse(this.image))
+//                .setMediaUri(Uri.parse(this.image)) TODO
                 .build()
 
         return MediaSessionCompat.QueueItem(description, this.idInPlaylist.toLong())

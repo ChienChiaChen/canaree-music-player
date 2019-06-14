@@ -2,7 +2,6 @@ package dev.olog.msc.presentation.widget.fast.scroller
 
 import android.content.Context
 import android.util.AttributeSet
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.runOnMainThread
@@ -16,11 +15,7 @@ class RxWaveSideBarView @JvmOverloads constructor(
     var scrollableLayoutId : Int = 0
 
     fun onDataChanged(list: List<DisplayableItem>){
-        if (AppConstants.useFakeData){
-            updateLetters(LETTERS)
-        } else {
-            updateLetters(generateLetters(list))
-        }
+        updateLetters(generateLetters(list))
     }
 
     fun setListener(listener: OnTouchLetterChangeListener?){

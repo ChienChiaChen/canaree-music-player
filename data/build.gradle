@@ -74,7 +74,7 @@ dependencies {
 
     implementation lib_core.dagger
     kapt lib_core.dagger_processor
-
+    implementation "androidx.core:core-ktx:1.0.2"
     implementation "me.xdrop:fuzzywuzzy:$rootProject.fuzzywuzzy"
     implementation "com.google.code.gson:gson:$rootProject.gson"
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"

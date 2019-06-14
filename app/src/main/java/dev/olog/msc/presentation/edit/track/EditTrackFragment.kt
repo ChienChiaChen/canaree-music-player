@@ -8,14 +8,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.edit.BaseEditItemFragment
 import dev.olog.msc.presentation.edit.EditItemViewModel
 import dev.olog.msc.presentation.edit.UpdateResult
 import dev.olog.msc.presentation.edit.UpdateSongInfo
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.utils.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.img.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_edit_track.*
@@ -58,8 +57,7 @@ class EditTrackFragment : BaseEditItemFragment() {
                 bitrate.text = it.bitrate
                 format.text = it.format
                 sampling.text = it.sampling
-                val model = DisplayableItem(0, MediaId.songId(it.id), "", image = it.image)
-                setImage(model)
+                setImage(MediaId.songId(it.id))
             }
             hideLoader()
         })

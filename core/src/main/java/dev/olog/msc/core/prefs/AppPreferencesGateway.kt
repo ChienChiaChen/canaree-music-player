@@ -1,4 +1,4 @@
-package dev.olog.msc.domain.gateway.prefs
+package dev.olog.msc.core.prefs
 
 import dev.olog.msc.core.entity.*
 import io.reactivex.Completable

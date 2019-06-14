@@ -69,7 +69,7 @@ class OfflineLyricsContent(
         musicServiceBinder.onMetadataChanged
                 .subscribe({
                     presenter.updateCurrentTrackId(it.id)
-                    loadImage(it, it.image)
+                    loadImage(it, MediaId.songId(it.id))
                     header.text = it.title
                     subHeader.text = it.artist
                     updateProgressBarMax(it.duration)
@@ -103,14 +103,14 @@ class OfflineLyricsContent(
         updateDisposable.unsubscribe()
     }
 
-    private fun loadImage(metadata: MusicServiceMetadata, image: DisplayableItem){
+    private fun loadImage(metadata: MusicServiceMetadata, mediaId: MediaId){
         GlideApp.with(context).clear(this.image)
 
         val drawable = CoverUtils.getGradient(context, if (metadata.isPodcast) MediaId.podcastId(metadata.id)
                         else MediaId.songId(metadata.id))
 
         GlideApp.with(context)
-                .load(image)
+                .load(mediaId)
                 .placeholder(drawable)
                 .priority(Priority.IMMEDIATE)
                 .override(500)

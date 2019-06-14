@@ -11,13 +11,12 @@ import dev.olog.msc.core.entity.Genre
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.gateway.GenreGateway
 import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.entity.GenreMostPlayedEntity
 import dev.olog.msc.data.mapper.extractId
 import dev.olog.msc.data.mapper.toGenre
-import dev.olog.msc.data.repository.util.CommonQuery
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.utils.k.extension.debounceFirst
+import dev.olog.msc.data.utils.CommonQuery
 import io.reactivex.Completable
 import io.reactivex.CompletableSource
 import io.reactivex.Observable
@@ -25,8 +24,8 @@ import javax.inject.Inject
 
 private val MEDIA_STORE_URI = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI
 private val PROJECTION = arrayOf(
-        MediaStore.Audio.Genres._ID,
-        MediaStore.Audio.Genres.NAME
+    MediaStore.Audio.Genres._ID,
+    MediaStore.Audio.Genres.NAME
 )
 private val SELECTION: String? = null
 private val SELECTION_ARGS: Array<String>? = null
@@ -50,30 +49,32 @@ class GenreRepository @Inject constructor(
 
     private fun queryAllData(): Observable<List<Genre>> {
         return rxContentResolver.createQuery(
-                MEDIA_STORE_URI, PROJECTION, SELECTION,
-                SELECTION_ARGS, SORT_ORDER, true
+            MEDIA_STORE_URI,
+            PROJECTION,
+            SELECTION,
+            SELECTION_ARGS,
+            SORT_ORDER, true
         )
-                .debounceFirst()
-                .lift(SqlBrite.Query.mapToList {
-                    val id = it.extractId()
-                    val uri = MediaStore.Audio.Genres.Members.getContentUri("external", id)
-                    val size = CommonQuery.getSize(context.contentResolver, uri)
-                    it.toGenre(context, size)
-                }).map { removeBlacklisted(it) }
-                .doOnError { it.printStackTrace() }
-                .onErrorReturnItem(listOf())
+            .lift(SqlBrite.Query.mapToList {
+                val id = it.extractId()
+                val uri = MediaStore.Audio.Genres.Members.getContentUri("external", id)
+                val size = CommonQuery.getSize(context.contentResolver, uri)
+                it.toGenre(size)
+            }).map { removeBlacklisted(it) }
+            .doOnError { it.printStackTrace() }
+            .onErrorReturnItem(listOf())
 
     }
 
     private val cachedData = queryAllData()
-            .replay(1)
-            .refCount()
+        .replay(1)
+        .refCount()
 
-    private fun removeBlacklisted(list: MutableList<Genre>): List<Genre>{
+    private fun removeBlacklisted(list: MutableList<Genre>): List<Genre> {
         val songsIds = CommonQuery.getAllSongsIdNotBlackListd(context.contentResolver, appPrefsUseCase)
         for (genre in list.toList()) {
             val newSize = calculateNewGenreSize(genre.id, songsIds)
-            if (newSize == 0){
+            if (newSize == 0) {
                 list.remove(genre)
             } else {
                 list[list.indexOf(genre)] = genre.copy(size = newSize)
@@ -85,11 +86,12 @@ class GenreRepository @Inject constructor(
 
     private fun calculateNewGenreSize(id: Long, songIds: List<Long>): Int {
         val uri = MediaStore.Audio.Genres.Members.getContentUri("external", id)
-        val cursor = context.contentResolver.query(uri, arrayOf(MediaStore.Audio.Genres.Members.AUDIO_ID), null, null, null)
+        val cursor =
+            context.contentResolver.query(uri, arrayOf(MediaStore.Audio.Genres.Members.AUDIO_ID), null, null, null)
         val list = mutableListOf<Long>()
 
         cursor?.use {
-            while (it.moveToNext()){
+            while (it.moveToNext()) {
                 list.add(it.getLong(0))
             }
         }
@@ -101,10 +103,6 @@ class GenreRepository @Inject constructor(
 
     override fun getAll(): Observable<List<Genre>> = cachedData
 
-    override fun getAllNewRequest(): Observable<List<Genre>> {
-        return queryAllData()
-    }
-
     override fun getByParam(param: Long): Observable<Genre> {
         return cachedData.map { list -> list.first { it.id == param } }
     }
@@ -114,18 +112,20 @@ class GenreRepository @Inject constructor(
         val uri = MediaStore.Audio.Genres.Members.getContentUri("external", genreId)
 
         return rxContentResolver.createQuery(
-                uri,SONG_PROJECTION,
-                SONG_SELECTION,
-                SONG_SELECTION_ARGS,
-                SONG_SORT_ORDER,
-                false
-        ).debounceFirst()
-                .lift(SqlBrite.Query.mapToList { it.extractId() })
-                .switchMapSingle { ids -> songGateway.getAll().firstOrError().map { songs ->
+            uri, SONG_PROJECTION,
+            SONG_SELECTION,
+            SONG_SELECTION_ARGS,
+            SONG_SORT_ORDER,
+            false
+        )
+            .lift(SqlBrite.Query.mapToList { it.extractId() })
+            .switchMapSingle { ids ->
+                songGateway.getAll().firstOrError().map { songs ->
                     ids.asSequence()
-                            .mapNotNull { id -> songs.firstOrNull { it.id == id } }
-                            .toList()
-                }}.distinctUntilChanged()
+                        .mapNotNull { id -> songs.firstOrNull { it.id == id } }
+                        .toList()
+                }
+            }.distinctUntilChanged()
     }
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
@@ -138,16 +138,18 @@ class GenreRepository @Inject constructor(
         val songId = mediaId.leaf!!
         val genreId = mediaId.categoryValue.toLong()
         return songGateway.getByParam(songId)
-                .firstOrError()
-                .flatMapCompletable { song ->
-                    CompletableSource { mostPlayedDao.insertOne(
+            .firstOrError()
+            .flatMapCompletable { song ->
+                CompletableSource {
+                    mostPlayedDao.insertOne(
                         GenreMostPlayedEntity(
                             0,
                             song.id,
                             genreId
                         )
-                    ) }
+                    )
                 }
+            }
     }
 
 }

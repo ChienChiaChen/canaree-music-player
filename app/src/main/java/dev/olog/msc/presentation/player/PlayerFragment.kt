@@ -314,7 +314,6 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
                 MediaId.fromString(description.mediaId!!),
                 description.title!!.toString(),
                 DisplayableItem.adjustArtist(description.subtitle!!.toString()),
-                description.mediaUri!!.toString(),
                 isPlayable = true,
                 trackNumber = "${this.queueId}"
         )

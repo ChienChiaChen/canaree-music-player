@@ -9,8 +9,8 @@ import dev.olog.msc.R
 import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.UserCredentials
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.domain.gateway.prefs.Sorting
+import dev.olog.msc.core.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.Sorting
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.safeGetCanonicalPath
 import io.reactivex.Completable

@@ -1,4 +1,4 @@
-package dev.olog.msc.data.repository.lyrics
+package dev.olog.msc.data.repository
 
 import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.entity.OfflineLyricsEntity

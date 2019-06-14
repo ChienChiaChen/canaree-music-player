@@ -16,7 +16,6 @@ import dev.olog.msc.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.dagger.scope.PerService
 import dev.olog.msc.music.service.MusicService
 import dev.olog.msc.presentation.base.music.service.MusicServiceConnectionState
-import dev.olog.msc.presentation.widget.image.view.player.toPlayerImage
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -31,8 +30,10 @@ class MusicServiceBinder @Inject constructor(
 
 ) : DefaultLifecycleObserver {
 
-    private val mediaBrowser = MediaBrowserCompat(context, ComponentName(context, MusicService::class.java),
-            FloatingMusicConnection(this), null)
+    private val mediaBrowser = MediaBrowserCompat(
+        context, ComponentName(context, MusicService::class.java),
+        FloatingMusicConnection(this), null
+    )
     private val connectionDisposable: Disposable
     private val publisher = BehaviorSubject.createDefault(MusicServiceConnectionState.NONE)
 
@@ -48,10 +49,11 @@ class MusicServiceBinder @Inject constructor(
     init {
         lifecycle.addObserver(this)
         connectionDisposable = publisher.subscribe({
-            when (it){
+            when (it) {
                 MusicServiceConnectionState.CONNECTED -> onConnected()
                 MusicServiceConnectionState.FAILED -> onConnectionFailed()
-                else -> {}
+                else -> {
+                }
             }
         }, Throwable::printStackTrace)
         mediaBrowser.connect()
@@ -74,15 +76,15 @@ class MusicServiceBinder @Inject constructor(
         }
     }
 
-    private fun onConnectionFailed(){
+    private fun onConnectionFailed() {
         mediaController?.unregisterCallback(callback)
     }
 
-    internal fun updateConnectionState(state: MusicServiceConnectionState){
+    internal fun updateConnectionState(state: MusicServiceConnectionState) {
         publisher.onNext(state)
     }
 
-    private fun initialize(mediaController : MediaControllerCompat){
+    private fun initialize(mediaController: MediaControllerCompat) {
         callback.onMetadataChanged(mediaController.metadata)
         callback.onPlaybackStateChanged(mediaController.playbackState)
         callback.onRepeatModeChanged(mediaController.repeatMode)
@@ -94,18 +96,18 @@ class MusicServiceBinder @Inject constructor(
         return statePublisher.observeOn(Schedulers.computation())
     }
 
-    fun next(){
+    fun next() {
         mediaController?.transportControls?.skipToNext()
     }
 
-    fun previous(){
+    fun previous() {
         mediaController?.transportControls?.skipToPrevious()
     }
 
-    fun playPause(){
+    fun playPause() {
         val playbackState = mediaController?.playbackState
         playbackState?.let {
-            if (it.state == PlaybackStateCompat.STATE_PLAYING){
+            if (it.state == PlaybackStateCompat.STATE_PLAYING) {
                 mediaController?.transportControls?.pause()
             } else {
                 mediaController?.transportControls?.play()
@@ -113,7 +115,7 @@ class MusicServiceBinder @Inject constructor(
         }
     }
 
-    fun seekTo(progress: Long){
+    fun seekTo(progress: Long) {
         mediaController?.transportControls?.seekTo(progress)
     }
 
@@ -126,21 +128,26 @@ class MusicServiceBinder @Inject constructor(
     }
 
     val animatePlayPauseLiveData: Observable<Int> = statePublisher
-            .filter { it.isPlaying() || it.isPaused() }
-            .map { it.state }
-            .distinctUntilChanged()
+        .filter { it.isPlaying() || it.isPaused() }
+        .map { it.state }
+        .distinctUntilChanged()
 
     val onBookmarkChangedLiveData: Observable<Long> = statePublisher
-            .filter { it.isPlaying() || it.isPaused() }
-            .map { it.position }
+        .filter { it.isPlaying() || it.isPaused() }
+        .map { it.position }
 
-    val onMetadataChanged : Observable<MusicServiceMetadata> = metadataPublisher
-            .map { MusicServiceMetadata(it.getId(), it.getTitle().toString(),
-                    it.getArtist().toString(), it.toPlayerImage(), it.getDuration(),
-                    it.isPodcast()
-            ) }
+    val onMetadataChanged: Observable<MusicServiceMetadata> = metadataPublisher
+        .map {
+            MusicServiceMetadata(
+                it.getId(),
+                it.getTitle().toString(),
+                it.getArtist().toString(),
+                it.getDuration(),
+                it.isPodcast()
+            )
+        }
 
     val onMaxChangedLiveData: Observable<Long> = metadataPublisher
-            .map { it.getDuration() }
+        .map { it.getDuration() }
 
 }

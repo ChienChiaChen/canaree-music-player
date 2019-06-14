@@ -2,12 +2,12 @@ package dev.olog.msc.presentation.playing.queue
 
 import androidx.lifecycle.ViewModel
 import dev.olog.msc.R
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.PlayingQueueSong
 import dev.olog.msc.domain.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.domain.interactor.playing.queue.ObservePlayingQueueUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.asLiveData
 import dev.olog.msc.utils.k.extension.debounceFirst
 import io.reactivex.rxkotlin.Observables
@@ -43,7 +43,6 @@ class PlayingQueueFragmentViewModel @Inject constructor(
                 MediaId.songId(this.idInPlaylist.toLong()),
                 title,
                 DisplayableItem.adjustArtist(artist),
-                image,
                 positionInList,
                 position == currentItemIndex
         )

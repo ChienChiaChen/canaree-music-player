@@ -7,10 +7,9 @@ import android.provider.BaseColumns
 import android.provider.MediaStore
 import dev.olog.msc.constants.PlaylistConstants
 import dev.olog.msc.core.dagger.ApplicationContext
-import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.core.entity.FavoriteType
 import dev.olog.msc.core.gateway.FavoriteGateway
-import dev.olog.msc.utils.getLong
+import dev.olog.msc.data.dao.AppDatabase
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -138,7 +137,7 @@ class PlaylistRepositoryHelper @Inject constructor(
         val distinctTrackIds = mutableSetOf<Long>()
 
         while (cursor != null && cursor.moveToNext()){
-            val trackId = cursor.getLong(MediaStore.Audio.Playlists.Members.AUDIO_ID)
+            val trackId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.AUDIO_ID))
             distinctTrackIds.add(trackId)
         }
         cursor?.close()

@@ -121,7 +121,7 @@ class CurrentSong @Inject constructor(
     private fun saveLastMetadata(entity: MediaEntity){
         musicPreferencesUseCase.setLastMetadata(
             LastMetadata(
-                entity.title, entity.artist, entity.image, entity.id
+                entity.title, entity.artist, entity.id
             )
         )
     }

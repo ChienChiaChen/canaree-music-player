@@ -9,7 +9,7 @@ import dagger.Module
 import dagger.Provides
 import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.data.prefs.app.AppPreferencesImpl
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.gateway.prefs.EqualizerPreferencesGateway
 import dev.olog.msc.domain.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.domain.gateway.prefs.TutorialPreferenceGateway

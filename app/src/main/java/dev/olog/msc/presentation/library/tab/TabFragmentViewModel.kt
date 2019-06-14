@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import dagger.Lazy
 import dev.olog.msc.core.entity.LibrarySortType
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.asLiveData

@@ -4,7 +4,7 @@ import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.entity.SortArranging
 import dev.olog.msc.core.entity.SortType
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.interactor.all.GetAllSongsUseCase
 import dev.olog.msc.core.interactor.base.ObservableUseCase
 import dev.olog.msc.utils.safeCompare

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.view.MenuItem
 import dev.olog.msc.R
 import dev.olog.msc.app.shortcuts.AppShortcuts
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.Playlist
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.domain.interactor.all.GetPlaylistsBlockingUseCase
@@ -12,7 +13,6 @@ import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.popup.AbsPopup
 import dev.olog.msc.presentation.popup.AbsPopupListener
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.toast
 import javax.inject.Inject
 
@@ -63,7 +63,7 @@ class PlaylistPopupListener @Inject constructor(
             R.id.viewArtist -> viewArtist(navigator, MediaId.artistId(song!!.artistId))
             R.id.share -> share(activity, song!!)
             R.id.setRingtone -> setRingtone(navigator, getMediaId(), song!!)
-            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), playlist.title, playlist.image)
+            R.id.addHomeScreen -> appShortcuts.addDetailShortcut(getMediaId(), playlist.title)
             R.id.removeDuplicates -> removeDuplicates()
         }
 

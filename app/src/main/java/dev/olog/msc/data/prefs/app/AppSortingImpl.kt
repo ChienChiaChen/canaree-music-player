@@ -6,7 +6,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.core.entity.LibrarySortType
 import dev.olog.msc.core.entity.SortArranging
 import dev.olog.msc.core.entity.SortType
-import dev.olog.msc.domain.gateway.prefs.Sorting
+import dev.olog.msc.core.prefs.Sorting
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables

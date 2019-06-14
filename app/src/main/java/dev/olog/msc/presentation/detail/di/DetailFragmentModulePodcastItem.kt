@@ -5,16 +5,16 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PodcastAlbum
 import dev.olog.msc.core.entity.PodcastArtist
 import dev.olog.msc.core.entity.PodcastPlaylist
+import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
 import dev.olog.msc.domain.interactor.item.GetPodcastAlbumUseCase
 import dev.olog.msc.domain.interactor.item.GetPodcastArtistUseCase
 import dev.olog.msc.domain.interactor.item.GetPodcastPlaylistUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.k.extension.asFlowable
 import io.reactivex.Flowable
@@ -71,8 +71,7 @@ private fun PodcastPlaylist.toHeaderItem(resources: Resources): List<Displayable
             R.layout.item_detail_item_image,
             MediaId.podcastPlaylistId(this.id),
             title,
-            listSize,
-            image = image
+            listSize
     ))
 
 }
@@ -83,8 +82,7 @@ private fun PodcastAlbum.toHeaderItem(): List<DisplayableItem> {
             R.layout.item_detail_item_image,
             MediaId.podcastAlbumId(this.id),
             title,
-            DisplayableItem.adjustArtist(this.artist),
-            image = image
+            DisplayableItem.adjustArtist(this.artist)
     ))
 }
 
@@ -98,7 +96,6 @@ private fun PodcastArtist.toHeaderItem(resources: Resources): List<DisplayableIt
             R.layout.item_detail_item_image,
             MediaId.podcastArtistId(this.id),
             name,
-            "$albums$songs".toLowerCase(),
-            image = image
+            "$albums$songs".toLowerCase()
     ))
 }

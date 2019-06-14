@@ -6,7 +6,6 @@ import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dagger.Module
 import dagger.Provides
-import dev.olog.msc.BuildConfig
 import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.data.dao.AppDatabase
 import io.reactivex.schedulers.Schedulers

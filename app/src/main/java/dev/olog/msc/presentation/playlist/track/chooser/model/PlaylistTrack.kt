@@ -1,11 +1,10 @@
 package dev.olog.msc.presentation.playlist.track.chooser.model
 
 import dev.olog.msc.R
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
-import java.io.File
 
 data class PlaylistTrack (
         val id: Long,
@@ -15,7 +14,6 @@ data class PlaylistTrack (
         val artist: String,
         val albumArtist: String,
         val album: String,
-        val image: String,
         val duration: Long,
         val dateAdded: Long,
         val path: String,
@@ -23,9 +21,6 @@ data class PlaylistTrack (
         val discNumber: Int,
         val trackNumber: Int,
         val isPodcast: Boolean) {
-
-    val folderPath: String
-        get() = path.substring(0, path.lastIndexOf(File.separator))
 
 }
 
@@ -35,7 +30,6 @@ internal fun PlaylistTrack.toDisplayableItem(): DisplayableItem {
             if (this.isPodcast) MediaId.podcastId(this.id) else MediaId.songId(this.id),
             this.title,
             DisplayableItem.adjustArtist(this.artist),
-            this.image,
             true
     )
 }
@@ -49,7 +43,6 @@ internal fun Podcast.toPlaylistTrack(): PlaylistTrack {
             this.artist,
             this.albumArtist,
             this.album,
-            this.image,
             this.duration,
             this.dateAdded,
             this.path,
@@ -69,7 +62,6 @@ internal fun Song.toPlaylistTrack(): PlaylistTrack {
             this.artist,
             this.albumArtist,
             this.album,
-            this.image,
             this.duration,
             this.dateAdded,
             this.path,

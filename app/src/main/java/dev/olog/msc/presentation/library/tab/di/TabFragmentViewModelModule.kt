@@ -206,8 +206,7 @@ private fun Folder.toTabDisplayableItem(resources: Resources): DisplayableItem {
             R.layout.item_tab_album,
             MediaId.folderId(path),
             title,
-            DisplayableItem.handleSongListSize(resources, size),
-            this.image
+            DisplayableItem.handleSongListSize(resources, size)
     )
 }
 
@@ -217,8 +216,7 @@ private fun Playlist.toAutoPlaylist(): DisplayableItem {
             R.layout.item_tab_auto_playlist,
             MediaId.playlistId(id),
             title,
-            "",
-            this.image
+            ""
     )
 }
 
@@ -230,8 +228,7 @@ private fun Playlist.toTabDisplayableItem(resources: Resources): DisplayableItem
             R.layout.item_tab_album,
             MediaId.playlistId(id),
             title,
-            size,
-            this.image
+            size
     )
 }
 
@@ -244,7 +241,6 @@ private fun Song.toTabDisplayableItem(): DisplayableItem {
             MediaId.songId(this.id),
             title,
             "$artist${TextUtils.MIDDLE_DOT_SPACED}$album",
-            image,
             true
     )
 }
@@ -256,8 +252,7 @@ private fun Album.toTabDisplayableItem(): DisplayableItem{
             R.layout.item_tab_album,
             MediaId.albumId(id),
             title,
-            DisplayableItem.adjustArtist(artist),
-            image
+            DisplayableItem.adjustArtist(artist)
     )
 }
 
@@ -270,8 +265,7 @@ private fun Artist.toTabDisplayableItem(resources: Resources): DisplayableItem{
             R.layout.item_tab_artist,
             MediaId.artistId(id),
             name,
-            albums + songs,
-            this.image
+            albums + songs
     )
 }
 
@@ -281,8 +275,7 @@ private fun Genre.toTabDisplayableItem(resources: Resources): DisplayableItem{
             R.layout.item_tab_album,
             MediaId.genreId(id),
             name,
-            DisplayableItem.handleSongListSize(resources, size),
-            this.image
+            DisplayableItem.handleSongListSize(resources, size)
     )
 }
 
@@ -291,8 +284,7 @@ private fun Album.toTabLastPlayedDisplayableItem(): DisplayableItem {
             R.layout.item_tab_album_last_played,
             MediaId.albumId(id),
             title,
-            DisplayableItem.adjustArtist(artist),
-            image
+            DisplayableItem.adjustArtist(artist)
     )
 }
 
@@ -305,7 +297,6 @@ private fun Artist.toTabLastPlayedDisplayableItem(resources: Resources): Display
             R.layout.item_tab_artist_last_played,
             MediaId.artistId(id),
             name,
-            albums + songs,
-            this.image
+            albums + songs
     )
 }

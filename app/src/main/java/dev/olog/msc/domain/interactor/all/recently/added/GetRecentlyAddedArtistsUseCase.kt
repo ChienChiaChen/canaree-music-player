@@ -2,7 +2,7 @@ package dev.olog.msc.domain.interactor.all.recently.added
 
 import dev.olog.msc.core.entity.Artist
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.interactor.all.GetAllArtistsUseCase
 import dev.olog.msc.domain.interactor.all.GetAllSongsUseCase
 import dev.olog.msc.core.interactor.base.ObservableUseCase

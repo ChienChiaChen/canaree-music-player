@@ -1,6 +1,6 @@
 package dev.olog.msc.domain.interactor
 
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import io.reactivex.Observable
 import javax.inject.Inject
 

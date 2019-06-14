@@ -7,12 +7,12 @@ import android.widget.RemoteViewsService
 import androidx.core.os.bundleOf
 import dev.olog.msc.R
 import dev.olog.msc.constants.MusicConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.core.entity.PlayingQueueSong
 import dev.olog.msc.domain.interactor.playing.queue.GetMiniQueueUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.k.extension.getBitmapAsync
+import dev.olog.msc.utils.k.extension.getCachedBitmap
 import javax.inject.Inject
 
 class QueueRemoteViewsFactory @Inject constructor(
@@ -55,7 +55,7 @@ class QueueRemoteViewsFactory @Inject constructor(
         val extras = bundleOf(MusicConstants.EXTRA_SKIP_TO_ITEM_ID to item.idInPlaylist)
         val fillIntent = Intent().also { it.putExtras(extras) }
         removeViews.setOnClickFillInIntent(R.id.root, fillIntent)
-        val bitmap = context.getBitmapAsync(DisplayableItem(0, item.mediaId, "", image = item.image), 100)
+        val bitmap = context.getCachedBitmap(item.mediaId, 100)
         removeViews.setImageViewBitmap(R.id.cover, bitmap)
 
         return removeViews
@@ -72,8 +72,7 @@ class QueueRemoteViewsFactory @Inject constructor(
             val idInPlaylist: Int,
             val mediaId: MediaId,
             val title: String,
-            val subtitle: String,
-            val image: String
+            val subtitle: String
     )
 
     private fun PlayingQueueSong.toWidgetItem(): WidgetItem {
@@ -88,8 +87,7 @@ class QueueRemoteViewsFactory @Inject constructor(
                 this.trackNumber,
                 mediaId,
                 this.title,
-                DisplayableItem.adjustArtist(this.artist),
-                this.image
+                DisplayableItem.adjustArtist(this.artist)
         )
     }
 

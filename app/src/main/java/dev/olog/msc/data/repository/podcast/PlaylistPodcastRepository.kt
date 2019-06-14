@@ -3,9 +3,7 @@ package dev.olog.msc.data.repository.podcast
 import android.content.res.Resources
 import dev.olog.msc.R
 import dev.olog.msc.constants.PlaylistConstants
-import dev.olog.msc.data.dao.AppDatabase
-import dev.olog.msc.data.entity.PodcastPlaylistEntity
-import dev.olog.msc.data.entity.PodcastPlaylistTrackEntity
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.FavoriteType
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.PodcastPlaylist
@@ -13,7 +11,9 @@ import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.PodcastPlaylistGateway
-import dev.olog.msc.core.MediaId
+import dev.olog.msc.data.dao.AppDatabase
+import dev.olog.msc.data.entity.PodcastPlaylistEntity
+import dev.olog.msc.data.entity.PodcastPlaylistTrackEntity
 import dev.olog.msc.utils.k.extension.mapToList
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -37,8 +37,7 @@ class PlaylistPodcastRepository @Inject constructor(
         return PodcastPlaylist(
                 this.id,
                 this.name,
-                this.size,
-                ""
+                this.size
         )
     }
 
@@ -51,7 +50,7 @@ class PlaylistPodcastRepository @Inject constructor(
     private val autoPlaylistTitles = resources.getStringArray(R.array.common_auto_playlists)
 
     private fun createAutoPlaylist(id: Long, title: String, listSize: Int) : PodcastPlaylist {
-        return PodcastPlaylist(id, title, listSize, "")
+        return PodcastPlaylist(id, title, listSize)
     }
 
     override fun getAllAutoPlaylists(): Observable<List<PodcastPlaylist>> {
@@ -65,10 +64,6 @@ class PlaylistPodcastRepository @Inject constructor(
                 createAutoPlaylist(PlaylistConstants.PODCAST_HISTORY_LIST_ID, autoPlaylistTitles[2], history)
         )
         } }
-
-    override fun getAllNewRequest(): Observable<List<PodcastPlaylist>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun getByParam(param: Long): Observable<PodcastPlaylist> {
         if (PlaylistConstants.isPodcastAutoPlaylist(param)){

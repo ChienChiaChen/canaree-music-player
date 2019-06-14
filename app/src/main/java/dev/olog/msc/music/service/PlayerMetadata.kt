@@ -52,14 +52,13 @@ class PlayerMetadata @Inject constructor(
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, entity.artist)
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, entity.album)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, entity.duration)
-                .putString(MediaMetadataCompat.METADATA_KEY_ART_URI, entity.image)
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, entity.image)
+//                .putString(MediaMetadataCompat.METADATA_KEY_ART_URI, entity.image) TODO check
+//                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, entity.image)
                 .putString(MusicConstants.PATH, entity.path)
                 .putLong(MusicConstants.IS_PODCAST, if (entity.isPodcast) 1 else 0)
 
         if (AppConstants.SHOW_LOCKSCREEN_IMAGE) {
-            val model = DisplayableItem(0, entity.mediaId, "", image = entity.image)
-            app.getBitmap(model, Target.SIZE_ORIGINAL) { bitmap ->
+            app.getBitmap(entity.mediaId, Target.SIZE_ORIGINAL) { bitmap ->
                 builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
                 mediaSession.setMetadata(builder.build())
             }
@@ -80,7 +79,6 @@ class PlayerMetadata @Inject constructor(
                 putExtra(WidgetConstants.ARGUMENT_SONG_ID, entity.id)
                 putExtra(WidgetConstants.ARGUMENT_TITLE, entity.title)
                 putExtra(WidgetConstants.ARGUMENT_SUBTITLE, entity.artist)
-                putExtra(WidgetConstants.ARGUMENT_IMAGE, entity.image)
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
             }
 

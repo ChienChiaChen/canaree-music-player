@@ -33,33 +33,30 @@ class GlideImageLoader(
     override fun buildLoadData(model: DisplayableItem, width: Int, height: Int, options: Options): ModelLoader.LoadData<InputStream>? {
         val mediaId = model.mediaId
 
-        if (isAsset(model)){
-            return uriLoader.buildLoadData(Uri.parse(model.image), width, height, options)
-        }
-
-        if (model.image == AppConstants.NO_IMAGE){
-            return uriLoader.buildLoadData(Uri.EMPTY, width, height, options)
-        }
+//        if (model.image == AppConstants.NO_IMAGE){ TODO
+//            return uriLoader.buildLoadData(Uri.EMPTY, width, height, options)
+//        }
 
         if (mediaId.isAlbum || mediaId.isPodcastAlbum || mediaId.isLeaf){
             return when {
-                notAnImage(model) -> {
-                    // song/album has not a default image, download
-                    if (mediaId.isLeaf){
-                        ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideSongFetcher(context, model, lastFmGateway))
-                    } else {
-                        ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideAlbumFetcher(context, model, lastFmGateway))
-                    }
-                }
+//                notAnImage(model) -> { TODo
+//                     song/album has not a default image, download
+//                    if (mediaId.isLeaf){
+//                        ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideSongFetcher(context, model, lastFmGateway))
+//                    } else {
+//                        ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideAlbumFetcher(context, model, lastFmGateway))
+//                    }
+//                }
                 AppConstants.IGNORE_MEDIA_STORE_COVERS -> {
                     ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideOriginalImageFetcher(model.mediaId, songGateway, podcastGateway))
                 }
-                else -> {
+                else -> TODO()
+//                else -> {
                     // use default album image
-                    val file = File(model.image)
-                    val uri = if (file.exists()) Uri.fromFile(file) else Uri.EMPTY
-                    uriLoader.buildLoadData(uri, width, height, options)
-                }
+//                    val file = File(model.image)
+//                    val uri = if (file.exists()) Uri.fromFile(file) else Uri.EMPTY
+//                    uriLoader.buildLoadData(uri, width, height, options)
+//                }
             }
         }
 
@@ -67,17 +64,9 @@ class GlideImageLoader(
             // download artist image
             return ModelLoader.LoadData(MediaIdKey(model.mediaId), GlideArtistFetcher(context, model, lastFmGateway))
         }
-
+        TODO()
         // use merged image
-        return uriLoader.buildLoadData(Uri.fromFile(File(model.image)), width, height, options)
-    }
-
-    private fun isAsset(model: DisplayableItem): Boolean {
-        return URLUtil.isAssetUrl(model.image)
-    }
-
-    private fun notAnImage(model: DisplayableItem): Boolean {
-        return model.image.isBlank() || URLUtil.isNetworkUrl(model.image)
+//        return uriLoader.buildLoadData(Uri.fromFile(File(model.image)), width, height, options)
     }
 
     class Factory(

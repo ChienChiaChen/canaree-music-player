@@ -35,25 +35,25 @@ class EditTrackFragmentViewModel @Inject constructor(
     }
 
     fun updateImage(image: String){
-        val oldValue = displayedSong.value
-        val newValue = oldValue?.copy(image = image)
-        displayedSong.postValue(newValue)
+//        val oldValue = displayedSong.value
+//        val newValue = oldValue?.copy(image = image)
+//        displayedSong.postValue(newValue) TODO
     }
 
     fun getNewImage(): String? {
-        try {
-            val albumId = getSong().albumId
-            val original = ImagesFolderUtils.forAlbum(albumId)
-            val current = displayedSong.value!!.image
-            if (original == current){
-                return null
-            } else {
-                return current
-            }
-        } catch (ex: KotlinNullPointerException){
-            return null
-        }
-
+//        try {
+//            val albumId = getSong().albumId
+//            val original = ImagesFolderUtils.forAlbum(albumId)
+//            val current = displayedSong.value!!.image
+//            if (original == current){
+//                return null
+//            } else {
+//                return current
+//            }
+//        } catch (ex: KotlinNullPointerException){
+//            return null
+//        }
+        TODO()
     }
 
     fun observeData(): LiveData<DisplayableSong> = displayedSong

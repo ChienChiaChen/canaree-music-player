@@ -12,7 +12,7 @@ import dev.olog.msc.app.app
 import dev.olog.msc.core.entity.LibrarySortType
 import dev.olog.msc.core.entity.SortArranging
 import dev.olog.msc.core.entity.SortType
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.core.MediaId

@@ -7,14 +7,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.edit.BaseEditItemFragment
 import dev.olog.msc.presentation.edit.EditItemViewModel
 import dev.olog.msc.presentation.edit.UpdateArtistInfo
 import dev.olog.msc.presentation.edit.UpdateResult
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.utils.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_edit_artist.*
 import kotlinx.android.synthetic.main.fragment_edit_artist.view.*
@@ -64,8 +63,7 @@ class EditArtistFragment : BaseEditItemFragment() {
                 .subscribe(viewLifecycleOwner) {
                     artist.setText(it.title)
                     albumArtist.setText(it.albumArtist)
-                    val model = DisplayableItem(0, MediaId.artistId(it.id), "", image = it.image ?: "")
-                    setImage(model)
+                    setImage(MediaId.artistId(it.id))
                 }
     }
 

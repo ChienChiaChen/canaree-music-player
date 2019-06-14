@@ -13,13 +13,13 @@ import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.entity.PlaylistMostPlayedEntity
 import dev.olog.msc.data.mapper.extractId
 import dev.olog.msc.data.mapper.toPlaylist
 import dev.olog.msc.data.mapper.toPlaylistSong
-import dev.olog.msc.data.repository.util.CommonQuery
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.data.utils.CommonQuery
 import dev.olog.msc.utils.k.extension.debounceFirst
 import io.reactivex.Completable
 import io.reactivex.CompletableSource
@@ -65,7 +65,7 @@ class PlaylistRepository @Inject constructor(
     private val autoPlaylistTitles = resources.getStringArray(R.array.common_auto_playlists)
 
     private fun createAutoPlaylist(id: Long, title: String, listSize: Int) : Playlist {
-        return Playlist(id, title, listSize, "")
+        return Playlist(id, title, listSize)
     }
 
     private fun queryAllData(): Observable<List<Playlist>> {
@@ -77,7 +77,7 @@ class PlaylistRepository @Inject constructor(
                     val id = it.extractId()
                     val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id)
                     val size = CommonQuery.getSize(context.contentResolver, uri)
-                    it.toPlaylist(context, size)
+                    it.toPlaylist(size)
                 })
                 .map { removeBlacklisted(it) }
                 .doOnError { it.printStackTrace() }
@@ -114,10 +114,6 @@ class PlaylistRepository @Inject constructor(
         return cachedData
     }
 
-    override fun getAllNewRequest(): Observable<List<Playlist>> {
-        return queryAllData()
-    }
-
     override fun getByParam(param: Long): Observable<Playlist> {
         val result = if (PlaylistConstants.isAutoPlaylist(param)){
             getAllAutoPlaylists()
@@ -148,7 +144,7 @@ class PlaylistRepository @Inject constructor(
                 SELECTION, SELECTION_ARGS, SORT_ORDER)
         val list = mutableListOf<Playlist>()
         while (cursor != null && cursor.moveToNext()){
-            val playlist = cursor.toPlaylist(context, -1)
+            val playlist = cursor.toPlaylist(-1)
             list.add(playlist)
         }
         cursor?.close()

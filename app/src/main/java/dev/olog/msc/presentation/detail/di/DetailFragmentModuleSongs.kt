@@ -8,6 +8,7 @@ import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
 import dev.olog.msc.R
 import dev.olog.msc.constants.PlaylistConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.core.entity.Artist
 import dev.olog.msc.core.entity.PodcastArtist
@@ -22,7 +23,6 @@ import dev.olog.msc.domain.interactor.all.sorted.GetSortedSongListByParamUseCase
 import dev.olog.msc.domain.interactor.all.sorted.util.GetSortOrderUseCase
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.TimeUtils
 import dev.olog.msc.utils.k.extension.mapToList
@@ -117,8 +117,7 @@ private fun Artist.toRelatedArtist(resources: Resources): DisplayableItem {
             R.layout.item_detail_related_artist,
             MediaId.artistId(this.id),
             this.name,
-            albums + songs,
-            this.image
+            albums + songs
     )
 }
 
@@ -131,8 +130,7 @@ private fun PodcastArtist.toRelatedArtist(resources: Resources): DisplayableItem
             R.layout.item_detail_related_artist,
             MediaId.podcastArtistId(this.id),
             this.name,
-            albums + songs,
-            this.image
+            albums + songs
     )
 }
 
@@ -165,7 +163,6 @@ private fun Song.toDetailDisplayableItem(parentId: MediaId, sortType: SortType):
             MediaId.playableItem(parentId, id),
             this.title,
             subtitle,
-            this.image,
             true,
             track
     )
@@ -177,7 +174,6 @@ private fun Song.toMostPlayedDetailDisplayableItem(parentId: MediaId): Displayab
             MediaId.playableItem(parentId, id),
             this.title,
             DisplayableItem.adjustArtist(this.artist),
-            this.image,
             true
     )
 }
@@ -188,7 +184,6 @@ private fun Song.toRecentDetailDisplayableItem(parentId: MediaId): DisplayableIt
             MediaId.playableItem(parentId, id),
             this.title,
             DisplayableItem.adjustArtist(this.artist),
-            this.image,
             true
     )
 }

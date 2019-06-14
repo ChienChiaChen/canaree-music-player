@@ -11,11 +11,10 @@ import android.provider.MediaStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import dev.olog.msc.R
-import dev.olog.msc.core.dagger.ApplicationContext
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.domain.interactor.all.GetAllFoldersUseCase
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.getLong
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.core.prefs.AppPreferencesGateway
+import dev.olog.msc.domain.interactor.all.GetAllFoldersUseCase
 import dev.olog.msc.utils.k.extension.*
 import dev.olog.msc.utils.safeCompare
 import io.reactivex.Observable
@@ -160,7 +159,7 @@ class FolderTreeFragmentViewModel @Inject constructor(
                     arrayOf(file.path), null)?.let { cursor ->
 
                 cursor.moveToFirst()
-                val trackId = cursor.getLong(BaseColumns._ID)
+                val trackId = cursor.getLong(cursor.getColumnIndex(BaseColumns._ID))
                 cursor.close()
                 return MediaId.playableItem(folderMediaId, trackId)
             }

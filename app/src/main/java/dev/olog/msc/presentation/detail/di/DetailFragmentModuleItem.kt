@@ -5,12 +5,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
-import dev.olog.msc.domain.interactor.item.*
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.*
+import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
+import dev.olog.msc.domain.interactor.item.*
+import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.k.extension.asFlowable
 import io.reactivex.Flowable
@@ -91,8 +91,7 @@ private fun Folder.toHeaderItem(resources: Resources): List<DisplayableItem> {
             R.layout.item_detail_item_image,
             MediaId.folderId(path),
             title,
-            subtitle = resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase(),
-            image = image
+            subtitle = resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase()
     ))
 }
 
@@ -105,8 +104,7 @@ private fun Playlist.toHeaderItem(resources: Resources): List<DisplayableItem> {
             R.layout.item_detail_item_image,
             MediaId.playlistId(this.id),
             title,
-            listSize,
-            image = image
+            listSize
     ))
 
 }
@@ -117,8 +115,7 @@ private fun Album.toHeaderItem(): List<DisplayableItem> {
             R.layout.item_detail_item_image,
             MediaId.albumId(this.id),
             title,
-            DisplayableItem.adjustArtist(this.artist),
-            image = image
+            DisplayableItem.adjustArtist(this.artist)
     ))
 }
 
@@ -132,8 +129,7 @@ private fun Artist.toHeaderItem(resources: Resources): List<DisplayableItem> {
             R.layout.item_detail_item_image,
             MediaId.artistId(this.id),
             name,
-            "$albums$songs".toLowerCase(),
-            image = image
+            "$albums$songs".toLowerCase()
     ))
 }
 
@@ -143,7 +139,6 @@ private fun Genre.toHeaderItem(resources: Resources): List<DisplayableItem> {
             R.layout.item_detail_item_image,
             MediaId.genreId(this.id),
             name,
-            resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase(),
-            image = image
+            resources.getQuantityString(R.plurals.common_plurals_song, this.size, this.size).toLowerCase()
     ))
 }

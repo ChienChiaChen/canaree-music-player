@@ -3,12 +3,11 @@ package dev.olog.msc.data.mapper
 import android.database.Cursor
 import android.provider.BaseColumns
 import android.provider.MediaStore
-import androidx.core.database.getStringOrNull
 import dev.olog.msc.core.entity.Song
-import dev.olog.msc.utils.getInt
-import dev.olog.msc.utils.getLong
-import dev.olog.msc.utils.getString
-import dev.olog.msc.utils.getStringOrNull
+import dev.olog.msc.data.utils.getInt
+import dev.olog.msc.data.utils.getLong
+import dev.olog.msc.data.utils.getString
+import dev.olog.msc.data.utils.getStringOrNull
 import java.io.File
 
 
@@ -26,12 +25,12 @@ fun Cursor.toSong(): Song {
     val album = getStringOrNull(MediaStore.Audio.AudioColumns.ALBUM) ?: ""
 
     var albumArtist = artist
-    val albumArtistIndex = this.getColumnIndex("album_artist")
-    if (albumArtistIndex != -1) {
-        this.getStringOrNull(albumArtistIndex)?.also {
-            albumArtist = it
-        }
-    }
+//    val albumArtistIndex = this.getColumnIndex("album_artist") TODO
+//    if (albumArtistIndex != -1) {
+//        this.getStringOrNull(albumArtistIndex)?.also {
+//            albumArtist = it
+//        }
+//    }
 
     val duration = getLong(MediaStore.Audio.AudioColumns.DURATION)
     val dateAdded = getLong(MediaStore.MediaColumns.DATE_ADDED)
@@ -42,12 +41,11 @@ fun Cursor.toSong(): Song {
 
     return Song(
             id, artistId, albumId, title, artist, albumArtist, album,
-            "",
             duration, dateAdded, path,
             folder.capitalize(), disc, track)
 }
 
-fun Cursor.toUneditedSong(image: String): Song {
+fun Cursor.toUneditedSong(): Song {
     val id = getLong(BaseColumns._ID)
     val artistId = getLong(MediaStore.Audio.AudioColumns.ARTIST_ID)
     val albumId = getLong(MediaStore.Audio.AudioColumns.ALBUM_ID)
@@ -77,7 +75,7 @@ fun Cursor.toUneditedSong(image: String): Song {
 
     return Song(
             id, artistId, albumId, title, artist, albumArtist, album,
-            image, duration, dateAdded, path,
+            duration, dateAdded, path,
             folder.capitalize(), disc, track)
 }
 

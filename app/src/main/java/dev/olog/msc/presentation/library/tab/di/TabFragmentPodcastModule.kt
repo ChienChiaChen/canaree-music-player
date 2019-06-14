@@ -6,11 +6,13 @@ import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.R
 import dev.olog.msc.app.app
-import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.PodcastAlbum
 import dev.olog.msc.core.entity.PodcastArtist
 import dev.olog.msc.core.entity.PodcastPlaylist
+import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
 import dev.olog.msc.domain.interactor.all.*
 import dev.olog.msc.domain.interactor.all.last.played.GetLastPlayedPodcastAlbumsUseCase
 import dev.olog.msc.domain.interactor.all.last.played.GetLastPlayedPodcastArtistsUseCase
@@ -18,8 +20,6 @@ import dev.olog.msc.domain.interactor.all.recently.added.GetRecentlyAddedPodcast
 import dev.olog.msc.domain.interactor.all.recently.added.GetRecentlyAddedPodcastsArtistsUseCase
 import dev.olog.msc.presentation.library.tab.TabFragmentHeaders
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable
@@ -182,8 +182,7 @@ private fun PodcastPlaylist.toTabDisplayableItem(resources: Resources): Displaya
             R.layout.item_tab_album,
             MediaId.podcastPlaylistId(id),
             title,
-            size,
-            this.image
+            size
     )
 }
 
@@ -194,8 +193,7 @@ private fun PodcastPlaylist.toAutoPlaylist(): DisplayableItem {
             R.layout.item_tab_auto_playlist,
             MediaId.podcastPlaylistId(id),
             title,
-            "",
-            this.image
+            ""
     )
 }
 
@@ -209,7 +207,6 @@ private fun Podcast.toTabDisplayableItem(): DisplayableItem {
             MediaId.podcastId(this.id),
             title,
             artist,
-            image,
             trackNumber = duration,
             isPlayable = true
     )
@@ -224,8 +221,7 @@ private fun PodcastArtist.toTabDisplayableItem(resources: Resources): Displayabl
             R.layout.item_tab_artist,
             MediaId.podcastArtistId(id),
             name,
-            albums + songs,
-            this.image
+            albums + songs
     )
 }
 
@@ -235,8 +231,7 @@ private fun PodcastAlbum.toTabDisplayableItem(): DisplayableItem{
             R.layout.item_tab_album,
             MediaId.podcastAlbumId(id),
             title,
-            DisplayableItem.adjustArtist(artist),
-            image
+            DisplayableItem.adjustArtist(artist)
     )
 }
 
@@ -245,8 +240,7 @@ private fun PodcastAlbum.toTabLastPlayedDisplayableItem(): DisplayableItem {
             R.layout.item_tab_album_last_played,
             MediaId.podcastAlbumId(id),
             title,
-            artist,
-            image
+            artist
     )
 }
 
@@ -259,7 +253,6 @@ private fun PodcastArtist.toTabLastPlayedDisplayableItem(resources: Resources): 
             R.layout.item_tab_artist_last_played,
             MediaId.podcastArtistId(id),
             name,
-            albums + songs,
-            this.image
+            albums + songs
     )
 }

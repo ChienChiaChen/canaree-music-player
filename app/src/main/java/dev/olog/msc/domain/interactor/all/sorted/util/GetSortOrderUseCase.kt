@@ -2,7 +2,7 @@ package dev.olog.msc.domain.interactor.all.sorted.util
 
 import dev.olog.msc.core.entity.SortType
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory

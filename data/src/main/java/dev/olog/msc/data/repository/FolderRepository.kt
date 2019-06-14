@@ -1,27 +1,21 @@
 package dev.olog.msc.data.repository
 
-import android.content.Context
-import dev.olog.msc.core.dagger.ApplicationContext
-import dev.olog.msc.data.dao.AppDatabase
-import dev.olog.msc.data.entity.FolderMostPlayedEntity
-import dev.olog.msc.data.mapper.toFolder
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.Folder
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.gateway.FolderGateway
 import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.safeCompare
+import dev.olog.msc.data.dao.AppDatabase
+import dev.olog.msc.data.entity.FolderMostPlayedEntity
+import dev.olog.msc.data.mapper.toFolder
 import io.reactivex.Completable
 import io.reactivex.CompletableSource
 import io.reactivex.Observable
-import java.text.Collator
 import javax.inject.Inject
 
 class FolderRepository @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val songGateway: SongGateway,
-    appDatabase: AppDatabase,
-    private val collator: Collator
+    appDatabase: AppDatabase
 
 ): FolderGateway {
 
@@ -39,10 +33,6 @@ class FolderRepository @Inject constructor(
 
     override fun getAll(): Observable<List<Folder>> {
         return cachedData
-    }
-
-    override fun getAllNewRequest(): Observable<List<Folder>> {
-        return queryAllData()
     }
 
     override fun getByParam(param: String): Observable<Folder> {
@@ -85,9 +75,8 @@ class FolderRepository @Inject constructor(
         return songList.asSequence()
                 .distinctBy { it.folderPath }
                 .map { song ->
-                    song.toFolder(context,
-                            songList.count { it.folderPath == song.folderPath }) // count song for all folder
-                }.sortedWith(Comparator { o1, o2 -> collator.safeCompare(o1.title, o2.title) })
+                    song.toFolder(songList.count { it.folderPath == song.folderPath }) // count song for all folder
+                }//.sortedWith(Comparator { o1, o2 -> collator.safeCompare(o1.title, o2.title) }) TODO
                 .toList()
     }
 

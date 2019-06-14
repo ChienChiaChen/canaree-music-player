@@ -2,6 +2,7 @@ package dev.olog.msc.presentation.edit.track
 
 import com.github.dmstocking.optional.java.util.Optional
 import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.Song
@@ -10,7 +11,6 @@ import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
 import dev.olog.msc.domain.interactor.item.GetUneditedSongUseCase
 import dev.olog.msc.domain.interactor.last.fm.GetLastFmTrackUseCase
 import dev.olog.msc.domain.interactor.last.fm.LastFmTrackRequest
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.get
 import io.reactivex.Single
 import org.jaudiotagger.audio.AudioFileIO
@@ -45,10 +45,10 @@ class EditTrackFragmentPresenter @Inject constructor(
                 ) }
                 .map { it.toDisplayableSong() }
                 .doOnSuccess {
-                    val usedImage = usedImageGateway.getForTrack(it.id)
-                            ?: usedImageGateway.getForAlbum(it.albumId)
-                            ?: it.image
-                    originalSong = it.copy(image = usedImage)
+//                    val usedImage = usedImageGateway.getForTrack(it.id)
+//                            ?: usedImageGateway.getForAlbum(it.albumId)
+//                            ?: it.image
+//                    originalSong = it.copy(image = usedImage) TODO
                 }
     }
 
@@ -61,10 +61,10 @@ class EditTrackFragmentPresenter @Inject constructor(
                 ) }
                 .map { it.toDisplayableSong() }
                 .doOnSuccess {
-                    val usedImage = usedImageGateway.getForTrack(it.id)
-                            ?: usedImageGateway.getForAlbum(it.albumId)
-                            ?: it.image
-                    originalSong = it.copy(image = usedImage)
+//                    val usedImage = usedImageGateway.getForTrack(it.id)
+//                            ?: usedImageGateway.getForAlbum(it.albumId)
+//                            ?: it.image
+//                    originalSong = it.copy(image = usedImage) TODO
                 }
     }
 
@@ -94,7 +94,6 @@ class EditTrackFragmentPresenter @Inject constructor(
                 tag.get(FieldKey.YEAR),
                 tag.get(FieldKey.DISC_NO),
                 tag.get(FieldKey.TRACK),
-                this.image,
                 this.path,
                 audioHeader.bitRate + " kb/s",
                 audioHeader.format,
@@ -121,7 +120,6 @@ class EditTrackFragmentPresenter @Inject constructor(
                 tag.get(FieldKey.YEAR),
                 tag.get(FieldKey.DISC_NO),
                 tag.get(FieldKey.TRACK),
-                this.image,
                 this.path,
                 audioHeader.bitRate + " kb/s",
                 audioHeader.format,

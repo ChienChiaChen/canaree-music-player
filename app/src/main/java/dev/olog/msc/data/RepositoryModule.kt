@@ -5,7 +5,7 @@ import dagger.Module
 import dev.olog.msc.core.gateway.*
 import dev.olog.msc.data.repository.*
 import dev.olog.msc.data.api.last.fm.repo.LastFmRepository
-import dev.olog.msc.data.repository.lyrics.OfflineLyricsRepository
+import dev.olog.msc.data.repository.OfflineLyricsRepository
 import dev.olog.msc.data.repository.podcast.PlaylistPodcastRepository
 import dev.olog.msc.data.repository.podcast.PodcastAlbumRepository
 import dev.olog.msc.data.repository.podcast.PodcastArtistRepository

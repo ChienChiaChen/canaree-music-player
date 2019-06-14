@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.preferences.categories
 
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.core.MediaIdCategory
 import javax.inject.Inject
 

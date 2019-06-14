@@ -2,7 +2,7 @@ package dev.olog.msc.domain.interactor.all.recently.added
 
 import dev.olog.msc.core.entity.PodcastAlbum
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.interactor.all.GetAllPodcastAlbumsUseCase
 import dev.olog.msc.domain.interactor.all.GetAllPodcastUseCase
 import dev.olog.msc.core.interactor.base.ObservableUseCase

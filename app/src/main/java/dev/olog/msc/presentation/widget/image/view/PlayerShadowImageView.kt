@@ -17,10 +17,9 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.Target
 import dev.olog.msc.R
 import dev.olog.msc.app.GlideApp
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.presentation.widget.image.view.PlayerShadowImageView.Companion.DOWNSCALE_FACTOR
 import dev.olog.msc.presentation.widget.image.view.player.PlayerImageView
-import dev.olog.msc.presentation.widget.image.view.player.toPlayerImage
+import dev.olog.msc.ripple.RippleTarget
 import dev.olog.msc.utils.img.CoverUtils
 import dev.olog.msc.utils.k.extension.dpToPx
 import dev.olog.msc.utils.k.extension.getMediaId
@@ -65,17 +64,14 @@ class PlayerShadowImageView @JvmOverloads constructor(
     override fun loadImage(metadata: MediaMetadataCompat){
         val mediaId = metadata.getMediaId()
 
-        val model = metadata.toPlayerImage()
-
         GlideApp.with(context).clear(this)
 
         GlideApp.with(context)
-                .load(model)
+                .load(mediaId)
                 .placeholder(CoverUtils.getGradient(context, mediaId))
                 .priority(Priority.IMMEDIATE)
-                .override(if (AppConstants.useFakeData) 800 else Target.SIZE_ORIGINAL)
-
-                .into(Ripple(this))
+                .override(Target.SIZE_ORIGINAL)
+                .into(RippleTarget(this))
     }
 
     override fun setImageBitmap(bm: Bitmap?) {

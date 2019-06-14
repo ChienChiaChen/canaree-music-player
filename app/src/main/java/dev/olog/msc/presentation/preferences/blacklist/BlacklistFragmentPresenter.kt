@@ -1,11 +1,11 @@
 package dev.olog.msc.presentation.preferences.blacklist
 
 import dev.olog.msc.R
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.Folder
-import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
+import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.interactor.all.GetAllFoldersUnfiltered
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.mapToList
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -27,8 +27,7 @@ class BlacklistFragmentPresenter @Inject constructor(
                 R.layout.dialog_blacklist_item,
                 MediaId.folderId(this.path),
                 this.title,
-                this.path,
-                this.image
+                this.path
         )
     }
 

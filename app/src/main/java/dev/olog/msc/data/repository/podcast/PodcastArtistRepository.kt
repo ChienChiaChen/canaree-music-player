@@ -8,10 +8,8 @@ import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.PodcastArtist
 import dev.olog.msc.core.gateway.PodcastArtistGateway
 import dev.olog.msc.core.gateway.PodcastGateway
-import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.mapper.toArtist
-import dev.olog.msc.data.mapper.toFakeArtist
 import dev.olog.msc.utils.k.extension.debounceFirst
 import dev.olog.msc.utils.safeCompare
 import io.reactivex.Completable
@@ -26,8 +24,7 @@ class PodcastArtistRepository @Inject constructor(
     appDatabase: AppDatabase,
     private val rxContentResolver: BriteContentResolver,
     private val podcastGateway: PodcastGateway,
-    private val collator: Collator,
-    private val usedImageGateway: UsedImageGateway
+    private val collator: Collator
 
 ) : PodcastArtistGateway {
 
@@ -42,19 +39,7 @@ class PodcastArtistRepository @Inject constructor(
                 .lift(SqlBrite.Query.mapToOne { 0 })
                 .switchMap { podcastGateway.getAll() }
                 .map { mapToArtists(it) }
-                .map { updateImages(it) }
 
-    }
-
-    private fun updateImages(list: List<PodcastArtist>): List<PodcastArtist>{
-        val allForArtists = usedImageGateway.getAllForArtists()
-        if (allForArtists.isEmpty()){
-            return list
-        }
-        return list.map { artist ->
-            val image = allForArtists.firstOrNull { it.id == artist.id }?.image ?: artist.image
-            artist.copy(image = image)
-        }
     }
 
     private fun mapToArtists(songList: List<Podcast>): List<PodcastArtist> {
@@ -70,11 +55,7 @@ class PodcastArtistRepository @Inject constructor(
     }
 
     private fun mapSongToArtist(song: Podcast, songCount: Int, albumCount: Int): PodcastArtist {
-        return if (AppConstants.useFakeData){
-            song.toFakeArtist(songCount, albumCount)
-        } else {
-            song.toArtist(songCount, albumCount)
-        }
+        return song.toArtist(songCount, albumCount)
     }
 
     private fun countAlbums(artistId: Long, songList: List<Podcast>): Int {
@@ -94,10 +75,6 @@ class PodcastArtistRepository @Inject constructor(
 
     override fun getAll(): Observable<List<PodcastArtist>> {
         return cachedData
-    }
-
-    override fun getAllNewRequest(): Observable<List<PodcastArtist>> {
-        return queryAllData()
     }
 
     override fun getByParam(param: Long): Observable<PodcastArtist> {

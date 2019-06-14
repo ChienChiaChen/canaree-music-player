@@ -4,13 +4,12 @@ import android.database.Cursor
 import android.os.Environment
 import android.provider.BaseColumns
 import android.provider.MediaStore
-import androidx.core.database.getStringOrNull
-import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.entity.Podcast
-import dev.olog.msc.utils.getInt
-import dev.olog.msc.utils.getLong
-import dev.olog.msc.utils.getString
-import dev.olog.msc.utils.getStringOrNull
+import dev.olog.msc.data.C
+import dev.olog.msc.data.utils.getInt
+import dev.olog.msc.data.utils.getLong
+import dev.olog.msc.data.utils.getString
+import dev.olog.msc.data.utils.getStringOrNull
 
 fun Cursor.toPodcast(): Podcast {
     val id = getLong(BaseColumns._ID)
@@ -26,12 +25,12 @@ fun Cursor.toPodcast(): Podcast {
     val album = adjustAlbum(getStringOrNull(MediaStore.Audio.AudioColumns.ALBUM))
 
     var albumArtist = artist
-    val albumArtistIndex = this.getColumnIndex("album_artist")
-    if (albumArtistIndex != -1) {
-        this.getStringOrNull(albumArtistIndex)?.also {
-            albumArtist = it
-        }
-    }
+//    val albumArtistIndex = this.getColumnIndex("album_artist") TODO
+//    if (albumArtistIndex != -1) {
+//        this.getStringOrNull(albumArtistIndex)?.also {
+//            albumArtist = it
+//        }
+//    }
 
     val duration = getLong(MediaStore.Audio.AudioColumns.DURATION)
     val dateAdded = getLong(MediaStore.MediaColumns.DATE_ADDED)
@@ -42,12 +41,12 @@ fun Cursor.toPodcast(): Podcast {
 
     return Podcast(
             id, artistId, albumId, title, artist, albumArtist, album,
-            "",
             duration, dateAdded, path,
-            folder.capitalize(), disc, track)
+            folder.capitalize(), disc, track
+    )
 }
 
-fun Cursor.toUneditedPodcast(image: String): Podcast {
+fun Cursor.toUneditedPodcast(): Podcast {
     val id = getLong(BaseColumns._ID)
     val artistId = getLong(MediaStore.Audio.AudioColumns.ARTIST_ID)
     val albumId = getLong(MediaStore.Audio.AudioColumns.ALBUM_ID)
@@ -77,7 +76,7 @@ fun Cursor.toUneditedPodcast(image: String): Podcast {
 
     return Podcast(
             id, artistId, albumId, title, artist, albumArtist, album,
-            image, duration, dateAdded, path,
+            duration, dateAdded, path,
             folder.capitalize(), disc, track)
 }
 
@@ -86,7 +85,7 @@ private fun adjustAlbum(album: String?): String {
         return ""
     }
     if (album == Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS).name){
-        return AppConstants.UNKNOWN
+        return C.UNKNOWN
     } else {
         return album
     }
