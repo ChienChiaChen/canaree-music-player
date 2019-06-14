@@ -1,7 +1,6 @@
 package dev.olog.msc.domain.gateway.prefs
 
-import dev.olog.msc.core.entity.UserCredentials
-import dev.olog.msc.domain.entity.*
+import dev.olog.msc.core.entity.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import java.io.File

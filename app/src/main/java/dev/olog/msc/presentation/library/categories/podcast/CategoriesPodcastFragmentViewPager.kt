@@ -2,9 +2,10 @@ package dev.olog.msc.presentation.library.categories.podcast
 
 import android.content.Context
 import androidx.fragment.app.FragmentStatePagerAdapter
-import dev.olog.msc.domain.entity.LibraryCategoryBehavior
-import dev.olog.msc.presentation.library.tab.TabFragment
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.entity.LibraryCategoryBehavior
+import dev.olog.msc.domain.entity.asString
+import dev.olog.msc.presentation.library.tab.TabFragment
 
 class CategoriesPodcastFragmentViewPager (
         private val context: Context,

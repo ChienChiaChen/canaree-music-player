@@ -6,8 +6,8 @@ import androidx.annotation.CallSuper
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.R
-import dev.olog.msc.domain.entity.PlaylistType
-import dev.olog.msc.domain.entity.SortType
+import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.core.entity.SortType
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.model.DisplayableItem

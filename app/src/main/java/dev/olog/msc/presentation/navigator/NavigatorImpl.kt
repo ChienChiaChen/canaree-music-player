@@ -12,7 +12,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.Lazy
 import dev.olog.msc.R
 import dev.olog.msc.app.app
-import dev.olog.msc.domain.entity.PlaylistType
+import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.dialog.add.favorite.AddFavoriteDialog
 import dev.olog.msc.presentation.dialog.clear.playlist.ClearPlaylistDialog

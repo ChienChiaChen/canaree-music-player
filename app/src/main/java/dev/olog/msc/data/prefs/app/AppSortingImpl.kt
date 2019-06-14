@@ -3,9 +3,9 @@ package dev.olog.msc.data.prefs.app
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import dev.olog.msc.domain.entity.LibrarySortType
-import dev.olog.msc.domain.entity.SortArranging
-import dev.olog.msc.domain.entity.SortType
+import dev.olog.msc.core.entity.LibrarySortType
+import dev.olog.msc.core.entity.SortArranging
+import dev.olog.msc.core.entity.SortType
 import dev.olog.msc.domain.gateway.prefs.Sorting
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -105,26 +105,40 @@ class AppSortingImpl (
     override fun getAllTracksSortOrder(): LibrarySortType {
         val sort = preferences.getInt(ALL_SONGS_SORT_ORDER, SortType.TITLE.ordinal)
         val arranging = preferences.getInt(ALL_SONGS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
-        return LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging])
+        return LibrarySortType(
+            SortType.values()[sort],
+            SortArranging.values()[arranging]
+        )
     }
 
     override fun getAllAlbumsSortOrder(): LibrarySortType {
         val sort = preferences.getInt(ALL_ALBUMS_SORT_ORDER, SortType.TITLE.ordinal)
         val arranging = preferences.getInt(ALL_ALBUMS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
-        return LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging])
+        return LibrarySortType(
+            SortType.values()[sort],
+            SortArranging.values()[arranging]
+        )
     }
 
     override fun getAllArtistsSortOrder(): LibrarySortType {
         val sort = preferences.getInt(ALL_ARTISTS_SORT_ORDER, SortType.ARTIST.ordinal)
         val arranging = preferences.getInt(ALL_ARTISTS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal)
-        return LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging])
+        return LibrarySortType(
+            SortType.values()[sort],
+            SortArranging.values()[arranging]
+        )
     }
 
     override fun observeAllTracksSortOrder(): Observable<LibrarySortType> {
         return Observables.combineLatest(
                 rxPreferences.getInteger(ALL_SONGS_SORT_ORDER, SortType.TITLE.ordinal).asObservable(),
                 rxPreferences.getInteger(ALL_SONGS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal).asObservable(), //ascending default
-                { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
+                { sort, arranging ->
+                    LibrarySortType(
+                        SortType.values()[sort],
+                        SortArranging.values()[arranging]
+                    )
+                }
         )
     }
 
@@ -132,7 +146,12 @@ class AppSortingImpl (
         return Observables.combineLatest(
                 rxPreferences.getInteger(ALL_ALBUMS_SORT_ORDER, SortType.TITLE.ordinal).asObservable(),
                 rxPreferences.getInteger(ALL_ALBUMS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal).asObservable(), //ascending default
-                { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
+                { sort, arranging ->
+                    LibrarySortType(
+                        SortType.values()[sort],
+                        SortArranging.values()[arranging]
+                    )
+                }
         )
     }
 
@@ -140,7 +159,12 @@ class AppSortingImpl (
         return Observables.combineLatest(
                 rxPreferences.getInteger(ALL_ARTISTS_SORT_ORDER, SortType.ARTIST.ordinal).asObservable(),
                 rxPreferences.getInteger(ALL_ARTISTS_SORT_ARRANGING, SortArranging.ASCENDING.ordinal).asObservable(), //ascending default
-                { sort, arranging -> LibrarySortType(SortType.values()[sort], SortArranging.values()[arranging]) }
+                { sort, arranging ->
+                    LibrarySortType(
+                        SortType.values()[sort],
+                        SortArranging.values()[arranging]
+                    )
+                }
         )
     }
 

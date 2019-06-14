@@ -1,6 +1,6 @@
 package dev.olog.msc.domain.interactor.offline.lyrics
 
-import dev.olog.msc.domain.entity.OfflineLyrics
+import dev.olog.msc.core.entity.OfflineLyrics
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.gateway.OfflineLyricsGateway

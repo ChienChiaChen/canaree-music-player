@@ -1,8 +1,8 @@
 package dev.olog.msc.domain.interactor.all.sorted
 
 import dev.olog.msc.core.entity.Song
-import dev.olog.msc.domain.entity.SortArranging
-import dev.olog.msc.domain.entity.SortType
+import dev.olog.msc.core.entity.SortArranging
+import dev.olog.msc.core.entity.SortType
 import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
 import dev.olog.msc.domain.interactor.all.sorted.util.GetSortArrangingUseCase

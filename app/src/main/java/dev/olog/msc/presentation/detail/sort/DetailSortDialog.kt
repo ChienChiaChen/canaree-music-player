@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.PopupMenu
 import androidx.annotation.MenuRes
 import dev.olog.msc.R
-import dev.olog.msc.domain.entity.SortType
+import dev.olog.msc.core.entity.SortType
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 

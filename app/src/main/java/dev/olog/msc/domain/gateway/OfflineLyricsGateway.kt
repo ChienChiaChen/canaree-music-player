@@ -1,6 +1,6 @@
 package dev.olog.msc.domain.gateway
 
-import dev.olog.msc.domain.entity.OfflineLyrics
+import dev.olog.msc.core.entity.OfflineLyrics
 import io.reactivex.Completable
 import io.reactivex.Observable
 

@@ -1,4 +1,4 @@
-package dev.olog.msc.domain.entity
+package dev.olog.msc.core.entity
 
 enum class PlaylistType{
     TRACK, PODCAST, AUTO

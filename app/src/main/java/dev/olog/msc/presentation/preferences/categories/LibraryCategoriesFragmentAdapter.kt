@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ItemTouchHelper
-import dev.olog.msc.BR
 import dev.olog.msc.R
-import dev.olog.msc.domain.entity.LibraryCategoryBehavior
+import dev.olog.msc.core.entity.LibraryCategoryBehavior
+import dev.olog.msc.domain.entity.asString
 import dev.olog.msc.presentation.base.adapter.DataBoundViewHolder
 import dev.olog.msc.presentation.base.adapter.drag.TouchableAdapter
 import dev.olog.msc.utils.k.extension.swap
@@ -27,8 +27,12 @@ class LibraryCategoriesFragmentAdapter (
     override fun getItemViewType(position: Int): Int = R.layout.dialog_tab_category_item
 
     override fun onBindViewHolder(holder: DataBoundViewHolder, position: Int) {
-        holder.binding.setVariable(BR.item, data[position])
-        holder.binding.executePendingBindings()
+        val item = data[position]
+        val ctx = holder.itemView.context
+        holder.itemView.checkBox.apply {
+            this.text = item.asString(ctx)
+            this.isChecked = item.visible
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBoundViewHolder {

@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.navigator
 
 import android.view.View
-import dev.olog.msc.domain.entity.PlaylistType
+import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory

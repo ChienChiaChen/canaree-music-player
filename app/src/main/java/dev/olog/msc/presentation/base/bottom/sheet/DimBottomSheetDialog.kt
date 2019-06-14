@@ -6,14 +6,12 @@ import android.widget.FrameLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dev.olog.msc.R
-import dev.olog.msc.analytics.AppAnalytics
-import dev.olog.msc.presentation.base.LoggableFragment
 import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.utils.k.extension.dip
 import dev.olog.msc.utils.k.extension.isLandscape
 
 class DimBottomSheetDialog(context: Context, theme: Int)
-    : BottomSheetDialog(context, theme), LoggableFragment {
+    : BottomSheetDialog(context, theme) {
 
     private var behavior: BottomSheetBehavior<FrameLayout>? = null
 
@@ -34,11 +32,6 @@ class DimBottomSheetDialog(context: Context, theme: Int)
             behavior = BottomSheetBehavior.from(bottomSheet)
             behavior?.peekHeight = context.dip(300)
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        AppAnalytics.logScreen(ownerActivity, this)
     }
 
 }
