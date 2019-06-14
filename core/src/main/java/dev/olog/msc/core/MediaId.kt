@@ -1,4 +1,4 @@
-package dev.olog.msc.utils
+package dev.olog.msc.core
 
 enum class MediaIdCategory {
     FOLDERS,

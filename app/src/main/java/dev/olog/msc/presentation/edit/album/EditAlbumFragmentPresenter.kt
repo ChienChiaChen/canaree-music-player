@@ -6,7 +6,7 @@ import dev.olog.msc.domain.entity.Song
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
 import dev.olog.msc.domain.interactor.item.GetAlbumUseCase
 import dev.olog.msc.domain.interactor.item.GetPodcastAlbumUseCase
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.get
 import io.reactivex.Single
 import org.jaudiotagger.audio.AudioFileIO

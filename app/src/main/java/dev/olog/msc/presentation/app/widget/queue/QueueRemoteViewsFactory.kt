@@ -11,7 +11,7 @@ import dev.olog.msc.dagger.qualifier.ApplicationContext
 import dev.olog.msc.domain.entity.PlayingQueueSong
 import dev.olog.msc.domain.interactor.playing.queue.GetMiniQueueUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.getBitmapAsync
 import javax.inject.Inject
 

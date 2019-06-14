@@ -6,7 +6,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.data.DataFetcher
 import dev.olog.msc.domain.gateway.PodcastGateway
 import dev.olog.msc.domain.gateway.SongGateway
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.unsubscribe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable

@@ -10,7 +10,7 @@ import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
 import dev.olog.msc.domain.interactor.item.GetUneditedSongUseCase
 import dev.olog.msc.domain.interactor.last.fm.GetLastFmTrackUseCase
 import dev.olog.msc.domain.interactor.last.fm.LastFmTrackRequest
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.get
 import io.reactivex.Single
 import org.jaudiotagger.audio.AudioFileIO

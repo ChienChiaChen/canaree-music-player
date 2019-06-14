@@ -8,7 +8,7 @@ import dev.olog.msc.domain.entity.Artist
 import dev.olog.msc.domain.interactor.GetItemTitleUseCase
 import dev.olog.msc.domain.interactor.all.related.artists.GetRelatedArtistsUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.k.extension.asLiveData
 import dev.olog.msc.utils.k.extension.mapToList

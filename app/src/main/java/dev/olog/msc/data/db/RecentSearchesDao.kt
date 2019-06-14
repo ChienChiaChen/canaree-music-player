@@ -3,7 +3,7 @@ package dev.olog.msc.data.db
 import androidx.room.*
 import dev.olog.msc.data.entity.RecentSearchesEntity
 import dev.olog.msc.domain.entity.*
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.RecentSearchesTypes.ALBUM
 import dev.olog.msc.utils.RecentSearchesTypes.ARTIST
 import dev.olog.msc.utils.RecentSearchesTypes.FOLDER

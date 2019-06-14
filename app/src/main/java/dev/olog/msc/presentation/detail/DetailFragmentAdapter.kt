@@ -2,8 +2,6 @@ package dev.olog.msc.presentation.detail
 
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
 import dev.olog.msc.BR
 import dev.olog.msc.R
@@ -18,7 +16,7 @@ import dev.olog.msc.presentation.detail.sort.DetailSortDialog
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.tutorial.TutorialTapTarget
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.elevateSongOnTouch
 import dev.olog.msc.utils.k.extension.setOnClickListener
 import dev.olog.msc.utils.k.extension.setOnLongClickListener

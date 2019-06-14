@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.playing.queue.model
 
 import dev.olog.msc.presentation.base.BaseModel
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 
 data class DisplayableQueueSong (
         override val type: Int,

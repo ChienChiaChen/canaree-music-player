@@ -6,7 +6,7 @@ import dagger.Lazy
 import dev.olog.msc.domain.entity.LibrarySortType
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.asLiveData
 import io.reactivex.Observable
 import javax.inject.Inject

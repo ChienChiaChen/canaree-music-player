@@ -22,7 +22,7 @@ import dev.olog.msc.domain.interactor.all.sorted.GetSortedSongListByParamUseCase
 import dev.olog.msc.domain.interactor.all.sorted.util.GetSortOrderUseCase
 import dev.olog.msc.presentation.detail.DetailFragmentViewModel
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.TimeUtils
 import dev.olog.msc.utils.k.extension.mapToList

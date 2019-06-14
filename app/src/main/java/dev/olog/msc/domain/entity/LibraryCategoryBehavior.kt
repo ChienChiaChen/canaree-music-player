@@ -2,7 +2,7 @@ package dev.olog.msc.domain.entity
 
 import android.content.Context
 import dev.olog.msc.R
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.MediaIdCategory
 
 data class LibraryCategoryBehavior(
         val category: MediaIdCategory,

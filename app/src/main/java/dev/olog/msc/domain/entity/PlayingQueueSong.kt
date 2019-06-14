@@ -1,6 +1,6 @@
 package dev.olog.msc.domain.entity
 
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import java.io.File
 
 data class PlayingQueueSong (

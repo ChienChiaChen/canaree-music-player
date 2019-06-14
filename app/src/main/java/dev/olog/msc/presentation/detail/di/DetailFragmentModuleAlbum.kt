@@ -12,8 +12,8 @@ import dev.olog.msc.domain.entity.Genre
 import dev.olog.msc.domain.entity.Playlist
 import dev.olog.msc.domain.interactor.all.sibling.*
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.utils.MediaId
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.mapToList
 import io.reactivex.Observable
 

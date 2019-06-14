@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import dev.olog.msc.R
 import dev.olog.msc.dagger.qualifier.ApplicationContext
 import dev.olog.msc.presentation.edit.track.DisplayableSong
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

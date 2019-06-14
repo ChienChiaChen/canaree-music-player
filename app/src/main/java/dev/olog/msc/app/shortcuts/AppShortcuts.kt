@@ -1,6 +1,6 @@
 package dev.olog.msc.app.shortcuts
 
-import dev.olog.msc.utils.MediaId
+import dev.olog.msc.core.MediaId
 
 interface AppShortcuts {
 

@@ -9,8 +9,8 @@ import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
 import dev.olog.msc.domain.entity.*
 import dev.olog.msc.domain.interactor.item.*
 import dev.olog.msc.presentation.model.DisplayableItem
-import dev.olog.msc.utils.MediaId
-import dev.olog.msc.utils.MediaIdCategory
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.k.extension.asFlowable
 import io.reactivex.Flowable
