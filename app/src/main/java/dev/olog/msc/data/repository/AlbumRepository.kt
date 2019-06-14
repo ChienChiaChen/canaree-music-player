@@ -4,14 +4,13 @@ import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.data.dao.AppDatabase
-import dev.olog.msc.data.mapper.toAlbum
 import dev.olog.msc.core.entity.Album
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.gateway.AlbumGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.gateway.UsedImageGateway
-import dev.olog.msc.onlyWithStoragePermission
+import dev.olog.msc.data.dao.AppDatabase
+import dev.olog.msc.data.mapper.toAlbum
 import dev.olog.msc.utils.img.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.debounceFirst
 import dev.olog.msc.utils.safeCompare
@@ -38,8 +37,7 @@ class AlbumRepository @Inject constructor(
         return rxContentResolver.createQuery(
                 MEDIA_STORE_URI, arrayOf("count(*) as size"), null,
                 null, " size ASC LIMIT 1", true
-        ).onlyWithStoragePermission()
-                .debounceFirst()
+        ).debounceFirst()
                 .lift(SqlBrite.Query.mapToOne { 0 })
                 .switchMap { songGateway.getAll() }
                 .map { songList ->

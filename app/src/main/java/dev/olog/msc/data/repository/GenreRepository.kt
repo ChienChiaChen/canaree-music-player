@@ -5,19 +5,18 @@ import android.provider.BaseColumns
 import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.core.entity.Genre
+import dev.olog.msc.core.entity.Song
+import dev.olog.msc.core.gateway.GenreGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.entity.GenreMostPlayedEntity
 import dev.olog.msc.data.mapper.extractId
 import dev.olog.msc.data.mapper.toGenre
 import dev.olog.msc.data.repository.util.CommonQuery
-import dev.olog.msc.core.entity.Genre
-import dev.olog.msc.core.entity.Song
-import dev.olog.msc.core.gateway.GenreGateway
-import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.onlyWithStoragePermission
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.debounceFirst
 import io.reactivex.Completable
 import io.reactivex.CompletableSource
@@ -53,7 +52,7 @@ class GenreRepository @Inject constructor(
         return rxContentResolver.createQuery(
                 MEDIA_STORE_URI, PROJECTION, SELECTION,
                 SELECTION_ARGS, SORT_ORDER, true
-        ).onlyWithStoragePermission()
+        )
                 .debounceFirst()
                 .lift(SqlBrite.Query.mapToList {
                     val id = it.extractId()
@@ -120,8 +119,7 @@ class GenreRepository @Inject constructor(
                 SONG_SELECTION_ARGS,
                 SONG_SORT_ORDER,
                 false
-        ).onlyWithStoragePermission()
-                .debounceFirst()
+        ).debounceFirst()
                 .lift(SqlBrite.Query.mapToList { it.extractId() })
                 .switchMapSingle { ids -> songGateway.getAll().firstOrError().map { songs ->
                     ids.asSequence()
