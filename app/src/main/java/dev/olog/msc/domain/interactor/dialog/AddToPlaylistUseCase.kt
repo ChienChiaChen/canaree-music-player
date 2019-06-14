@@ -2,8 +2,8 @@ package dev.olog.msc.domain.interactor.dialog
 
 import dev.olog.msc.core.entity.Playlist
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.PlaylistGateway
-import dev.olog.msc.domain.gateway.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.PlaylistGateway
+import dev.olog.msc.core.gateway.PodcastPlaylistGateway
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
 import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.domain.interactor.item.GetPodcastUseCase

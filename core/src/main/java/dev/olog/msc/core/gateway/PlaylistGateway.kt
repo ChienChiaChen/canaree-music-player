@@ -1,8 +1,6 @@
-package dev.olog.msc.domain.gateway
+package dev.olog.msc.core.gateway
 
 import dev.olog.msc.core.entity.Playlist
-import dev.olog.msc.core.gateway.BaseGateway
-import dev.olog.msc.core.gateway.ChildsHasSongs
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -10,7 +8,7 @@ import io.reactivex.Single
 interface PlaylistGateway :
         BaseGateway<Playlist, Long>,
     ChildsHasSongs<Long>,
-        HasMostPlayed {
+    HasMostPlayed {
 
     fun getAllAutoPlaylists() : Observable<List<Playlist>>
 

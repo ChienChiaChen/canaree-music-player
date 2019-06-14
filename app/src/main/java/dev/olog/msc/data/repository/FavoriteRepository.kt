@@ -3,8 +3,8 @@ package dev.olog.msc.data.repository
 import android.annotation.SuppressLint
 import dev.olog.msc.core.entity.*
 import dev.olog.msc.data.dao.AppDatabase
-import dev.olog.msc.domain.gateway.FavoriteGateway
-import dev.olog.msc.domain.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.FavoriteGateway
+import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.utils.safeCompare
 import io.reactivex.Completable

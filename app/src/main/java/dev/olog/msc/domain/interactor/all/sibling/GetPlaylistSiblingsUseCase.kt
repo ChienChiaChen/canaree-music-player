@@ -3,7 +3,7 @@ package dev.olog.msc.domain.interactor.all.sibling
 import dev.olog.msc.constants.PlaylistConstants
 import dev.olog.msc.core.entity.Playlist
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.PlaylistGateway
+import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import io.reactivex.Observable

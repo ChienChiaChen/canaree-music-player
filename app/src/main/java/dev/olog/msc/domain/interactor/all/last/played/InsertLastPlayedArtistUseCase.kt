@@ -2,7 +2,7 @@ package dev.olog.msc.domain.interactor.all.last.played
 
 import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.core.gateway.ArtistGateway
-import dev.olog.msc.domain.gateway.PodcastArtistGateway
+import dev.olog.msc.core.gateway.PodcastArtistGateway
 import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import io.reactivex.Completable

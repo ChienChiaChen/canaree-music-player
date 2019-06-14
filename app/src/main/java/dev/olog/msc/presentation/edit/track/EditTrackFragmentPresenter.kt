@@ -5,7 +5,7 @@ import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.Song
-import dev.olog.msc.domain.gateway.UsedImageGateway
+import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
 import dev.olog.msc.domain.interactor.item.GetUneditedSongUseCase
 import dev.olog.msc.domain.interactor.last.fm.GetLastFmTrackUseCase

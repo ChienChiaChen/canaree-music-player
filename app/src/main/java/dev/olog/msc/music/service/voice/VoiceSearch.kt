@@ -1,7 +1,7 @@
 package dev.olog.msc.music.service.voice
 
 import dev.olog.msc.core.entity.Song
-import dev.olog.msc.domain.gateway.GenreGateway
+import dev.olog.msc.core.gateway.GenreGateway
 import dev.olog.msc.music.service.model.MediaEntity
 import dev.olog.msc.music.service.model.toMediaEntity
 import dev.olog.msc.core.MediaId

@@ -21,7 +21,7 @@ import dev.olog.msc.data.mapper.toUneditedSong
 import dev.olog.msc.data.repository.util.CommonQuery
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.domain.gateway.UsedImageGateway
+import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.utils.getLong

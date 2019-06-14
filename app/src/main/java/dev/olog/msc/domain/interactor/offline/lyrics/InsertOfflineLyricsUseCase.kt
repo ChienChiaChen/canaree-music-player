@@ -3,7 +3,7 @@ package dev.olog.msc.domain.interactor.offline.lyrics
 import dev.olog.msc.core.entity.OfflineLyrics
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.OfflineLyricsGateway
+import dev.olog.msc.core.gateway.OfflineLyricsGateway
 import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.domain.interactor.item.GetSongUseCase
 import dev.olog.msc.core.MediaId

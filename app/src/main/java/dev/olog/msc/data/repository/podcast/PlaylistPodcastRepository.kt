@@ -10,9 +10,9 @@ import dev.olog.msc.core.entity.FavoriteType
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.PodcastPlaylist
 import dev.olog.msc.core.entity.Song
-import dev.olog.msc.domain.gateway.FavoriteGateway
-import dev.olog.msc.domain.gateway.PodcastGateway
-import dev.olog.msc.domain.gateway.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.FavoriteGateway
+import dev.olog.msc.core.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.PodcastPlaylistGateway
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.mapToList
 import io.reactivex.Completable

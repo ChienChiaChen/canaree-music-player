@@ -9,7 +9,7 @@ import dev.olog.msc.constants.PlaylistConstants
 import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.core.entity.FavoriteType
-import dev.olog.msc.domain.gateway.FavoriteGateway
+import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.utils.getLong
 import io.reactivex.Completable
 import io.reactivex.Single

@@ -9,9 +9,9 @@ import dev.olog.msc.data.mapper.toArtist
 import dev.olog.msc.data.mapper.toFakeArtist
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.PodcastArtist
-import dev.olog.msc.domain.gateway.PodcastArtistGateway
-import dev.olog.msc.domain.gateway.PodcastGateway
-import dev.olog.msc.domain.gateway.UsedImageGateway
+import dev.olog.msc.core.gateway.PodcastArtistGateway
+import dev.olog.msc.core.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.utils.k.extension.debounceFirst
 import dev.olog.msc.utils.safeCompare

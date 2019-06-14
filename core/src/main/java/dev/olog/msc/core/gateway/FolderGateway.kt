@@ -1,14 +1,12 @@
-package dev.olog.msc.domain.gateway
+package dev.olog.msc.core.gateway
 
 import dev.olog.msc.core.entity.Folder
-import dev.olog.msc.core.gateway.BaseGateway
-import dev.olog.msc.core.gateway.ChildsHasSongs
 import io.reactivex.Observable
 
 interface FolderGateway :
         BaseGateway<Folder, String>,
     ChildsHasSongs<String>,
-        HasMostPlayed {
+    HasMostPlayed {
 
     fun getAllUnfiltered(): Observable<List<Folder>>
 

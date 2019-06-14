@@ -2,7 +2,7 @@ package dev.olog.msc.domain.interactor.all.sibling
 
 import dev.olog.msc.core.entity.PodcastPlaylist
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.PodcastPlaylistGateway
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import io.reactivex.Observable

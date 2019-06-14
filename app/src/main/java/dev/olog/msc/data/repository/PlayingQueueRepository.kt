@@ -4,7 +4,7 @@ import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.core.entity.PlayingQueueSong
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.gateway.PlayingQueueGateway
-import dev.olog.msc.domain.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.interactor.UpdatePlayingQueueUseCaseRequest
 import dev.olog.msc.core.MediaId

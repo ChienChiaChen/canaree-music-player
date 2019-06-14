@@ -3,10 +3,7 @@ package dev.olog.msc.data.repository
 import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.dao.RecentSearchesDao
 import dev.olog.msc.core.entity.SearchResult
-import dev.olog.msc.core.gateway.AlbumGateway
-import dev.olog.msc.core.gateway.ArtistGateway
-import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.domain.gateway.*
+import dev.olog.msc.core.gateway.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject

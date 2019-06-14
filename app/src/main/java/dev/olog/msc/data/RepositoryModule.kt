@@ -10,7 +10,6 @@ import dev.olog.msc.data.repository.podcast.PlaylistPodcastRepository
 import dev.olog.msc.data.repository.podcast.PodcastAlbumRepository
 import dev.olog.msc.data.repository.podcast.PodcastArtistRepository
 import dev.olog.msc.data.repository.podcast.PodcastRepository
-import dev.olog.msc.domain.gateway.*
 import javax.inject.Singleton
 
 @Module

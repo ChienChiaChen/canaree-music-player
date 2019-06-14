@@ -14,7 +14,7 @@ import dev.olog.msc.R
 import dev.olog.msc.app.shortcuts.AppShortcuts
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.core.gateway.LastFmGateway
-import dev.olog.msc.domain.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.interactor.prefs.SleepTimerUseCase
 import dev.olog.msc.presentation.image.creation.ImagesCreator

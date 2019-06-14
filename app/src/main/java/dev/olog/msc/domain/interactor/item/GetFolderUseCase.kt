@@ -2,7 +2,7 @@ package dev.olog.msc.domain.interactor.item
 
 import dev.olog.msc.core.entity.Folder
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.FolderGateway
+import dev.olog.msc.core.gateway.FolderGateway
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import io.reactivex.Observable

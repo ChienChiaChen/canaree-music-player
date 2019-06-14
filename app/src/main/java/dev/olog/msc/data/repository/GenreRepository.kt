@@ -13,7 +13,7 @@ import dev.olog.msc.data.mapper.toGenre
 import dev.olog.msc.data.repository.util.CommonQuery
 import dev.olog.msc.core.entity.Genre
 import dev.olog.msc.core.entity.Song
-import dev.olog.msc.domain.gateway.GenreGateway
+import dev.olog.msc.core.gateway.GenreGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.onlyWithStoragePermission

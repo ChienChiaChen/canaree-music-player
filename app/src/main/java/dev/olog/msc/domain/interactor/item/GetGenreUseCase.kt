@@ -2,7 +2,7 @@ package dev.olog.msc.domain.interactor.item
 
 import dev.olog.msc.core.entity.Genre
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.GenreGateway
+import dev.olog.msc.core.gateway.GenreGateway
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import io.reactivex.Observable

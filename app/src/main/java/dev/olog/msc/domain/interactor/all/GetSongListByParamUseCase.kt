@@ -3,13 +3,10 @@ package dev.olog.msc.domain.interactor.all
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.entity.toSong
 import dev.olog.msc.core.executor.ComputationScheduler
-import dev.olog.msc.domain.gateway.*
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.core.gateway.AlbumGateway
-import dev.olog.msc.core.gateway.ArtistGateway
-import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.gateway.*
 import dev.olog.msc.utils.k.extension.mapToList
 import io.reactivex.Observable
 import javax.inject.Inject

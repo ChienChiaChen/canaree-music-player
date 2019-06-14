@@ -16,8 +16,8 @@ import dev.olog.msc.data.mapper.toPodcast
 import dev.olog.msc.data.mapper.toUneditedPodcast
 import dev.olog.msc.data.repository.util.CommonQuery
 import dev.olog.msc.core.entity.Podcast
-import dev.olog.msc.domain.gateway.PodcastGateway
-import dev.olog.msc.domain.gateway.UsedImageGateway
+import dev.olog.msc.core.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.img.ImagesFolderUtils

@@ -1,9 +1,9 @@
 package dev.olog.msc.domain.interactor.all.most.played
 
 import dev.olog.msc.core.executor.IoScheduler
-import dev.olog.msc.domain.gateway.FolderGateway
-import dev.olog.msc.domain.gateway.GenreGateway
-import dev.olog.msc.domain.gateway.PlaylistGateway
+import dev.olog.msc.core.gateway.FolderGateway
+import dev.olog.msc.core.gateway.GenreGateway
+import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory

@@ -1,4 +1,4 @@
-package dev.olog.msc.domain.gateway
+package dev.olog.msc.core.gateway
 
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.gateway.BaseGateway

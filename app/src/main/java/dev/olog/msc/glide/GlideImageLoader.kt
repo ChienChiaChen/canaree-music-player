@@ -13,7 +13,7 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.gateway.LastFmGateway
 import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.domain.gateway.PodcastGateway
+import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.presentation.model.DisplayableItem
 import java.io.File
 import java.io.InputStream

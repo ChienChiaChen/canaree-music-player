@@ -5,7 +5,7 @@ import android.os.Bundle
 import dev.olog.msc.constants.MusicConstants
 import dev.olog.msc.core.entity.SortArranging
 import dev.olog.msc.core.entity.SortType
-import dev.olog.msc.domain.gateway.GenreGateway
+import dev.olog.msc.core.gateway.GenreGateway
 import dev.olog.msc.domain.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.domain.interactor.PodcastPositionUseCase
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
@@ -31,18 +31,18 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class QueueManager @Inject constructor(
-        private val queueImpl: QueueImpl,
-        private val getPlayingQueueUseCase: GetPlayingQueueUseCase,
-        private val musicPreferencesUseCase: MusicPreferencesGateway,
-        private val shuffleMode: ShuffleMode,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase,
-        private val getMostPlayedSongsUseCase: GetMostPlayedSongsUseCase,
-        private val getRecentlyAddedUseCase: GetRecentlyAddedUseCase,
-        private val getSongByFileUseCase: GetSongByFileUseCase,
-        private val genreGateway: GenreGateway,
-        private val collator: Collator,
-        private val enhancedShuffle: EnhancedShuffle,
-        private val podcastPosition: PodcastPositionUseCase
+    private val queueImpl: QueueImpl,
+    private val getPlayingQueueUseCase: GetPlayingQueueUseCase,
+    private val musicPreferencesUseCase: MusicPreferencesGateway,
+    private val shuffleMode: ShuffleMode,
+    private val getSongListByParamUseCase: GetSongListByParamUseCase,
+    private val getMostPlayedSongsUseCase: GetMostPlayedSongsUseCase,
+    private val getRecentlyAddedUseCase: GetRecentlyAddedUseCase,
+    private val getSongByFileUseCase: GetSongByFileUseCase,
+    private val genreGateway: GenreGateway,
+    private val collator: Collator,
+    private val enhancedShuffle: EnhancedShuffle,
+    private val podcastPosition: PodcastPositionUseCase
 
 ) : Queue {
 

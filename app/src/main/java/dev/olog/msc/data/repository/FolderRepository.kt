@@ -7,7 +7,7 @@ import dev.olog.msc.data.entity.FolderMostPlayedEntity
 import dev.olog.msc.data.mapper.toFolder
 import dev.olog.msc.core.entity.Folder
 import dev.olog.msc.core.entity.Song
-import dev.olog.msc.domain.gateway.FolderGateway
+import dev.olog.msc.core.gateway.FolderGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.safeCompare

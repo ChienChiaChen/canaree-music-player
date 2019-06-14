@@ -1,13 +1,13 @@
 package dev.olog.msc.domain.interactor.playlist
 
 import dev.olog.msc.core.entity.PlaylistType
-import dev.olog.msc.domain.gateway.PlaylistGateway
-import dev.olog.msc.domain.gateway.PodcastPlaylistGateway
+import dev.olog.msc.core.gateway.PlaylistGateway
+import dev.olog.msc.core.gateway.PodcastPlaylistGateway
 import javax.inject.Inject
 
 class MoveItemInPlaylistUseCase @Inject constructor(
-        private val playlistGateway: PlaylistGateway,
-        private val podcastGateway: PodcastPlaylistGateway
+    private val playlistGateway: PlaylistGateway,
+    private val podcastGateway: PodcastPlaylistGateway
 ) {
 
     fun execute(input: Input): Boolean{

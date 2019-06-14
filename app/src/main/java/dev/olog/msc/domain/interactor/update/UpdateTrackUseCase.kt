@@ -5,7 +5,7 @@ import com.crashlytics.android.Crashlytics
 import dev.olog.msc.app.IoSchedulers
 import dev.olog.msc.catchNothing
 import dev.olog.msc.core.dagger.ApplicationContext
-import dev.olog.msc.domain.gateway.UsedImageGateway
+import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.notifyItemChanged
 import io.reactivex.Completable

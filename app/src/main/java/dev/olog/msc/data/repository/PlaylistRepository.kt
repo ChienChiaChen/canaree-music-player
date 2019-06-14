@@ -15,8 +15,8 @@ import dev.olog.msc.data.mapper.toPlaylistSong
 import dev.olog.msc.data.repository.util.CommonQuery
 import dev.olog.msc.core.entity.Playlist
 import dev.olog.msc.core.entity.Song
-import dev.olog.msc.domain.gateway.FavoriteGateway
-import dev.olog.msc.domain.gateway.PlaylistGateway
+import dev.olog.msc.core.gateway.FavoriteGateway
+import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.onlyWithStoragePermission

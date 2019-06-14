@@ -11,7 +11,7 @@ import dev.olog.msc.core.entity.Artist
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.gateway.ArtistGateway
 import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.domain.gateway.UsedImageGateway
+import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.utils.k.extension.debounceFirst
 import dev.olog.msc.utils.safeCompare
