@@ -14,13 +14,13 @@ import androidx.core.util.getOrDefault
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.data.mapper.toFakeSong
 import dev.olog.msc.data.mapper.toSong
 import dev.olog.msc.data.mapper.toUneditedSong
 import dev.olog.msc.data.repository.util.CommonQuery
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.entity.Song
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.gateway.UsedImageGateway
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.onlyWithStoragePermission
@@ -59,10 +59,10 @@ private const val SELECTION = "$DURATION > 20000 AND ${MediaStore.Audio.Media.IS
 private const val SORT_ORDER = "lower(${MediaStore.Audio.Media.TITLE})"
 
 class SongRepository @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private  val rxContentResolver: BriteContentResolver,
-        private  val appPrefsUseCase: AppPreferencesGateway,
-        private  val usedImageGateway: UsedImageGateway
+    @ApplicationContext private val context: Context,
+    private  val rxContentResolver: BriteContentResolver,
+    private  val appPrefsUseCase: AppPreferencesGateway,
+    private  val usedImageGateway: UsedImageGateway
 
 ) : SongGateway {
 
@@ -110,11 +110,13 @@ class SongRepository @Inject constructor(
     private fun mockDataIfNeeded(original: List<Song>): List<Song> {
         if (AppConstants.useFakeData && original.isEmpty()){
             return (0 until 50)
-                    .map { Song(it.toLong(), it.toLong(), it.toLong(),
-                            "An awesome title", "An awesome artist",
-                            "An awesome album artist", "An awesome album",
-                            "", (it * 1000000).toLong(), System.currentTimeMillis(),
-                            "storage/emulated/folder", "folder", -1, -1) }
+                    .map {
+                        Song(it.toLong(), it.toLong(), it.toLong(),
+                                "An awesome title", "An awesome artist",
+                                "An awesome album artist", "An awesome album",
+                                "", (it * 1000000).toLong(), System.currentTimeMillis(),
+                                "storage/emulated/folder", "folder", -1, -1)
+                    }
         }
         return original
     }
@@ -154,8 +156,8 @@ class SongRepository @Inject constructor(
     }
 
     @SuppressLint("Recycle")
-    override fun getByUri(uri: Uri): Single<Song> {
-        return Single.fromCallable { getByUriInternal(uri) }
+    override fun getByUri(uri: String): Single<Song> {
+        return Single.fromCallable { getByUriInternal(Uri.parse(uri)) }
                 .map { it.toLong() }
                 .flatMap { getByParam(it).firstOrError() }
     }

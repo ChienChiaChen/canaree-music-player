@@ -1,14 +1,14 @@
 package dev.olog.msc.data.repository
 
 import android.content.Context
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.entity.FolderMostPlayedEntity
 import dev.olog.msc.data.mapper.toFolder
-import dev.olog.msc.domain.entity.Folder
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.Folder
+import dev.olog.msc.core.entity.Song
 import dev.olog.msc.domain.gateway.FolderGateway
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.safeCompare
 import io.reactivex.Completable
@@ -18,10 +18,10 @@ import java.text.Collator
 import javax.inject.Inject
 
 class FolderRepository @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val songGateway: SongGateway,
-        appDatabase: AppDatabase,
-        private val collator: Collator
+    @ApplicationContext private val context: Context,
+    private val songGateway: SongGateway,
+    appDatabase: AppDatabase,
+    private val collator: Collator
 
 ): FolderGateway {
 
@@ -66,7 +66,13 @@ class FolderRepository @Inject constructor(
         return songGateway.getByParam(songId)
                 .firstOrError()
                 .flatMapCompletable { song ->
-                    CompletableSource { mostPlayedDao.insertOne(FolderMostPlayedEntity(0, song.id, song.folderPath)) }
+                    CompletableSource { mostPlayedDao.insertOne(
+                        FolderMostPlayedEntity(
+                            0,
+                            song.id,
+                            song.folderPath
+                        )
+                    ) }
                 }
     }
 

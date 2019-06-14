@@ -188,7 +188,7 @@ class QueueManager @Inject constructor(
     }
 
     override fun handlePlayFromUri(uri: Uri): Single<PlayerMediaEntity> {
-        return getSongByFileUseCase.execute(uri)
+        return getSongByFileUseCase.execute(uri.toString())
                 .delay(500, TimeUnit.MILLISECONDS)
                 .map { it.toMediaEntity(0, MediaId.songId(it.id)) }
                 .map { listOf(it) }

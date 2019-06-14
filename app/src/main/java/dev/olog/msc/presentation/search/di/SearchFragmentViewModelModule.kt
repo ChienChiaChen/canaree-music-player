@@ -7,16 +7,16 @@ import androidx.lifecycle.Transformations
 import dagger.Module
 import dagger.Provides
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.dagger.scope.PerFragment
-import dev.olog.msc.domain.entity.*
 import dev.olog.msc.domain.interactor.all.*
 import dev.olog.msc.domain.interactor.search.GetAllRecentSearchesUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.search.SearchFragmentHeaders
 import dev.olog.msc.presentation.search.SearchFragmentType
 import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.RecentSearchesTypes
+import dev.olog.msc.core.entity.*
+import dev.olog.msc.core.RecentSearchesTypes
 import dev.olog.msc.utils.k.extension.asLiveData
 import dev.olog.msc.utils.k.extension.mapToList
 import io.reactivex.Observable
@@ -34,23 +34,23 @@ class SearchFragmentViewModelModule {
 
     @Provides
     internal fun provideSearchData(
-            @ApplicationContext context: Context,
+        @ApplicationContext context: Context,
             // tracks
-            getAllArtistsUseCase: GetAllArtistsUseCase,
-            getAllAlbumsUseCase: GetAllAlbumsUseCase,
-            getAllPlaylistsUseCase: GetAllPlaylistsUseCase,
-            getAllGenresUseCase: GetAllGenresUseCase,
-            getAllFoldersUseCase: GetAllFoldersUseCase,
-            getAllSongsUseCase: GetAllSongsUseCase,
+        getAllArtistsUseCase: GetAllArtistsUseCase,
+        getAllAlbumsUseCase: GetAllAlbumsUseCase,
+        getAllPlaylistsUseCase: GetAllPlaylistsUseCase,
+        getAllGenresUseCase: GetAllGenresUseCase,
+        getAllFoldersUseCase: GetAllFoldersUseCase,
+        getAllSongsUseCase: GetAllSongsUseCase,
             // podcasts
-            getAllPodcastUseCase: GetAllPodcastUseCase,
-            getAllPodcastAlbumsUseCase: GetAllPodcastAlbumsUseCase,
-            getAllPodcastArtistUseCase: GetAllPodcastArtistsUseCase,
-            getAllPodcastPlaylistUseCase: GetAllPodcastPlaylistUseCase,
+        getAllPodcastUseCase: GetAllPodcastUseCase,
+        getAllPodcastAlbumsUseCase: GetAllPodcastAlbumsUseCase,
+        getAllPodcastArtistUseCase: GetAllPodcastArtistsUseCase,
+        getAllPodcastPlaylistUseCase: GetAllPodcastPlaylistUseCase,
             //recent
-            getAllRecentSearchesUseCase: GetAllRecentSearchesUseCase,
-            searchHeaders: SearchFragmentHeaders,
-            queryLiveData: MutableLiveData<String>)
+        getAllRecentSearchesUseCase: GetAllRecentSearchesUseCase,
+        searchHeaders: SearchFragmentHeaders,
+        queryLiveData: MutableLiveData<String>)
             : LiveData<Pair<MutableMap<SearchFragmentType, MutableList<DisplayableItem>>, String>> {
 
         return Transformations.switchMap(queryLiveData) { input ->

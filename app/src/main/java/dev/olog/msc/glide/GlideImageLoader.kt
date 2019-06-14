@@ -9,22 +9,22 @@ import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.domain.gateway.LastFmGateway
-import dev.olog.msc.domain.gateway.PodcastGateway
-import dev.olog.msc.domain.gateway.SongGateway
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.gateway.LastFmGateway
+import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.domain.gateway.PodcastGateway
+import dev.olog.msc.presentation.model.DisplayableItem
 import java.io.File
 import java.io.InputStream
 import java.security.MessageDigest
 
 class GlideImageLoader(
-        private val context: Context,
-        private val lastFmGateway: LastFmGateway,
-        private val uriLoader: ModelLoader<Uri, InputStream>,
-        private val songGateway: SongGateway,
-        private val podcastGateway: PodcastGateway
+    private val context: Context,
+    private val lastFmGateway: LastFmGateway,
+    private val uriLoader: ModelLoader<Uri, InputStream>,
+    private val songGateway: SongGateway,
+    private val podcastGateway: PodcastGateway
 
 ) : ModelLoader<DisplayableItem, InputStream> {
 
@@ -81,10 +81,10 @@ class GlideImageLoader(
     }
 
     class Factory(
-            private val context: Context,
-            private val lastFmGateway: LastFmGateway,
-            private val songGateway: SongGateway,
-            private val podcastGateway: PodcastGateway
+        private val context: Context,
+        private val lastFmGateway: LastFmGateway,
+        private val songGateway: SongGateway,
+        private val podcastGateway: PodcastGateway
 
     ) : ModelLoaderFactory<DisplayableItem, InputStream> {
 

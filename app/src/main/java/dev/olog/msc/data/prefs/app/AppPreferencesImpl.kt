@@ -6,9 +6,9 @@ import android.os.Environment
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.domain.entity.LibraryCategoryBehavior
-import dev.olog.msc.domain.entity.UserCredentials
+import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.gateway.prefs.Sorting
 import dev.olog.msc.core.MediaIdCategory
@@ -21,9 +21,9 @@ import java.io.File
 import javax.inject.Inject
 
 class AppPreferencesImpl @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val preferences: SharedPreferences,
-        private val rxPreferences: RxSharedPreferences
+    @ApplicationContext private val context: Context,
+    private val preferences: SharedPreferences,
+    private val rxPreferences: RxSharedPreferences
 
 ) : AppPreferencesGateway,
         Sorting by AppSortingImpl(preferences, rxPreferences) {
@@ -384,8 +384,8 @@ class AppPreferencesImpl @Inject constructor(
          */
     override fun getLastFmCredentials(): UserCredentials {
         return UserCredentials(
-                preferences.getString(LAST_FM_USERNAME, "")!!,
-                preferences.getString(LAST_FM_PASSWORD, "")!!
+            preferences.getString(LAST_FM_USERNAME, "")!!,
+            preferences.getString(LAST_FM_PASSWORD, "")!!
         )
     }
 
@@ -395,10 +395,12 @@ class AppPreferencesImpl @Inject constructor(
     override fun observeLastFmCredentials(): Observable<UserCredentials> {
         return rxPreferences.getString(LAST_FM_USERNAME, "")
                 .asObservable()
-                .map { UserCredentials(
+                .map {
+                    UserCredentials(
                         it,
                         preferences.getString(LAST_FM_PASSWORD, "")!!
-                ) }
+                    )
+                }
     }
 
     /*

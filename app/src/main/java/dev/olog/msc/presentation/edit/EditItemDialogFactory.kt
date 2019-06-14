@@ -7,9 +7,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.crashlytics.android.Crashlytics
 import dev.olog.msc.R
 import dev.olog.msc.dagger.qualifier.ActivityLifecycle
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.core.entity.Podcast
+import dev.olog.msc.core.entity.Song
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
 import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
 import dev.olog.msc.domain.interactor.item.GetSongUseCase
@@ -27,11 +27,11 @@ import java.io.IOException
 import javax.inject.Inject
 
 class EditItemDialogFactory @Inject constructor(
-        @ActivityLifecycle lifecycle: Lifecycle,
-        @ApplicationContext private val context: Context,
-        private val getSongUseCase: GetSongUseCase,
-        private val getPodcastUseCase: GetPodcastUseCase,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase
+    @ActivityLifecycle lifecycle: Lifecycle,
+    @ApplicationContext private val context: Context,
+    private val getSongUseCase: GetSongUseCase,
+    private val getPodcastUseCase: GetPodcastUseCase,
+    private val getSongListByParamUseCase: GetSongListByParamUseCase
 
 ) : DefaultLifecycleObserver {
 

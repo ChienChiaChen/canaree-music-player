@@ -1,18 +1,18 @@
 package dev.olog.msc.domain.interactor.all.last.played
 
-import dev.olog.msc.domain.entity.PodcastArtist
-import dev.olog.msc.domain.executors.ComputationScheduler
+import dev.olog.msc.core.entity.PodcastArtist
+import dev.olog.msc.core.executor.ComputationScheduler
 import dev.olog.msc.domain.gateway.PodcastArtistGateway
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.domain.interactor.base.ObservableUseCase
+import dev.olog.msc.core.interactor.base.ObservableUseCase
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import javax.inject.Inject
 
 class GetLastPlayedPodcastArtistsUseCase @Inject constructor(
-        schedulers: ComputationScheduler,
-        private val artistGateway: PodcastArtistGateway,
-        private val appPreferencesUseCase: AppPreferencesGateway
+    schedulers: ComputationScheduler,
+    private val artistGateway: PodcastArtistGateway,
+    private val appPreferencesUseCase: AppPreferencesGateway
 
 ): ObservableUseCase<List<PodcastArtist>>(schedulers) {
 

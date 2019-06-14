@@ -3,14 +3,14 @@ package dev.olog.msc.presentation.detail
 import android.content.Context
 import androidx.core.os.bundleOf
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import javax.inject.Inject
 
 class DetailFragmentHeaders @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val mediaId: MediaId
+    @ApplicationContext private val context: Context,
+    private val mediaId: MediaId
 ) {
 
     companion object {

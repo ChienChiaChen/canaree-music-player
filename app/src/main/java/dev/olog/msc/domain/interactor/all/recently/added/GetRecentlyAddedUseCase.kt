@@ -1,12 +1,12 @@
 package dev.olog.msc.domain.interactor.all.recently.added
 
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.entity.Podcast
+import dev.olog.msc.core.entity.Song
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.interactor.all.GetAllPodcastUseCase
 import dev.olog.msc.domain.interactor.all.GetAllSongsUseCase
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
@@ -35,8 +35,8 @@ internal fun getRecentlyAddedPodcast(getAllPodcastsUseCase: GetAllPodcastUseCase
 }
 
 class GetRecentlyAddedUseCase @Inject constructor(
-        scheduler: IoScheduler,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase
+    scheduler: IoScheduler,
+    private val getSongListByParamUseCase: GetSongListByParamUseCase
 
 ) : ObservableUseCaseWithParam<List<Song>, MediaId>(scheduler) {
 

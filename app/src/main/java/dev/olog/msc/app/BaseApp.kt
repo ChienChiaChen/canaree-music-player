@@ -8,11 +8,7 @@ import dagger.android.HasBroadcastReceiverInjector
 import dagger.android.HasServiceInjector
 import dagger.android.support.DaggerApplication
 
-abstract class BaseApp: DaggerApplication(),
-        HasActivityInjector,
-        HasServiceInjector,
-        HasBroadcastReceiverInjector,
-        DefaultLifecycleObserver {
+abstract class BaseApp: DaggerApplication(), DefaultLifecycleObserver {
 
     override fun onCreate() {
         super<DaggerApplication>.onCreate()

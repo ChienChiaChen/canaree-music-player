@@ -1,15 +1,15 @@
 package dev.olog.msc.domain.interactor.search.delete
 
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.gateway.RecentSearchesGateway
-import dev.olog.msc.domain.interactor.base.CompletableUseCaseWithParam
+import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import io.reactivex.Completable
 import javax.inject.Inject
 
 class DeleteRecentSearchUseCase @Inject constructor(
-        scheduler: IoScheduler,
-        private val recentSearchesGateway: RecentSearchesGateway
+    scheduler: IoScheduler,
+    private val recentSearchesGateway: RecentSearchesGateway
 
 ) : CompletableUseCaseWithParam<MediaId>(scheduler) {
 

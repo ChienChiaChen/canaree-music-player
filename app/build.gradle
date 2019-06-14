@@ -77,19 +77,19 @@ android {
         checkReleaseBuilds false
         disable 'MissingTranslation'
     }
+}
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-        main.assets.srcDirs = ['src/main/assets']
-        debug.assets.srcDirs = ['src/debug/assets']
-        debug.res.srcDirs = ['src/debug/res']
-    }
+kapt {
+    useBuildCache = true
+    correctErrorTypes = true
 
-    kapt {
-        javacOptions {
-            option("-Xmaxerrs", 500)
-            correctErrorTypes = true
-        }
+    javacOptions {
+        option("-Xmaxerrs", 500)
+        // dagger compiler options
+        option("-Adagger.gradle.incremental")
+        option("-Adagger.fastInit=enabled")
+//        option("-Adagger.fullBindingGraphValidation=ERROR")
+//        option("-Adagger.formatGeneratedSource=enabled")
     }
 }
 

@@ -1,18 +1,38 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "29.0.0"
-
+    
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
+
+    dexOptions {
+        preDexLibraries true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -21,13 +41,49 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+}
 
+kapt {
+    useBuildCache = true
+    correctErrorTypes = true
+
+    javacOptions {
+        option("-Xmaxerrs", 500)
+        // dagger compiler options
+        option("-Adagger.gradle.incremental")
+        option("-Adagger.fastInit=enabled")
+//        option("-Adagger.fullBindingGraphValidation=ERROR")
+//        option("-Adagger.formatGeneratedSource=enabled")
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':core')
+    implementation "com.squareup.sqlbrite3:sqlbrite:$rootProject.sql_brite"
+    // room
+    implementation lib_data.room
+    implementation lib_data.room_ktx
+    kapt lib_data.room_processor
+    implementation lib_data.room_rx
 
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    // rx
+    implementation lib_core.rx
+    implementation lib_core.rx_android
+    implementation lib_core.rx_kotlin
+    implementation lib_data.rx_prefs
+
+    implementation lib_core.dagger
+    kapt lib_core.dagger_processor
+
+    implementation "me.xdrop:fuzzywuzzy:$rootProject.fuzzywuzzy"
+    implementation "com.google.code.gson:gson:$rootProject.gson"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.ok_http"
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.ok_http"
+    implementation "com.github.dmstocking:support-optional:$rootProject.optional_lib"
+    
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

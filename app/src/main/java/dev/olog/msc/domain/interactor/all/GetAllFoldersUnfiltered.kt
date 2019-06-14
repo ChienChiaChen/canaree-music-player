@@ -1,15 +1,15 @@
 package dev.olog.msc.domain.interactor.all
 
-import dev.olog.msc.domain.entity.Folder
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.entity.Folder
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.gateway.FolderGateway
-import dev.olog.msc.domain.interactor.base.ObservableUseCase
+import dev.olog.msc.core.interactor.base.ObservableUseCase
 import io.reactivex.Observable
 import javax.inject.Inject
 
 class GetAllFoldersUnfiltered @Inject constructor(
-        scheduler: IoScheduler,
-        private val gateway: FolderGateway
+    scheduler: IoScheduler,
+    private val gateway: FolderGateway
 
 ) : ObservableUseCase<List<Folder>>(scheduler) {
 

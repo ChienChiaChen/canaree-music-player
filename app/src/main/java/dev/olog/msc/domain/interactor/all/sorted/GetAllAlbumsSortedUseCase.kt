@@ -1,12 +1,12 @@
 package dev.olog.msc.domain.interactor.all.sorted
 
-import dev.olog.msc.domain.entity.Album
+import dev.olog.msc.core.entity.Album
 import dev.olog.msc.domain.entity.SortArranging
 import dev.olog.msc.domain.entity.SortType
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.interactor.all.GetAllAlbumsUseCase
-import dev.olog.msc.domain.interactor.base.ObservableUseCase
+import dev.olog.msc.core.interactor.base.ObservableUseCase
 import dev.olog.msc.utils.safeCompare
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -14,10 +14,10 @@ import java.text.Collator
 import javax.inject.Inject
 
 class GetAllAlbumsSortedUseCase @Inject constructor(
-        schedulers: IoScheduler,
-        private val getAllUseCase: GetAllAlbumsUseCase,
-        private val appPrefsGateway: AppPreferencesGateway,
-        private val collator: Collator
+    schedulers: IoScheduler,
+    private val getAllUseCase: GetAllAlbumsUseCase,
+    private val appPrefsGateway: AppPreferencesGateway,
+    private val collator: Collator
 
 ) : ObservableUseCase<List<Album>>(schedulers){
 

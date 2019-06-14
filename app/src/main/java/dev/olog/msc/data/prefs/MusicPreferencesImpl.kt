@@ -5,8 +5,8 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.domain.entity.LastMetadata
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.domain.gateway.prefs.MusicPreferencesGateway
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -35,9 +35,9 @@ private const val PLAYBACK_SPEED = "$TAG.playback_speed"
 private const val LAST_POSITION = "$TAG.last_position"
 
 class MusicPreferencesImpl @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val preferences: SharedPreferences,
-        private val rxPreferences: RxSharedPreferences
+    @ApplicationContext private val context: Context,
+    private val preferences: SharedPreferences,
+    private val rxPreferences: RxSharedPreferences
 
 ): MusicPreferencesGateway {
 
@@ -101,10 +101,10 @@ class MusicPreferencesImpl @Inject constructor(
 
     override fun getLastMetadata(): LastMetadata {
         return LastMetadata(
-                preferences.getString(LAST_TITLE, "")!!,
-                preferences.getString(LAST_SUBTITLE, "")!!,
-                preferences.getString(LAST_IMAGE, "")!!,
-                preferences.getLong(LAST_ID, -1)
+            preferences.getString(LAST_TITLE, "")!!,
+            preferences.getString(LAST_SUBTITLE, "")!!,
+            preferences.getString(LAST_IMAGE, "")!!,
+            preferences.getLong(LAST_ID, -1)
         )
     }
 

@@ -1,19 +1,19 @@
 package dev.olog.msc.domain.interactor.dialog
 
-import dev.olog.msc.domain.entity.FavoriteType
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.entity.FavoriteType
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.gateway.FavoriteGateway
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
-import dev.olog.msc.domain.interactor.base.CompletableUseCaseWithParam
+import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.mapToList
 import io.reactivex.Completable
 import javax.inject.Inject
 
 class AddToFavoriteUseCase @Inject constructor(
-        scheduler: IoScheduler,
-        private val favoriteGateway: FavoriteGateway,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase
+    scheduler: IoScheduler,
+    private val favoriteGateway: FavoriteGateway,
+    private val getSongListByParamUseCase: GetSongListByParamUseCase
 
 ) : CompletableUseCaseWithParam<AddToFavoriteUseCase.Input>(scheduler) {
 

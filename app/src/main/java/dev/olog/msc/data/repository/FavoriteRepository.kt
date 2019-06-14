@@ -1,11 +1,11 @@
 package dev.olog.msc.data.repository
 
 import android.annotation.SuppressLint
-import dev.olog.msc.data.db.AppDatabase
-import dev.olog.msc.domain.entity.*
+import dev.olog.msc.core.entity.*
+import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.domain.gateway.FavoriteGateway
 import dev.olog.msc.domain.gateway.PodcastGateway
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.utils.safeCompare
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -32,9 +32,21 @@ class FavoriteRepository @Inject constructor(
     override fun updateFavoriteState(type: FavoriteType, state: FavoriteStateEntity) {
         favoriteStatePublisher.onNext(state)
         if (state.enum == FavoriteEnum.ANIMATE_NOT_FAVORITE){
-            favoriteStatePublisher.onNext(FavoriteStateEntity(state.songId, FavoriteEnum.NOT_FAVORITE, type))
+            favoriteStatePublisher.onNext(
+                FavoriteStateEntity(
+                    state.songId,
+                    FavoriteEnum.NOT_FAVORITE,
+                    type
+                )
+            )
         } else if (state.enum == FavoriteEnum.ANIMATE_TO_FAVORITE) {
-            favoriteStatePublisher.onNext(FavoriteStateEntity(state.songId, FavoriteEnum.FAVORITE, type))
+            favoriteStatePublisher.onNext(
+                FavoriteStateEntity(
+                    state.songId,
+                    FavoriteEnum.FAVORITE,
+                    type
+                )
+            )
         }
     }
 
@@ -63,7 +75,13 @@ class FavoriteRepository @Inject constructor(
                 .andThen {
                     val id = favoriteStatePublisher.value?.songId ?: return@andThen
                     if (songId == id){
-                        updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.FAVORITE, type))
+                        updateFavoriteState(type,
+                            FavoriteStateEntity(
+                                songId,
+                                FavoriteEnum.FAVORITE,
+                                type
+                            )
+                        )
                     }
                     it.onComplete()
                 }
@@ -74,7 +92,13 @@ class FavoriteRepository @Inject constructor(
                 .andThen {
                     val songId = favoriteStatePublisher.value?.songId ?: return@andThen
                     if (songListId.contains(songId)){
-                        updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.FAVORITE, type))
+                        updateFavoriteState(type,
+                            FavoriteStateEntity(
+                                songId,
+                                FavoriteEnum.FAVORITE,
+                                type
+                            )
+                        )
                     }
                     it.onComplete()
                 }
@@ -85,7 +109,13 @@ class FavoriteRepository @Inject constructor(
                 .andThen {
                     val id = favoriteStatePublisher.value?.songId ?: return@andThen
                     if (songId == id){
-                        updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.NOT_FAVORITE, type))
+                        updateFavoriteState(type,
+                            FavoriteStateEntity(
+                                songId,
+                                FavoriteEnum.NOT_FAVORITE,
+                                type
+                            )
+                        )
                     }
                     it.onComplete()
                 }
@@ -96,7 +126,13 @@ class FavoriteRepository @Inject constructor(
                 .andThen {
                     val songId = favoriteStatePublisher.value?.songId ?: return@andThen
                     if (songListId.contains(songId)){
-                        updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.NOT_FAVORITE, type))
+                        updateFavoriteState(type,
+                            FavoriteStateEntity(
+                                songId,
+                                FavoriteEnum.NOT_FAVORITE,
+                                type
+                            )
+                        )
                     }
                     it.onComplete()
                 }
@@ -106,7 +142,13 @@ class FavoriteRepository @Inject constructor(
         return Completable.fromCallable { favoriteDao.deleteAll() }
                 .andThen {
                     val songId = favoriteStatePublisher.value?.songId ?: return@andThen
-                    updateFavoriteState(type, FavoriteStateEntity(songId, FavoriteEnum.NOT_FAVORITE, type))
+                    updateFavoriteState(type,
+                        FavoriteStateEntity(
+                            songId,
+                            FavoriteEnum.NOT_FAVORITE,
+                            type
+                        )
+                    )
                     it.onComplete()
                 }
     }
@@ -127,11 +169,23 @@ class FavoriteRepository @Inject constructor(
 
         when (state) {
             FavoriteEnum.NOT_FAVORITE -> {
-                updateFavoriteState(type, FavoriteStateEntity(id, FavoriteEnum.ANIMATE_TO_FAVORITE, type))
+                updateFavoriteState(type,
+                    FavoriteStateEntity(
+                        id,
+                        FavoriteEnum.ANIMATE_TO_FAVORITE,
+                        type
+                    )
+                )
                 action = favoriteDao.addToFavoriteSingle(type, id)
             }
             FavoriteEnum.FAVORITE -> {
-                updateFavoriteState(type, FavoriteStateEntity(id, FavoriteEnum.ANIMATE_NOT_FAVORITE, type))
+                updateFavoriteState(type,
+                    FavoriteStateEntity(
+                        id,
+                        FavoriteEnum.ANIMATE_NOT_FAVORITE,
+                        type
+                    )
+                )
                 action = favoriteDao.removeFromFavorite(type, listOf(id))
             }
             else -> Completable.complete()

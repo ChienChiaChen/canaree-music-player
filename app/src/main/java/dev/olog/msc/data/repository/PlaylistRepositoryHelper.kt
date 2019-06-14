@@ -6,9 +6,9 @@ import android.content.Context
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import dev.olog.msc.constants.PlaylistConstants
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.data.db.AppDatabase
-import dev.olog.msc.domain.entity.FavoriteType
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.data.dao.AppDatabase
+import dev.olog.msc.core.entity.FavoriteType
 import dev.olog.msc.domain.gateway.FavoriteGateway
 import dev.olog.msc.utils.getLong
 import io.reactivex.Completable
@@ -19,9 +19,9 @@ import javax.inject.Inject
 private val MEDIA_STORE_URI = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI
 
 class PlaylistRepositoryHelper @Inject constructor(
-        @ApplicationContext private val context: Context,
-        appDatabase: AppDatabase,
-        private val favoriteGateway: FavoriteGateway
+    @ApplicationContext private val context: Context,
+    appDatabase: AppDatabase,
+    private val favoriteGateway: FavoriteGateway
 
 ){
 

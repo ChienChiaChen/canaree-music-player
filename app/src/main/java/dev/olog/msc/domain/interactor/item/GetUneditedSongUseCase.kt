@@ -1,16 +1,16 @@
 package dev.olog.msc.domain.interactor.item
 
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.executors.IoScheduler
-import dev.olog.msc.domain.gateway.SongGateway
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
+import dev.olog.msc.core.entity.Song
+import dev.olog.msc.core.executor.IoScheduler
+import dev.olog.msc.core.gateway.SongGateway
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import io.reactivex.Observable
 import javax.inject.Inject
 
 class GetUneditedSongUseCase @Inject internal constructor(
-        schedulers: IoScheduler,
-        private val gateway: SongGateway
+    schedulers: IoScheduler,
+    private val gateway: SongGateway
 
 ) : ObservableUseCaseWithParam<Song, MediaId>(schedulers) {
 

@@ -1,15 +1,15 @@
 package dev.olog.msc.domain.interactor
 
-import dev.olog.msc.domain.executors.ComputationScheduler
+import dev.olog.msc.core.executor.ComputationScheduler
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
-import dev.olog.msc.domain.interactor.base.SingleUseCaseWithParam
+import dev.olog.msc.core.interactor.base.SingleUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import io.reactivex.Single
 import javax.inject.Inject
 
 class GetTotalSongDurationUseCase @Inject constructor(
-        scheduler: ComputationScheduler,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase
+    scheduler: ComputationScheduler,
+    private val getSongListByParamUseCase: GetSongListByParamUseCase
 
 ): SingleUseCaseWithParam<Int, MediaId>(scheduler) {
 

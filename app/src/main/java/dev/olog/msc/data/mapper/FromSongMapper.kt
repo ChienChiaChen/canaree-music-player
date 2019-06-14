@@ -2,10 +2,10 @@ package dev.olog.msc.data.mapper
 
 import android.content.Context
 import android.net.Uri
-import dev.olog.msc.domain.entity.Album
-import dev.olog.msc.domain.entity.Artist
-import dev.olog.msc.domain.entity.Folder
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.Album
+import dev.olog.msc.core.entity.Artist
+import dev.olog.msc.core.entity.Folder
+import dev.olog.msc.core.entity.Song
 import dev.olog.msc.utils.img.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.clamp
 

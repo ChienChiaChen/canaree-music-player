@@ -1,6 +1,6 @@
 package dev.olog.msc.domain.gateway
 
-import dev.olog.msc.domain.entity.*
+import dev.olog.msc.core.entity.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single

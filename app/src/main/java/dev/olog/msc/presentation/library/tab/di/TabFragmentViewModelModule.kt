@@ -6,7 +6,6 @@ import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.R
 import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
-import dev.olog.msc.domain.entity.*
 import dev.olog.msc.domain.interactor.all.GetAllAutoPlaylistUseCase
 import dev.olog.msc.domain.interactor.all.GetAllFoldersUseCase
 import dev.olog.msc.domain.interactor.all.GetAllGenresUseCase
@@ -22,6 +21,7 @@ import dev.olog.msc.presentation.library.tab.TabFragmentHeaders
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.entity.*
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Observable

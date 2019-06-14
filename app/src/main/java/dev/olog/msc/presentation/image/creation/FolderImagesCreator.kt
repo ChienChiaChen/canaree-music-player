@@ -2,8 +2,8 @@ package dev.olog.msc.presentation.image.creation
 
 import android.content.Context
 import android.provider.MediaStore
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.core.entity.Song
 import dev.olog.msc.domain.interactor.all.newrequest.GetAllSongsNewRequestUseCase
 import dev.olog.msc.presentation.image.creation.impl.MergedImagesCreator
 import dev.olog.msc.utils.assertBackgroundThread
@@ -15,9 +15,9 @@ import javax.inject.Inject
 private val MEDIA_STORE_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
 class FolderImagesCreator @Inject constructor(
-        @ApplicationContext private val ctx: Context,
-        private val getAllSongsUseCase: GetAllSongsNewRequestUseCase,
-        private val imagesThreadPool: ImagesThreadPool
+    @ApplicationContext private val ctx: Context,
+    private val getAllSongsUseCase: GetAllSongsNewRequestUseCase,
+    private val imagesThreadPool: ImagesThreadPool
 
 ) {
 

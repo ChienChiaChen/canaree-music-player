@@ -3,8 +3,8 @@ package dev.olog.msc.data.mapper
 import android.database.Cursor
 import android.provider.BaseColumns
 import android.provider.MediaStore
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.Podcast
+import dev.olog.msc.core.entity.Song
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.getString
 import dev.olog.msc.utils.img.ImagesFolderUtils

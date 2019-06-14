@@ -5,8 +5,8 @@ import android.database.Cursor
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import dev.olog.msc.data.entity.PlaylistSongEntity
-import dev.olog.msc.domain.entity.Genre
-import dev.olog.msc.domain.entity.Playlist
+import dev.olog.msc.core.entity.Genre
+import dev.olog.msc.core.entity.Playlist
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.getLongOrNull
 import dev.olog.msc.utils.getStringOrNull
@@ -41,7 +41,7 @@ fun Cursor.extractId() : Long {
 
 fun Cursor.toPlaylistSong() : PlaylistSongEntity {
     return PlaylistSongEntity(
-            this.getLong(MediaStore.Audio.Playlists.Members._ID),
-            this.getLong(MediaStore.Audio.Playlists.Members.AUDIO_ID)
+        this.getLong(MediaStore.Audio.Playlists.Members._ID),
+        this.getLong(MediaStore.Audio.Playlists.Members.AUDIO_ID)
     )
 }

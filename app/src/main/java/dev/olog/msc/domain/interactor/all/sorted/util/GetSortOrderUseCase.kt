@@ -1,17 +1,17 @@
 package dev.olog.msc.domain.interactor.all.sorted.util
 
 import dev.olog.msc.domain.entity.SortType
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import io.reactivex.Observable
 import javax.inject.Inject
 
 class GetSortOrderUseCase @Inject constructor(
-        schedulers: IoScheduler,
-        private val gateway: AppPreferencesGateway
+    schedulers: IoScheduler,
+    private val gateway: AppPreferencesGateway
 
 ) : ObservableUseCaseWithParam<SortType, MediaId>(schedulers) {
 

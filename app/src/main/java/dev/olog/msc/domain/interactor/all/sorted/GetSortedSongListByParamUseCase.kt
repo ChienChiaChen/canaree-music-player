@@ -1,13 +1,13 @@
 package dev.olog.msc.domain.interactor.all.sorted
 
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.Song
 import dev.olog.msc.domain.entity.SortArranging
 import dev.olog.msc.domain.entity.SortType
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
 import dev.olog.msc.domain.interactor.all.sorted.util.GetSortArrangingUseCase
 import dev.olog.msc.domain.interactor.all.sorted.util.GetSortOrderUseCase
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.utils.ComparatorUtils
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.safeCompare
@@ -17,11 +17,11 @@ import java.text.Collator
 import javax.inject.Inject
 
 class GetSortedSongListByParamUseCase @Inject constructor(
-        schedulers: IoScheduler,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase,
-        private val getSortOrderUseCase: GetSortOrderUseCase,
-        private val getSortArrangingUseCase: GetSortArrangingUseCase,
-        private val collator: Collator
+    schedulers: IoScheduler,
+    private val getSongListByParamUseCase: GetSongListByParamUseCase,
+    private val getSortOrderUseCase: GetSortOrderUseCase,
+    private val getSortArrangingUseCase: GetSortArrangingUseCase,
+    private val collator: Collator
 
 ) : ObservableUseCaseWithParam<List<Song>, MediaId>(schedulers){
 

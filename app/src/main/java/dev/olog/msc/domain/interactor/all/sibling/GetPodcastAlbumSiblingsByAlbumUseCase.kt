@@ -1,18 +1,18 @@
 package dev.olog.msc.domain.interactor.all.sibling
 
-import dev.olog.msc.domain.entity.PodcastAlbum
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.entity.PodcastAlbum
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.gateway.PodcastAlbumGateway
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.domain.interactor.item.GetPodcastAlbumUseCase
 import dev.olog.msc.core.MediaId
 import io.reactivex.Observable
 import javax.inject.Inject
 
 class GetPodcastAlbumSiblingsByAlbumUseCase @Inject constructor(
-        schedulers: IoScheduler,
-        private val getAlbumUseCase: GetPodcastAlbumUseCase,
-        private val albumGateway: PodcastAlbumGateway
+    schedulers: IoScheduler,
+    private val getAlbumUseCase: GetPodcastAlbumUseCase,
+    private val albumGateway: PodcastAlbumGateway
 
 ) : ObservableUseCaseWithParam<List<PodcastAlbum>, MediaId>(schedulers) {
 

@@ -1,20 +1,20 @@
 package dev.olog.msc.domain.interactor.all.most.played
 
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.gateway.FolderGateway
 import dev.olog.msc.domain.gateway.GenreGateway
 import dev.olog.msc.domain.gateway.PlaylistGateway
-import dev.olog.msc.domain.interactor.base.CompletableUseCaseWithParam
+import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
 import io.reactivex.Completable
 import javax.inject.Inject
 
 class InsertMostPlayedUseCase @Inject constructor(
-        scheduler: IoScheduler,
-        private val folderGateway: FolderGateway,
-        private val playlistGateway: PlaylistGateway,
-        private val genreGateway: GenreGateway
+    scheduler: IoScheduler,
+    private val folderGateway: FolderGateway,
+    private val playlistGateway: PlaylistGateway,
+    private val genreGateway: GenreGateway
 
 ) : CompletableUseCaseWithParam<MediaId>(scheduler) {
 

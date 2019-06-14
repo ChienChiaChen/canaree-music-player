@@ -6,7 +6,7 @@ import android.provider.BaseColumns
 import android.provider.MediaStore
 import androidx.core.database.getStringOrNull
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.domain.entity.Podcast
+import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.utils.getInt
 import dev.olog.msc.utils.getLong
 import dev.olog.msc.utils.getString

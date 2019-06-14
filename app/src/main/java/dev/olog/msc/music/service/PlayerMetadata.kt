@@ -10,7 +10,7 @@ import dev.olog.msc.app.app
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.constants.MusicConstants
 import dev.olog.msc.constants.WidgetConstants
-import dev.olog.msc.dagger.qualifier.ApplicationContext
+import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.dagger.scope.PerService
 import dev.olog.msc.music.service.interfaces.PlayerLifecycle
 import dev.olog.msc.music.service.model.MediaEntity
@@ -22,10 +22,10 @@ import javax.inject.Inject
 
 @PerService
 class PlayerMetadata @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val mediaSession: MediaSessionCompat,
-        playerLifecycle: PlayerLifecycle,
-        private val widgetClasses: WidgetClasses
+    @ApplicationContext private val context: Context,
+    private val mediaSession: MediaSessionCompat,
+    playerLifecycle: PlayerLifecycle,
+    private val widgetClasses: WidgetClasses
 
 ) : PlayerLifecycle.Listener {
 

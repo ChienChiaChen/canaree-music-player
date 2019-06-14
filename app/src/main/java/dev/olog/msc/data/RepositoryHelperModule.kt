@@ -7,8 +7,8 @@ import com.squareup.sqlbrite3.SqlBrite
 import dagger.Module
 import dagger.Provides
 import dev.olog.msc.BuildConfig
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.data.dao.AppDatabase
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Singleton
 
@@ -34,7 +34,6 @@ class RepositoryHelperModule {
     fun provideRoomDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, "db")
                 .allowMainThreadQueries()
-                .fallbackToDestructiveMigration() // 1 to 2
                 .build()
     }
 

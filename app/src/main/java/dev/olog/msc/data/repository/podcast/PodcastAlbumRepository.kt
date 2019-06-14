@@ -4,10 +4,10 @@ import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.mapper.toAlbum
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.PodcastAlbum
+import dev.olog.msc.core.entity.Podcast
+import dev.olog.msc.core.entity.PodcastAlbum
 import dev.olog.msc.domain.gateway.PodcastAlbumGateway
 import dev.olog.msc.domain.gateway.PodcastGateway
 import dev.olog.msc.domain.gateway.UsedImageGateway
@@ -24,11 +24,11 @@ import javax.inject.Inject
 private val MEDIA_STORE_URI = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
 
 class PodcastAlbumRepository @Inject constructor(
-        appDatabase: AppDatabase,
-        private val rxContentResolver: BriteContentResolver,
-        private val podcastGateway: PodcastGateway,
-        private val collator: Collator,
-        private val usedImageGateway: UsedImageGateway
+    appDatabase: AppDatabase,
+    private val rxContentResolver: BriteContentResolver,
+    private val podcastGateway: PodcastGateway,
+    private val collator: Collator,
+    private val usedImageGateway: UsedImageGateway
 
 ) : PodcastAlbumGateway {
 

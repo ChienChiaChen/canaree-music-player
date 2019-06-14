@@ -6,18 +6,18 @@ import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dev.olog.msc.R
 import dev.olog.msc.constants.PlaylistConstants
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.entity.PlaylistMostPlayedEntity
 import dev.olog.msc.data.mapper.extractId
 import dev.olog.msc.data.mapper.toPlaylist
 import dev.olog.msc.data.mapper.toPlaylistSong
 import dev.olog.msc.data.repository.util.CommonQuery
-import dev.olog.msc.domain.entity.Playlist
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.Playlist
+import dev.olog.msc.core.entity.Song
 import dev.olog.msc.domain.gateway.FavoriteGateway
 import dev.olog.msc.domain.gateway.PlaylistGateway
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.core.MediaId
@@ -48,13 +48,13 @@ private val SONG_SELECTION_ARGS: Array<String>? = null
 private const val SONG_SORT_ORDER = MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER
 
 class PlaylistRepository @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val rxContentResolver: BriteContentResolver,
-        private val songGateway: SongGateway,
-        private val favoriteGateway: FavoriteGateway,
-        appDatabase: AppDatabase,
-        private val helper: PlaylistRepositoryHelper,
-        private val appPrefsUseCase: AppPreferencesGateway
+    @ApplicationContext private val context: Context,
+    private val rxContentResolver: BriteContentResolver,
+    private val songGateway: SongGateway,
+    private val favoriteGateway: FavoriteGateway,
+    appDatabase: AppDatabase,
+    private val helper: PlaylistRepositoryHelper,
+    private val appPrefsUseCase: AppPreferencesGateway
 
 ) : PlaylistGateway {
 
@@ -204,7 +204,13 @@ class PlaylistRepository @Inject constructor(
         return songGateway.getByParam(songId)
                 .firstOrError()
                 .flatMapCompletable { song ->
-                    CompletableSource { mostPlayedDao.insertOne(PlaylistMostPlayedEntity(0, song.id, playlistId)) }
+                    CompletableSource { mostPlayedDao.insertOne(
+                        PlaylistMostPlayedEntity(
+                            0,
+                            song.id,
+                            playlistId
+                        )
+                    ) }
                 }
     }
 

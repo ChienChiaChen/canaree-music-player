@@ -7,10 +7,10 @@ import dagger.multibindings.IntoMap
 import dev.olog.msc.R
 import dev.olog.msc.app.app
 import dev.olog.msc.dagger.qualifier.MediaIdCategoryKey
-import dev.olog.msc.domain.entity.Podcast
-import dev.olog.msc.domain.entity.PodcastAlbum
-import dev.olog.msc.domain.entity.PodcastArtist
-import dev.olog.msc.domain.entity.PodcastPlaylist
+import dev.olog.msc.core.entity.Podcast
+import dev.olog.msc.core.entity.PodcastAlbum
+import dev.olog.msc.core.entity.PodcastArtist
+import dev.olog.msc.core.entity.PodcastPlaylist
 import dev.olog.msc.domain.interactor.all.*
 import dev.olog.msc.domain.interactor.all.last.played.GetLastPlayedPodcastAlbumsUseCase
 import dev.olog.msc.domain.interactor.all.last.played.GetLastPlayedPodcastArtistsUseCase

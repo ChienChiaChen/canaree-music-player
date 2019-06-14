@@ -8,14 +8,14 @@ import androidx.core.util.getOrDefault
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.entity.PodcastPositionEntity
 import dev.olog.msc.data.mapper.toFakePodcast
 import dev.olog.msc.data.mapper.toPodcast
 import dev.olog.msc.data.mapper.toUneditedPodcast
 import dev.olog.msc.data.repository.util.CommonQuery
-import dev.olog.msc.domain.entity.Podcast
+import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.domain.gateway.PodcastGateway
 import dev.olog.msc.domain.gateway.UsedImageGateway
 import dev.olog.msc.onlyWithStoragePermission
@@ -52,10 +52,10 @@ private const val SELECTION = "${MediaStore.Audio.Media.DURATION} > 20000 AND ${
 private const val SORT_ORDER = "lower(${MediaStore.Audio.Media.TITLE})"
 
 class PodcastRepository @Inject constructor(
-        appDatabase: AppDatabase,
-        @ApplicationContext private val context: Context,
-        private  val rxContentResolver: BriteContentResolver,
-        private  val usedImageGateway: UsedImageGateway
+    appDatabase: AppDatabase,
+    @ApplicationContext private val context: Context,
+    private  val rxContentResolver: BriteContentResolver,
+    private  val usedImageGateway: UsedImageGateway
 
 ): PodcastGateway {
 
@@ -85,11 +85,13 @@ class PodcastRepository @Inject constructor(
     private fun mockDataIfNeeded(original: List<Podcast>): List<Podcast> {
         if (AppConstants.useFakeData && original.isEmpty()){
             return (0 until 50)
-                    .map { Podcast(it.toLong(), it.toLong(), it.toLong(),
-                            "An awesome title", "An awesome artist",
-                            "An awesome album artist", "An awesome album",
-                            "", (it * 1000000).toLong(), System.currentTimeMillis(),
-                            "storage/emulated/folder", "folder", -1, -1) }
+                    .map {
+                        Podcast(it.toLong(), it.toLong(), it.toLong(),
+                                "An awesome title", "An awesome artist",
+                                "An awesome album artist", "An awesome album",
+                                "", (it * 1000000).toLong(), System.currentTimeMillis(),
+                                "storage/emulated/folder", "folder", -1, -1)
+                    }
         }
         return original
     }

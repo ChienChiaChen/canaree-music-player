@@ -8,10 +8,10 @@ import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
 import dev.olog.msc.R
 import dev.olog.msc.constants.PlaylistConstants
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.domain.entity.Artist
-import dev.olog.msc.domain.entity.PodcastArtist
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.core.entity.Artist
+import dev.olog.msc.core.entity.PodcastArtist
+import dev.olog.msc.core.entity.Song
 import dev.olog.msc.domain.entity.SortType
 import dev.olog.msc.domain.interactor.GetTotalSongDurationUseCase
 import dev.olog.msc.domain.interactor.all.most.played.GetMostPlayedSongsUseCase
@@ -57,11 +57,11 @@ class DetailFragmentModuleSongs {
     @IntoMap
     @StringKey(DetailFragmentViewModel.SONGS)
     internal fun provideSongList(
-            @ApplicationContext context: Context,
-            mediaId: MediaId,
-            useCase: GetSortedSongListByParamUseCase,
-            sortOrderUseCase: GetSortOrderUseCase,
-            songDurationUseCase: GetTotalSongDurationUseCase) : Observable<List<DisplayableItem>> {
+        @ApplicationContext context: Context,
+        mediaId: MediaId,
+        useCase: GetSortedSongListByParamUseCase,
+        sortOrderUseCase: GetSortOrderUseCase,
+        songDurationUseCase: GetTotalSongDurationUseCase) : Observable<List<DisplayableItem>> {
 
         return useCase.execute(mediaId)
                 .flatMapSingle { songList ->

@@ -19,8 +19,8 @@ class EditItemPresenter @Inject constructor(
 
 ){
 
-    fun deleteTrack(id: Long, isPodcast: Boolean): Completable {
-        return deleteTrackUseCase.execute(id to isPodcast)
+    fun deleteTrack(id: Long): Completable {
+        return deleteTrackUseCase.execute(id)
     }
 
     fun deleteAlbum(mediaId: MediaId): Completable {

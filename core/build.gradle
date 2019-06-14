@@ -1,9 +1,11 @@
 apply plugin: 'kotlin'
 
 dependencies {
-    implementation project(':core')
-
     implementation lib_core.kotlin
+    implementation lib_core.dagger
+    implementation lib_core.rx
+
+    implementation "com.github.dmstocking:support-optional:$rootProject.optional_lib"
 }
 
 sourceCompatibility = "8"

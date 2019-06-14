@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import dev.olog.msc.R
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.presentation.edit.track.DisplayableSong
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.presentation.edit.track.DisplayableSong
 import dev.olog.msc.utils.k.extension.toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -17,8 +17,8 @@ import java.io.FileNotFoundException
 import javax.inject.Inject
 
 class EditItemViewModel @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val presenter: EditItemPresenter
+    @ApplicationContext private val context: Context,
+    private val presenter: EditItemPresenter
 
 ) : ViewModel() {
 
@@ -32,7 +32,7 @@ class EditItemViewModel @Inject constructor(
             data.track.isNotBlank() && !data.track.isDigitsOnly() -> return UpdateResult.ILLEGAL_TRACK_NUMBER
         }
 
-        presenter.deleteTrack(data.originalSong.id, data.originalSong.isPodcast)
+        presenter.deleteTrack(data.originalSong.id)
                 .andThen(presenter.updateSingle(data))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ context.toast(R.string.edit_track_update_success) }, { showErrorMessage(it) })

@@ -8,10 +8,10 @@ import de.umass.lastfm.Caller
 import de.umass.lastfm.Session
 import de.umass.lastfm.Track
 import de.umass.lastfm.scrobble.ScrobbleData
-import dev.olog.msc.api.last.fm.LAST_FM_API_KEY
-import dev.olog.msc.api.last.fm.LAST_FM_API_SECRET
+import dev.olog.msc.data.api.last.fm.LAST_FM_API_KEY
+import dev.olog.msc.data.api.last.fm.LAST_FM_API_SECRET
 import dev.olog.msc.dagger.qualifier.ServiceLifecycle
-import dev.olog.msc.domain.entity.UserCredentials
+import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.domain.interactor.last.fm.scrobble.ObserveLastFmUserCredentials
 import dev.olog.msc.music.service.interfaces.PlayerLifecycle
 import dev.olog.msc.music.service.model.MediaEntity
@@ -44,7 +44,10 @@ class LastFmScrobbling @Inject constructor(
 
     private fun tryAutenticate(credentials: UserCredentials){
         try {
-            session = Authenticator.getMobileSession(credentials.username, credentials.password, LAST_FM_API_KEY, LAST_FM_API_SECRET)
+            session = Authenticator.getMobileSession(credentials.username, credentials.password,
+                LAST_FM_API_KEY,
+                LAST_FM_API_SECRET
+            )
             userCredentials = credentials
         } catch (ex: Exception){
             ex.printStackTrace()

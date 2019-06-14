@@ -7,8 +7,8 @@ import android.widget.RemoteViewsService
 import androidx.core.os.bundleOf
 import dev.olog.msc.R
 import dev.olog.msc.constants.MusicConstants
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.domain.entity.PlayingQueueSong
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.core.entity.PlayingQueueSong
 import dev.olog.msc.domain.interactor.playing.queue.GetMiniQueueUseCase
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
@@ -16,8 +16,8 @@ import dev.olog.msc.utils.k.extension.getBitmapAsync
 import javax.inject.Inject
 
 class QueueRemoteViewsFactory @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val getMiniQueueUseCase: GetMiniQueueUseCase
+    @ApplicationContext private val context: Context,
+    private val getMiniQueueUseCase: GetMiniQueueUseCase
 
 ) : RemoteViewsService.RemoteViewsFactory {
 

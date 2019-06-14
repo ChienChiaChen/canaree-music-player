@@ -5,10 +5,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import dev.olog.msc.dagger.qualifier.ServiceLifecycle
 import dev.olog.msc.dagger.scope.PerService
-import dev.olog.msc.domain.entity.FavoriteEnum
-import dev.olog.msc.domain.entity.FavoriteStateEntity
-import dev.olog.msc.domain.entity.FavoriteType
-import dev.olog.msc.domain.entity.LastMetadata
+import dev.olog.msc.core.entity.FavoriteEnum
+import dev.olog.msc.core.entity.FavoriteStateEntity
+import dev.olog.msc.core.entity.FavoriteType
+import dev.olog.msc.core.entity.LastMetadata
 import dev.olog.msc.domain.gateway.prefs.MusicPreferencesGateway
 import dev.olog.msc.domain.interactor.all.last.played.InsertLastPlayedAlbumUseCase
 import dev.olog.msc.domain.interactor.all.last.played.InsertLastPlayedArtistUseCase
@@ -108,14 +108,22 @@ class CurrentSong @Inject constructor(
         isFavoriteDisposable = isFavoriteSongUseCase
                 .execute(IsFavoriteSongUseCase.Input(mediaEntity.id, type))
                 .map { if (it) FavoriteEnum.FAVORITE else FavoriteEnum.NOT_FAVORITE }
-                .flatMapCompletable { updateFavoriteStateUseCase.execute(FavoriteStateEntity(mediaEntity.id, it, type)) }
+                .flatMapCompletable { updateFavoriteStateUseCase.execute(
+                    FavoriteStateEntity(
+                        mediaEntity.id,
+                        it,
+                        type
+                    )
+                ) }
                 .subscribe({}, Throwable::printStackTrace)
     }
 
     private fun saveLastMetadata(entity: MediaEntity){
-        musicPreferencesUseCase.setLastMetadata(LastMetadata(
+        musicPreferencesUseCase.setLastMetadata(
+            LastMetadata(
                 entity.title, entity.artist, entity.image, entity.id
-        ))
+            )
+        )
     }
 
     private fun createMostPlayedId(entity: MediaEntity): Maybe<MediaId> {

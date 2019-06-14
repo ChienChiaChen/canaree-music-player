@@ -1,16 +1,16 @@
 package dev.olog.msc.domain.interactor.all.sibling
 
-import dev.olog.msc.domain.entity.Folder
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.entity.Folder
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.gateway.FolderGateway
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.core.MediaId
 import io.reactivex.Observable
 import javax.inject.Inject
 
 class GetFolderSiblingsUseCase @Inject constructor(
-        schedulers: IoScheduler,
-        private val gateway: FolderGateway
+    schedulers: IoScheduler,
+    private val gateway: FolderGateway
 
 ) : ObservableUseCaseWithParam<List<Folder>, MediaId>(schedulers) {
 

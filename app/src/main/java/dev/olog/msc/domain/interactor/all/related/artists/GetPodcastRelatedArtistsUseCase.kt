@@ -1,10 +1,10 @@
 package dev.olog.msc.domain.interactor.all.related.artists
 
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.domain.entity.PodcastArtist
-import dev.olog.msc.domain.executors.ComputationScheduler
+import dev.olog.msc.core.entity.PodcastArtist
+import dev.olog.msc.core.executor.ComputationScheduler
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
-import dev.olog.msc.domain.interactor.base.ObservableUseCaseWithParam
+import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
 import dev.olog.msc.domain.interactor.item.GetPodcastArtistUseCase
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.safeCompare
@@ -14,10 +14,10 @@ import java.text.Collator
 import javax.inject.Inject
 
 class GetPodcastRelatedArtistsUseCase @Inject constructor(
-        private val executors: ComputationScheduler,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase,
-        private val getPodcastArtistUseCase: GetPodcastArtistUseCase,
-        private val collator: Collator
+    private val executors: ComputationScheduler,
+    private val getSongListByParamUseCase: GetSongListByParamUseCase,
+    private val getPodcastArtistUseCase: GetPodcastArtistUseCase,
+    private val collator: Collator
 
 ) : ObservableUseCaseWithParam<List<PodcastArtist>, MediaId>(executors) {
 

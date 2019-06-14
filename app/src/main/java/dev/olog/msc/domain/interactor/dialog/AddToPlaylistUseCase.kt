@@ -1,11 +1,11 @@
 package dev.olog.msc.domain.interactor.dialog
 
-import dev.olog.msc.domain.entity.Playlist
-import dev.olog.msc.domain.executors.IoScheduler
+import dev.olog.msc.core.entity.Playlist
+import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.domain.gateway.PlaylistGateway
 import dev.olog.msc.domain.gateway.PodcastPlaylistGateway
 import dev.olog.msc.domain.interactor.all.GetSongListByParamUseCase
-import dev.olog.msc.domain.interactor.base.CompletableUseCaseWithParam
+import dev.olog.msc.core.interactor.base.CompletableUseCaseWithParam
 import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
 import dev.olog.msc.domain.interactor.item.GetSongUseCase
 import dev.olog.msc.core.MediaId
@@ -14,12 +14,12 @@ import io.reactivex.Completable
 import javax.inject.Inject
 
 class AddToPlaylistUseCase @Inject constructor(
-        scheduler: IoScheduler,
-        private val playlistGateway: PlaylistGateway,
-        private val getSongUseCase: GetSongUseCase,
-        private val podcastPlaylistGateway: PodcastPlaylistGateway,
-        private val getPodcastUseCase: GetPodcastUseCase,
-        private val getSongListByParamUseCase: GetSongListByParamUseCase
+    scheduler: IoScheduler,
+    private val playlistGateway: PlaylistGateway,
+    private val getSongUseCase: GetSongUseCase,
+    private val podcastPlaylistGateway: PodcastPlaylistGateway,
+    private val getPodcastUseCase: GetPodcastUseCase,
+    private val getSongListByParamUseCase: GetSongListByParamUseCase
 
 ) : CompletableUseCaseWithParam<Pair<Playlist, MediaId>>(scheduler) {
 

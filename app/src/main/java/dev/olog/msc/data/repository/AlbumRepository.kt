@@ -4,12 +4,12 @@ import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.mapper.toAlbum
-import dev.olog.msc.domain.entity.Album
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.gateway.AlbumGateway
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.entity.Album
+import dev.olog.msc.core.entity.Song
+import dev.olog.msc.core.gateway.AlbumGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.gateway.UsedImageGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.utils.img.ImagesFolderUtils
@@ -24,11 +24,11 @@ import javax.inject.Inject
 private val MEDIA_STORE_URI = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
 
 class AlbumRepository @Inject constructor(
-        private val rxContentResolver: BriteContentResolver,
-        private val songGateway: SongGateway,
-        appDatabase: AppDatabase,
-        private val collator: Collator,
-        private val usedImageGateway: UsedImageGateway
+    private val rxContentResolver: BriteContentResolver,
+    private val songGateway: SongGateway,
+    appDatabase: AppDatabase,
+    private val collator: Collator,
+    private val usedImageGateway: UsedImageGateway
 
 ) : AlbumGateway {
 

@@ -5,16 +5,16 @@ import android.provider.BaseColumns
 import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
-import dev.olog.msc.dagger.qualifier.ApplicationContext
-import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.entity.GenreMostPlayedEntity
 import dev.olog.msc.data.mapper.extractId
 import dev.olog.msc.data.mapper.toGenre
 import dev.olog.msc.data.repository.util.CommonQuery
-import dev.olog.msc.domain.entity.Genre
-import dev.olog.msc.domain.entity.Song
+import dev.olog.msc.core.entity.Genre
+import dev.olog.msc.core.entity.Song
 import dev.olog.msc.domain.gateway.GenreGateway
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.gateway.prefs.AppPreferencesGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.core.MediaId
@@ -39,11 +39,11 @@ private val SONG_SELECTION_ARGS: Array<String>? = null
 private const val SONG_SORT_ORDER = "lower(${MediaStore.Audio.Genres.Members.TITLE})"
 
 class GenreRepository @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val rxContentResolver: BriteContentResolver,
-        private val songGateway: SongGateway,
-        private val appPrefsUseCase: AppPreferencesGateway,
-        appDatabase: AppDatabase
+    @ApplicationContext private val context: Context,
+    private val rxContentResolver: BriteContentResolver,
+    private val songGateway: SongGateway,
+    private val appPrefsUseCase: AppPreferencesGateway,
+    appDatabase: AppDatabase
 
 ) : GenreGateway {
 
@@ -142,7 +142,13 @@ class GenreRepository @Inject constructor(
         return songGateway.getByParam(songId)
                 .firstOrError()
                 .flatMapCompletable { song ->
-                    CompletableSource { mostPlayedDao.insertOne(GenreMostPlayedEntity(0, song.id, genreId)) }
+                    CompletableSource { mostPlayedDao.insertOne(
+                        GenreMostPlayedEntity(
+                            0,
+                            song.id,
+                            genreId
+                        )
+                    ) }
                 }
     }
 

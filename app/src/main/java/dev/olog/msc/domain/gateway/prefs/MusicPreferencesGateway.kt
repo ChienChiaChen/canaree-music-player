@@ -1,6 +1,6 @@
 package dev.olog.msc.domain.gateway.prefs
 
-import dev.olog.msc.domain.entity.LastMetadata
+import dev.olog.msc.core.entity.LastMetadata
 import io.reactivex.Completable
 import io.reactivex.Observable
 

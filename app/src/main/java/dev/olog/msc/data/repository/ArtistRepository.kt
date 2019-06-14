@@ -4,13 +4,13 @@ import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dev.olog.msc.constants.AppConstants
-import dev.olog.msc.data.db.AppDatabase
+import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.mapper.toArtist
 import dev.olog.msc.data.mapper.toFakeArtist
-import dev.olog.msc.domain.entity.Artist
-import dev.olog.msc.domain.entity.Song
-import dev.olog.msc.domain.gateway.ArtistGateway
-import dev.olog.msc.domain.gateway.SongGateway
+import dev.olog.msc.core.entity.Artist
+import dev.olog.msc.core.entity.Song
+import dev.olog.msc.core.gateway.ArtistGateway
+import dev.olog.msc.core.gateway.SongGateway
 import dev.olog.msc.domain.gateway.UsedImageGateway
 import dev.olog.msc.onlyWithStoragePermission
 import dev.olog.msc.utils.k.extension.debounceFirst
@@ -24,11 +24,11 @@ import javax.inject.Inject
 private val MEDIA_STORE_URI = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
 
 class ArtistRepository @Inject constructor(
-        private val rxContentResolver: BriteContentResolver,
-        private val songGateway: SongGateway,
-        appDatabase: AppDatabase,
-        private val collator: Collator,
-        private val usedImageGateway: UsedImageGateway
+    private val rxContentResolver: BriteContentResolver,
+    private val songGateway: SongGateway,
+    appDatabase: AppDatabase,
+    private val collator: Collator,
+    private val usedImageGateway: UsedImageGateway
 
 ) : ArtistGateway {
 
