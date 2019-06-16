@@ -5,8 +5,7 @@ import dev.olog.msc.utils.k.extension.configuration
 
 
 class PlaylistSpanSizeLookup(
-        context: Context,
-        private val isPortrait: Boolean
+        context: Context
 
 ) : AbsSpanSizeLookup() {
 
@@ -18,7 +17,7 @@ class PlaylistSpanSizeLookup(
             0, 4 -> return spanCount
         }
 
-        var span = if (isPortrait) 3 else 4
+        var span = 3
 
         if (isTablet) {
             span++

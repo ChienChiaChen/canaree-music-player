@@ -14,6 +14,7 @@ import dev.olog.msc.BR
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.constants.MusicConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.dagger.qualifier.FragmentLifecycle
 import dev.olog.msc.presentation.base.HasSlidingPanel
 import dev.olog.msc.presentation.base.adapter.AbsAdapter
@@ -28,7 +29,6 @@ import dev.olog.msc.presentation.widget.animateBackgroundColor
 import dev.olog.msc.presentation.widget.animateTextColor
 import dev.olog.msc.presentation.widget.audiowave.AudioWaveViewWrapper
 import dev.olog.msc.presentation.widget.playpause.AnimatedPlayPauseImageView
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -346,7 +346,7 @@ class PlayerFragmentAdapter (
                     openPlaybackSpeedPopup(playbackSpeed)
                 }, Throwable::printStackTrace)
 
-        if (view.context.isPortrait || AppTheme.isFullscreenTheme() || AppTheme.isMiniTheme()){
+        if (AppTheme.isFullscreenTheme() || AppTheme.isMiniTheme()){
 
             mediaProvider.onStateChanged()
                     .takeUntil(RxView.detaches(view))

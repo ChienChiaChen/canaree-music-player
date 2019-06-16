@@ -66,7 +66,6 @@ class MainPopupDialog @Inject constructor(
                 R.id.equalizer -> navigator.toEqualizer()
                 R.id.settings -> navigator.toSettingsActivity()
                 R.id.sleepTimer -> navigator.toSleepTimer()
-                R.id.share -> activityNavigator.toShareApp()
                 DEBUG_ID -> navigator.toDebugConfiguration()
                 SAVE_AS_PLAYLIST_ID -> activityNavigator.toCreatePlaylistDialog(MediaId.playingQueueId, -1, "")
                 else -> {

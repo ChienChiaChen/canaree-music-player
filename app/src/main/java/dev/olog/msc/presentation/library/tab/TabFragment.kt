@@ -6,6 +6,7 @@ import androidx.annotation.CallSuper
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.R
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.core.entity.SortType
 import dev.olog.msc.presentation.base.BaseFragment
@@ -15,7 +16,6 @@ import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.parentViewModelProvider
 import dev.olog.msc.presentation.utils.lazyFast
 import dev.olog.msc.presentation.widget.fast.scroller.WaveSideBarView
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.TextUtils
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_tab.*
@@ -26,8 +26,8 @@ class TabFragment : BaseFragment() {
 
     companion object {
 
-        private const val TAG = "TabFragment"
-        const val ARGUMENTS_SOURCE = "$TAG.argument.dataSource"
+        val TAG = TabFragment::class.java.canonicalName
+        val ARGUMENTS_SOURCE = "$TAG.argument.dataSource"
 
         @JvmStatic
         fun newInstance(category: MediaIdCategory): TabFragment {

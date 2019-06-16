@@ -1,114 +1,125 @@
 package dev.olog.msc.presentation.main
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
-import com.crashlytics.android.Crashlytics
-import com.google.android.gms.appinvite.AppInviteInvitation
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import androidx.lifecycle.Lifecycle
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dev.olog.msc.Permissions
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.constants.FloatingWindowsConstants
 import dev.olog.msc.constants.MusicConstants
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.entity.BottomNavigationPage
 import dev.olog.msc.floating.window.service.FloatingWindowHelper
 import dev.olog.msc.music.service.MusicService
 import dev.olog.msc.presentation.DrawsOnTop
+import dev.olog.msc.presentation.base.CanHandleOnBackPressed
 import dev.olog.msc.presentation.base.HasBilling
 import dev.olog.msc.presentation.base.HasSlidingPanel
 import dev.olog.msc.presentation.base.bottom.sheet.DimBottomSheetDialogFragment
 import dev.olog.msc.presentation.base.music.service.MusicGlueActivity
 import dev.olog.msc.presentation.dialog.rate.request.RateAppDialog
 import dev.olog.msc.presentation.library.categories.track.CategoriesFragment
-import dev.olog.msc.presentation.library.folder.tree.FolderTreeFragment
+import dev.olog.msc.presentation.main.utils.toBottomNavigationPage
+import dev.olog.msc.presentation.main.utils.toMenuId
 import dev.olog.msc.presentation.navigator.Navigator
-import dev.olog.msc.presentation.preferences.PreferencesActivity
 import dev.olog.msc.presentation.theme.AppTheme
-import dev.olog.msc.presentation.utils.animation.HasSafeTransition
 import dev.olog.msc.pro.IBilling
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.shared.clamp
 import dev.olog.msc.utils.k.extension.*
+import dev.olog.scrollhelper.InitialHeight
+import dev.olog.scrollhelper.Input
+import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
 class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
-    companion object {
-        private const val SPLASH_REQUEST_CODE = 0
-        const val INVITE_FRIEND_CODE = 12198
-    }
-
-    @Inject lateinit var presenter: MainActivityPresenter
     @Inject lateinit var navigator: Navigator
-    // handles lifecycle itself
     @Inject override lateinit var billing: IBilling
+    @Inject lateinit var statusBarColorBehavior: StatusBarColorBehavior
+    @Inject lateinit var rateAppDialog: RateAppDialog
+    @Inject lateinit var viewModel: MainActivityPresenter
 
-    @Suppress("unused") @Inject
-    lateinit var statusBarColorBehavior: StatusBarColorBehavior
-    @Suppress("unused") @Inject
-    lateinit var rateAppDialog : RateAppDialog
+    private lateinit var scrollHelper: SuperCerealScrollHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        slidingPanel.panelHeight = dimen(R.dimen.sliding_panel_peek) + dimen(R.dimen.bottom_navigation_height)
+        scrollHelper = SuperCerealScrollHelper(this, Input.Full(
+            slidingPanel = BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*> to InitialHeight(dimen(R.dimen.sliding_panel_peek)),
+            bottomNavigation = bottomWrapper to InitialHeight(dimen(R.dimen.bottom_navigation_height)),
+            toolbarHeight = InitialHeight(dimen(R.dimen.toolbar)),
+            tabLayoutHeight = InitialHeight(dimen(R.dimen.tab))
+        ))
 
-        presenter.isRepositoryEmptyUseCase.execute()
-                .asLiveData()
-                .subscribe(this, this::handleEmptyRepository)
+        val isFirstAccess = isFirstAccess()
 
-        val canReadStorage = Permissions.canReadStorage(this)
-        val isFirstAccess = presenter.isFirstAccess()
-        val toFirstAccess = !canReadStorage || isFirstAccess
-        if (toFirstAccess){
-            navigator.toFirstAccess(SPLASH_REQUEST_CODE)
+        when {
+            isFirstAccess -> {
+                // TODO hide sliding panel and bottom navigation?
+                navigator.toFirstAccess()
+            }
+            savedInstanceState == null -> {
+                BottomNavigator.initialize(this, viewModel.getLastBottomViewPage())
+                handleOnActivityCreated()
+            }
+        }
+        if (isFirstAccess) {
             return
-        } else if (savedInstanceState == null) {
-            var navigateTo = presenter.getLastBottomViewPage()
-            if (!presenter.canShowPodcastCategory()){
-                bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
-                if (navigateTo == R.id.navigation_podcasts) {
-                    navigateTo = R.id.navigation_songs
-                    presenter.setLastBottomViewPage(navigateTo)
-                }
-            }
-            bottomNavigation.selectedItemId = navigateTo
-            bottomNavigate(navigateTo, false)
-        } else {
-            if (!presenter.canShowPodcastCategory()){
-                val currentId = presenter.getLastBottomViewPage()
-                bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
-                if (currentId == R.id.navigation_podcasts){
-                    bottomNavigation.selectedItemId = R.id.navigation_songs
-                    presenter.setLastBottomViewPage(R.id.navigation_songs)
-                    bottomNavigate(bottomNavigation.selectedItemId, true)
-                }
-            }
         }
 
-        if (AppTheme.isMiniTheme()){
-            slidingPanel.setParallaxOffset(0)
-            playerLayout.layoutParams = SlidingUpPanelLayout.LayoutParams(
-                    SlidingUpPanelLayout.LayoutParams.MATCH_PARENT, SlidingUpPanelLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
+        viewModel.isRepositoryEmptyUseCase.execute()
+            .asLiveData()
+            .subscribe(this, this::handleEmptyRepository)
 
+        setupMiniPlayerTheme()
+        adjustSlidingPanel()
+
+        intent?.let { handleIntent(it) }
+    }
+
+    private fun handleOnActivityCreated() {
+        val bottomNavigationPage = viewModel.getLastBottomViewPage()
+        var navigateTo = bottomNavigationPage.toMenuId()
+        if (!viewModel.canShowPodcastCategory()) {
+            bottomNavigation.menu.removeItem(R.id.navigation_podcasts)
+            if (navigateTo == R.id.navigation_podcasts) {
+                navigateTo = R.id.navigation_songs
+                viewModel.setLastBottomViewPage(navigateTo.toBottomNavigationPage())
+            }
+        }
+        bottomNavigation.selectedItemId = navigateTo
+        BottomNavigator.navigate(this, bottomNavigationPage)
+    }
+
+    private fun isFirstAccess(): Boolean {
+        val canReadStorage = Permissions.canReadStorage(this)
+        val isFirstAccess = viewModel.isFirstAccess()
+        return !canReadStorage || isFirstAccess
+    }
+
+    private fun setupMiniPlayerTheme(){
+        if (AppTheme.isMiniTheme()) {
+//            slidingPanel.setParallaxOffset(0) TODO
+//            playerLayout.layoutParams = SlidingUpPanelLayout.LayoutParams(
+//                SlidingUpPanelLayout.LayoutParams.MATCH_PARENT, SlidingUpPanelLayout.LayoutParams.WRAP_CONTENT
+//            )
+        }
+    }
+
+    // slides down bottom navigation when sliding panel is expanded
+    private fun adjustSlidingPanel() {
         bottomWrapper.doOnPreDraw {
-            if (slidingPanel.isExpanded()){
+            if (getSlidingPanel().isExpanded()) {
                 bottomWrapper.translationY = bottomWrapper.height.toFloat()
             }
         }
-
-        intent?.let { handleIntent(it) }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -118,70 +129,44 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
 
     override fun onResume() {
         super.onResume()
-        bottomNavigation.setOnNavigationItemSelectedListener {
-            presenter.setLastBottomViewPage(it.itemId)
-            bottomNavigate(it.itemId, false)
+        bottomNavigation.setOnNavigationItemSelectedListener { menu ->
+            val navigationPage = menu.itemId.toBottomNavigationPage()
+            viewModel.setLastBottomViewPage(navigationPage)
+            BottomNavigator.navigate(this, navigationPage)
             true
         }
-        bottomNavigation.setOnNavigationItemReselectedListener { bottomNavigate(it.itemId, true) }
-        slidingPanel.addPanelSlideListener(onPanelSlide)
-        handleFakeView(slidingPanel.panelState)
-    }
+        bottomNavigation.setOnNavigationItemReselectedListener { /* do nothing */ }
 
-    private fun handleFakeView(state: SlidingUpPanelLayout.PanelState){
-        when (state){
-            SlidingUpPanelLayout.PanelState.EXPANDED,
-            SlidingUpPanelLayout.PanelState.ANCHORED -> {
-                fakeView.isClickable = true
-                fakeView.isFocusable = true
-                fakeView.setOnClickListener { slidingPanel.collapse() }
-            }
-            else -> {
-                fakeView.setOnClickListener(null)
-                fakeView.isClickable = false
-                fakeView.isFocusable = false
-            }
-        }
-    }
-
-    private fun bottomNavigate(itemId: Int, forceRecreate: Boolean){
-        when (itemId){
-            R.id.navigation_songs -> navigator.toLibraryCategories(forceRecreate)
-            R.id.navigation_search -> navigator.toSearchFragment()
-            R.id.navigation_podcasts -> navigator.toPodcastCategories(forceRecreate)
-            R.id.navigation_queue -> navigator.toPlayingQueueFragment()
-            else -> bottomNavigate(R.id.navigation_songs, forceRecreate)
-        }
+        scrollHelper.onAttach()
+//        slidingPanel.setFadeOnClickListener { TODo
+//            if (playerTheme().isMini()){
+//                slidingPanel.collapse()
+//            }
+//        }
     }
 
     override fun onPause() {
         super.onPause()
         bottomNavigation.setOnNavigationItemSelectedListener(null)
         bottomNavigation.setOnNavigationItemReselectedListener(null)
-        slidingPanel.removePanelSlideListener(onPanelSlide)
+        scrollHelper.onDetach()
     }
 
-    private val onPanelSlide = object : SlidingUpPanelLayout.PanelSlideListener {
-
-        override fun onPanelSlide(panel: View, slideOffset: Float) {
-            bottomWrapper.translationY = bottomWrapper.height * clamp(slideOffset, 0f, 1f)
-        }
-
-        override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState, newState: SlidingUpPanelLayout.PanelState) {
-            handleFakeView(newState)
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        scrollHelper.dispose()
     }
 
     private fun handleIntent(intent: Intent) {
-        when (intent.action){
+        when (intent.action) {
             FloatingWindowsConstants.ACTION_START_SERVICE -> {
                 FloatingWindowHelper.startServiceIfHasOverlayPermission(this)
             }
             AppConstants.SHORTCUT_SEARCH -> {
                 bottomNavigation.selectedItemId = R.id.navigation_search
-                navigator.toSearchFragment()
+                BottomNavigator.navigate(this, BottomNavigationPage.SEARCH)
             }
-            AppConstants.ACTION_CONTENT_VIEW -> slidingPanel.expand()
+            AppConstants.ACTION_CONTENT_VIEW -> getSlidingPanel().expand()
             MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH -> {
                 val serviceIntent = Intent(this, MusicService::class.java)
                 serviceIntent.action = MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH
@@ -202,83 +187,67 @@ class MainActivity : MusicGlueActivity(), HasSlidingPanel, HasBilling {
         setIntent(null)
     }
 
-    private fun handleEmptyRepository(isEmpty: Boolean){
-        if (isEmpty){
-            slidingPanel.panelHeight = dimen(R.dimen.bottom_navigation_height)
+    private fun handleEmptyRepository(isEmpty: Boolean) {
+        // TODO handle in OnScrollBehavior.kt ?
+        val height = if (isEmpty) {
+            dimen(R.dimen.bottom_navigation_height)
         } else {
-            slidingPanel.panelHeight = dimen(R.dimen.sliding_panel_peek) + dimen(R.dimen.bottom_navigation_height)
+            dimen(R.dimen.sliding_panel_peek) + dimen(R.dimen.bottom_navigation_height)
         }
+
+        getSlidingPanel().peekHeight = height
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK){
-            when (requestCode){
-                SPLASH_REQUEST_CODE -> {
-                    bottomNavigate(bottomNavigation.selectedItemId, false)
-                    slidingPanel.collapse()
-                    return
-                }
-                PreferencesActivity.REQUEST_CODE -> {
-                    bottomNavigate(bottomNavigation.selectedItemId, true)
-                    recreate()
-                    return
-                }
-                INVITE_FRIEND_CODE -> handleOnFriendsInvited(resultCode, data)
-            }
-        }
-
-        if (requestCode == FloatingWindowHelper.REQUEST_CODE_HOVER_PERMISSION){
+        if (requestCode == FloatingWindowHelper.REQUEST_CODE_HOVER_PERMISSION) {
             FloatingWindowHelper.startServiceIfHasOverlayPermission(this)
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
-    private fun handleOnFriendsInvited(resultCode: Int, data: Intent?){
-        try {
-            val invitedIds = AppInviteInvitation.getInvitationIds(resultCode, data!!)
-            val analytics = FirebaseAnalytics.getInstance(this)
-            analytics.logEvent("invited_friends", bundleOf(
-                    "friends_number_invited" to invitedIds.size
-            ))
-            analytics.setUserProperty("invited_friends", "true")
-        } catch (ex: Exception){
-            ex.printStackTrace()
-            Crashlytics.logException(ex)
-        }
-    }
-
     override fun onBackPressed() {
         try {
-            if (tryPopFolderBack()){
-                return
-            }
-
             val topFragment = getTopFragment()
 
             when {
-                topFragment is HasSafeTransition && topFragment.isAnimating() -> {
-//                  prevents circular reveal crash
+                topFragment is DrawsOnTop || topFragment is DimBottomSheetDialogFragment -> {
+                    super.onBackPressed()
+                    return
                 }
-                topFragment is DrawsOnTop -> super.onBackPressed()
-                topFragment is DimBottomSheetDialogFragment -> supportFragmentManager.popBackStack()
-                slidingPanel.isExpanded() -> slidingPanel.collapse()
-                else -> super.onBackPressed()
+                getSlidingPanel().isExpanded() -> {
+                    getSlidingPanel().collapse()
+                    return
+                }
             }
-        } catch (ex: IllegalStateException){ /*random fragment manager crashes */}
+            if (tryPopFolderBack()) {
+                return
+            }
 
+            super.onBackPressed()
+        } catch (ex: IllegalStateException) {
+            /*random fragment manager crashes */
+            ex.printStackTrace()
+        }
     }
 
     private fun tryPopFolderBack(): Boolean {
-        val categories = findFragmentByTag<CategoriesFragment>(CategoriesFragment.TAG)
-        categories?.view?.findViewById<androidx.viewpager.widget.ViewPager>(R.id.viewPager)?.let { pager ->
-            val currentItem = pager.adapter?.instantiateItem(pager, pager.currentItem) as androidx.fragment.app.Fragment
-            return if (currentItem is FolderTreeFragment){
-                currentItem.pop()
-            } else false
-
-        } ?: return false
+        // TODO test if implementation is correct, i think it pop folder back even if not seeing the fragment
+        val categoriesFragment = supportFragmentManager.findFragmentByTag(CategoriesFragment.TAG) ?: return false
+        val fragments = categoriesFragment.childFragmentManager.fragments
+        for (fragment in fragments) {
+            if (fragment is CanHandleOnBackPressed &&
+                fragment.viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED && // ensure fragment is visible
+                fragment.handleOnBackPressed()
+            ) {
+                return true
+            }
+        }
+        return false
     }
 
-    override fun getSlidingPanel(): SlidingUpPanelLayout? = slidingPanel
+    override fun getSlidingPanel(): MultiListenerBottomSheetBehavior<*> {
+        // TODO cache the value?
+        return BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*>
+    }
 }

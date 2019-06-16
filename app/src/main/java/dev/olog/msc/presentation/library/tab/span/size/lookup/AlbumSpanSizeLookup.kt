@@ -5,7 +5,6 @@ import dev.olog.msc.R
 import dev.olog.msc.presentation.base.adapter.AbsAdapter
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.utils.k.extension.configuration
-import dev.olog.msc.utils.k.extension.isPortrait
 
 class AlbumSpanSizeLookup(
         private val context: Context,
@@ -13,7 +12,6 @@ class AlbumSpanSizeLookup(
 
 ) : AbsSpanSizeLookup() {
 
-    private val isPortrait = context.isPortrait
     private val smallestWidthDip = context.configuration.smallestScreenWidthDp
     private val isTablet = smallestWidthDip >= 600
 
@@ -26,11 +24,11 @@ class AlbumSpanSizeLookup(
         }
 //
         if (isTablet){
-            val span = if (isPortrait) 4 else 5
+            val span = 4
             return spanCount / span
         }
 
-        return if(isPortrait) spanCount / 2 else spanCount / 4
+        return spanCount / 2
     }
 
 }

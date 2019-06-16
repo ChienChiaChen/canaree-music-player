@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import dev.olog.msc.R
 import dev.olog.msc.catchNothing
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.floating.window.service.FloatingWindowHelper
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.base.adapter.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.utils.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_playing_queue.*
 import kotlinx.android.synthetic.main.fragment_playing_queue.view.*
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class PlayingQueueFragment : BaseFragment() {
 
     companion object {
-        const val TAG = "PlayingQueueFragment"
+        val TAG = PlayingQueueFragment::class.java.canonicalName
 
         @JvmStatic
         fun newInstance(): PlayingQueueFragment {

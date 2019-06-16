@@ -187,10 +187,10 @@
             android:name="android.max_aspect"
             android:value="2.1" />
 
-        <!--chromecast-->
-        <meta-data
-            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="dev.olog.msc.chromecast.CastOptionsProvider" />
+        <!--crashlytics-->
+        <!--<meta-data-->
+            <!--android:name="firebase_crashlytics_collection_enabled"-->
+            <!--android:value="${enableCrashReporting}" />-->
 
     </application>
 

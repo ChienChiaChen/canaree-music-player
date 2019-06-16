@@ -4,6 +4,7 @@ import android.content.Context
 import android.preference.PreferenceManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaIdCategory
@@ -17,7 +18,7 @@ class CategoriesViewPager(
         fragmentManager: FragmentManager,
         private val categories : List<LibraryCategoryBehavior>
 
-) : FragmentStatePagerAdapter(fragmentManager) {
+) : FragmentPagerAdapter(fragmentManager) {
 
     fun getCategoryAtPosition(position: Int): MediaIdCategory? {
         try {

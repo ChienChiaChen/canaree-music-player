@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -13,6 +14,7 @@ import androidx.annotation.Px
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
 import dev.olog.msc.R
 
 
@@ -138,4 +140,38 @@ fun View.setWidth(@Px heightPx: Int){
         is ConstraintLayout.LayoutParams -> params.width = heightPx
     }
     layoutParams = params
+}
+
+fun ViewGroup.findChild(filter: (View) -> Boolean): View?{
+    var child : View? = null
+
+    forEachRecursively {
+        if (filter(it)){
+            child = it
+            return@forEachRecursively
+        }
+    }
+
+    return child
+}
+
+fun ViewGroup.forEachRecursively(action: (view: View) -> Unit){
+    forEach {
+        if (it is ViewGroup){
+            it.forEachRecursively(action)
+        } else {
+            action(it)
+        }
+    }
+}
+
+fun <T : View> View.findViewByIdNotRecursive(id: Int): T? {
+    if (this is ViewGroup) {
+        forEach { child ->
+            if (child.id == id) {
+                return child as T
+            }
+        }
+    }
+    return null
 }

@@ -28,16 +28,22 @@
         android:layout_height="0dp"
         android:background="@drawable/side_bar_background" />
 
-    <dev.olog.msc.presentation.widget.fast.scroller.RxWaveSideBarView
-        android:id="@+id/sidebar"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_marginBottom="0dp"
-        tools:layout_marginTop="0dp"
-        app:layout_constraintHeight_max="420dp"/>
+    <!--    workaround for RxWaveSideBarView using 'clipChildren = clipToPadding = false' in root viewGroup -->
+    <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="420dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="@dimen/bottom_navigation_height">
+
+        <dev.olog.msc.presentation.widget.fast.scroller.RxWaveSideBarView
+                android:id="@+id/sidebar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/emptyStateText"

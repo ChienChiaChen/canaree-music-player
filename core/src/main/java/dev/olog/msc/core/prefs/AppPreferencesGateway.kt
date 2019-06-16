@@ -7,8 +7,8 @@ import java.io.File
 
 interface AppPreferencesGateway : Sorting {
 
-    fun getLastBottomViewPage(): Int
-    fun setLastBottomViewPage(page: Int)
+    fun getLastBottomViewPage(): BottomNavigationPage
+    fun setLastBottomViewPage(page: BottomNavigationPage)
 
     fun isFirstAccess(): Boolean
 

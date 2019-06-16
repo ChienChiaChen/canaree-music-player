@@ -14,12 +14,6 @@ import androidx.annotation.DrawableRes
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import dev.olog.msc.utils.isOreo
 
-val Context.isPortrait: Boolean
-    get() = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-
-val Context.isLandscape: Boolean
-    get() = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-
 fun Context.getAnimatedVectorDrawable (@DrawableRes id: Int): AnimatedVectorDrawableCompat {
     return AnimatedVectorDrawableCompat.create(this, id)!!
 }

@@ -12,8 +12,6 @@ import dev.olog.msc.utils.k.extension.isIntentSafe
 import dev.olog.msc.utils.k.extension.toast
 import javax.inject.Inject
 
-private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
-
 class NavigatorAboutImpl @Inject internal constructor(
         private val activity: AppCompatActivity
 
@@ -95,12 +93,6 @@ class NavigatorAboutImpl @Inject internal constructor(
                 activity.toast(R.string.common_browser_not_found)
             }
         }
-    }
-
-    private fun allowed(): Boolean {
-        val allowed = (System.currentTimeMillis() - lastRequest) > NEXT_REQUEST_THRESHOLD
-        lastRequest = System.currentTimeMillis()
-        return allowed
     }
 
 }

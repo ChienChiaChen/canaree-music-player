@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dev.olog.msc.R
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.BindingsAdapter
 import dev.olog.msc.presentation.base.BaseFragment
+import dev.olog.msc.presentation.base.CanChangeStatusBarColor
 import dev.olog.msc.presentation.base.adapter.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.detail.scroll.listener.HeaderVisibilityScrollListener
@@ -20,18 +22,17 @@ import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.utils.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.presentation.widget.image.view.ShapeImageView
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-class DetailFragment : BaseFragment() {
+class DetailFragment : BaseFragment(), CanChangeStatusBarColor {
 
     companion object {
-        const val TAG = "DetailFragment"
-        const val ARGUMENTS_MEDIA_ID = "$TAG.arguments.media_id"
+        val TAG = DetailFragment::class.java.canonicalName
+        val ARGUMENTS_MEDIA_ID = "$TAG.arguments.media_id"
 
         @JvmStatic
         fun newInstance(mediaId: MediaId): DetailFragment {
@@ -86,8 +87,6 @@ class DetailFragment : BaseFragment() {
         view.fastScroller.attachRecyclerView(view.list)
         view.fastScroller.showBubble(false)
 
-        view.cover?.setVisible()
-
         viewModel.mostPlayedLiveData
                 .subscribe(viewLifecycleOwner, mostPlayedAdapter::updateDataSet)
 
@@ -102,25 +101,25 @@ class DetailFragment : BaseFragment() {
                     albumsAdapter.updateDataSet(it)
                 }
 
-        viewModel.observeData()
-                .subscribe(viewLifecycleOwner) { map ->
-                    val copy = map.deepCopy()
-                    if (copy.isEmpty()){
-                        act.onBackPressed()
-                    } else {
-                        if (ctx.isLandscape){
-                            // header in list is not used in landscape
-                            copy[DetailFragmentDataType.HEADER]!!.clear()
-                        }
-                        adapter.updateDataSet(copy)
-                    }
-                }
+//        viewModel.observeData() TODO remove
+//                .subscribe(viewLifecycleOwner) { map ->
+//                    val copy = map.deepCopy()
+//                    if (copy.isEmpty()){
+//                        act.onBackPressed()
+//                    } else {
+//                        if (ctx.isLandscape){
+//                            // header in list is not used in landscape
+//                            copy[DetailFragmentDataType.HEADER]!!.clear()
+//                        }
+//                        adapter.updateDataSet(copy)
+//                    }
+//                }
 
         viewModel.itemLiveData.subscribe(viewLifecycleOwner) { item ->
             if (item.isNotEmpty()){
                 headerText.text = item[0].title
                 val cover = view.findViewById<View>(R.id.cover)
-                if (!isPortrait() && cover is ShapeImageView){
+                if (cover is ShapeImageView){
                     BindingsAdapter.loadBigAlbumImage(cover, item[0])
                 }
             }
@@ -138,9 +137,7 @@ class DetailFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (ctx.isPortrait){
-            list.addOnScrollListener(recyclerOnScrollListener)
-        }
+        list.addOnScrollListener(recyclerOnScrollListener)
         back.setOnClickListener { act.onBackPressed() }
         more.setOnClickListener { navigator.toDialog(viewModel.mediaId, more) }
         filter.setOnClickListener {
@@ -151,18 +148,20 @@ class DetailFragment : BaseFragment() {
 
     override fun onPause() {
         super.onPause()
-        if (ctx.isPortrait){
-            list.removeOnScrollListener(recyclerOnScrollListener)
+        list.removeOnScrollListener(recyclerOnScrollListener)
 //            list.removeItemDecoration(detailListMargin)
-        }
         back.setOnClickListener(null)
         more.setOnClickListener(null)
         filter.setOnClickListener(null)
         clear.setOnClickListener(null)
     }
 
-    internal fun adjustStatusBarColor(lightStatusBar: Boolean = hasLightStatusBarColor){
-        if (lightStatusBar){
+    override fun adjustStatusBarColor() {
+        adjustStatusBarColor(hasLightStatusBarColor)
+    }
+
+    override fun adjustStatusBarColor(lightStatusBar: Boolean) {
+        if (lightStatusBar) {
             setLightStatusBar()
         } else {
             removeLightStatusBar()

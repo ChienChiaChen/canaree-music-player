@@ -8,7 +8,6 @@ import dev.olog.msc.utils.k.extension.configuration
 
 class ArtistSpanSizeLookup(
         context: Context,
-        private val isPortrait: Boolean,
         private val adapter: AbsAdapter<DisplayableItem>
 
 ) : AbsSpanSizeLookup() {
@@ -24,7 +23,7 @@ class ArtistSpanSizeLookup(
             R.layout.item_tab_new_artist_horizontal_list -> return spanCount
         }
 
-        var span = if (isPortrait) 3 else 4
+        var span = 3
 
         if (isTablet) {
             span++

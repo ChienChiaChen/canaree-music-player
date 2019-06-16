@@ -1,27 +1,20 @@
 package dev.olog.msc.presentation.navigator
 
 import android.view.View
-import dev.olog.msc.core.entity.PlaylistType
-import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.entity.PlaylistType
+import dev.olog.msc.presentation.model.DisplayableItem
 
 interface Navigator {
 
-    fun toFirstAccess(requestCode: Int)
-
-    fun toLibraryCategories(forceRecreate: Boolean)
-    fun toPodcastCategories(forceRecreate: Boolean)
+    fun toFirstAccess()
 
     fun toDetailFragment(mediaId: MediaId)
-
-    fun toSearchFragment()
 
     fun toRelatedArtists(mediaId: MediaId)
 
     fun toRecentlyAdded(mediaId: MediaId)
-
-    fun toPlayingQueueFragment()
 
     fun toChooseTracksForPlaylistFragment(type: PlaylistType)
 
@@ -51,7 +44,5 @@ interface Navigator {
     fun toDeleteDialog(mediaId: MediaId, listSize: Int, itemTitle: String)
 
     fun toRemoveDuplicatesDialog(mediaId: MediaId, itemTitle: String)
-
-    fun toShareApp()
 
 }

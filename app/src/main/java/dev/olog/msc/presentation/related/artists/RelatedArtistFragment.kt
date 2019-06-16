@@ -3,11 +3,12 @@ package dev.olog.msc.presentation.related.artists
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import dev.olog.msc.R
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.utils.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.k.extension.act
 import dev.olog.msc.utils.k.extension.subscribe
 import dev.olog.msc.utils.k.extension.withArguments
@@ -35,7 +36,7 @@ class RelatedArtistFragment: BaseFragment() {
     private val viewModel by lazyFast { viewModelProvider<RelatedArtistFragmentViewModel>(viewModelFactory) }
 
     override fun onViewBound(view: View, savedInstanceState: Bundle?) {
-        view.list.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context!!, if (isPortrait()) 2 else 3)
+        view.list.layoutManager = GridLayoutManager(context!!, 2)
         view.list.adapter = adapter
         view.list.setHasFixedSize(true)
 

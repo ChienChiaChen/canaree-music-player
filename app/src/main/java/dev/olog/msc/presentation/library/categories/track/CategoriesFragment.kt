@@ -24,7 +24,7 @@ import javax.inject.Inject
 class CategoriesFragment : BaseFragment() {
 
     companion object {
-        const val TAG = "CategoriesFragment"
+        val TAG = CategoriesFragment::class.java.canonicalName
 
         @JvmStatic
         fun newInstance(): CategoriesFragment {

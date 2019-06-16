@@ -10,7 +10,6 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import dev.olog.msc.R
 import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.utils.k.extension.getAnimatedVectorDrawable
-import dev.olog.msc.utils.k.extension.isPortrait
 import dev.olog.msc.utils.k.extension.textColorTertiary
 
 @Keep
@@ -63,7 +62,7 @@ class AnimatedImageView @JvmOverloads constructor(
 
     private fun getDefaultColor(): Int{
         return when {
-            context.isPortrait && AppTheme.isCleanTheme() && !AppTheme.isDarkTheme() -> 0xFF_8d91a6.toInt()
+            AppTheme.isCleanTheme() && !AppTheme.isDarkTheme() -> 0xFF_8d91a6.toInt()
             AppTheme.isFullscreenTheme() || AppTheme.isDarkTheme() -> Color.WHITE
             else -> context.textColorTertiary()
         }

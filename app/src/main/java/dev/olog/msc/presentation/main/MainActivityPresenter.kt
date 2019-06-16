@@ -1,5 +1,6 @@
 package dev.olog.msc.presentation.main
 
+import dev.olog.msc.core.entity.BottomNavigationPage
 import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.interactor.IsRepositoryEmptyUseCase
 import javax.inject.Inject
@@ -13,9 +14,9 @@ class MainActivityPresenter @Inject constructor(
         return appPreferencesUseCase.isFirstAccess()
     }
 
-    fun getLastBottomViewPage(): Int = appPreferencesUseCase.getLastBottomViewPage()
+    fun getLastBottomViewPage(): BottomNavigationPage = appPreferencesUseCase.getLastBottomViewPage()
 
-    fun setLastBottomViewPage(page: Int){
+    fun setLastBottomViewPage(page: BottomNavigationPage){
         appPreferencesUseCase.setLastBottomViewPage(page)
     }
 

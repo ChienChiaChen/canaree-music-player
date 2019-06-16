@@ -8,6 +8,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.core.entity.BottomNavigationPage
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.prefs.AppPreferencesGateway
@@ -34,7 +35,7 @@ class AppPreferencesImpl @Inject constructor(
 
         private const val VIEW_PAGER_LAST_PAGE = "$TAG.VIEW_PAGER_LAST_PAGE"
         private const val VIEW_PAGER_PODCAST_LAST_PAGE = "$TAG.VIEW_PAGER_PODCAST_LAST_PAGE"
-        private const val BOTTOM_VIEW_LAST_PAGE = "$TAG.BOTTOM_VIEW"
+        private const val BOTTOM_VIEW_LAST_PAGE = "$TAG.BOTTOM_VIEW_2"
 
         private const val SLEEP_TIME = "$TAG.SLEEP_TIME"
         private const val SLEEP_FROM = "$TAG.FROM_WHEN"
@@ -100,12 +101,13 @@ class AppPreferencesImpl @Inject constructor(
         preferences.edit { putInt(VIEW_PAGER_PODCAST_LAST_PAGE, lastPage) }
     }
 
-    override fun getLastBottomViewPage(): Int {
-        return preferences.getInt(BOTTOM_VIEW_LAST_PAGE, R.id.navigation_songs)
+    override fun getLastBottomViewPage(): BottomNavigationPage {
+        val result = preferences.getString(BOTTOM_VIEW_LAST_PAGE, BottomNavigationPage.SONGS.toString())
+        return BottomNavigationPage.valueOf(result)
     }
 
-    override fun setLastBottomViewPage(page: Int) {
-        preferences.edit { putInt(BOTTOM_VIEW_LAST_PAGE, page) }
+    override fun setLastBottomViewPage(page: BottomNavigationPage) {
+        preferences.edit { putString(BOTTOM_VIEW_LAST_PAGE, page.toString()) }
     }
 
     override fun getVisibleTabs(): Observable<BooleanArray> {

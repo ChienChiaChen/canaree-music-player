@@ -37,7 +37,6 @@ android {
 
         release {
             minifyEnabled true
-            useProguard true
             multiDexEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -45,18 +44,22 @@ android {
 
             buildConfigField 'String', "LAST_FM_KEY", last_fm_key
             buildConfigField 'String', "LAST_FM_SECRET", last_fm_secret
+
+//            manifestPlaceholders = [enableCrashReporting: "true"]
         }
 
         debug {
             minifyEnabled false
-            useProguard false
-            multiDexEnabled true
+            multiDexEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
 //            debuggable false
 
             buildConfigField 'String', "LAST_FM_KEY", last_fm_key
             buildConfigField 'String', "LAST_FM_SECRET", last_fm_secret
+
+//            manifestPlaceholders = [enableCrashReporting: "false"]
+//            ext.enableCrashlytics = false
         }
     }
 
@@ -129,6 +132,8 @@ dependencies {
     implementation lib_x.palette
     implementation lib_x.constraint_layout
 
+    implementation "com.github.ologe:scroll-helper:0.1-alpha03"
+
     // billing
     implementation "com.android.billingclient:billing:$rootProject.billing"
 
@@ -158,7 +163,6 @@ dependencies {
     implementation lib_core.coroutines_rx
 
     // other
-    implementation "com.sothree.slidinguppanel:library:$rootProject.sliding_panel"
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.0'
 //    implementation project(':exoplayer-library-core')
 //    implementation project(':exoplayer-extension-flac')
@@ -197,7 +201,6 @@ dependencies {
     implementation("com.crashlytics.sdk.android:crashlytics:$rootProject.crashlytics") {
         transitive = true
     }
-    implementation 'com.google.firebase:firebase-invites:17.0.0'
 
     testImplementation "junit:junit:$rootProject.junit"
     testImplementation "org.mockito:mockito-core:$rootProject.mockito"

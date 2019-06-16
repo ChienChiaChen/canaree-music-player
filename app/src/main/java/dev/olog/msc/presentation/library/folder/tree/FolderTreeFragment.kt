@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import dev.olog.msc.R
 import dev.olog.msc.presentation.base.BaseFragment
+import dev.olog.msc.presentation.base.CanHandleOnBackPressed
 import dev.olog.msc.presentation.base.music.service.MediaProvider
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.presentation.theme.AppTheme
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_folder_tree.*
 import kotlinx.android.synthetic.main.fragment_folder_tree.view.*
 import javax.inject.Inject
 
-class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback {
+class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback, CanHandleOnBackPressed {
 
     companion object {
 
@@ -78,7 +79,7 @@ class FolderTreeFragment : BaseFragment(), BreadCrumbLayout.SelectionCallback {
         viewModel.nextFolder(crumb.file.safeGetCanonicalFile())
     }
 
-    fun pop(): Boolean{
+    override fun handleOnBackPressed(): Boolean {
         return viewModel.popFolder()
     }
 
