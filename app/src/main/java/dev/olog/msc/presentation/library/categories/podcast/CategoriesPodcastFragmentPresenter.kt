@@ -1,7 +1,7 @@
 package dev.olog.msc.presentation.library.categories.podcast
 
 import dev.olog.msc.core.prefs.AppPreferencesGateway
-import dev.olog.msc.utils.k.extension.clamp
+import dev.olog.msc.shared.clamp
 import javax.inject.Inject
 
 class CategoriesPodcastFragmentPresenter @Inject constructor(

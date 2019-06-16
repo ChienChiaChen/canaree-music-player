@@ -1,11 +1,11 @@
 package dev.olog.msc.domain.interactor.all.sibling
 
-import dev.olog.msc.constants.PlaylistConstants
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.entity.AutoPlaylistType
 import dev.olog.msc.core.entity.Playlist
 import dev.olog.msc.core.executor.IoScheduler
 import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.interactor.base.ObservableUseCaseWithParam
-import dev.olog.msc.core.MediaId
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ class GetPlaylistSiblingsUseCase @Inject internal constructor(
     override fun buildUseCaseObservable(mediaId: MediaId): Observable<List<Playlist>> {
         val playlistId = mediaId.categoryValue.toLong()
 
-        val observable = if (PlaylistConstants.isAutoPlaylist(playlistId)){
+        val observable = if (AutoPlaylistType.isAutoPlaylist(playlistId)){
             gateway.getAllAutoPlaylists()
         } else gateway.getAll()
 

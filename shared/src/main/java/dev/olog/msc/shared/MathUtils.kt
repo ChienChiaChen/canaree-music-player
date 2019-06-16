@@ -1,4 +1,4 @@
-package dev.olog.msc.utils.k.extension
+package dev.olog.msc.shared
 
 fun clamp(value: Int, min: Int, max: Int): Int {
     if (value < min) {
@@ -31,7 +31,7 @@ fun indexOfClosest(value: Int, list: List<Int>): Int {
     var min = Integer.MAX_VALUE
     var closestIndex = -1
 
-    for (index in 0..list.lastIndex){
+    for (index in 0..list.lastIndex) {
         val v = list[index]
 
         val diff = Math.abs(v - value)

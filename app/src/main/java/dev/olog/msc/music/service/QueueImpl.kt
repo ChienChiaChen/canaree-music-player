@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.annotation.CheckResult
 import androidx.annotation.MainThread
 import com.crashlytics.android.Crashlytics
-import dev.olog.msc.constants.PlaylistConstants.MINI_QUEUE_SIZE
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.domain.gateway.prefs.MusicPreferencesGateway
@@ -17,7 +16,7 @@ import dev.olog.msc.music.service.model.PositionInQueue
 import dev.olog.msc.music.service.model.toMediaEntity
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.assertMainThread
-import dev.olog.msc.utils.k.extension.clamp
+import dev.olog.msc.shared.clamp
 import dev.olog.msc.utils.k.extension.swap
 import dev.olog.msc.utils.k.extension.unsubscribe
 import io.reactivex.Single
@@ -30,6 +29,7 @@ import javax.inject.Inject
 import kotlin.properties.Delegates
 
 private const val SKIP_TO_PREVIOUS_THRESHOLD = 10 * 1000 // 10 sec
+private const val MINI_QUEUE_SIZE = 51
 
 class QueueImpl @Inject constructor(
     private val updatePlayingQueueUseCase: UpdatePlayingQueueUseCase,

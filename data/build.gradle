@@ -59,7 +59,11 @@ kapt {
 
 dependencies {
     implementation project(':core')
+    implementation project(':shared')
     implementation "com.squareup.sqlbrite3:sqlbrite:$rootProject.sql_brite"
+
+    implementation lib_core.kotlin
+
     // room
     implementation lib_data.room
     implementation lib_data.room_ktx

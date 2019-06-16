@@ -2,7 +2,7 @@ package dev.olog.msc.presentation.library.categories.track
 
 import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.domain.gateway.prefs.TutorialPreferenceGateway
-import dev.olog.msc.utils.k.extension.clamp
+import dev.olog.msc.shared.clamp
 import io.reactivex.Completable
 import javax.inject.Inject
 

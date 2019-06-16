@@ -1,13 +1,14 @@
 package dev.olog.msc.presentation.library.tab.di
 
+import android.content.Context
 import android.content.res.Resources
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import dev.olog.msc.R
-import dev.olog.msc.app.app
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.MediaIdCategory
+import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.PodcastAlbum
 import dev.olog.msc.core.entity.PodcastArtist
@@ -34,22 +35,22 @@ class TabFragmentPodcastModule {
     @IntoMap
     @MediaIdCategoryKey(MediaIdCategory.PODCASTS_PLAYLIST)
     internal fun providePodcastPlaylist(
-            resources: Resources,
-            podcastUseCase: GetAllPodcastPlaylistUseCase,
-            autoPlaylistUseCase: GetAllPodcastsAutoPlaylistUseCase,
-            headers: TabFragmentHeaders
+        @ApplicationContext context: Context,
+        podcastUseCase: GetAllPodcastPlaylistUseCase,
+        autoPlaylistUseCase: GetAllPodcastsAutoPlaylistUseCase,
+        headers: TabFragmentHeaders
 
-    ): Observable<List<DisplayableItem>>{
+    ): Observable<List<DisplayableItem>> {
 
         val autoPlaylistObs = autoPlaylistUseCase.execute()
-                .mapToList { it.toAutoPlaylist() }
-                .map { it.startWith(headers.autoPlaylistHeader) }
-                .defer()
+            .mapToList { it.toAutoPlaylist() }
+            .map { it.startWith(headers.autoPlaylistHeader) }
+            .defer()
 
         val playlistObs = podcastUseCase.execute()
-                .mapToList { it.toTabDisplayableItem(resources) }
-                .map { it.startWithIfNotEmpty(headers.allPlaylistHeader) }
-                .defer()
+            .mapToList { it.toTabDisplayableItem(context.resources) }
+            .map { it.startWithIfNotEmpty(headers.allPlaylistHeader) }
+            .defer()
 
         return Observables.combineLatest(playlistObs, autoPlaylistObs) { playlist, autoPlaylist ->
             autoPlaylist.plus(playlist)
@@ -59,117 +60,126 @@ class TabFragmentPodcastModule {
     @Provides
     @IntoMap
     @MediaIdCategoryKey(MediaIdCategory.PODCASTS)
-    internal fun providePodcastData(useCase: GetAllPodcastUseCase)
+    internal fun providePodcastData(
+        useCase: GetAllPodcastUseCase,
+        @ApplicationContext context: Context
+    )
             : Observable<List<DisplayableItem>> {
 
         return useCase.execute()
-                .mapToList { it.toTabDisplayableItem() }
-                .defer()
+            .mapToList { it.toTabDisplayableItem(context) }
+            .defer()
     }
 
     @Provides
     @IntoMap
     @MediaIdCategoryKey(MediaIdCategory.PODCASTS_ARTISTS)
     internal fun providePodcastArtistsData(
-            useCase: GetAllPodcastArtistsUseCase,
-            lastPlayedArtistsUseCase: GetLastPlayedPodcastArtistsUseCase,
-            newArtistsUseCase: GetRecentlyAddedPodcastsArtistsUseCase,
-            resources: Resources,
-            headers: TabFragmentHeaders): Observable<List<DisplayableItem>> {
+        useCase: GetAllPodcastArtistsUseCase,
+        lastPlayedArtistsUseCase: GetLastPlayedPodcastArtistsUseCase,
+        newArtistsUseCase: GetRecentlyAddedPodcastsArtistsUseCase,
+        @ApplicationContext context: Context,
+        headers: TabFragmentHeaders
+    ): Observable<List<DisplayableItem>> {
 
         val allObs = useCase.execute()
-                .mapToList { it.toTabDisplayableItem(resources) }
-                .map { it.toMutableList() }
-                .defer()
+            .mapToList { it.toTabDisplayableItem(context.resources) }
+            .map { it.toMutableList() }
+            .defer()
 
         val lastPlayedObs = Observables.combineLatest(
-                lastPlayedArtistsUseCase.execute().distinctUntilChanged(),
-                newArtistsUseCase.execute().distinctUntilChanged()
+            lastPlayedArtistsUseCase.execute().distinctUntilChanged(),
+            newArtistsUseCase.execute().distinctUntilChanged()
         ) { last, new ->
             val result = mutableListOf<DisplayableItem>()
             result.doIf(new.count() > 0) { addAll(headers.newArtistsHeaders) }
-                    .doIf(last.count() > 0) { addAll(headers.recentArtistHeaders) }
-                    .doIf(result.isNotEmpty()) { addAll(headers.allArtistsHeader) }
+                .doIf(last.count() > 0) { addAll(headers.recentArtistHeaders) }
+                .doIf(result.isNotEmpty()) { addAll(headers.allArtistsHeader) }
         }.distinctUntilChanged()
-                .defer()
+            .defer()
 
         return Observables.combineLatest(allObs, lastPlayedObs) { all, recent -> recent.plus(all) }
-                .defer()
+            .defer()
     }
 
     @Provides
     @IntoMap
     @MediaIdCategoryKey(MediaIdCategory.PODCASTS_ALBUMS)
     internal fun providePodcastAlbumData(
-            useCase: GetAllPodcastAlbumsUseCase,
-            lastPlayedAlbumsUseCase: GetLastPlayedPodcastAlbumsUseCase,
-            newAlbumsUseCase: GetRecentlyAddedPodcastsAlbumsUseCase,
-            headers: TabFragmentHeaders): Observable<List<DisplayableItem>> {
+        useCase: GetAllPodcastAlbumsUseCase,
+        lastPlayedAlbumsUseCase: GetLastPlayedPodcastAlbumsUseCase,
+        newAlbumsUseCase: GetRecentlyAddedPodcastsAlbumsUseCase,
+        headers: TabFragmentHeaders
+    ): Observable<List<DisplayableItem>> {
 
         val allObs = useCase.execute()
-                .mapToList { it.toTabDisplayableItem() }
-                .map { it.toMutableList() }
-                .defer()
+            .mapToList { it.toTabDisplayableItem() }
+            .map { it.toMutableList() }
+            .defer()
 
         val lastPlayedObs = Observables.combineLatest(
-                lastPlayedAlbumsUseCase.execute().distinctUntilChanged(),
-                newAlbumsUseCase.execute().distinctUntilChanged()
+            lastPlayedAlbumsUseCase.execute().distinctUntilChanged(),
+            newAlbumsUseCase.execute().distinctUntilChanged()
         ) { last, new ->
             val result = mutableListOf<DisplayableItem>()
             result.doIf(new.count() > 0) { addAll(headers.newAlbumsHeaders) }
-                    .doIf(last.count() > 0) { addAll(headers.recentAlbumHeaders) }
-                    .doIf(result.isNotEmpty()) { addAll(headers.allAlbumsHeader) }
+                .doIf(last.count() > 0) { addAll(headers.recentAlbumHeaders) }
+                .doIf(result.isNotEmpty()) { addAll(headers.allAlbumsHeader) }
         }.distinctUntilChanged()
-                .defer()
+            .defer()
 
         return Observables.combineLatest(allObs, lastPlayedObs) { all, recent -> recent.plus(all) }
-                .defer()
+            .defer()
     }
 
     @Provides
     @IntoMap
     @MediaIdCategoryKey(MediaIdCategory.RECENT_PODCAST_ALBUMS)
     internal fun provideLastPlayedAlbumData(
-            useCase: GetLastPlayedPodcastAlbumsUseCase): Observable<List<DisplayableItem>> {
+        useCase: GetLastPlayedPodcastAlbumsUseCase
+    ): Observable<List<DisplayableItem>> {
 
         return useCase.execute()
-                .mapToList { it.toTabLastPlayedDisplayableItem() }
-                .defer()
+            .mapToList { it.toTabLastPlayedDisplayableItem() }
+            .defer()
     }
 
     @Provides
     @IntoMap
     @MediaIdCategoryKey(MediaIdCategory.RECENT_PODCAST_ARTISTS)
     internal fun provideLastPlayedArtistData(
-            resources: Resources,
-            useCase: GetLastPlayedPodcastArtistsUseCase) : Observable<List<DisplayableItem>> {
+        @ApplicationContext context: Context,
+        useCase: GetLastPlayedPodcastArtistsUseCase
+    ): Observable<List<DisplayableItem>> {
 
         return useCase.execute()
-                .mapToList { it.toTabLastPlayedDisplayableItem(resources) }
-                .defer()
+            .mapToList { it.toTabLastPlayedDisplayableItem(context.resources) }
+            .defer()
     }
 
     @Provides
     @IntoMap
     @MediaIdCategoryKey(MediaIdCategory.NEW_PODCSAT_ALBUMS)
     internal fun provideNewAlbumsData(
-            useCase: GetRecentlyAddedPodcastsAlbumsUseCase): Observable<List<DisplayableItem>> {
+        useCase: GetRecentlyAddedPodcastsAlbumsUseCase
+    ): Observable<List<DisplayableItem>> {
 
         return useCase.execute()
-                .mapToList { it.toTabLastPlayedDisplayableItem() }
-                .defer()
+            .mapToList { it.toTabLastPlayedDisplayableItem() }
+            .defer()
     }
 
     @Provides
     @IntoMap
     @MediaIdCategoryKey(MediaIdCategory.NEW_PODCSAT_ARTISTS)
     internal fun provideNewArtistsData(
-            resources: Resources,
-            useCase: GetRecentlyAddedPodcastsArtistsUseCase): Observable<List<DisplayableItem>> {
+        @ApplicationContext context: Context,
+        useCase: GetRecentlyAddedPodcastsArtistsUseCase
+    ): Observable<List<DisplayableItem>> {
 
         return useCase.execute()
-                .mapToList { it.toTabLastPlayedDisplayableItem(resources) }
-                .defer()
+            .mapToList { it.toTabLastPlayedDisplayableItem(context.resources) }
+            .defer()
     }
 
 }
@@ -179,10 +189,10 @@ private fun PodcastPlaylist.toTabDisplayableItem(resources: Resources): Displaya
     val size = DisplayableItem.handleSongListSize(resources, size)
 
     return DisplayableItem(
-            R.layout.item_tab_album,
-            MediaId.podcastPlaylistId(id),
-            title,
-            size
+        R.layout.item_tab_album,
+        MediaId.podcastPlaylistId(id),
+        title,
+        size
     )
 }
 
@@ -190,69 +200,69 @@ private fun PodcastPlaylist.toTabDisplayableItem(resources: Resources): Displaya
 private fun PodcastPlaylist.toAutoPlaylist(): DisplayableItem {
 
     return DisplayableItem(
-            R.layout.item_tab_auto_playlist,
-            MediaId.podcastPlaylistId(id),
-            title,
-            ""
+        R.layout.item_tab_auto_playlist,
+        MediaId.podcastPlaylistId(id),
+        title,
+        ""
     )
 }
 
-private fun Podcast.toTabDisplayableItem(): DisplayableItem {
+private fun Podcast.toTabDisplayableItem(context: Context): DisplayableItem {
     val artist = DisplayableItem.adjustArtist(this.artist)
 
-    val duration = app.getString(R.string.tab_podcast_duration, TimeUnit.MILLISECONDS.toMinutes(this.duration))
+    val duration = context.getString(R.string.tab_podcast_duration, TimeUnit.MILLISECONDS.toMinutes(this.duration))
 
     return DisplayableItem(
-            R.layout.item_tab_podcast,
-            MediaId.podcastId(this.id),
-            title,
-            artist,
-            trackNumber = duration,
-            isPlayable = true
+        R.layout.item_tab_podcast,
+        MediaId.podcastId(this.id),
+        title,
+        artist,
+        trackNumber = duration,
+        isPlayable = true
     )
 }
 
-private fun PodcastArtist.toTabDisplayableItem(resources: Resources): DisplayableItem{
+private fun PodcastArtist.toTabDisplayableItem(resources: Resources): DisplayableItem {
     val songs = DisplayableItem.handleSongListSize(resources, songs)
     var albums = DisplayableItem.handleAlbumListSize(resources, albums)
-    if (albums.isNotBlank()) albums+= TextUtils.MIDDLE_DOT_SPACED
+    if (albums.isNotBlank()) albums += TextUtils.MIDDLE_DOT_SPACED
 
     return DisplayableItem(
-            R.layout.item_tab_artist,
-            MediaId.podcastArtistId(id),
-            name,
-            albums + songs
+        R.layout.item_tab_artist,
+        MediaId.podcastArtistId(id),
+        name,
+        albums + songs
     )
 }
 
 
-private fun PodcastAlbum.toTabDisplayableItem(): DisplayableItem{
+private fun PodcastAlbum.toTabDisplayableItem(): DisplayableItem {
     return DisplayableItem(
-            R.layout.item_tab_album,
-            MediaId.podcastAlbumId(id),
-            title,
-            DisplayableItem.adjustArtist(artist)
+        R.layout.item_tab_album,
+        MediaId.podcastAlbumId(id),
+        title,
+        DisplayableItem.adjustArtist(artist)
     )
 }
 
 private fun PodcastAlbum.toTabLastPlayedDisplayableItem(): DisplayableItem {
     return DisplayableItem(
-            R.layout.item_tab_album_last_played,
-            MediaId.podcastAlbumId(id),
-            title,
-            artist
+        R.layout.item_tab_album_last_played,
+        MediaId.podcastAlbumId(id),
+        title,
+        artist
     )
 }
 
 private fun PodcastArtist.toTabLastPlayedDisplayableItem(resources: Resources): DisplayableItem {
     val songs = DisplayableItem.handleSongListSize(resources, songs)
     var albums = DisplayableItem.handleAlbumListSize(resources, albums)
-    if (albums.isNotBlank()) albums+= TextUtils.MIDDLE_DOT_SPACED
+    if (albums.isNotBlank()) albums += TextUtils.MIDDLE_DOT_SPACED
 
     return DisplayableItem(
-            R.layout.item_tab_artist_last_played,
-            MediaId.podcastArtistId(id),
-            name,
-            albums + songs
+        R.layout.item_tab_artist_last_played,
+        MediaId.podcastArtistId(id),
+        name,
+        albums + songs
     )
 }

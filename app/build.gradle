@@ -72,7 +72,6 @@ android {
     }
 
 
-
     lintOptions {
         checkReleaseBuilds false
         disable 'MissingTranslation'
@@ -95,6 +94,7 @@ kapt {
 
 dependencies {
     implementation project(':core')
+    implementation project(':shared')
     implementation project(':data')
     implementation files('libs/jaudiotagger-android-2.2.3.jar')
 
@@ -102,7 +102,7 @@ dependencies {
     kapt "androidx.databinding:databinding-compiler:$gradle_plugin"
 
     // kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation lib_core.kotlin
 
     // google architecture components
     implementation "androidx.lifecycle:lifecycle-runtime:$rootProject.lifecycle"
@@ -111,19 +111,17 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-reactivestreams:$rootProject.lifecycle"
 
     // support
-    implementation "androidx.core:core:1.0.1"
-    implementation "androidx.core:core-ktx:1.0.1"
-    implementation "androidx.legacy:legacy-support-v4:$rootProject.androidX"
-    implementation "androidx.appcompat:appcompat:1.0.2"
-    implementation "androidx.media:media:1.0.1"
-    implementation "androidx.mediarouter:mediarouter:$rootProject.androidX"
-    implementation "androidx.recyclerview:recyclerview:$rootProject.androidX"
-    implementation "androidx.cardview:cardview:$rootProject.androidX"
-    implementation "androidx.browser:browser:$rootProject.androidX"
-    implementation "com.google.android.material:material:$rootProject.androidX"
-    implementation "androidx.legacy:legacy-preference-v14:$rootProject.androidX"
-    implementation "androidx.palette:palette:$rootProject.androidX"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraint_layout"
+    implementation lib_x.core
+    implementation lib_x.core_ktx
+    implementation lib_x.legacy_v4
+    implementation lib_x.appcompat
+    implementation lib_x.media
+    implementation lib_x.recycler
+    implementation lib_x.browser
+    implementation lib_x.material
+    implementation lib_x.preference
+    implementation lib_x.palette
+    implementation lib_x.constraint_layout
 
     // billing
     implementation "com.android.billingclient:billing:$rootProject.billing"
@@ -135,19 +133,23 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$rootProject.room"
 
     // dagger
-    implementation "com.google.dagger:dagger:$rootProject.dagger"
-    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
-    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
-    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+    implementation lib_core.dagger
+    kapt lib_core.dagger_processor
+    implementation "com.google.dagger:dagger-android:$rootProject.dagger" // TODO remove
+    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger" // TODO remove
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"// TODO remove
 
     // rx
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rx_java"
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rx_android"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rx_kotlin"
+    implementation lib_core.rx
+    implementation lib_core.rx_android
+    implementation lib_core.rx_kotlin
     implementation "com.f2prateek.rx.preferences2:rx-preferences:$rootProject.rx_preferences"
     implementation "com.jakewharton.rxbinding2:rxbinding:$rootProject.rx_binding"
     debugImplementation "nl.littlerobots.rxlint:rxlint:$rootProject.rx_lint"
+
+    // coroutines
+    implementation lib_core.coroutines
+    implementation lib_core.coroutines_rx
 
     // other
     implementation "com.sothree.slidinguppanel:library:$rootProject.sliding_panel"
@@ -189,7 +191,7 @@ dependencies {
     implementation("com.crashlytics.sdk.android:crashlytics:$rootProject.crashlytics") {
         transitive = true
     }
-    implementation 'com.google.firebase:firebase-invites:16.1.1'
+    implementation 'com.google.firebase:firebase-invites:17.0.0'
 
     testImplementation "junit:junit:$rootProject.junit"
     testImplementation "org.mockito:mockito-core:$rootProject.mockito"

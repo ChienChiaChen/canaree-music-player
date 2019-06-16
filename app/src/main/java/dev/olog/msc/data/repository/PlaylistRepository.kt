@@ -5,11 +5,12 @@ import android.provider.MediaStore
 import com.squareup.sqlbrite3.BriteContentResolver
 import com.squareup.sqlbrite3.SqlBrite
 import dev.olog.msc.R
-import dev.olog.msc.constants.PlaylistConstants
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.core.entity.AutoPlaylistType
 import dev.olog.msc.core.entity.Playlist
 import dev.olog.msc.core.entity.Song
+import dev.olog.msc.core.entity.id
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.core.gateway.PlaylistGateway
 import dev.olog.msc.core.gateway.SongGateway
@@ -31,16 +32,16 @@ import javax.inject.Inject
 
 private val MEDIA_STORE_URI = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI
 private val PROJECTION = arrayOf(
-        MediaStore.Audio.Playlists._ID,
-        MediaStore.Audio.Playlists.NAME
+    MediaStore.Audio.Playlists._ID,
+    MediaStore.Audio.Playlists.NAME
 )
 private val SELECTION: String? = null
 private val SELECTION_ARGS: Array<String>? = null
 private const val SORT_ORDER = "lower(${MediaStore.Audio.Playlists.DEFAULT_SORT_ORDER})"
 
 private val SONG_PROJECTION = arrayOf(
-        MediaStore.Audio.Playlists.Members._ID,
-        MediaStore.Audio.Playlists.Members.AUDIO_ID
+    MediaStore.Audio.Playlists.Members._ID,
+    MediaStore.Audio.Playlists.Members.AUDIO_ID
 )
 private val SONG_SELECTION = null
 private val SONG_SELECTION_ARGS: Array<String>? = null
@@ -64,31 +65,31 @@ class PlaylistRepository @Inject constructor(
 
     private val autoPlaylistTitles = resources.getStringArray(R.array.common_auto_playlists)
 
-    private fun createAutoPlaylist(id: Long, title: String, listSize: Int) : Playlist {
+    private fun createAutoPlaylist(id: Long, title: String, listSize: Int): Playlist {
         return Playlist(id, title, listSize)
     }
 
     private fun queryAllData(): Observable<List<Playlist>> {
         return rxContentResolver.createQuery(
-                MEDIA_STORE_URI, PROJECTION, SELECTION,
-                SELECTION_ARGS, SORT_ORDER, false
+            MEDIA_STORE_URI, PROJECTION, SELECTION,
+            SELECTION_ARGS, SORT_ORDER, false
         ).debounceFirst()
-                .lift(SqlBrite.Query.mapToList {
-                    val id = it.extractId()
-                    val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id)
-                    val size = CommonQuery.getSize(context.contentResolver, uri)
-                    it.toPlaylist(size)
-                })
-                .map { removeBlacklisted(it) }
-                .doOnError { it.printStackTrace() }
-                .onErrorReturnItem(listOf())
+            .lift(SqlBrite.Query.mapToList {
+                val id = it.extractId()
+                val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id)
+                val size = CommonQuery.getSize(context.contentResolver, uri)
+                it.toPlaylist(size)
+            })
+            .map { removeBlacklisted(it) }
+            .doOnError { it.printStackTrace() }
+            .onErrorReturnItem(listOf())
     }
 
     private val cachedData = queryAllData()
-            .replay(1)
-            .refCount()
+        .replay(1)
+        .refCount()
 
-    private fun removeBlacklisted(list: MutableList<Playlist>): List<Playlist>{
+    private fun removeBlacklisted(list: MutableList<Playlist>): List<Playlist> {
         val songsIds = CommonQuery.getAllSongsIdNotBlackListd(context.contentResolver, appPrefsUseCase)
         for (playlist in list.toList()) {
             val newSize = calculateNewPlaylistSize(playlist.id, songsIds)
@@ -99,9 +100,10 @@ class PlaylistRepository @Inject constructor(
 
     private fun calculateNewPlaylistSize(id: Long, songIds: List<Long>): Int {
         val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id)
-        val cursor = context.contentResolver.query(uri, arrayOf(MediaStore.Audio.Playlists.Members.AUDIO_ID), null, null, null)
+        val cursor =
+            context.contentResolver.query(uri, arrayOf(MediaStore.Audio.Playlists.Members.AUDIO_ID), null, null, null)
         val list = mutableListOf<Long>()
-        while (cursor != null && cursor.moveToNext()){
+        while (cursor != null && cursor.moveToNext()) {
             list.add(cursor.getLong(0))
         }
         cursor?.close()
@@ -115,7 +117,7 @@ class PlaylistRepository @Inject constructor(
     }
 
     override fun getByParam(param: Long): Observable<Playlist> {
-        val result = if (PlaylistConstants.isAutoPlaylist(param)){
+        val result = if (AutoPlaylistType.isAutoPlaylist(param)) {
             getAllAutoPlaylists()
         } else getAll()
 
@@ -125,14 +127,16 @@ class PlaylistRepository @Inject constructor(
 
     override fun getAllAutoPlaylists(): Observable<List<Playlist>> {
         return Observables.combineLatest(
-                songGateway.getAll().map { it.count() }.distinctUntilChanged(), // last added
-                favoriteGateway.getAll().map { it.count() }.distinctUntilChanged(), // favorites
-                historyDao.getAllAsSongs(songGateway.getAll().firstOrError()).map { it.count() } // history
-                ) { last, favorites, history -> listOf(
-                        createAutoPlaylist(PlaylistConstants.LAST_ADDED_ID, autoPlaylistTitles[0], last),
-                        createAutoPlaylist(PlaylistConstants.FAVORITE_LIST_ID, autoPlaylistTitles[1], favorites),
-                        createAutoPlaylist(PlaylistConstants.HISTORY_LIST_ID, autoPlaylistTitles[2], history)
-                ) }
+            songGateway.getAll().map { it.count() }.distinctUntilChanged(), // last added
+            favoriteGateway.getAll().map { it.count() }.distinctUntilChanged(), // favorites
+            historyDao.getAllAsSongs(songGateway.getAll().firstOrError()).map { it.count() } // history
+        ) { last, favorites, history ->
+            listOf(
+                createAutoPlaylist(AutoPlaylistType.LAST_ADDED.id, autoPlaylistTitles[0], last),
+                createAutoPlaylist(AutoPlaylistType.FAVORITE.id, autoPlaylistTitles[1], favorites),
+                createAutoPlaylist(AutoPlaylistType.HISTORY.id, autoPlaylistTitles[2], history)
+            )
+        }
     }
 
     override fun insertSongToHistory(songId: Long): Completable {
@@ -140,10 +144,12 @@ class PlaylistRepository @Inject constructor(
     }
 
     override fun getPlaylistsBlocking(): List<Playlist> {
-        val cursor = context.contentResolver.query(MEDIA_STORE_URI, PROJECTION,
-                SELECTION, SELECTION_ARGS, SORT_ORDER)
+        val cursor = context.contentResolver.query(
+            MEDIA_STORE_URI, PROJECTION,
+            SELECTION, SELECTION_ARGS, SORT_ORDER
+        )
         val list = mutableListOf<Playlist>()
-        while (cursor != null && cursor.moveToNext()){
+        while (cursor != null && cursor.moveToNext()) {
             val playlist = cursor.toPlaylist(-1)
             list.add(playlist)
         }
@@ -153,39 +159,41 @@ class PlaylistRepository @Inject constructor(
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun observeSongListByParam(playlistId: Long): Observable<List<Song>> {
-        return when (playlistId){
-            PlaylistConstants.LAST_ADDED_ID -> getLastAddedSongs()
-            PlaylistConstants.FAVORITE_LIST_ID -> favoriteGateway.getAll()
-            PlaylistConstants.HISTORY_LIST_ID -> historyDao.getAllAsSongs(songGateway.getAll().firstOrError())
+        return when (playlistId) {
+            AutoPlaylistType.LAST_ADDED.id -> getLastAddedSongs()
+            AutoPlaylistType.FAVORITE.id -> favoriteGateway.getAll()
+            AutoPlaylistType.HISTORY.id -> historyDao.getAllAsSongs(songGateway.getAll().firstOrError())
             else -> getPlaylistSongs(playlistId)
         }
     }
 
-    private fun getLastAddedSongs() : Observable<List<Song>>{
+    private fun getLastAddedSongs(): Observable<List<Song>> {
         return songGateway.getAll().switchMapSingle {
-            it.toFlowable().toSortedList { o1, o2 ->  (o2.dateAdded - o1.dateAdded).toInt() }
+            it.toFlowable().toSortedList { o1, o2 -> (o2.dateAdded - o1.dateAdded).toInt() }
         }
     }
 
-    private fun getPlaylistSongs(playlistId: Long) : Observable<List<Song>> {
+    private fun getPlaylistSongs(playlistId: Long): Observable<List<Song>> {
         val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId)
 
         return rxContentResolver.createQuery(
-                uri, SONG_PROJECTION, SONG_SELECTION,
-                SONG_SELECTION_ARGS, SONG_SORT_ORDER, false
+            uri, SONG_PROJECTION, SONG_SELECTION,
+            SONG_SELECTION_ARGS, SONG_SORT_ORDER, false
         ).lift(SqlBrite.Query.mapToList { it.toPlaylistSong() })
-                .switchMapSingle { playlistSongs -> songGateway.getAll().firstOrError().map { songs ->
+            .switchMapSingle { playlistSongs ->
+                songGateway.getAll().firstOrError().map { songs ->
                     playlistSongs.asSequence()
-                            .mapNotNull { playlistSong ->
-                                val song = songs.firstOrNull { it.id == playlistSong.songId }
-                                song?.copy(trackNumber = playlistSong.idInPlaylist.toInt())
-                            }.toList()
-                }}
+                        .mapNotNull { playlistSong ->
+                            val song = songs.firstOrNull { it.id == playlistSong.songId }
+                            song?.copy(trackNumber = playlistSong.idInPlaylist.toInt())
+                        }.toList()
+                }
+            }
     }
 
     override fun getMostPlayed(mediaId: MediaId): Observable<List<Song>> {
         val playlistId = mediaId.categoryValue.toLong()
-        if (PlaylistConstants.isAutoPlaylist(playlistId)){
+        if (AutoPlaylistType.isAutoPlaylist(playlistId)) {
             return Observable.just(listOf())
         }
         return mostPlayedDao.getAll(playlistId, songGateway.getAll())
@@ -195,16 +203,18 @@ class PlaylistRepository @Inject constructor(
         val songId = mediaId.leaf!!
         val playlistId = mediaId.categoryValue.toLong()
         return songGateway.getByParam(songId)
-                .firstOrError()
-                .flatMapCompletable { song ->
-                    CompletableSource { mostPlayedDao.insertOne(
+            .firstOrError()
+            .flatMapCompletable { song ->
+                CompletableSource {
+                    mostPlayedDao.insertOne(
                         PlaylistMostPlayedEntity(
                             0,
                             song.id,
                             playlistId
                         )
-                    ) }
+                    )
                 }
+            }
     }
 
     override fun deletePlaylist(playlistId: Long): Completable {
@@ -216,13 +226,11 @@ class PlaylistRepository @Inject constructor(
     }
 
 
-
-
     override fun clearPlaylist(playlistId: Long): Completable {
         return helper.clearPlaylist(playlistId)
     }
 
-    override fun removeFromPlaylist(playlistId: Long, idInPlaylist: Long) : Completable{
+    override fun removeFromPlaylist(playlistId: Long, idInPlaylist: Long): Completable {
         return helper.removeSongFromPlaylist(playlistId, idInPlaylist)
     }
 

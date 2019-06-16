@@ -8,11 +8,11 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
-import dev.olog.msc.app.GlideApp
-import dev.olog.msc.app.GlideRequest
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.glide.GlideApp
+import dev.olog.msc.glide.GlideRequest
 import dev.olog.msc.utils.assertBackgroundThread
-import dev.olog.msc.utils.img.CoverUtils
+import dev.olog.msc.glide.creator.CoverUtils
 
 fun Context.getCachedBitmap(
     mediaId: MediaId,

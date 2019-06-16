@@ -15,7 +15,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dev.olog.msc.R
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.constants.AppConstants.PROGRESS_BAR_INTERVAL
-import dev.olog.msc.constants.PlaylistConstants
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.presentation.base.BaseFragment
 import dev.olog.msc.presentation.base.adapter.drag.TouchHelperAdapterCallback
 import dev.olog.msc.presentation.base.music.service.MediaProvider
@@ -26,7 +26,6 @@ import dev.olog.msc.presentation.tutorial.TutorialTapTarget
 import dev.olog.msc.presentation.utils.lazyFast
 import dev.olog.msc.presentation.viewModelProvider
 import dev.olog.msc.presentation.widget.SwipeableView
-import dev.olog.msc.core.MediaId
 import dev.olog.msc.utils.isMarshmallow
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Completable
@@ -89,7 +88,7 @@ class PlayerFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
                 .map { queue ->
                     if (!AppTheme.isMiniTheme()){
                         val copy = queue.toMutableList()
-                        if (copy.size > PlaylistConstants.MINI_QUEUE_SIZE - 1){
+                        if (copy.size > 50){ // see QueueImpl.kt TODO change hardcoding
                             copy.add(viewModel.footerLoadMore)
                         }
                         copy.add(0, viewModel.playerControls())

@@ -1,14 +1,20 @@
 package dev.olog.msc.app
 
+import android.app.Activity
+import android.app.Application
+import android.app.Service
+import android.appwidget.AppWidgetProvider
+import androidx.fragment.app.Fragment
+import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
-import dagger.android.AndroidInjector
-import dev.olog.msc.data.api.last.fm.LastFmModule
 import dev.olog.msc.app.shortcuts.AppShortcutsModule
 import dev.olog.msc.data.RepositoryHelperModule
 import dev.olog.msc.data.RepositoryModule
+import dev.olog.msc.data.api.last.fm.LastFmModule
 import dev.olog.msc.data.prefs.PreferenceModule
 import dev.olog.msc.floating.window.service.di.FloatingWindowServiceInjector
+import dev.olog.msc.glide.GlideModule
 import dev.olog.msc.music.service.di.MusicServiceInjector
 import dev.olog.msc.presentation.ViewModelModule
 import dev.olog.msc.presentation.about.di.AboutActivityInjector
@@ -18,8 +24,9 @@ import dev.olog.msc.presentation.preferences.di.PreferencesActivityInjector
 import dev.olog.msc.presentation.shortcuts.playlist.chooser.di.PlaylistChooserActivityInjector
 import javax.inject.Singleton
 
-@Component(modules = arrayOf(
-        AppModule::class,
+@Component(
+    modules = arrayOf(
+        CoreModule::class,
         SchedulersModule::class,
         AppShortcutsModule::class,
         LastFmModule::class,
@@ -45,19 +52,37 @@ import javax.inject.Singleton
 
 //        // floating info service
         FloatingWindowServiceInjector::class
-))
+    )
+)
 @Singleton
-interface AppComponent: AndroidInjector<App> {
+interface CoreComponent {
 
-    @Component.Builder
-    abstract class Builder : AndroidInjector.Builder<App>() {
+    fun inject(instance: App)
+    fun inject(instance: GlideModule)
 
-        internal abstract fun module(module: AppModule): Builder
+    @Component.Factory
+    interface Factory {
 
-        override fun seedInstance(instance: App) {
-            module(AppModule(instance))
-        }
+        fun create(@BindsInstance instance: Application): CoreComponent
 
     }
 
+    companion object {
+        private var component: CoreComponent? = null
+
+        fun component(app: Application): CoreComponent {
+            if (component == null) {
+                // not double checking because it will be created in App.kt on main thread at app startup
+                component = DaggerCoreComponent.factory().create(app)
+            }
+            return component!!
+        }
+
+        fun unsafeComponent(): CoreComponent = component!!
+    }
 }
+
+fun Activity.coreComponent(): CoreComponent = CoreComponent.unsafeComponent()
+fun Service.coreComponent(): CoreComponent = CoreComponent.unsafeComponent()
+fun Fragment.coreComponent(): CoreComponent = CoreComponent.unsafeComponent()
+fun AppWidgetProvider.coreComponent(): CoreComponent = CoreComponent.unsafeComponent()

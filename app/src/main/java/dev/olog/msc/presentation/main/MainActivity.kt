@@ -33,6 +33,7 @@ import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.utils.animation.HasSafeTransition
 import dev.olog.msc.pro.IBilling
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.shared.clamp
 import dev.olog.msc.utils.k.extension.*
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject

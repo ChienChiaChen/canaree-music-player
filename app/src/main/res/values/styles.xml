@@ -88,7 +88,7 @@
 
     <style name="AppTabLayout" parent="DefaultTabLayout"/>
 
-    <style name="DefaultTabLayoutTextAppearance" parent="TextAppearance.MaterialComponents.Tab">
+    <style name="DefaultTabLayoutTextAppearance" parent="TextAppearance.MaterialComponents.Button">
         <item name="android:letterSpacing">0</item>
     </style>
 

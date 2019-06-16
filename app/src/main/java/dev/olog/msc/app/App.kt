@@ -1,12 +1,8 @@
 package dev.olog.msc.app
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
-import android.content.Context
 import android.os.Looper
 import androidx.preference.PreferenceManager
-import dagger.android.AndroidInjector
-import dagger.android.support.DaggerApplication
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
 import dev.olog.msc.app.shortcuts.AppShortcuts
@@ -23,20 +19,22 @@ import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-
-@SuppressLint("StaticFieldLeak")
-lateinit var app: Context
-
-
 class App : BaseApp() {
 
-    @Suppress("unused") @Inject lateinit var appShortcuts: AppShortcuts
+    @Suppress("unused")
+    @Inject
+    lateinit var appShortcuts: AppShortcuts
 
-    @Inject lateinit var lastFmGateway: LastFmGateway
-    @Inject lateinit var songGateway: SongGateway
-    @Inject lateinit var podcastGateway: PodcastGateway
-    @Inject lateinit var alarmManager: AlarmManager
-    @Inject lateinit var sleepTimerUseCase: SleepTimerUseCase
+    @Inject
+    lateinit var lastFmGateway: LastFmGateway
+    @Inject
+    lateinit var songGateway: SongGateway
+    @Inject
+    lateinit var podcastGateway: PodcastGateway
+    @Inject
+    lateinit var alarmManager: AlarmManager
+    @Inject
+    lateinit var sleepTimerUseCase: SleepTimerUseCase
 
     override fun initializeApp() {
         initializeComponents()
@@ -74,7 +72,8 @@ class App : BaseApp() {
         alarmManager.cancel(PendingIntents.stopMusicServiceIntent(this))
     }
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.builder().create(this)
+    override fun injectComponent() {
+        CoreComponent.component(this).inject(this)
     }
+
 }

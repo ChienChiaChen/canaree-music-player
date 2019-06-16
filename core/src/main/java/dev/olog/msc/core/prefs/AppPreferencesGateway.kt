@@ -40,7 +40,7 @@ interface AppPreferencesGateway : Sorting {
 
     fun setDefault(): Completable
 
-    fun observeAutoCreateImages(): Observable<Boolean>
+    fun canAutoCreateImages(): Boolean
 
     fun getLastFmCredentials(): UserCredentials
     fun observeLastFmCredentials(): Observable<UserCredentials>

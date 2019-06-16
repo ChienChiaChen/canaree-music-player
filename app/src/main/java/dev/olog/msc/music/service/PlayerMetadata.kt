@@ -6,7 +6,6 @@ import android.content.Intent
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import com.bumptech.glide.request.target.Target
-import dev.olog.msc.app.app
 import dev.olog.msc.constants.AppConstants
 import dev.olog.msc.constants.MusicConstants
 import dev.olog.msc.constants.WidgetConstants
@@ -58,7 +57,7 @@ class PlayerMetadata @Inject constructor(
                 .putLong(MusicConstants.IS_PODCAST, if (entity.isPodcast) 1 else 0)
 
         if (AppConstants.SHOW_LOCKSCREEN_IMAGE) {
-            app.getBitmap(entity.mediaId, Target.SIZE_ORIGINAL) { bitmap ->
+            context.getBitmap(entity.mediaId, Target.SIZE_ORIGINAL) { bitmap ->
                 builder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
                 mediaSession.setMetadata(builder.build())
             }

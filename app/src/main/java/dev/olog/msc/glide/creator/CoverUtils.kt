@@ -1,4 +1,4 @@
-package dev.olog.msc.utils.img
+package dev.olog.msc.glide.creator
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -42,15 +42,25 @@ object CoverUtils {
     ).shuffled()
 
     fun getGradient(context: Context, mediaId: MediaId): Drawable {
-        return getGradient(context, mediaId.resolveId.toInt(), mediaId.resolveSource)
+        return getGradient(
+            context,
+            mediaId.resolveId.toInt(),
+            mediaId.resolveSource
+        )
     }
 
     fun getGradient(context: Context, position: Int, source: Int = 2): Drawable {
-        return get(context, position, getDrawable(source))
+        return get(
+            context,
+            position,
+            getDrawable(source)
+        )
     }
 
     fun onlyGradient(context: Context, position: Int): Drawable {
-        val drawable = ContextCompat.getDrawable(context, getDrawable(MediaIdCategory.SONGS.ordinal))!!.mutate() as LayerDrawable
+        val drawable = ContextCompat.getDrawable(context,
+            getDrawable(MediaIdCategory.SONGS.ordinal)
+        )!!.mutate() as LayerDrawable
         val gradient = drawable.getDrawable(0).mutate() as GradientDrawable
 
         val pos = (position) % COLORS.size

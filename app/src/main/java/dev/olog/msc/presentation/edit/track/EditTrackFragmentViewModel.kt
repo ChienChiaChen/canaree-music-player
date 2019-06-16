@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.crashlytics.android.Crashlytics
 import dev.olog.msc.NetworkUtils
-import dev.olog.msc.app.app
-import dev.olog.msc.utils.img.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.unsubscribe
 import io.reactivex.disposables.Disposable
 import org.jaudiotagger.tag.TagOptionSingleton
@@ -60,9 +58,9 @@ class EditTrackFragmentViewModel @Inject constructor(
     fun getSong(): DisplayableSong = presenter.getSong()
 
     fun fetchSongInfo(): Boolean {
-        if (!NetworkUtils.isConnected(app)){
-            return false
-        }
+//        if (!NetworkUtils.isConnected(app)){ TODO
+//            return false
+//        }
 
         fetchSongInfoDisposable.unsubscribe()
         fetchSongInfoDisposable = presenter.fetchData()

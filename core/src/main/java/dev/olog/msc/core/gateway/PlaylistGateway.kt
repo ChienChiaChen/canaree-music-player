@@ -10,6 +10,8 @@ interface PlaylistGateway :
     ChildsHasSongs<Long>,
     HasMostPlayed {
 
+
+
     fun getAllAutoPlaylists() : Observable<List<Playlist>>
 
     fun createPlaylist(playlistName: String): Single<Long>

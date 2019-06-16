@@ -1,15 +1,18 @@
-package dev.olog.msc.glide
+package dev.olog.msc.glide.fetcher
 
 import android.media.MediaMetadataRetriever
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.data.DataFetcher
+import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.PodcastGateway
 import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.utils.k.extension.unsubscribe
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
+import dev.olog.msc.glide.executor.GlideScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.awaitFirst
+import kotlinx.coroutines.yield
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 import org.jaudiotagger.audio.mp3.MP3File
@@ -24,44 +27,53 @@ class GlideOriginalImageFetcher(
     private val songGateway: SongGateway,
     private val podcastGateway: PodcastGateway
 
-) : DataFetcher<InputStream> {
-
-    private var disposable: Disposable? = null
+) : DataFetcher<InputStream>, CoroutineScope by GlideScope() {
 
     override fun getDataClass(): Class<InputStream> = InputStream::class.java
     override fun getDataSource(): DataSource = DataSource.LOCAL
 
     override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) {
-        val id = getId()
-        if (id == -1L){
-           callback.onLoadFailed(Exception("item not found"))
-            return
-        }
+        launch {
+            val id = getId()
+            if (id == -1L) {
+                callback.onLoadFailed(Exception("item not found for id$id"))
+                return@launch
+            }
+            val itemPath: String?
 
-        disposable = when {
-            mediaId.isLeaf && !mediaId.isPodcast -> songGateway.getByParam(id).map { it.path }
-            mediaId.isLeaf && mediaId.isPodcast -> podcastGateway.getByParam(id).map { it.path }
-            mediaId.isAlbum -> songGateway.getByAlbumId(id).map { it.path }
-            mediaId.isPodcastAlbum -> podcastGateway.getByAlbumId(id).map { it.path }
-            else -> Observable.error(IllegalArgumentException("not a valid media id=$mediaId"))
-        }.firstOrError().subscribe({
+            itemPath = when {
+                mediaId.isLeaf && !mediaId.isPodcast -> songGateway.getByParam(id).awaitFirst()?.path
+                mediaId.isLeaf && mediaId.isPodcast -> podcastGateway.getByParam(id).awaitFirst()?.path
+                mediaId.isAlbum -> songGateway.getByAlbumId(id).awaitFirst()?.path
+                mediaId.isPodcastAlbum -> podcastGateway.getByAlbumId(id).awaitFirst()?.path
+                else -> {
+                    callback.onLoadFailed(IllegalArgumentException("not a valid media id=$mediaId"))
+                    return@launch
+                }
+            }
+            yield()
+
+            if (itemPath == null) {
+                callback.onLoadFailed(IllegalArgumentException("track not found for id $id"))
+                return@launch
+            }
             try {
-                val stream = loadImage(it)
+                val stream = loadImage(itemPath)
                 callback.onDataReady(stream)
-            } catch (ex: Exception){
+            } catch (ex: Exception) {
                 callback.onLoadFailed(ex)
             }
-        }, {
-            it.printStackTrace()
-            callback.onLoadFailed(Exception(it))
-        })
+        }
     }
 
-    private fun loadImage(path: String): InputStream? {
+    private suspend fun loadImage(path: String): InputStream? {
         val retriever = MediaMetadataRetriever()
+        yield()
         return try {
-            retriever.setDataSource(path)
+            retriever.setDataSource(path) // time consuming
+            yield()
             val picture = retriever.embeddedPicture
+            yield()
             if (picture != null) {
                 ByteArrayInputStream(picture)
             } else {
@@ -72,23 +84,25 @@ class GlideOriginalImageFetcher(
         }
     }
 
-    private fun fallback(path: String): InputStream? {
+    private suspend fun fallback(path: String): InputStream? {
         try {
             val mp3File = MP3File(path)
-            if (mp3File.hasID3v2Tag()){
+            if (mp3File.hasID3v2Tag()) {
                 val art = mp3File.tag.firstArtwork
-                if (art != null){
+                if (art != null) {
                     val data = art.binaryData
                     return ByteArrayInputStream(data)
                 }
             }
-        } catch (ex: ReadOnlyFileException){}
-        catch (ex: InvalidAudioFrameException){}
-        catch (ex: TagException){ }
-        catch (ex: IOException){}
+        } catch (ex: ReadOnlyFileException) {
+        } catch (ex: InvalidAudioFrameException) {
+        } catch (ex: TagException) {
+        } catch (ex: IOException) {
+        }
 
         val parent = File(path).parentFile
         for (fallback in FALLBACKS) {
+            yield()
             val cover = File(parent, fallback)
             if (cover.exists()) {
                 return FileInputStream(cover)
@@ -99,20 +113,20 @@ class GlideOriginalImageFetcher(
 
     private fun getId(): Long {
         var trackId = -1L
-        if (mediaId.isLeaf){
+        if (mediaId.isLeaf) {
             trackId = mediaId.leaf!!
         } else if (mediaId.isAlbum || mediaId.isPodcastAlbum) {
-            trackId = mediaId.categoryValue.toLong()
+            trackId = mediaId.categoryId
         }
         return trackId
     }
 
     override fun cleanup() {
-        disposable.unsubscribe()
+        cancel(null)
     }
 
     override fun cancel() {
-        disposable.unsubscribe()
+        cancel(null)
     }
 
 }

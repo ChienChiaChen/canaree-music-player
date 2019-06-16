@@ -14,6 +14,8 @@ import dagger.Lazy
 import dev.olog.msc.FileProvider
 import dev.olog.msc.catchNothing
 import dev.olog.msc.constants.MusicConstants
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.domain.interactor.prefs.SleepTimerUseCase
 import dev.olog.msc.music.service.helper.CarHelper
 import dev.olog.msc.music.service.helper.MediaIdHelper
@@ -21,10 +23,7 @@ import dev.olog.msc.music.service.helper.MediaItemGenerator
 import dev.olog.msc.music.service.helper.WearHelper
 import dev.olog.msc.music.service.notification.MusicNotificationManager
 import dev.olog.msc.presentation.main.MainActivity
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.PendingIntents
-import dev.olog.msc.utils.img.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.asServicePendingIntent
 import dev.olog.msc.utils.k.extension.toast
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -200,27 +199,6 @@ class MusicService : BaseMusicService() {
         catchNothing {
             grantUriPermission(packageName,
                     FileProvider.getUriForPath(this, cacheDir.path),
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-
-        catchNothing {
-            val folderDir = ImagesFolderUtils.getImageFolderFor(this, ImagesFolderUtils.FOLDER)
-            grantUriPermission(packageName,
-                    FileProvider.getUriForFile(this, folderDir),
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-
-        catchNothing {
-            val playlistDir = ImagesFolderUtils.getImageFolderFor(this, ImagesFolderUtils.PLAYLIST)
-            grantUriPermission(packageName,
-                    FileProvider.getUriForFile(this, playlistDir),
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-
-        catchNothing {
-            val genreDir = ImagesFolderUtils.getImageFolderFor(this, ImagesFolderUtils.GENRE)
-            grantUriPermission(packageName,
-                    FileProvider.getUriForFile(this, genreDir),
                     Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
     }

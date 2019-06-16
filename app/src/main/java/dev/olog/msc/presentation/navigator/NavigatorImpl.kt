@@ -11,7 +11,8 @@ import com.google.android.gms.appinvite.AppInviteInvitation
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.Lazy
 import dev.olog.msc.R
-import dev.olog.msc.app.app
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.PlaylistType
 import dev.olog.msc.presentation.detail.DetailFragment
 import dev.olog.msc.presentation.dialog.add.favorite.AddFavoriteDialog
@@ -40,8 +41,6 @@ import dev.olog.msc.presentation.recently.added.RecentlyAddedFragment
 import dev.olog.msc.presentation.related.artists.RelatedArtistFragment
 import dev.olog.msc.presentation.search.SearchFragment
 import dev.olog.msc.presentation.splash.SplashActivity
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.collapse
 import dev.olog.msc.utils.k.extension.fragmentTransaction
 import dev.olog.msc.utils.k.extension.hideFragmentsIfExists
@@ -49,13 +48,13 @@ import dev.olog.msc.utils.k.extension.unsubscribe
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-private const val NEXT_REQUEST_THRESHOLD : Long = 400 // ms
+private const val NEXT_REQUEST_THRESHOLD: Long = 400 // ms
 
 class NavigatorImpl @Inject internal constructor(
-        private val activity: AppCompatActivity,
-        private val popupFactory: PopupMenuFactory,
-        private val mainPopup: Lazy<MainPopupDialog>,
-        private val editItemDialogFactory: EditItemDialogFactory
+    private val activity: AppCompatActivity,
+    private val popupFactory: PopupMenuFactory,
+    private val mainPopup: Lazy<MainPopupDialog>,
+    private val editItemDialogFactory: EditItemDialogFactory
 
 ) : DefaultLifecycleObserver, Navigator {
 
@@ -78,32 +77,38 @@ class NavigatorImpl @Inject internal constructor(
 
     private fun anyFragmentOnUpperFragmentContainer(): Boolean {
         return activity.supportFragmentManager.fragments
-                .any { (it.view?.parent as View?)?.id == R.id.upperFragmentContainer  }
+            .any { (it.view?.parent as View?)?.id == R.id.upperFragmentContainer }
     }
 
     private fun getFragmentOnFragmentContainer(): androidx.fragment.app.Fragment? {
         return activity.supportFragmentManager.fragments
-                .firstOrNull { (it.view?.parent as View?)?.id == R.id.fragmentContainer  }
+            .firstOrNull { (it.view?.parent as View?)?.id == R.id.fragmentContainer }
     }
 
     override fun toLibraryCategories(forceRecreate: Boolean) {
-        if (anyFragmentOnUpperFragmentContainer()){
+        if (anyFragmentOnUpperFragmentContainer()) {
             activity.onBackPressed()
         }
 
         activity.fragmentTransaction {
             setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            hideFragmentsIfExists(activity, listOf(
+            hideFragmentsIfExists(
+                activity, listOf(
                     SearchFragment.TAG,
                     PlayingQueueFragment.TAG,
                     CategoriesPodcastFragment.TAG
-            ))
-            if (forceRecreate){
-                return@fragmentTransaction replace(R.id.fragmentContainer, CategoriesFragment.newInstance(), CategoriesFragment.TAG)
+                )
+            )
+            if (forceRecreate) {
+                return@fragmentTransaction replace(
+                    R.id.fragmentContainer,
+                    CategoriesFragment.newInstance(),
+                    CategoriesFragment.TAG
+                )
             }
             val fragment = activity.supportFragmentManager.findFragmentByTag(CategoriesFragment.TAG)
-            if (fragment == null){
-               replace(R.id.fragmentContainer, CategoriesFragment.newInstance(), CategoriesFragment.TAG)
+            if (fragment == null) {
+                replace(R.id.fragmentContainer, CategoriesFragment.newInstance(), CategoriesFragment.TAG)
             } else {
                 show(fragment)
             }
@@ -111,22 +116,28 @@ class NavigatorImpl @Inject internal constructor(
     }
 
     override fun toPodcastCategories(forceRecreate: Boolean) {
-        if (anyFragmentOnUpperFragmentContainer()){
+        if (anyFragmentOnUpperFragmentContainer()) {
             activity.onBackPressed()
         }
 
         activity.fragmentTransaction {
             setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            hideFragmentsIfExists(activity, listOf(
+            hideFragmentsIfExists(
+                activity, listOf(
                     SearchFragment.TAG,
                     PlayingQueueFragment.TAG,
                     CategoriesFragment.TAG
-            ))
-            if (forceRecreate){
-                return@fragmentTransaction replace(R.id.fragmentContainer, CategoriesPodcastFragment.newInstance(), CategoriesPodcastFragment.TAG)
+                )
+            )
+            if (forceRecreate) {
+                return@fragmentTransaction replace(
+                    R.id.fragmentContainer,
+                    CategoriesPodcastFragment.newInstance(),
+                    CategoriesPodcastFragment.TAG
+                )
             }
             val fragment = activity.supportFragmentManager.findFragmentByTag(CategoriesPodcastFragment.TAG)
-            if (fragment == null){
+            if (fragment == null) {
                 replace(R.id.fragmentContainer, CategoriesPodcastFragment.newInstance(), CategoriesPodcastFragment.TAG)
             } else {
                 show(fragment)
@@ -135,19 +146,21 @@ class NavigatorImpl @Inject internal constructor(
     }
 
     override fun toSearchFragment() {
-        if (anyFragmentOnUpperFragmentContainer()){
+        if (anyFragmentOnUpperFragmentContainer()) {
             activity.onBackPressed()
         }
 
         activity.fragmentTransaction {
             setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            hideFragmentsIfExists(activity, listOf(
+            hideFragmentsIfExists(
+                activity, listOf(
                     CategoriesPodcastFragment.TAG,
                     PlayingQueueFragment.TAG,
                     CategoriesFragment.TAG
-            ))
+                )
+            )
             val fragment = activity.supportFragmentManager.findFragmentByTag(SearchFragment.TAG)
-            if (fragment == null){
+            if (fragment == null) {
                 replace(R.id.fragmentContainer, SearchFragment.newInstance(), SearchFragment.TAG)
             } else {
                 show(fragment)
@@ -156,19 +169,21 @@ class NavigatorImpl @Inject internal constructor(
     }
 
     override fun toPlayingQueueFragment() {
-        if (anyFragmentOnUpperFragmentContainer()){
+        if (anyFragmentOnUpperFragmentContainer()) {
             activity.onBackPressed()
         }
 
         activity.fragmentTransaction {
             setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            hideFragmentsIfExists(activity, listOf(
+            hideFragmentsIfExists(
+                activity, listOf(
                     CategoriesPodcastFragment.TAG,
                     SearchFragment.TAG,
                     CategoriesFragment.TAG
-            ))
+                )
+            )
             val fragment = activity.supportFragmentManager.findFragmentByTag(PlayingQueueFragment.TAG)
-            if (fragment == null){
+            if (fragment == null) {
                 replace(R.id.fragmentContainer, PlayingQueueFragment.newInstance(), PlayingQueueFragment.TAG)
             } else {
                 show(fragment)
@@ -178,7 +193,7 @@ class NavigatorImpl @Inject internal constructor(
 
     override fun toDetailFragment(mediaId: MediaId) {
 
-        if (allowed()){
+        if (allowed()) {
             activity.findViewById<SlidingUpPanelLayout>(R.id.slidingPanel).collapse()
 
             activity.fragmentTransaction {
@@ -192,36 +207,46 @@ class NavigatorImpl @Inject internal constructor(
     }
 
     override fun toRelatedArtists(mediaId: MediaId) {
-        if (allowed()){
+        if (allowed()) {
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 getFragmentOnFragmentContainer()?.let { hide(it) }
-                replace(R.id.upperFragmentContainer, RelatedArtistFragment.newInstance(mediaId), RelatedArtistFragment.TAG)
+                replace(
+                    R.id.upperFragmentContainer,
+                    RelatedArtistFragment.newInstance(mediaId),
+                    RelatedArtistFragment.TAG
+                )
                 addToBackStack(RelatedArtistFragment.TAG)
             }
         }
     }
 
     override fun toRecentlyAdded(mediaId: MediaId) {
-        if (allowed()){
+        if (allowed()) {
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 getFragmentOnFragmentContainer()?.let { hide(it) }
-                replace(R.id.upperFragmentContainer, RecentlyAddedFragment.newInstance(mediaId), RecentlyAddedFragment.TAG)
+                replace(
+                    R.id.upperFragmentContainer,
+                    RecentlyAddedFragment.newInstance(mediaId),
+                    RecentlyAddedFragment.TAG
+                )
                 addToBackStack(RecentlyAddedFragment.TAG)
             }
         }
     }
 
     override fun toOfflineLyrics() {
-        if (allowed()){
+        if (allowed()) {
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                add(android.R.id.content, OfflineLyricsFragment.newInstance(),
-                        OfflineLyricsFragment.TAG)
+                add(
+                    android.R.id.content, OfflineLyricsFragment.newInstance(),
+                    OfflineLyricsFragment.TAG
+                )
                 addToBackStack(OfflineLyricsFragment.TAG)
             }
         }
@@ -254,12 +279,16 @@ class NavigatorImpl @Inject internal constructor(
     }
 
     override fun toChooseTracksForPlaylistFragment(type: PlaylistType) {
-        if (allowed()){
+        if (allowed()) {
             activity.fragmentTransaction {
                 setReorderingAllowed(true)
                 setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 getFragmentOnFragmentContainer()?.let { hide(it) }
-                replace(R.id.upperFragmentContainer, PlaylistTracksChooserFragment.newInstance(type), PlaylistTracksChooserFragment.TAG)
+                replace(
+                    R.id.upperFragmentContainer,
+                    PlaylistTracksChooserFragment.newInstance(type),
+                    PlaylistTracksChooserFragment.TAG
+                )
                 addToBackStack(PlaylistTracksChooserFragment.TAG)
             }
         }
@@ -270,10 +299,10 @@ class NavigatorImpl @Inject internal constructor(
     }
 
     override fun toDialog(mediaId: MediaId, anchor: View) {
-        if (allowed()){
+        if (allowed()) {
             popupDisposable.unsubscribe()
             popupDisposable = popupFactory.create(anchor, mediaId)
-                    .subscribe({ it.show() }, Throwable::printStackTrace)
+                .subscribe({ it.show() }, Throwable::printStackTrace)
         }
     }
 
@@ -333,11 +362,11 @@ class NavigatorImpl @Inject internal constructor(
     }
 
     override fun toShareApp() {
-        val intent = AppInviteInvitation.IntentBuilder(app.getString(R.string.share_app_title))
-                .setMessage(app.getString(R.string.share_app_message))
-                .setDeepLink(Uri.parse("https://deveugeniuolog.wixsite.com/next"))
-                .setAndroidMinimumVersionCode(Build.VERSION_CODES.LOLLIPOP)
-                .build()
+        val intent = AppInviteInvitation.IntentBuilder(activity.getString(R.string.share_app_title))
+            .setMessage(activity.getString(R.string.share_app_message))
+            .setDeepLink(Uri.parse("https://deveugeniuolog.wixsite.com/next"))
+            .setAndroidMinimumVersionCode(Build.VERSION_CODES.LOLLIPOP)
+            .build()
         activity.startActivityForResult(intent, MainActivity.INVITE_FRIEND_CODE)
     }
 }

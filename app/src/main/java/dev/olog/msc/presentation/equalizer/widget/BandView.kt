@@ -13,6 +13,7 @@ import androidx.core.math.MathUtils
 import dev.olog.msc.R
 import dev.olog.msc.presentation.equalizer.EqHelper
 import dev.olog.msc.presentation.equalizer.ResizeAnimation
+import dev.olog.msc.shared.clamp
 import dev.olog.msc.utils.k.extension.*
 
 class BandView (

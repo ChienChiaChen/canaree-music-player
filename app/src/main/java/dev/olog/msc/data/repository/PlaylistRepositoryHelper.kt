@@ -5,9 +5,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.provider.BaseColumns
 import android.provider.MediaStore
-import dev.olog.msc.constants.PlaylistConstants
 import dev.olog.msc.core.dagger.ApplicationContext
+import dev.olog.msc.core.entity.AutoPlaylistType
 import dev.olog.msc.core.entity.FavoriteType
+import dev.olog.msc.core.entity.id
 import dev.olog.msc.core.gateway.FavoriteGateway
 import dev.olog.msc.data.dao.AppDatabase
 import io.reactivex.Completable
@@ -22,7 +23,7 @@ class PlaylistRepositoryHelper @Inject constructor(
     appDatabase: AppDatabase,
     private val favoriteGateway: FavoriteGateway
 
-){
+) {
 
     private val historyDao = appDatabase.historyDao()
 
@@ -40,7 +41,7 @@ class PlaylistRepositoryHelper @Inject constructor(
 
                 e.onSuccess(ContentUris.parseId(uri))
 
-            } catch (exception: Exception){
+            } catch (exception: Exception) {
                 e.onError(exception)
             }
         }
@@ -48,8 +49,10 @@ class PlaylistRepositoryHelper @Inject constructor(
 
     fun addSongsToPlaylist(playlistId: Long, songIds: List<Long>) {
         val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId)
-        val cursor = context.contentResolver.query(uri, arrayOf("max(${MediaStore.Audio.Playlists.Members.PLAY_ORDER})"),
-                null, null, null)
+        val cursor = context.contentResolver.query(
+            uri, arrayOf("max(${MediaStore.Audio.Playlists.Members.PLAY_ORDER})"),
+            null, null, null
+        )
 
         if (cursor != null && cursor.moveToFirst()) {
             var maxId = cursor.getInt(0) + 1
@@ -69,16 +72,16 @@ class PlaylistRepositoryHelper @Inject constructor(
     }
 
     fun deletePlaylist(playlistId: Long): Completable {
-        return Completable.fromCallable{
+        return Completable.fromCallable {
             context.contentResolver.delete(MEDIA_STORE_URI, "${BaseColumns._ID} = ?", arrayOf("$playlistId"))
         }
     }
 
     fun clearPlaylist(playlistId: Long): Completable {
-        if (PlaylistConstants.isAutoPlaylist(playlistId)){
-            when (playlistId){
-                PlaylistConstants.FAVORITE_LIST_ID -> return favoriteGateway.deleteAll(FavoriteType.TRACK)
-                PlaylistConstants.HISTORY_LIST_ID -> return Completable.fromCallable { historyDao.deleteAll() }
+        if (AutoPlaylistType.isAutoPlaylist(playlistId)) {
+            when (playlistId) {
+                AutoPlaylistType.FAVORITE.id -> return favoriteGateway.deleteAll(FavoriteType.TRACK)
+                AutoPlaylistType.HISTORY.id -> return Completable.fromCallable { historyDao.deleteAll() }
             }
         }
         return Completable.fromCallable {
@@ -88,19 +91,23 @@ class PlaylistRepositoryHelper @Inject constructor(
     }
 
     fun removeSongFromPlaylist(playlistId: Long, idInPlaylist: Long): Completable {
-        if (PlaylistConstants.isAutoPlaylist(playlistId)){
+        if (AutoPlaylistType.isAutoPlaylist(playlistId)) {
             return removeFromAutoPlaylist(playlistId, idInPlaylist)
         }
         return Completable.fromCallable {
             val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId)
-            context.contentResolver.delete(uri, "${MediaStore.Audio.Playlists.Members._ID} = ?", arrayOf("$idInPlaylist"))
+            context.contentResolver.delete(
+                uri,
+                "${MediaStore.Audio.Playlists.Members._ID} = ?",
+                arrayOf("$idInPlaylist")
+            )
         }
     }
 
     private fun removeFromAutoPlaylist(playlistId: Long, songId: Long): Completable {
-        return when(playlistId){
-            PlaylistConstants.FAVORITE_LIST_ID -> favoriteGateway.deleteSingle(FavoriteType.TRACK, songId)
-            PlaylistConstants.HISTORY_LIST_ID -> Completable.fromCallable { historyDao.deleteSingle(songId) }
+        return when (playlistId) {
+            AutoPlaylistType.FAVORITE.id -> favoriteGateway.deleteSingle(FavoriteType.TRACK, songId)
+            AutoPlaylistType.HISTORY.id -> Completable.fromCallable { historyDao.deleteSingle(songId) }
             else -> throw IllegalArgumentException("invalid auto playlist id: $playlistId")
         }
     }
@@ -111,10 +118,12 @@ class PlaylistRepositoryHelper @Inject constructor(
             val values = ContentValues(1)
             values.put(MediaStore.Audio.Playlists.NAME, newTitle)
 
-            val rowsUpdated = context.contentResolver.update(MEDIA_STORE_URI,
-                    values, "${BaseColumns._ID} = ?", arrayOf("$playlistId"))
+            val rowsUpdated = context.contentResolver.update(
+                MEDIA_STORE_URI,
+                values, "${BaseColumns._ID} = ?", arrayOf("$playlistId")
+            )
 
-            if (rowsUpdated > 0){
+            if (rowsUpdated > 0) {
                 e.onComplete()
             } else {
                 e.onError(Throwable("playlist name not updated"))
@@ -129,14 +138,16 @@ class PlaylistRepositoryHelper @Inject constructor(
 
     fun removeDuplicated(playlistId: Long) {
         val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId)
-        val cursor = context.contentResolver.query(uri, arrayOf(
-                    MediaStore.Audio.Playlists.Members._ID,
-                    MediaStore.Audio.Playlists.Members.AUDIO_ID
-                ), null, null, MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER)
+        val cursor = context.contentResolver.query(
+            uri, arrayOf(
+                MediaStore.Audio.Playlists.Members._ID,
+                MediaStore.Audio.Playlists.Members.AUDIO_ID
+            ), null, null, MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER
+        )
 
         val distinctTrackIds = mutableSetOf<Long>()
 
-        while (cursor != null && cursor.moveToNext()){
+        while (cursor != null && cursor.moveToNext()) {
             val trackId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.AUDIO_ID))
             distinctTrackIds.add(trackId)
         }

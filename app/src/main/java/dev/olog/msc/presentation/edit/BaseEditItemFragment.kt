@@ -13,12 +13,12 @@ import com.bumptech.glide.Priority
 import dev.olog.msc.Permissions
 import dev.olog.msc.R
 import dev.olog.msc.core.MediaId
+import dev.olog.msc.glide.GlideApp
+import dev.olog.msc.glide.creator.CoverUtils
 import dev.olog.msc.presentation.base.BaseBottomSheetFragment
 import dev.olog.msc.presentation.theme.ThemedDialog
-import dev.olog.msc.utils.img.CoverUtils
 import dev.olog.msc.utils.k.extension.act
 import dev.olog.msc.utils.k.extension.ctx
-import dev.olog.msc.app.GlideApp
 
 private const val PICK_IMAGE_CODE = 456
 
@@ -26,7 +26,7 @@ abstract class BaseEditItemFragment : BaseBottomSheetFragment() {
 
     private var progressDialog: ProgressDialog? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         Permissions.requestReadStorage(act)
     }

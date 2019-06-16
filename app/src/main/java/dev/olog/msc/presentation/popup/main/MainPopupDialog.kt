@@ -8,15 +8,14 @@ import android.view.View
 import android.widget.PopupMenu
 import dev.olog.msc.BuildConfig
 import dev.olog.msc.R
-import dev.olog.msc.app.app
+import dev.olog.msc.core.MediaId
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.entity.LibrarySortType
 import dev.olog.msc.core.entity.SortArranging
 import dev.olog.msc.core.entity.SortType
 import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.presentation.navigator.Navigator
 import dev.olog.msc.pro.IBilling
-import dev.olog.msc.core.MediaId
-import dev.olog.msc.core.MediaIdCategory
 import javax.inject.Inject
 
 
@@ -57,7 +56,7 @@ class MainPopupDialog @Inject constructor(
         }
 
         if (category == MediaIdCategory.PLAYING_QUEUE){
-            popup.menu.add(Menu.NONE, SAVE_AS_PLAYLIST_ID, Menu.NONE, app.getString(R.string.save_as_playlist))
+            popup.menu.add(Menu.NONE, SAVE_AS_PLAYLIST_ID, Menu.NONE, activity.getString(R.string.save_as_playlist))
         }
 
         popup.setOnMenuItemClickListener {

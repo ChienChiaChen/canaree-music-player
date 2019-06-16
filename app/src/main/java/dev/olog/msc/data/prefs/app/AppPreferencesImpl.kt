@@ -6,12 +6,12 @@ import android.os.Environment
 import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dev.olog.msc.R
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.core.dagger.ApplicationContext
 import dev.olog.msc.core.entity.LibraryCategoryBehavior
 import dev.olog.msc.core.entity.UserCredentials
 import dev.olog.msc.core.prefs.AppPreferencesGateway
 import dev.olog.msc.core.prefs.Sorting
-import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.utils.k.extension.safeGetCanonicalPath
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -315,7 +315,6 @@ class AppPreferencesImpl @Inject constructor(
     private fun setDefaultLockscreenArtwork(){
         preferences.edit {
             putBoolean(context.getString(R.string.prefs_lockscreen_artwork_key), false)
-            putBoolean(context.getString(R.string.prefs_ignore_media_store_cover_key), false)
         }
     }
 
@@ -345,11 +344,8 @@ class AppPreferencesImpl @Inject constructor(
         }
     }
 
-    override fun observeAutoCreateImages(): Observable<Boolean> {
-        return rxPreferences.getBoolean(context.getString(R.string.prefs_auto_create_images_key), true)
-                .asObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+    override fun canAutoCreateImages(): Boolean {
+        return preferences.getBoolean(context.getString(R.string.prefs_auto_create_images_key), true)
     }
 
     private fun setDefaultFolderView(){

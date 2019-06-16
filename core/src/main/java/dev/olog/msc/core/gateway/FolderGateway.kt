@@ -4,7 +4,7 @@ import dev.olog.msc.core.entity.Folder
 import io.reactivex.Observable
 
 interface FolderGateway :
-        BaseGateway<Folder, String>,
+    BaseGateway<Folder, String>,
     ChildsHasSongs<String>,
     HasMostPlayed {
 

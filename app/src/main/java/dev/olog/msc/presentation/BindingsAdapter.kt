@@ -8,16 +8,16 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.target.Target
-import dev.olog.msc.app.GlideApp
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.glide.AudioFileCover
+import dev.olog.msc.glide.GlideApp
+import dev.olog.msc.glide.creator.CoverUtils
 import dev.olog.msc.presentation.library.folder.tree.DisplayableFile
 import dev.olog.msc.presentation.model.DisplayableItem
 import dev.olog.msc.presentation.playing.queue.model.DisplayableQueueSong
 import dev.olog.msc.presentation.special.thanks.SpecialThanksModel
 import dev.olog.msc.presentation.widget.QuickActionView
 import dev.olog.msc.ripple.RippleTarget
-import dev.olog.msc.utils.img.CoverUtils
 
 object BindingsAdapter {
 

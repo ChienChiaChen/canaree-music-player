@@ -1,6 +1,7 @@
 package dev.olog.msc.presentation.preferences
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -17,18 +18,17 @@ import com.afollestad.materialdialogs.color.colorChooser
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import dev.olog.msc.R
-import dev.olog.msc.app.GlideApp
 import dev.olog.msc.constants.AppConstants
+import dev.olog.msc.core.MediaIdCategory
 import dev.olog.msc.domain.gateway.prefs.TutorialPreferenceGateway
-import dev.olog.msc.isLowMemoryDevice
+import dev.olog.msc.glide.GlideApp
 import dev.olog.msc.presentation.preferences.blacklist.BlacklistFragment
 import dev.olog.msc.presentation.preferences.categories.LibraryCategoriesFragment
 import dev.olog.msc.presentation.preferences.last.fm.credentials.LastFmCredentialsFragment
 import dev.olog.msc.presentation.theme.AppTheme
 import dev.olog.msc.presentation.theme.ThemedDialog
 import dev.olog.msc.presentation.utils.ColorPalette
-import dev.olog.msc.core.MediaIdCategory
-import dev.olog.msc.utils.img.ImagesFolderUtils
+import dev.olog.msc.glide.creator.ImagesFolderUtils
 import dev.olog.msc.utils.k.extension.*
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -49,22 +49,22 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
     private lateinit var accentColorChooser: Preference
     private lateinit var resetTutorial: Preference
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.prefs, rootKey)
-        libraryCategories = preferenceScreen.findPreference(getString(R.string.prefs_library_categories_key))
-        podcastCategories = preferenceScreen.findPreference(getString(R.string.prefs_podcast_library_categories_key))
-        blacklist = preferenceScreen.findPreference(getString(R.string.prefs_blacklist_key))
-        iconShape = preferenceScreen.findPreference(getString(R.string.prefs_icon_shape_key))
-        deleteCache = preferenceScreen.findPreference(getString(R.string.prefs_delete_cached_images_key))
-        lastFmCredentials = preferenceScreen.findPreference(getString(R.string.prefs_last_fm_credentials_key))
-        autoCreateImages = preferenceScreen.findPreference(getString(R.string.prefs_auto_create_images_key)) as SwitchPreference
-        accentColorChooser = preferenceScreen.findPreference(getString(R.string.prefs_accent_color_key))
-        resetTutorial = preferenceScreen.findPreference(getString(R.string.prefs_reset_tutorial_key))
+        libraryCategories = preferenceScreen.findPreference(getString(R.string.prefs_library_categories_key))!!
+        podcastCategories = preferenceScreen.findPreference(getString(R.string.prefs_podcast_library_categories_key))!!
+        blacklist = preferenceScreen.findPreference(getString(R.string.prefs_blacklist_key))!!
+        iconShape = preferenceScreen.findPreference(getString(R.string.prefs_icon_shape_key))!!
+        deleteCache = preferenceScreen.findPreference(getString(R.string.prefs_delete_cached_images_key))!!
+        lastFmCredentials = preferenceScreen.findPreference(getString(R.string.prefs_last_fm_credentials_key))!!
+        autoCreateImages = preferenceScreen.findPreference(getString(R.string.prefs_auto_create_images_key))!!
+        accentColorChooser = preferenceScreen.findPreference(getString(R.string.prefs_accent_color_key))!!
+        resetTutorial = preferenceScreen.findPreference(getString(R.string.prefs_reset_tutorial_key))!!
     }
 
     private var needsToRecreate = false
@@ -88,7 +88,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
                     }
                 }
 
-        val lowRam = isLowMemoryDevice(ctx)
+        val lowRam = (ctx.getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager).isLowRamDevice
         if (lowRam){
             autoCreateImages.isChecked = false
             autoCreateImages.isEnabled = false
@@ -187,11 +187,6 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
                 AppTheme.updateTheme(act)
                 requestMainActivityToRecreate()
             }
-            getString(R.string.prefs_ignore_media_store_cover_key) -> {
-                AppConstants.updateIgnoreMediaStoreCovers(ctx)
-                requestMainActivityToRecreate()
-                GlideApp.get(ctx.applicationContext).clearMemory()
-            }
             getString(R.string.prefs_lockscreen_artwork_key) -> AppConstants.updateLockscreenArtworkEnabled(ctx)
             getString(R.string.prefs_notch_support_key),
             getString(R.string.prefs_folder_tree_view_key),
@@ -215,9 +210,9 @@ class PreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnShar
                     @Suppress("UNUSED_VARIABLE")
                     val disp = Completable.fromCallable {
                         GlideApp.get(ctx.applicationContext).clearDiskCache()
-                        ImagesFolderUtils.getImageFolderFor(ctx, ImagesFolderUtils.getFolderName(ImagesFolderUtils.FOLDER)).listFiles().forEach { it.delete() }
-                        ImagesFolderUtils.getImageFolderFor(ctx, ImagesFolderUtils.getFolderName(ImagesFolderUtils.PLAYLIST)).listFiles().forEach { it.delete() }
-                        ImagesFolderUtils.getImageFolderFor(ctx, ImagesFolderUtils.getFolderName(ImagesFolderUtils.GENRE)).listFiles().forEach { it.delete() }
+                        ImagesFolderUtils.getImageFolderFor(ctx, ImagesFolderUtils.FOLDER).listFiles().forEach { it.delete() }
+                        ImagesFolderUtils.getImageFolderFor(ctx, ImagesFolderUtils.PLAYLIST).listFiles().forEach { it.delete() }
+                        ImagesFolderUtils.getImageFolderFor(ctx, ImagesFolderUtils.GENRE).listFiles().forEach { it.delete() }
                     }.observeOn(AndroidSchedulers.mainThread())
                             .subscribeOn(Schedulers.io())
                             .subscribe({

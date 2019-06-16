@@ -6,9 +6,9 @@ import android.util.AttributeSet
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.target.Target
-import dev.olog.msc.app.GlideApp
+import dev.olog.msc.glide.GlideApp
 import dev.olog.msc.ripple.RippleTarget
-import dev.olog.msc.utils.img.CoverUtils
+import dev.olog.msc.glide.creator.CoverUtils
 import dev.olog.msc.utils.k.extension.getMediaId
 
 open class PlayerImageView @JvmOverloads constructor(
