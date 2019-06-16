@@ -5,7 +5,6 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.data.DataFetcher
 import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.gateway.LastFmGateway
-import kotlinx.coroutines.rx2.await
 import java.io.InputStream
 
 // for some reason last fm for some artists (maybe all) is returning a start instead of the artist image, this
@@ -22,7 +21,7 @@ class GlideArtistFetcher(
     private val id = mediaId.resolveId
 
     override suspend fun execute(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>): String {
-        val image = lastFmGateway.getArtist(id).await().get()!!.image
+        val image = lastFmGateway.getArtist(id)!!.image
         if (image.endsWith(LAST_FM_PLACEHOLDER)) {
             return ""
         }
@@ -30,7 +29,7 @@ class GlideArtistFetcher(
     }
 
     override suspend fun shouldFetch(): Boolean {
-        return lastFmGateway.shouldFetchArtist(id).await()
+        return lastFmGateway.shouldFetchArtist(id)
     }
 
     override val threshold: Long = 250

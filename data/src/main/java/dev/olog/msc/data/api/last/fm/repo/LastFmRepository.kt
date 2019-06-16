@@ -1,13 +1,9 @@
 package dev.olog.msc.data.api.last.fm.repo
 
-import com.github.dmstocking.optional.java.util.Optional
 import dev.olog.msc.core.entity.LastFmAlbum
 import dev.olog.msc.core.entity.LastFmArtist
 import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.core.gateway.LastFmGateway
-import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class LastFmRepository @Inject constructor(
@@ -17,64 +13,56 @@ class LastFmRepository @Inject constructor(
 
 ) : LastFmGateway {
 
-    override fun shouldFetchTrack(trackId: Long): Single<Boolean> {
+    override suspend fun shouldFetchTrack(trackId: Long): Boolean {
         return lastFmRepoTrack.shouldFetch(trackId)
     }
 
-    override fun getTrack(trackId: Long): Single<Optional<LastFmTrack?>> {
+    override suspend fun getTrack(trackId: Long): LastFmTrack? {
         return lastFmRepoTrack.get(trackId)
     }
 
-    override fun deleteTrack(trackId: Long) {
+    override suspend fun deleteTrack(trackId: Long) {
         lastFmRepoTrack.delete(trackId)
     }
 
-    override fun shouldFetchTrackImage(trackId: Long): Single<Boolean> {
-        return lastFmRepoTrack.getOriginalItem(trackId)
-                .flatMap {
-                    Singles.zip(
-                            lastFmRepoAlbum.shouldFetch(it.albumId),
-                            lastFmRepoTrack.shouldFetch(it.id),
-                            { isAlbumCached, isTrackCached -> isAlbumCached || isTrackCached }
-                    )
-                }.subscribeOn(Schedulers.io())
+    override suspend fun shouldFetchTrackImage(trackId: Long): Boolean {
+        val item = lastFmRepoTrack.getOriginalItem(trackId) ?: return false
+
+        return lastFmRepoAlbum.shouldFetch(item.albumId) || lastFmRepoTrack.shouldFetch(item.id)
     }
 
-    override fun getTrackImage(trackId: Long): Single<Optional<String?>> {
-        return lastFmRepoTrack.getOriginalItem(trackId)
-                .flatMap { lastFmRepoAlbum
-                        .get(it.albumId)
-                        .map { it.get()!!.image }
-                        .map { Optional.of(it) }
-                }.onErrorResumeNext {
-                    lastFmRepoTrack
-                            .get(trackId)
-                            .map { it.get()!!.image }
-                            .map { Optional.of(it) }
-                }.subscribeOn(Schedulers.io())
+    override suspend fun getTrackImage(trackId: Long): String? {
+        val item = lastFmRepoTrack.getOriginalItem(trackId) ?: return null
+
+        return try {
+            lastFmRepoAlbum.get(item.albumId)?.image
+                ?: lastFmRepoTrack.get(trackId)?.image
+        } catch (ex: Exception) {
+            null
+        }
     }
 
-    override fun shouldFetchAlbum(albumId: Long): Single<Boolean> {
+    override suspend fun shouldFetchAlbum(albumId: Long): Boolean {
         return lastFmRepoAlbum.shouldFetch(albumId)
     }
 
-    override fun getAlbum(albumId: Long): Single<Optional<LastFmAlbum?>> {
+    override suspend fun getAlbum(albumId: Long): LastFmAlbum? {
         return lastFmRepoAlbum.get(albumId)
     }
 
-    override fun deleteAlbum(albumId: Long) {
+    override suspend fun deleteAlbum(albumId: Long) {
         lastFmRepoAlbum.delete(albumId)
     }
 
-    override fun shouldFetchArtist(artistId: Long): Single<Boolean> {
+    override suspend fun shouldFetchArtist(artistId: Long): Boolean {
         return lastFmRepoArtist.shouldFetch(artistId)
     }
 
-    override fun getArtist(artistId: Long): Single<Optional<LastFmArtist?>> {
+    override suspend fun getArtist(artistId: Long): LastFmArtist? {
         return lastFmRepoArtist.get(artistId)
     }
 
-    override fun deleteArtist(artistId: Long) {
+    override suspend fun deleteArtist(artistId: Long) {
         lastFmRepoArtist.delete(artistId)
     }
 }

@@ -1,6 +1,5 @@
 package dev.olog.msc.data.api.last.fm.repo
 
-import com.github.dmstocking.optional.java.util.Optional
 import dev.olog.msc.core.entity.Artist
 import dev.olog.msc.core.entity.LastFmArtist
 import dev.olog.msc.core.gateway.ArtistGateway
@@ -12,8 +11,7 @@ import dev.olog.msc.data.api.last.fm.mapper.toDomain
 import dev.olog.msc.data.api.last.fm.mapper.toModel
 import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.entity.LastFmArtistEntity
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.rx2.awaitFirst
 import javax.inject.Inject
 
 class LastFmRepoArtist @Inject constructor(
@@ -25,62 +23,48 @@ class LastFmRepoArtist @Inject constructor(
 
     private val dao = appDatabase.lastFmDao()
 
-    fun shouldFetch(artistId: Long): Single<Boolean> {
-        return Single.fromCallable { dao.getArtist(artistId) == null }
-                .subscribeOn(Schedulers.io())
+    suspend fun shouldFetch(artistId: Long): Boolean {
+        return dao.getArtist(artistId) == null
     }
 
-    fun get(artistId: Long): Single<Optional<LastFmArtist?>> {
+    suspend fun get(artistId: Long): LastFmArtist? {
         val cachedValue = getFromCache(artistId)
-
-        val fetch = artistGateway.getByParam(artistId)
-                .firstOrError()
-                .flatMap { fetch(it) }
-                .map { Optional.of(it) }
-
-        return cachedValue.onErrorResumeNext(fetch)
-                .subscribeOn(Schedulers.io())
+        if (cachedValue != null) {
+            return cachedValue
+        }
+        val artist = artistGateway.getByParam(artistId).awaitFirst() ?: return null
+        return fetch(artist)
     }
 
-    private fun getFromCache(artistId: Long): Single<Optional<LastFmArtist?>> {
-        return Single.fromCallable { Optional.ofNullable(dao.getArtist(artistId)) }
-                .map {
-                    if (it.isPresent){
-                        Optional.of(it.get()!!.toDomain())
-                    } else throw NoSuchElementException()
-                }
+    private suspend fun getFromCache(artistId: Long): LastFmArtist? {
+        return dao.getArtist(artistId)?.toDomain()
     }
 
-    private fun fetch(artist: Artist): Single<LastFmArtist> {
+    private suspend fun fetch(artist: Artist): LastFmArtist? {
         val artistId = artist.id
 
-        return lastFmService.getArtistInfo(artist.name)
-                .map {
-                    try {
-                        cache(artistId, it)
-                        val model = it.toModel(artistId)
-                        dao.insertArtist(model)
-                        it.toDomain(artistId)
-                    } catch (ex: NoSuchElementException){
-                        cacheEmpty(artistId)
-                        throw ex
-                    }
-                }
+        try {
+            val artistInfo = lastFmService.getArtistInfoAsync(artist.name).await()
+            return cache(artistId, artistInfo).toDomain()
+        } catch (ex: Exception) {
+            cacheEmpty(artistId)
+            return null
+        }
     }
 
-    private fun cache(artistId: Long, model: ArtistInfo): LastFmArtistEntity {
+    private suspend fun cache(artistId: Long, model: ArtistInfo): LastFmArtistEntity {
         val entity = model.toModel(artistId)
         dao.insertArtist(entity)
         return entity
     }
 
-    private fun cacheEmpty(artistId: Long): LastFmArtistEntity {
+    private suspend fun cacheEmpty(artistId: Long): LastFmArtistEntity {
         val entity = LastFmNulls.createNullArtist(artistId)
         dao.insertArtist(entity)
         return entity
     }
 
-    fun delete(artistId: Long) {
+    suspend fun delete(artistId: Long) {
         dao.deleteArtist(artistId)
     }
 

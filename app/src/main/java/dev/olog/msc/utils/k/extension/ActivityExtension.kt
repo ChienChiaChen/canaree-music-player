@@ -1,10 +1,7 @@
 package dev.olog.msc.utils.k.extension
 
-import android.annotation.SuppressLint
-import android.view.View
 import androidx.appcompat.app.AlertDialog
 import dev.olog.msc.presentation.theme.ThemedDialog
-import dev.olog.msc.utils.isP
 
 fun androidx.fragment.app.FragmentActivity.fragmentTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
     supportFragmentManager
@@ -27,14 +24,6 @@ fun androidx.fragment.app.FragmentActivity.getTopFragment(): androidx.fragment.a
         return supportFragmentManager.findFragmentByTag(tag)
     }
     return null
-}
-
-@SuppressLint("NewApi")
-fun View.hasNotch(): Boolean {
-    if (isP()){
-        return rootWindowInsets?.displayCutout != null
-    }
-    return false
 }
 
 fun androidx.fragment.app.FragmentActivity.simpleDialog(builder: AlertDialog.Builder.() -> AlertDialog.Builder){

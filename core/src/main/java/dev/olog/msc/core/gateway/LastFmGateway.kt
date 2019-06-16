@@ -1,26 +1,24 @@
 package dev.olog.msc.core.gateway
 
-import com.github.dmstocking.optional.java.util.Optional
 import dev.olog.msc.core.entity.LastFmAlbum
 import dev.olog.msc.core.entity.LastFmArtist
 import dev.olog.msc.core.entity.LastFmTrack
-import io.reactivex.Single
 
 interface LastFmGateway {
 
-    fun shouldFetchTrack(trackId: Long): Single<Boolean>
-    fun getTrack(trackId: Long): Single<Optional<LastFmTrack?>>
-    fun deleteTrack(trackId: Long)
+    suspend fun shouldFetchTrack(trackId: Long): Boolean
+    suspend fun getTrack(trackId: Long): LastFmTrack?
+    suspend fun deleteTrack(trackId: Long)
 
-    fun shouldFetchTrackImage(trackId: Long): Single<Boolean>
-    fun getTrackImage(trackId: Long): Single<Optional<String?>>
+    suspend fun shouldFetchTrackImage(trackId: Long): Boolean
+    suspend fun getTrackImage(trackId: Long): String?
 
-    fun shouldFetchAlbum(albumId: Long): Single<Boolean>
-    fun getAlbum(albumId: Long): Single<Optional<LastFmAlbum?>>
-    fun deleteAlbum(albumId: Long)
+    suspend fun shouldFetchAlbum(albumId: Long): Boolean
+    suspend fun getAlbum(albumId: Long): LastFmAlbum?
+    suspend fun deleteAlbum(albumId: Long)
 
-    fun shouldFetchArtist(artistId: Long): Single<Boolean>
-    fun getArtist(artistId: Long): Single<Optional<LastFmArtist?>>
-    fun deleteArtist(artistId: Long)
+    suspend fun shouldFetchArtist(artistId: Long): Boolean
+    suspend fun getArtist(artistId: Long): LastFmArtist?
+    suspend fun deleteArtist(artistId: Long)
 
 }

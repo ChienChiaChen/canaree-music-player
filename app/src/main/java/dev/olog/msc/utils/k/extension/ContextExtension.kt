@@ -50,7 +50,7 @@ inline fun Context.toast(message: CharSequence): Toast = Toast
             show()
         }
 
-inline val Context.configuration: android.content.res.Configuration
+inline val Context.configuration: Configuration
     get() = resources.configuration
 
 @SuppressLint("NewApi")
@@ -63,8 +63,4 @@ fun Context.vibrate(time: Long){
     } else {
         vibrator.vibrate(time)
     }
-}
-
-fun Context.isOneHanded(): Boolean {
-    return isPortrait && configuration.smallestScreenWidthDp < 600
 }

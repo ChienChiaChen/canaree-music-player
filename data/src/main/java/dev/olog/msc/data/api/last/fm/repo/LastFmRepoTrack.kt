@@ -1,10 +1,9 @@
 package dev.olog.msc.data.api.last.fm.repo
 
-import com.github.dmstocking.optional.java.util.Optional
+import android.provider.MediaStore
 import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.core.entity.Song
 import dev.olog.msc.core.gateway.SongGateway
-import dev.olog.msc.data.C
 import dev.olog.msc.data.api.last.fm.LastFmService
 import dev.olog.msc.data.api.last.fm.annotation.Proxy
 import dev.olog.msc.data.api.last.fm.mapper.LastFmNulls
@@ -13,85 +12,81 @@ import dev.olog.msc.data.api.last.fm.mapper.toModel
 import dev.olog.msc.data.dao.AppDatabase
 import dev.olog.msc.data.entity.LastFmTrackEntity
 import dev.olog.msc.data.utils.TextUtils
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.rx2.awaitFirst
 import javax.inject.Inject
 
 class LastFmRepoTrack @Inject constructor(
     appDatabase: AppDatabase,
     @Proxy private val lastFmService: LastFmService,
     private val songGateway: SongGateway
-
 ) {
 
     private val dao = appDatabase.lastFmDao()
 
-    fun shouldFetch(trackId: Long): Single<Boolean> {
-        return Single.fromCallable { dao.getTrack(trackId) == null }
+    suspend fun shouldFetch(trackId: Long): Boolean {
+        return dao.getTrack(trackId) == null
     }
 
-    fun getOriginalItem(trackId: Long): Single<Song> {
-        return songGateway.getByParam(trackId).firstOrError()
+    suspend fun getOriginalItem(trackId: Long): Song? {
+        return songGateway.getByParam(trackId).awaitFirst()
     }
 
-    fun get(trackId: Long): Single<Optional<LastFmTrack?>> {
+    suspend fun get(trackId: Long): LastFmTrack? {
         val cachedValue = getFromCache(trackId)
+        if (cachedValue != null) {
+            return cachedValue
+        }
 
-        val fetch = getOriginalItem(trackId)
-                .flatMap { fetch(it) }
-                .map { Optional.of(it) }
-
-        return cachedValue.onErrorResumeNext(fetch)
-                .subscribeOn(Schedulers.io())
+        val song = getOriginalItem(trackId)
+        if (song != null) {
+            return fetch(song)
+        }
+        return null
     }
 
-    private fun getFromCache(trackId: Long): Single<Optional<LastFmTrack?>> {
-        return Single.fromCallable { Optional.ofNullable(dao.getTrack(trackId)) }
-                .map {
-                    if (it.isPresent){
-                        Optional.of(it.get()!!.toDomain())
-                    } else throw NoSuchElementException()
-                }
+    private suspend fun getFromCache(trackId: Long): LastFmTrack? {
+        val track = dao.getTrack(trackId)
+        return track?.toDomain()
     }
 
-    private fun fetch(track: Song): Single<LastFmTrack> {
+    private suspend fun fetch(track: Song): LastFmTrack {
+
         val trackId = track.id
 
         val trackTitle = TextUtils.addSpacesToDash(track.title)
-        val trackArtist = if (track.artist == C.UNKNOWN) "" else track.artist
+        val trackArtist = if (track.artist == MediaStore.UNKNOWN_STRING) "" else track.artist
 
-        return lastFmService.getTrackInfo(trackTitle, trackArtist)
-                .map { it.toDomain(trackId) }
-                .doOnSuccess { cache(it) }
-                .onErrorResumeNext { lastFmService.searchTrack(trackTitle, trackArtist)
-                        .map { it.toDomain(trackId) }
-                        .flatMap { result -> lastFmService.getTrackInfo(result.title, result.artist)
-                                .map { it.toDomain(trackId) }
-                                .onErrorReturnItem(result)
-                        }
-                        .doOnSuccess { cache(it) }
-                        .onErrorResumeNext {
-                            if (it is NoSuchElementException){
-                                Single.fromCallable { cacheEmpty(trackId) }
-                                        .map { it.toDomain() }
-                            } else Single.error(it)
-                        }
+        try {
+            val trackInfo = lastFmService.getTrackInfoAsync(trackTitle, trackArtist).await().toDomain(trackId)
+            return cache(trackInfo).toDomain()
+        } catch (ex: Exception) {
+            try {
+                var trackInfo = lastFmService.searchTrackAsync(trackTitle, trackArtist).await().toDomain(trackId)
+                try {
+                    trackInfo =
+                        lastFmService.getTrackInfoAsync(trackInfo.title, trackInfo.artist).await().toDomain(trackId)
+                } catch (ignored: Exception) {
                 }
+                return cache(trackInfo).toDomain()
+            } catch (ex: Exception) {
+                return cacheEmpty(trackId).toDomain()
+            }
+        }
     }
 
-    private fun cache(model: LastFmTrack): LastFmTrackEntity {
+    private suspend fun cache(model: LastFmTrack): LastFmTrackEntity {
         val entity = model.toModel()
         dao.insertTrack(entity)
         return entity
     }
 
-    private fun cacheEmpty(trackId: Long): LastFmTrackEntity {
+    private suspend fun cacheEmpty(trackId: Long): LastFmTrackEntity {
         val entity = LastFmNulls.createNullTrack(trackId)
         dao.insertTrack(entity)
         return entity
     }
 
-    fun delete(trackId: Long){
+    suspend fun delete(trackId: Long) {
         dao.deleteTrack(trackId)
     }
 

@@ -1,13 +1,17 @@
 package dev.olog.msc.data.api.last.fm.mapper
 
-import dev.olog.msc.core.entity.*
+import dev.olog.msc.core.entity.LastFmAlbum
+import dev.olog.msc.core.entity.LastFmArtist
+import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.data.api.last.fm.album.info.AlbumInfo
 import dev.olog.msc.data.api.last.fm.album.search.AlbumSearch
 import dev.olog.msc.data.api.last.fm.artist.info.ArtistInfo
 import dev.olog.msc.data.api.last.fm.track.info.TrackInfo
 import dev.olog.msc.data.api.last.fm.track.search.TrackSearch
-import dev.olog.msc.data.entity.*
-import me.xdrop.fuzzywuzzy.FuzzySearch
+import dev.olog.msc.data.entity.LastFmAlbumEntity
+import dev.olog.msc.data.entity.LastFmArtistEntity
+import dev.olog.msc.data.entity.LastFmPodcastArtistEntity
+import dev.olog.msc.data.entity.LastFmTrackEntity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,7 +22,7 @@ private fun millisToFormattedDate(value: Long): String {
 
 }
 
-fun LastFmTrackEntity.toDomain(): LastFmTrack {
+internal fun LastFmTrackEntity.toDomain(): LastFmTrack {
     return LastFmTrack(
         this.id,
         this.title,
@@ -28,17 +32,7 @@ fun LastFmTrackEntity.toDomain(): LastFmTrack {
     )
 }
 
-fun LastFmPodcastEntity.toDomain(): LastFmPodcast {
-    return LastFmPodcast(
-        this.id,
-        this.title,
-        this.artist,
-        this.album,
-        this.image
-    )
-}
-
-fun LastFmAlbumEntity.toDomain(): LastFmAlbum {
+internal fun LastFmAlbumEntity.toDomain(): LastFmAlbum {
     return LastFmAlbum(
         this.id,
         this.title,
@@ -47,48 +41,7 @@ fun LastFmAlbumEntity.toDomain(): LastFmAlbum {
     )
 }
 
-fun LastFmPodcastAlbumEntity.toDomain(): LastFmPodcastAlbum {
-    return LastFmPodcastAlbum(
-        this.id,
-        this.title,
-        this.artist,
-        this.image
-    )
-}
-
-fun TrackInfo.toDomain(id: Long): LastFmTrack {
-    val track = this.track
-    val title = track.name
-    val artist = track.artist.name
-    val album = track.album.title
-    val image = track.album.image.reversed().first { it.text.isNotBlank() }.text
-
-    return LastFmTrack(
-        id,
-        title ?: "",
-        artist ?: "",
-        album ?: "",
-        image
-    )
-}
-
-fun TrackInfo.toDomainPodcast(id: Long): LastFmPodcast {
-    val track = this.track
-    val title = track.name
-    val artist = track.artist.name
-    val album = track.album.title
-    val image = track.album.image.reversed().first { it.text.isNotBlank() }.text
-
-    return LastFmPodcast(
-        id,
-        title ?: "",
-        artist ?: "",
-        album ?: "",
-        image
-    )
-}
-
-fun LastFmTrack.toModel(): LastFmTrackEntity {
+internal fun LastFmTrack.toModel(): LastFmTrackEntity {
     return LastFmTrackEntity(
         this.id,
         this.title,
@@ -99,64 +52,8 @@ fun LastFmTrack.toModel(): LastFmTrackEntity {
     )
 }
 
-fun LastFmPodcast.toModel(): LastFmPodcastEntity {
-    return LastFmPodcastEntity(
-        this.id,
-        this.title,
-        this.artist,
-        this.album,
-        this.image,
-        millisToFormattedDate(System.currentTimeMillis())
-    )
-}
 
-
-
-fun TrackSearch.toDomain(id: Long): LastFmTrack {
-    val track = this.results.trackmatches.track[0]
-
-    return LastFmTrack(
-        id,
-        track.name ?: "",
-        track.artist ?: "",
-        "",
-        ""
-    )
-}
-
-fun TrackSearch.toDomainPodcast(id: Long): LastFmPodcast {
-    val track = this.results.trackmatches.track[0]
-
-    return LastFmPodcast(
-        id,
-        track.name ?: "",
-        track.artist ?: "",
-        "",
-        ""
-    )
-}
-
-fun AlbumInfo.toDomain(id: Long): LastFmAlbum {
-    val album = this.album
-    return LastFmAlbum(
-        id,
-        album.name,
-        album.artist,
-        album.image.reversed().first { it.text.isNotBlank() }.text
-    )
-}
-
-fun AlbumInfo.toPodcastDomain(id: Long): LastFmPodcastAlbum {
-    val album = this.album
-    return LastFmPodcastAlbum(
-        id,
-        album.name,
-        album.artist,
-        album.image.reversed().first { it.text.isNotBlank() }.text
-    )
-}
-
-fun LastFmAlbum.toModel(): LastFmAlbumEntity {
+internal fun LastFmAlbum.toModel(): LastFmAlbumEntity {
     return LastFmAlbumEntity(
         this.id,
         this.title,
@@ -166,95 +63,16 @@ fun LastFmAlbum.toModel(): LastFmAlbumEntity {
     )
 }
 
-fun LastFmPodcastAlbum.toModel(): LastFmPodcastAlbumEntity {
-    return LastFmPodcastAlbumEntity(
-        this.id,
-        this.title,
-        this.artist,
-        this.image,
-        millisToFormattedDate(System.currentTimeMillis())
-    )
-}
-
-
-fun AlbumSearch.toDomain(id: Long, originalArtist: String): LastFmAlbum {
-    val results = this.results.albummatches.album
-    val bestArtist = FuzzySearch.extractOne(originalArtist, results.map { it.artist }).string
-    val best = results.first { it.artist == bestArtist }
-
-    return LastFmAlbum(
-        id,
-        best.name,
-        best.artist,
-        best.image.reversed().first { it.text.isNotBlank() }.text
-    )
-}
-
-fun AlbumSearch.toPodcastDomain(id: Long, originalArtist: String): LastFmPodcastAlbum {
-    val results = this.results.albummatches.album
-    val bestArtist = FuzzySearch.extractOne(originalArtist, results.map { it.artist }).string
-    val best = results.first { it.artist == bestArtist }
-
-    return LastFmPodcastAlbum(
-        id,
-        best.name,
-        best.artist,
-        best.image.reversed().first { it.text.isNotBlank() }.text
-    )
-}
-
-fun ArtistInfo.toDomain(id: Long): LastFmArtist {
-    val artist = this.artist
-    return LastFmArtist(
-        id,
-        artist.image.reversed().first { it.text.isNotBlank() }.text
-    )
-}
-
-
-fun ArtistInfo.toPodcastDomain(id: Long): LastFmPodcastArtist {
-    val artist = this.artist
-    return LastFmPodcastArtist(
-        id,
-        artist.image.reversed().first { it.text.isNotBlank() }.text
-    )
-}
-
-fun ArtistInfo.toModel(id: Long): LastFmArtistEntity {
-    val artist = this.artist
-    return LastFmArtistEntity(
-        id,
-        artist.image.reversed().first { it.text.isNotBlank() }.text,
-        millisToFormattedDate(System.currentTimeMillis())
-    )
-}
-
-fun ArtistInfo.toPodcastModel(id: Long): LastFmPodcastArtistEntity {
-    val artist = this.artist
-    return LastFmPodcastArtistEntity(
-        id,
-        artist.image.reversed().first { it.text.isNotBlank() }.text,
-        millisToFormattedDate(System.currentTimeMillis())
-    )
-}
-
-fun LastFmArtistEntity.toDomain(): LastFmArtist {
+internal fun LastFmArtistEntity.toDomain(): LastFmArtist {
     return LastFmArtist(
         this.id,
         this.image
     )
 }
 
-fun LastFmPodcastArtistEntity.toDomain(): LastFmPodcastArtist {
-    return LastFmPodcastArtist(
-        this.id,
-        this.image
-    )
-}
+internal object LastFmNulls {
 
-object LastFmNulls {
-
-    fun createNullTrack(trackId: Long): LastFmTrackEntity {
+    internal fun createNullTrack(trackId: Long): LastFmTrackEntity {
         return LastFmTrackEntity(
             trackId,
             "",
@@ -265,7 +83,7 @@ object LastFmNulls {
         )
     }
 
-    fun createNullArtist(artistId: Long): LastFmArtistEntity {
+    internal fun createNullArtist(artistId: Long): LastFmArtistEntity {
         return LastFmArtistEntity(
             artistId,
             "",
@@ -273,7 +91,7 @@ object LastFmNulls {
         )
     }
 
-    fun createNullAlbum(albumId: Long): LastFmAlbumEntity {
+    internal fun createNullAlbum(albumId: Long): LastFmAlbumEntity {
         return LastFmAlbumEntity(
             albumId,
             "",
@@ -283,33 +101,84 @@ object LastFmNulls {
         )
     }
 
-    fun createNullPodcast(trackId: Long): LastFmPodcastEntity {
-        return LastFmPodcastEntity(
-            trackId,
-            "",
-            "",
-            "",
-            "",
-            millisToFormattedDate(System.currentTimeMillis())
-        )
-    }
+}
 
-    fun createNullPodcastArtist(artistId: Long): LastFmPodcastArtistEntity {
-        return LastFmPodcastArtistEntity(
-            artistId,
-            "",
-            millisToFormattedDate(System.currentTimeMillis())
-        )
-    }
 
-    fun createNullPodcastAlbum(albumId: Long): LastFmPodcastAlbumEntity {
-        return LastFmPodcastAlbumEntity(
-            albumId,
-            "",
-            "",
-            "",
-            millisToFormattedDate(System.currentTimeMillis())
-        )
-    }
+internal fun ArtistInfo.toDomain(id: Long): LastFmArtist {
+    val artist = this.artist
+    return dev.olog.msc.core.entity.LastFmArtist(
+        id,
+        artist.image.reversed().first { it.text.isNotBlank() }.text
+    )
+}
 
+
+internal fun ArtistInfo.toModel(id: Long): LastFmArtistEntity {
+    val artist = this.artist
+    return dev.olog.msc.data.entity.LastFmArtistEntity(
+        id,
+        artist.image.reversed().first { it.text.isNotBlank() }.text,
+        millisToFormattedDate(java.lang.System.currentTimeMillis())
+    )
+}
+
+internal fun ArtistInfo.toPodcastModel(id: Long): LastFmPodcastArtistEntity {
+    val artist = this.artist
+    return dev.olog.msc.data.entity.LastFmPodcastArtistEntity(
+        id,
+        artist.image.reversed().first { it.text.isNotBlank() }.text,
+        millisToFormattedDate(java.lang.System.currentTimeMillis())
+    )
+}
+
+internal fun AlbumSearch.toDomain(id: Long, originalArtist: String): LastFmAlbum {
+    val results = this.results.albummatches.album
+    val bestArtist = me.xdrop.fuzzywuzzy.FuzzySearch.extractOne(originalArtist, results.map { it.artist }).string
+    val best = results.first { it.artist == bestArtist }
+
+    return dev.olog.msc.core.entity.LastFmAlbum(
+        id,
+        best.name,
+        best.artist,
+        best.image.reversed().first { it.text.isNotBlank() }.text
+    )
+}
+
+internal fun TrackSearch.toDomain(id: Long): LastFmTrack {
+    val track = this.results.trackmatches.track[0]
+
+    return dev.olog.msc.core.entity.LastFmTrack(
+        id,
+        track.name ?: "",
+        track.artist ?: "",
+        "",
+        ""
+    )
+}
+
+
+internal fun AlbumInfo.toDomain(id: Long): LastFmAlbum {
+    val album = this.album
+    return dev.olog.msc.core.entity.LastFmAlbum(
+        id,
+        album.name,
+        album.artist,
+        album.image.reversed().first { it.text.isNotBlank() }.text
+    )
+}
+
+internal fun TrackInfo.toDomain(id: Long): LastFmTrack {
+    val track = this.track
+    val title = track.name
+    val artist = track.artist.name
+    val album = track.album.title
+    val image = track.album.image.reversed().first { it.text.isNotBlank() }.text
+
+    return dev.olog.msc.core.entity.LastFmTrack(
+        id,
+        title ?: "",
+        artist ?: "",
+        album ?: "",
+        image
+    )
 }

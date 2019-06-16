@@ -42,6 +42,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
+
+            buildConfigField 'String', "LAST_FM_KEY", last_fm_key
+            buildConfigField 'String', "LAST_FM_SECRET", last_fm_secret
         }
 
         debug {
@@ -51,6 +54,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
 //            debuggable false
+
+            buildConfigField 'String', "LAST_FM_KEY", last_fm_key
+            buildConfigField 'String', "LAST_FM_SECRET", last_fm_secret
         }
     }
 

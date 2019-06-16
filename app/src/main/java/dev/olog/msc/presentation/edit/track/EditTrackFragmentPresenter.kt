@@ -6,11 +6,8 @@ import dev.olog.msc.core.MediaId
 import dev.olog.msc.core.entity.LastFmTrack
 import dev.olog.msc.core.entity.Podcast
 import dev.olog.msc.core.entity.Song
-import dev.olog.msc.core.gateway.UsedImageGateway
 import dev.olog.msc.domain.interactor.item.GetPodcastUseCase
 import dev.olog.msc.domain.interactor.item.GetUneditedSongUseCase
-import dev.olog.msc.domain.interactor.last.fm.GetLastFmTrackUseCase
-import dev.olog.msc.domain.interactor.last.fm.LastFmTrackRequest
 import dev.olog.msc.utils.k.extension.get
 import io.reactivex.Single
 import org.jaudiotagger.audio.AudioFileIO
@@ -21,9 +18,7 @@ import javax.inject.Inject
 class EditTrackFragmentPresenter @Inject constructor(
         private val mediaId: MediaId,
         private val getSongUseCase: GetUneditedSongUseCase,
-        private val getPodcastUseCase: GetPodcastUseCase,
-        private val getLastFmTrackUseCase: GetLastFmTrackUseCase,
-        private val usedImageGateway: UsedImageGateway
+        private val getPodcastUseCase: GetPodcastUseCase
 
 ) {
 
@@ -69,9 +64,10 @@ class EditTrackFragmentPresenter @Inject constructor(
     }
 
     fun fetchData(): Single<Optional<LastFmTrack?>> {
-        return getLastFmTrackUseCase.execute(
-                LastFmTrackRequest(originalSong.id, originalSong.title, originalSong.artist, originalSong.album)
-        )
+        TODO()
+//        return getLastFmTrackUseCase.execute(
+//                LastFmTrackRequest(originalSong.id, originalSong.title, originalSong.artist, originalSong.album)
+//        )
     }
 
     fun getSong(): DisplayableSong = originalSong
